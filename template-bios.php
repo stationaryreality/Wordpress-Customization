@@ -3,6 +3,21 @@
 get_header();
 ?>
 
+
+<?php
+  if ( has_post_thumbnail() ) {
+    echo '<div class="featured-image">';
+    the_post_thumbnail('full'); // or 'large', or use a custom size
+    echo '</div>';
+  }
+?>
+
+<div class="page-content">
+  <?php the_content(); ?>
+</div>
+
+
+
 <main class="biographies-page">
   <h1>Biographies</h1>
 <div style="margin-bottom: 2rem;"></div>

@@ -12,6 +12,7 @@ function ct_author_child_enqueue_styles() {
 }
 add_action( 'wp_enqueue_scripts', 'ct_author_child_enqueue_styles' );
 
+add_post_type_support('page', 'excerpt');
 
 #error_log('This is a custom test message');
 

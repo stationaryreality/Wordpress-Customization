@@ -3,9 +3,25 @@
 get_header();
 ?>
 
+<?php
+if ( has_post_thumbnail() ) {
+    echo '<div class="featured-image">';
+    the_post_thumbnail('full'); // or 'large', or use a custom size
+    echo '</div>';
+}
+?>
+<BR><BR>
+<!-- Move Lexicon heading here, outside the main content -->
+<h1 class="lexicon-title">Lexicon:</h1>
+
+<div class="page-content">
+    <?php the_content(); ?>
+</div>
+
 <main class="lexicon-page" style="max-width:800px; margin:2rem auto;">
-  <h1>Lexicon:</h1>
-<div style="margin-bottom: 2rem;"></div>
+    <!-- Removed <h1>Lexicon:</h1> and empty div with 2rem margin -->
+
+
   <?php
   $terms = get_terms([
       'taxonomy' => 'post_tag',
