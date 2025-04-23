@@ -1,0 +1,14 @@
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore node/npm stuff if used
+node_modules/
+
+# Ignore SASS or build artifacts
+*.log
+*.tmp
+*.bak*
+
+# Optional: exclude compiled files if you track only source
+dist/
