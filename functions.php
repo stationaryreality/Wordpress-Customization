@@ -16,6 +16,18 @@ add_post_type_support('page', 'excerpt');
 
 #error_log('This is a custom test message');
 
+
+add_action('load-edit.php', function () {
+    $screen = get_current_screen();
+
+    // Only affect posts (or change 'post' to your custom post type)
+    if ($screen->post_type == 'post' && !isset($_GET['post_status']) && !isset($_GET['all_posts'])) {
+        wp_redirect(admin_url('edit.php?post_status=publish&post_type=post'));
+        exit;
+    }
+});
+
+
 function get_blocks_by_anchor($target_anchors = []) {
     $matching_blocks = [];
 
