@@ -19,11 +19,11 @@ get_header(); ?>
   if ($query->have_posts()) :
     echo '<div class="tag-posts-grid">';
     while ($query->have_posts()) : $query->the_post(); ?>
-      <div class="tag-post-item">
-        <a href="<?php the_permalink(); ?>" class="tag-post-thumbnail">
-          <?php if (has_post_thumbnail()) : ?>
-            <img src="<?php the_post_thumbnail_url('custom-featured'); ?>" alt="<?php the_title(); ?>">
-          <?php endif; ?>
+     <div class="tag-post-item">
+    <a href="<?php the_permalink(); ?>" class="tag-post-thumbnail">
+      <?php if (has_post_thumbnail()) : ?>
+        <img src="<?php the_post_thumbnail_url('medium'); ?>" alt="<?php the_title(); ?>">
+      <?php endif; ?>
         </a>
         <a href="<?php the_permalink(); ?>" class="tag-post-title"><?php the_title(); ?></a>
         <p class="tag-post-excerpt"><?php the_excerpt(); ?></p>
@@ -54,15 +54,16 @@ get_header(); ?>
     echo '<h2 class="page-section-title">Site Pages</h2>';
     echo '<div class="tag-posts-grid">'; // reuse the same grid class
     while ($pages_query->have_posts()) : $pages_query->the_post(); ?>
-      <div class="tag-post-item">
-        <a href="<?php the_permalink(); ?>" class="tag-post-thumbnail">
-          <?php if (has_post_thumbnail()) : ?>
-            <img src="<?php the_post_thumbnail_url('custom-featured'); ?>" alt="<?php the_title(); ?>">
-          <?php endif; ?>
-        </a>
-        <a href="<?php the_permalink(); ?>" class="tag-post-title"><?php the_title(); ?></a>
-        <p class="tag-post-excerpt"><?php the_excerpt(); ?></p>
-      </div>
+  <div class="tag-post-item">
+  <a href="<?php the_permalink(); ?>" class="tag-post-thumbnail">
+    <?php if (has_post_thumbnail()) : ?>
+      <img src="<?php the_post_thumbnail_url('medium'); ?>" alt="<?php the_title(); ?>">
+    <?php endif; ?>
+  </a>
+  <a href="<?php the_permalink(); ?>" class="tag-post-title"><?php the_title(); ?></a>
+  <p class="tag-post-excerpt"><?php the_excerpt(); ?></p>
+</div>
+
     <?php endwhile;
     echo '</div>';
     wp_reset_postdata();
