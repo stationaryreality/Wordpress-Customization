@@ -14,4 +14,6 @@ node_modules/
 dist/
 
 # Ignore fonts folder
-/wp-content/themes/your-child-theme/fonts/
+/wp-content/themes/your-child-theme/fonts/*
+!folder-name/fonts.css
+
