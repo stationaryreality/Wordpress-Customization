@@ -177,3 +177,27 @@ add_action('acf/init', function () {
 });
 
 
+// Disable Author Archives and show 404 page properly
+add_action('template_redirect', function() {
+    if (is_author()) {
+        global $wp_query;
+        $wp_query->set_404();
+        status_header(404);
+        nocache_headers();
+        // Load the theme's 404 page
+        include( get_query_template( '404' ) );
+        exit;
+    }
+});
+
+// Dequeue Google Fonts in the Parent Theme
+function child_theme_remove_google_fonts() {
+    wp_dequeue_style('ct-author-google-fonts'); // Replace this with the correct handle from the parent theme
+}
+add_action('wp_enqueue_scripts', 'child_theme_remove_google_fonts', 20); // The 20 ensures it runs after the parent theme's script
+
+
+function child_theme_enqueue_custom_fonts() {
+    wp_enqueue_style('custom-fonts', get_stylesheet_directory_uri() . '/fonts/fonts.css');
+}
+add_action('wp_enqueue_scripts', 'child_theme_enqueue_custom_fonts');

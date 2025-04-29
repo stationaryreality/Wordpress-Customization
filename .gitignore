@@ -12,3 +12,6 @@ node_modules/
 
 # Optional: exclude compiled files if you track only source
 dist/
+
+# Ignore fonts folder
+/wp-content/themes/your-child-theme/fonts/
