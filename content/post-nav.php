@@ -1,53 +1,39 @@
-<?php
+<?php get_header(); ?>
 
-global $post;
+<div id="loop-container" class="loop-container">
+  <div class="tag-posts-grid">
 
-$previous_post = get_adjacent_post( false, '', true );
-$previous_text = esc_html__( 'Next Post', 'author' );
+    <!-- Previous Post -->
+    <?php
+    $previous_post = get_adjacent_post( false, '', true ); // Get the previous post
+    if ( $previous_post ) : ?>
+      <div class="previous-post">
+        <h2>Next Post</h2>
+        <div class="post-thumbnail">
+          <a href="<?php echo get_permalink( $previous_post->ID ); ?>">
+            <?php echo get_the_post_thumbnail( $previous_post->ID, 'medium' ); ?>
+          </a>
+        </div>
+        <h3><a href="<?php echo get_permalink( $previous_post->ID ); ?>"><?php echo get_the_title( $previous_post->ID ); ?></a></h3>
+      </div>
+    <?php endif; ?>
 
-if ( $previous_post == '' ) {
-	$previous_text  = esc_html__( 'No Newer Posts', 'author' );
-	if ( get_option( 'show_on_front' ) == 'page' ) {
-		$previous_url = get_permalink( get_option( 'page_for_posts' ) );
-	} else {
-		$previous_url = get_home_url();
-	}
-	$previous_link = '<a href="' . esc_url( $previous_url ) . '">' . esc_html__( 'Return to Blog', 'author' ) . '</a>';
-}
+    <!-- Next Post -->
+    <?php
+    $next_post = get_adjacent_post( false, '', false ); // Get the next post
+    if ( $next_post ) : ?>
+      <div class="next-post">
+        <h2>Previous Post</h2>
+        <div class="post-thumbnail">
+          <a href="<?php echo get_permalink( $next_post->ID ); ?>">
+            <?php echo get_the_post_thumbnail( $next_post->ID, 'medium' ); ?>
+          </a>
+        </div>
+        <h3><a href="<?php echo get_permalink( $next_post->ID ); ?>"><?php echo get_the_title( $next_post->ID ); ?></a></h3>
+      </div>
+    <?php endif; ?>
+  
+  </div>
+</div>
 
-$next_post  = get_adjacent_post( false, '', false );
-$next_text  = esc_html__( 'Previous Post', 'author' );
-
-if ( $next_post == '' ) {
-	$next_text  = esc_html__( 'No Older Posts', 'author' );
-	if ( get_option( 'show_on_front' ) == 'page' ) {
-		$next_url = get_permalink( get_option( 'page_for_posts' ) );
-	} else {
-		$next_url = get_home_url();
-	}
-	$next_link = '<a href="' . esc_url( $next_url ) . '">' . esc_html__( 'Return to Blog', 'author' ) . '</a>';
-}
-
-?>
-<nav class="further-reading">
-	<div class="previous">
-		<span><?php echo esc_html( $previous_text ); ?></span>
-		<?php
-		if ( $previous_post == '' ) {
-			echo $previous_link;
-		} else {
-			previous_post_link( '%link' );
-		}
-		?>
-	</div>
-	<div class="next">
-		<span><?php echo esc_html( $next_text ); ?></span>
-		<?php
-		if ( $next_post == '' ) {
-			echo $next_link;
-		} else {
-			next_post_link( '%link' );
-		}
-		?>
-	</div>
-</nav>
+<?php get_footer(); ?>
