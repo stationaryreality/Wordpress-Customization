@@ -1,203 +1,111 @@
-<?php 
+<?php
 
+// Enqueue parent and child theme styles
 function ct_author_child_enqueue_styles() {
+    $parent_style = 'ct-author-style';
 
-  $parent_style = 'ct-author-style';
-
-  wp_enqueue_style( $parent_style, get_template_directory_uri() . '/style.css' );
-  wp_enqueue_style( 'ct-author-child-style',
-      get_stylesheet_directory_uri() . '/style.css',
-      array( $parent_style )
-  );
+    wp_enqueue_style($parent_style, get_template_directory_uri() . '/style.css');
+    wp_enqueue_style('ct-author-child-style',
+        get_stylesheet_directory_uri() . '/style.css',
+        array($parent_style)
+    );
 }
-add_action( 'wp_enqueue_scripts', 'ct_author_child_enqueue_styles' );
+add_action('wp_enqueue_scripts', 'ct_author_child_enqueue_styles');
 
+// Enable excerpts for Pages
 add_post_type_support('page', 'excerpt');
 
-#error_log('This is a custom test message');
-
-
+// Redirect default Posts admin screen to show only published posts
 add_action('load-edit.php', function () {
     $screen = get_current_screen();
-
-    // Only affect posts (or change 'post' to your custom post type)
     if ($screen->post_type == 'post' && !isset($_GET['post_status']) && !isset($_GET['all_posts'])) {
         wp_redirect(admin_url('edit.php?post_status=publish&post_type=post'));
         exit;
     }
 });
 
-
+// [Optional] Utility: Search blocks by anchor across Posts (keep only if you still use this)
 function get_blocks_by_anchor($target_anchors = []) {
     $matching_blocks = [];
-
     $args = [
-
-	'post_type' => ['post'],
-	'posts_per_page' => -1,
-        'post_status'    => 'publish',
+        'post_type' => ['post'],
+        'posts_per_page' => -1,
+        'post_status' => 'publish',
     ];
     $query = new WP_Query($args);
-
     while ($query->have_posts()) {
         $query->the_post();
         $blocks = parse_blocks(get_the_content());
-
         foreach ($blocks as $block) {
             if (!empty($block['attrs']['anchor']) && in_array($block['attrs']['anchor'], $target_anchors)) {
                 $matching_blocks[] = $block;
             }
         }
     }
-
     wp_reset_postdata();
     return $matching_blocks;
 }
 
 
-function load_block_editor_styles_frontend() {
-    if (is_page_template('template-lexicon.php')) {
-        // Ensures global block styles (like Cover, Paragraph, etc.) are loaded
-        wp_enqueue_style('wp-block-library');
-	wp_enqueue_style('wp-block-library-theme');
-
-    }
-}
-add_action('wp_enqueue_scripts', 'load_block_editor_styles_frontend');
 
 
-add_action('acf/init', 'register_acf_photo_block');
-function register_acf_photo_block() {
-    if( function_exists('acf_register_block_type') ) {
-        acf_register_block_type([
-            'name'              => 'photo-block',
-            'title'             => 'Photo Block',
-            'description'       => 'A block that displays an image with a caption and source.',
-            'render_template'   => 'template-parts/blocks/photo-block.php',
-            'category'          => 'formatting',
-            'icon'              => 'format-image',
-            'keywords'          => ['photo', 'image', 'caption'],
-            'mode'              => 'preview',
-            'supports'          => [
-                'align' => ['full', 'wide']
-            ],
-        ]);
-    }
-}
-
-
-
-
-add_action('acf/init', 'register_chapter_header_block');
-function register_chapter_header_block() {
-    if( function_exists('acf_register_block_type') ) {
-        acf_register_block_type(array(
-            'name'              => 'chapter-header',
-            'title'             => __('Chapter Header'),
-            'description'       => __('Displays artist headshot, name, and song title.'),
-            'render_template'   => get_theme_file_path('/template-parts/blocks/chapter-header.php'),
-            'category'          => 'formatting',
-            'icon'              => 'format-image',
-            'keywords'          => array('chapter', 'header', 'artist'),
-            'mode'              => 'edit',
-            'supports'          => array(
-                'align' => true,
-                'mode' => true,
-                'jsx' => true
-            ),
-        ));
-    }
-}
-
-
-add_action('acf/init', function () {
-    acf_register_block_type([
-        'name'            => 'chapter-notes',
-        'title'           => 'Chapter Notes',
-        'render_template' => 'template-parts/blocks/chapter-notes.php',
-        // Add rest of your config here...
-    ]);
-});
-
-
-
-
-
-add_action('acf/init', function () {
-    acf_register_block_type([
-        'name' => 'quote-cover',
-        'title' => 'Quote Cover Block',
-        'description' => 'Displays a stylized quote with background, headshot, and attribution.',
-        'render_template' => 'template-parts/blocks/quote-cover.php',
-        'category' => 'formatting',
-        'icon' => 'format-quote',
-        'keywords' => ['quote', 'cover', 'author'],
-        'mode' => 'preview',
-        'supports' => [
-            'align' => false,
-        ]
-    ]);
-});
-
-
-
-function render_quote_cover_block($block) {
-    $quote_text = get_field('quote_text');
-    $attribution = get_field('attribution');
-    $headshot = get_field('headshot_image');
-    $background = get_field('background_image');
-    $overlay_opacity = get_field('overlay_opacity');
-    $quote_type = get_field('quote_type');
-    $footnote = get_field('footnote_text');
-
-    $is_wiki_style = in_array($quote_type, ['wikipedia', 'movie']);
-    $headshot_class = $is_wiki_style ? 'headshot-thumbnail right' : 'headshot-rounded centered';
-
-    // Include the template file manually
-    include get_theme_file_path('/template-parts/blocks/quote-cover.php');
-}
-
-
-
-add_action('acf/init', function () {
-    acf_register_block_type([
-        'name' => 'cover-block',
-        'title' => 'Cover Block',
-        'description' => 'Generic base cover block with optional background and overlay.',
-        'render_template' => 'template-parts/blocks/cover-block.php',
-        'category' => 'formatting',
-        'icon' => 'cover-image',
-        'keywords' => ['cover', 'background', 'overlay'],
-        'mode' => 'preview',
-        'supports' => [
-            'align' => true,
-            'anchor' => true,
-        ],
-    ]);
-});
-
-
-// Disable Author Archives and show 404 page properly
-add_action('template_redirect', function() {
+// Disable Author Archive pages (redirect to 404)
+add_action('template_redirect', function () {
     if (is_author()) {
         global $wp_query;
         $wp_query->set_404();
         status_header(404);
         nocache_headers();
-        // Load the theme's 404 page
-        include( get_query_template( '404' ) );
+        include(get_query_template('404'));
         exit;
     }
 });
 
-// Dequeue Google Fonts in the Parent Theme
+// Remove Google Fonts from Parent Theme
 function child_theme_remove_google_fonts() {
-    wp_dequeue_style('ct-author-google-fonts'); // Replace this with the correct handle from the parent theme
+    wp_dequeue_style('ct-author-google-fonts'); // Update handle if needed
 }
-add_action('wp_enqueue_scripts', 'child_theme_remove_google_fonts', 20); // The 20 ensures it runs after the parent theme's script
+add_action('wp_enqueue_scripts', 'child_theme_remove_google_fonts', 20);
 
-
+// Load custom local fonts
 function child_theme_enqueue_custom_fonts() {
     wp_enqueue_style('custom-fonts', get_stylesheet_directory_uri() . '/fonts/fonts.css');
 }
 add_action('wp_enqueue_scripts', 'child_theme_enqueue_custom_fonts');
+
+
+// =====================================================
+// Disable Comments Site-Wide
+// =====================================================
+add_action('init', function() {
+    foreach (get_post_types() as $post_type) {
+        if (post_type_supports($post_type, 'comments')) {
+            remove_post_type_support($post_type, 'comments');
+            remove_post_type_support($post_type, 'trackbacks');
+        }
+    }
+});
+add_filter('comments_open', '__return_false', 20, 2);
+add_filter('pings_open', '__return_false', 20, 2);
+add_filter('comments_array', '__return_empty_array', 10, 2);
+add_action('admin_menu', function() {
+    remove_menu_page('edit-comments.php');
+});
+add_action('init', function() {
+    if (is_admin_bar_showing()) {
+        remove_action('admin_bar_menu', 'wp_admin_bar_comments_menu', 60);
+    }
+});
+
+// =====================================================
+// Disable RSS Feeds
+// =====================================================
+add_action('do_feed', 'disable_feeds', 1);
+add_action('do_feed_rdf', 'disable_feeds', 1);
+add_action('do_feed_rss', 'disable_feeds', 1);
+add_action('do_feed_rss2', 'disable_feeds', 1);
+add_action('do_feed_atom', 'disable_feeds', 1);
+function disable_feeds() {
+    wp_die(__('No feed available, please visit the homepage.'));
+}
+
