@@ -1,1 +1,73 @@
-<h1>Welcome to my tech showcase</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Web Projects & Tools</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    h1, h2 {
+      color: #2c3e50;
+    }
+    a {
+      color: #007acc;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .section {
+      margin-bottom: 2em;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Welcome to My Site Management Toolkit</h1>
+  <p>This page documents tools, setups, and techniques I use to manage and secure my WordPress site and VPS.</p>
+
+  <div class="section">
+    <h2>🧰 Tools & Technologies</h2>
+    <ul>
+      <li>WordPress Child Theme Customizations</li>
+      <li>Advanced Custom Fields (ACF)</li>
+      <li>Cloudflare DNS & Email Routing</li>
+      <li>YubiKey Authentication</li>
+      <li>Git Version Control</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>📘 Guides & Resources</h2>
+    <ul>
+      <li><a href="#vps-setup">VPS Setup & Security Guide</a></li>
+      <li><a href="#email-routing">Email Routing via Cloudflare</a></li>
+      <li><a href="#wordpress-hardening">Hardening WordPress</a></li>
+    </ul>
+  </div>
+
+  <div class="section" id="vps-setup">
+    <h2>VPS Setup & Security</h2>
+    <p>Details on configuring your VPS, setting up SSH, firewalls, fail2ban, and secure deployments.</p>
+  </div>
+
+  <div class="section" id="email-routing">
+    <h2>Email Routing & Contact Form Replies</h2>
+    <p>How I configured MailPoet + Cloudflare + Gmail to receive replies to contact forms and newsletters securely.</p>
+  </div>
+
+  <div class="section" id="wordpress-hardening">
+    <h2>WordPress Hardening Techniques</h2>
+    <p>Includes disabling XML-RPC, moving login paths, rate limiting, and secure file permissions.</p>
+  </div>
+
+</body>
+</html>
