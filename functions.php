@@ -24,7 +24,7 @@ add_action('load-edit.php', function () {
     }
 });
 
-// [Optional] Utility: Search blocks by anchor across Posts (keep only if you still use this)
+// [Search blocks by anchor across CPTS, future linking tool
 function get_blocks_by_anchor($target_anchors = []) {
     $matching_blocks = [];
     $args = [
