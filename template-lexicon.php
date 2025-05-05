@@ -11,7 +11,7 @@ if ( has_post_thumbnail() ) {
 }
 ?>
 <BR><BR>
-<!-- Move Lexicon heading here, outside the main content -->
+
 <h1 class="lexicon-title">Lexicon:</h1>
 
 <div class="page-content">
@@ -19,8 +19,6 @@ if ( has_post_thumbnail() ) {
 </div>
 
 <main class="lexicon-page" style="max-width:800px; margin:2rem auto;">
-    <!-- Removed <h1>Lexicon:</h1> and empty div with 2rem margin -->
-
 
   <?php
   $terms = get_terms([
