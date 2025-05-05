@@ -26,14 +26,15 @@
       margin: auto;
     }
 
-    .card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      overflow: hidden;
-      text-align: center;
-      transition: transform 0.2s ease;
-    }
+    .card img {
+  display: block;
+  margin-top: 15px; /* Add space above image */
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
+  height: auto;
+}
+
 
     .card:hover {
       transform: translateY(-5px);
@@ -63,10 +64,6 @@
   <h1>Digital Craft</h1>
 
   <div class="grid">
-    <a href="github.html" class="card">
-      <img src="github.svg" alt="GitHub">
-      <h3>GitHub for WordPress Customization</h3>
-    </a>
     <a href="vps.html" class="card">
       <img src="server.png" alt="VPS Setup">
       <h3>VPS Setup (Linode/Akamai)</h3>
@@ -82,6 +79,10 @@
     <a href="wordpress.html" class="card">
       <img src="images/wp.png" alt="WordPress">
       <h3>WordPress Install & Plugins</h3>
+    </a>
+    <a href="github.html" class="card">
+      <img src="github.svg" alt="GitHub">
+      <h3>GitHub for WordPress Customization</h3>
     </a>
     <a href="email.html" class="card">
       <img src="images/email.png" alt="Email">
