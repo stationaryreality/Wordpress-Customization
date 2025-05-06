@@ -108,4 +108,3 @@ add_action('do_feed_atom', 'disable_feeds', 1);
 function disable_feeds() {
     wp_die(__('No feed available, please visit the homepage.'));
 }
-
