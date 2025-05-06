@@ -51,7 +51,7 @@ get_header(); ?>
   $pages_query = new WP_Query($page_args);
 
   if ($pages_query->have_posts()) :
-    echo '<h2 class="page-section-title">Site Pages</h2>';
+    echo '<h2 class="page-section-title">Site Resources</h2>';
     echo '<div class="tag-posts-grid">'; // reuse the same grid class
     while ($pages_query->have_posts()) : $pages_query->the_post(); ?>
   <div class="tag-post-item">
