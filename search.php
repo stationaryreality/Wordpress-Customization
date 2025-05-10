@@ -3,7 +3,7 @@
 <?php
 // Show all search results on one page
 $query = $wp_query;
-$query->query_vars['posts_per_page'] = -1;
+$query->set('posts_per_page', -1);
 $query->get_posts();
 ?>
 
