@@ -24,6 +24,15 @@ add_action('load-edit.php', function () {
     }
 });
 
+
+function limit_search_to_chapters($query) {
+    if (!is_admin() && $query->is_main_query() && $query->is_search()) {
+        $query->set('post_type', 'chapter');
+    }
+}
+add_action('pre_get_posts', 'limit_search_to_chapters');
+
+
 // [Search blocks by anchor across CPTS, future linking tool
 function get_blocks_by_anchor($target_anchors = []) {
     $matching_blocks = [];
@@ -47,6 +56,31 @@ function get_blocks_by_anchor($target_anchors = []) {
 }
 
 
+// Disable Chapter Archives Completely
+function disable_chapter_archives() {
+    if (is_archive() && 'chapter' == get_post_type()) {
+        wp_die('Archives are disabled.'); // Same as above, or use wp_redirect() if you'd like
+    }
+}
+add_action('template_redirect', 'disable_chapter_archives');
+
+
+// Disable Category Archives for Posts
+function disable_category_archives_for_posts() {
+    if (is_category() && 'post' == get_post_type()) {
+        wp_die('Category Archives are disabled for Posts.');
+    }
+}
+add_action('template_redirect', 'disable_category_archives_for_posts');
+
+
+// Disable Category Archives for Chapters
+function disable_category_archives_for_chapters() {
+    if (is_category() && 'chapter' == get_post_type()) {
+        wp_die('Category Archives are disabled for Chapters.');
+    }
+}
+add_action('template_redirect', 'disable_category_archives_for_chapters');
 
 
 // Disable Author Archive pages (redirect to 404)
