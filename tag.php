@@ -4,9 +4,9 @@
   <h1>Posts tagged: <?php single_tag_title(); ?></h1>
 
   <?php
-  // Custom query to show all posts without pagination
+  // Show both posts and chapters with this tag
   $args = array(
-      'post_type' => 'post',
+      'post_type' => array('chapter'), // You can include 'post' here too if needed
       'posts_per_page' => -1,
       'tag' => get_queried_object()->slug
   );
