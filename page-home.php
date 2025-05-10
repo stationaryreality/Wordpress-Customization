@@ -7,14 +7,15 @@ get_header(); ?>
   <h1>Narrative Threads</h1>
 
   <?php
-  // Posts Grid
+  // Chapters Grid
   $args = array(
-    'post_type' => 'post',
-    'posts_per_page' => -1, // show all posts
+    'post_type' => 'chapter', // changed from 'post' to 'chapter'
+    'posts_per_page' => -1,
     'orderby' => 'date',
     'order' => 'DESC'
   );
   $query = new WP_Query($args);
+
 
   if ($query->have_posts()) :
     echo '<div class="tag-posts-grid">';
