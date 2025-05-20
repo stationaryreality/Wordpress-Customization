@@ -40,12 +40,31 @@ get_header(); ?>
   <hr style="margin: 4em auto; max-width: 80%; border: 0; border-top: 1px solid #ccc;">
 
   <?php
+
+
+// exclusion code for mailpoet pages
+
+$excluded_slugs = array(
+  'subscription-confirmed',
+  'unsubscribe',
+  'unsubscribed',
+  'manage-subscription'
+);
+
+$excluded_ids = get_posts(array(
+  'post_type' => 'page',
+  'fields' => 'ids',
+  'post_name__in' => $excluded_slugs,
+  'posts_per_page' => -1,
+));
+
+
   // Pages Grid
   $page_args = array(
     'post_type' => 'page',
     'post_status' => 'publish',
     'posts_per_page' => -1,
-    'post__not_in' => array(get_the_ID()), // Exclude the current page (Home)
+  'post__not_in'   => array_merge(array(get_the_ID()), $excluded_ids), // exclude MailPoet & home
     'orderby' => 'menu_order',
     'order' => 'ASC'
   );
