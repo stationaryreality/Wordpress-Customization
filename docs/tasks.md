@@ -1,4 +1,9 @@
-# ✅ Completed Tasks
+---
+layout: default
+title: ✅ Completed Tasks
+---
+
+## ✅ Completed Tasks
 
 A broad overview of the core technical work behind this site — from the initial server setup to ongoing configuration, optimization, and custom development. This page will remain a high-level reference and summary, with each major area having its own breakdown page over time.
 
