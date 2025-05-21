@@ -52,7 +52,7 @@ title: Current & Future Tasks
 
 ## 🧠 Long-Term Vision
 
-> “Once situated, I want to be able to simply grab a book, a PDF, or a video/transcript and extract useful content into my site as chapters — or into a pool for future integration — and display it all cleanly, even before final curation.”
+> “Once situated, I want to be able to simply grab a book, a PDF, or a video/transcript and extract useful content into my site chapters — or into a pool for future integration — and display it all cleanly, even before final curation.”
 
 - Create systems to:
   - Quickly enter, organize, and publish knowledge in phases.
