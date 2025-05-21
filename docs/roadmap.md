@@ -17,7 +17,7 @@ title: Current & Future Tasks
 ## 🧪 Experiments & Possibilities
 
 - 🔁 **Install NGINX alongside Apache**
-  - Goal: Serve `dev.mydomain.com` on the same VPS.
+  - Goal: Serve `dev.stationaryreality.com` on the same VPS.
   - May eventually:
     - Replace GitHub Pages if it’s more effective.
     - Or run in parallel for hands-on guides and experimentation.
@@ -47,6 +47,15 @@ title: Current & Future Tasks
 - 🖼️ **Replace Cover Blocks**
   - Replace most visual elements with **WebP screenshots** for better consistency and file management.
   - Keep cover blocks for desktop, while simplifying dynamic views.
+
+---
+
+## 📬 Contact & Newsletter Integration
+
+- Started setting up **MailPoet** for email newsletter sign-up and site update notifications.
+- Configured **Cloudflare Email Routing** with a catch-all address to handle site mail.
+- Updated **Sender (SMTP) settings** for MailPoet delivery configuration.
+- Installed a separate **Forms plugin** to support a simple local contact form for user messages.
 
 ---
 
