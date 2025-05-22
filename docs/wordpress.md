@@ -33,7 +33,7 @@ You can keep things simple or build something extremely custom—and you don't h
 
 ### 💻 GitHub and Version Control
 
-Every time I make a change to my theme or WordPress configuration, I push it to my public [GitHub](https://github.com/) repository. This is both for transparency and version control. If something breaks or I want to undo a change, Git lets me roll back to an earlier version.
+Every time I make a change to my theme or WordPress configuration, I push it to my public [GitHub](https://github.com/stationaryreality/Wordpress-Customization) repository. This is both for transparency and version control. If something breaks or I want to undo a change, Git lets me roll back to an earlier version.
 
 In fact, this page you're reading is served as a static HTML file via GitHub Pages, but if you visit my **WordPress Customization** repo, you’ll see all the code and modifications I’ve made to shape my site beyond the defaults.
 

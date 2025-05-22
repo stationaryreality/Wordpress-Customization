@@ -14,7 +14,7 @@ Since Debian is minimal and stable, it doesn’t include a graphical interface. 
 To access the server, I use the Terminal on my Mac and run:
 
 ```bash
-ssh username@domainname.com
+ssh username@stationaryreality.com
 ````
 
 This connects me securely using SSH keys I set up when I created the server. My private key is stored securely on my Mac and unlocked with a passphrase. The public key is installed on the server. This authentication method ensures only I can connect.

@@ -9,7 +9,7 @@ All servers on the internet are ultimately accessed through IP addresses—uniqu
 
 My main domain cost $9 for the first year. I also picked up the `.net` and `.xyz` variants for $6 each. When all three expired, I renewed them for two years, bringing the total to about $120. That might seem like a lot, but for three domains over two years, it’s a reasonable investment—especially if you’re planning to expand or protect your name long term.
 
-Even subdomains like `dev.mydomain.com` are completely free to create and behave similarly to full domains. I plan to use this for more technical documentation using NGINX in the future.
+Once you own a domain, subdomains like `dev.stationaryreality.com` are completely free to create and behave similarly to full domains. I plan to use this for more technical documentation using NGINX in the future.
 
 When you factor in both the $5/month Linode server and the domain registration cost, my entire setup still averages out to about **$6.41 per month**—not bad for a fully functional website.
 

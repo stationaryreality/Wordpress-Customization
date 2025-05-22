@@ -21,4 +21,4 @@ Only after all this did I install WordPress. It runs on top of the LAMP stack an
 
 ---
 
-This page isn’t a how-to guide — it’s a snapshot of how I personally run and secure my site. If I end up publishing full step-by-step instructions, those will live on my secondary domain, `dev.mydomain.com`. This section, and the rest of this GitHub Pages site, is here to document what I’ve actually done — and what’s still ahead.
+This page isn’t a how-to guide — it’s a snapshot of how I personally run and secure my site. If I end up publishing full step-by-step instructions, those will live on my secondary domain, `dev.stationaryreality.com`. This section, and the rest of this GitHub Pages site, is here to document what I’ve actually done — and what’s still ahead.
