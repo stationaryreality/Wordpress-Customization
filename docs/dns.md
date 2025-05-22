@@ -11,7 +11,7 @@ My main domain cost $9 for the first year. I also picked up the `.net` and `.xyz
 
 Even subdomains like `dev.mydomain.com` are completely free to create and behave similarly to full domains. I plan to use this for more technical documentation using NGINX in the future.
 
-When you factor in both the $5/month Linode server and the domain registration cost, my entire setup still averages out to about **$6.41 per month**—not bad for a fully functional, globally accessible website.
+When you factor in both the $5/month Linode server and the domain registration cost, my entire setup still averages out to about **$6.41 per month**—not bad for a fully functional website.
 
 ### 🧭 How Domain Names Work
 
@@ -21,7 +21,7 @@ I originally registered my domains through Namecheap. At first, they were the au
 
 Later, I moved DNS management to **Cloudflare**, which offers free DNS services and even more powerful features like caching and content delivery. And yes—**it’s free** for small-scale sites like mine.
 
-### 🚀 CDN: Cloudflare as a Global Proxy
+### 🚀 CDN: Cloudflare as a Worldwide Proxy
 
 Cloudflare doesn’t just handle DNS—it also acts as a **Content Delivery Network (CDN)**. This means users around the world connect to the closest Cloudflare server instead of directly hitting my VPS. That server either serves cached versions of my site or pulls it from the origin server (my Linode VPS) if needed.
 
@@ -30,5 +30,3 @@ This greatly reduces the load on my VPS and speeds up performance for users in d
 I'll talk more about that in my [Security and Hardening](security.md) section.
 
 ---
-
-With just a $5/month server and some free tools, you can build a fast, secure, and globally distributed website. That’s the power of open source and smart configuration.
