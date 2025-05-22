@@ -1,6 +1,3 @@
-Here's your generated `linux.md` page in the same style and tone as your previous ones—reflecting your hands-on approach while being insightful for others who might want to run their own VPS:
-
-````markdown
 ---
 layout: default
 title: Linux Server Configuration
