@@ -1,6 +1,6 @@
 ---
 layout: default
-title: ✅ Completed Tasks
+title: Completed Tasks
 ---
 
 ## ✅ Completed Tasks
