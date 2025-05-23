@@ -22,14 +22,15 @@
     text-align: center;
   }
 
-    .grid {
+.grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* allows up to 6 columns */
   gap: 1.5rem;
   padding: 2rem;
-  max-width: 1200px;
+  max-width: 1440px; /* expands the layout width */
   margin: auto;
 }
+
 
 
     .card img {
@@ -51,7 +52,7 @@
       height: 180px;
       object-fit: contain;
       background: #fff;
-    }
+    }    
 
     .card h3 {
       padding: 1rem;
