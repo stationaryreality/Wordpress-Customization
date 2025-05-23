@@ -28,36 +28,40 @@
   gap: 1.5rem;
   padding: 2rem;
   max-width: 1600px;
-  margin: auto;
+  height: 100vh; /* Full viewport height */
+  box-sizing: border-box;
+  align-content: center; /* Center grid vertically if there's extra space */
 }
 
-    .card img {
-  display: block;
-  margin-top: 15px; /* Add space above image */
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 100%;
-  height: auto;
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc((100vh - 6rem - 4rem) / 3); /* Adjust for header/padding */
+  overflow: hidden;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
 }
 
+.card:hover {
+  transform: translateY(-5px);
+}
 
-    .card:hover {
-      transform: translateY(-5px);
-    }
+.card img {
+  width: 100%;
+  height: 100px; /* Adjust as needed */
+  object-fit: contain;
+  background: #fff;
+}
 
-    .card img {
-      width: 100%;
-      height: 180px;
-      object-fit: contain;
-      background: #fff;
-    }    
-
-    .card h3 {
-      padding: 1rem;
-      font-size: 1.1rem;
-      margin: 0;
-      text-align: center;
-    }
+.card h3 {
+  padding: 0.5rem;
+  font-size: 0.95rem;
+  margin: 0;
+  text-align: center;
+}
 
     a {
       text-decoration: none;
