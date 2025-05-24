@@ -3,8 +3,6 @@ layout: default
 title: Content Structure & Taxonomy
 ---
 
-## Content Structure & Taxonomy
-
 I’ve touched on this in the [image strategy](/image-strategy), but this document explains the deeper realization behind my current taxonomy and the significance of what I’m trying to build.
 
 ### 💡 The Spark: Anchor Tags & Cover Blocks

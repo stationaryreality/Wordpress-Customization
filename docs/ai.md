@@ -3,7 +3,7 @@ layout: default
 title: Using AI in Site Development
 ---
 
-## 🤖 Using AI in Site Development
+## 🤖 Using Artificial Intelligence
 
 AI can be polarizing. The term "AI slop" captures a legitimate concern: low-effort, mass-generated content that clutters platforms like YouTube. We've all seen the AI-generated thumbnails and auto-assembled videos filled with scraped media. While sometimes serviceable, they often lack depth and intention.
 

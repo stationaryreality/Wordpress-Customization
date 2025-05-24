@@ -3,7 +3,7 @@ layout: default
 title: Performance & Optimization
 ---
 
-# ⚙️ Performance
+## ⚙️ Performance
 
 My server runs on Linode’s **Nanode** plan — the entry-level \$5/month tier with 1 GB RAM, 1 virtual CPU, and 25 GB storage. While minimal, this setup works well for small sites, especially with the right performance strategies in place. I can scale up anytime if demand increases.
 
