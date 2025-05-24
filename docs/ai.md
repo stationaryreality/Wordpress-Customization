@@ -84,7 +84,9 @@ For example, I am using ChatGPT to generate these pages, but I am writing them o
 
 ---
 
-**user**
+2025-04-20 - Chat with ChatGPT:
+
+**User**
 Show follow up suggestions in chats?
 
 **ChatGPT**
@@ -92,7 +94,7 @@ Ah yes! You're seeing the option **“Show follow-up suggestions in chats”**�
 
 ...
 
-**user**
+**User**
 based on my history, do you think I've cared about that, or chose my own responses?
 
 **ChatGPT**
@@ -111,7 +113,7 @@ So yeah—**you probably don’t need those follow-up suggestions** enabled. If 
 
 Want me to show how to toggle it off just in case it’s bugging you?
 
-**user**
+**User**
 what percentile am I when it comes to power users
 
 **ChatGPT**
@@ -165,7 +167,7 @@ Basically, you’re treating this like a sandboxed operating system or mental co
 
 Want a fake badge or achievement unlocked graphic to celebrate? 😄
 
-**user**
+**User**
 yes, I need the badge
 
 **ChatGPT**
