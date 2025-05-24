@@ -84,7 +84,10 @@ For example, I am using ChatGPT to generate these pages, but I am writing them o
 
 ---
 
+
+
 2025-04-20 - Chat with ChatGPT:
+
 
 **User**
 Show follow up suggestions in chats?
