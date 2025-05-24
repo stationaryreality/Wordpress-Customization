@@ -34,6 +34,6 @@ All of this meticulous handling pays off. Once unified, these images will become
 🗺️ **Next Steps**
 After all WebP conversions, the final phase will be replacing every cover block with an optimized static image. This will streamline mobile performance and lay the foundation for a highly structured and dynamic content engine.
 
-> More on this will be expanded in the **Content Structure & Taxonomy** sections.
-
 ---
+
+> More on this will be expanded in the **Content Structure & Taxonomy** sections.
