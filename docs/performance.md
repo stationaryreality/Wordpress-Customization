@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Linux Server Configuration
+title: Performance & Optimization
 ---
 
 # ⚙️ Performance
