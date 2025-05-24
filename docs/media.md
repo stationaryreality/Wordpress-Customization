@@ -25,7 +25,7 @@ Initially, I underestimated the load these images would generate. I’m now conv
 * Manual replacement due to the need for exact filenames
 * Cover blocks also need to be captured and replaced with static images
 
-📸 The Power of Featured Images
+📸 **The Power of Featured Images**
 One of the most impactful upgrades I’ve made was integrating featured images. I used to ignore them, but now each chapter has its own visual identity—used both at the top of the chapter and on the main page via grid thumbnails. This graphical structure replaces the old method of forcing users to navigate via a single post view and the left-side or bottom links. Now, the visual grid allows intuitive browsing and gives each section presence. Even better, featured images enhance how my pages appear in search engine results, adding both aesthetic and practical value.
 
 🛠️ **Partial Automation with Limits**
