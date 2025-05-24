@@ -7,7 +7,7 @@ title: Linux Server Configuration
 
 My server runs on Linode’s **Nanode** plan — the entry-level \$5/month tier with 1 GB RAM, 1 virtual CPU, and 25 GB storage. While minimal, this setup works well for small sites, especially with the right performance strategies in place. I can scale up anytime if demand increases.
 
-Even with this setup, **Cloudflare’s CDN** lets me stretch performance by caching content across a global network, reducing direct load on my server.
+Even with this setup, **Cloudflare’s CDN** lets me stretch performance by caching content across a worldwide network, reducing direct load on my server.
 
 ---
 
@@ -19,7 +19,7 @@ I’m currently using **Apache**, but I’m exploring a switch to **NGINX**. NGI
 
 ## 🖼️ Image Optimization
 
-I’ve converted all images and animated GIFs to **WebP**, a modern format that offers much smaller file sizes with no noticeable quality loss. This improves load times and reduces bandwidth usage significantly.
+I’m in the process of converting all images and animated GIFs to **WebP**, a modern format that offers much smaller file sizes with no noticeable quality loss. This improves load times and reduces bandwidth usage significantly.
 
 ---
 
