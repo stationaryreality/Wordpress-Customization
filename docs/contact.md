@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Contact Systems: Email & Forms
+title: Contact Systems - Email & Forms
 ---
 
 ## 📬 Contact Systems: Email & Forms
