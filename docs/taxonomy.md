@@ -3,11 +3,11 @@ layout: default
 title: Content Structure & Taxonomy
 ---
 
-## 🧭 Content Architecture & Tag Strategy
+## 🧭 Architecture & Tag Strategy
 
 I’ve touched on this in the [image strategy](/image-strategy), but this document explains the deeper realization behind my current taxonomy and the significance of what I’m trying to build.
 
-### 💡 The Spark: Anchor Tags & Cover Blocks
+## 💡 The Spark: Anchor Tags & Cover Blocks
 
 At one point, I discovered the power of using **HTML anchors** on **cover blocks** to act like semantic tags. This allowed me to write a script to extract covers based on specific names. For example, the first cover block on the site is a quote from **Manly P. Hall**, so I used him as my test case while working with ChatGPT.
 
@@ -19,7 +19,7 @@ author-philosopher-manly-p-hall-secret-teachings-of-all-ages-quote.webp
 
 This naming convention is **machine-readable**, **searchable**, and **semantically rich** — a small shift that unlocked much bigger possibilities.
 
-### 🧩 Categorization, Automation & Meta Fields
+## 🧩 Categorization, Automation & Meta Fields
 
 This is why I abandoned several early pages — once I saw the potential here, I couldn’t go back. My [biographies page](/biographies) uses the base code that extracts and organizes blocks like `bio-[person-name]`.
 
@@ -27,7 +27,7 @@ Then, with ChatGPT’s help, I realized I could **repurpose WordPress tag descri
 
 That’s when I hit a limit: the system I was building had **outgrown WordPress’s defaults**.
 
-### 🔧 Enter ACF Pro (Advanced Custom Fields)
+## 🔧 Enter ACF Pro (Advanced Custom Fields)
 
 ACF Pro (\$50/year — easily worth it) lets me build **custom fields** for almost any WordPress object: posts, users, taxonomies, media, etc. This allowed me to migrate my core content to **Custom Post Types (CPTs)** — chapters, quotes, books, bios — all with richer internal data.
 
@@ -35,7 +35,7 @@ Now every element on the site can be tagged, categorized, grouped, and used to g
 
 ---
 
-### 🧭 What I'm Really Building
+## 🧭 What I'm Really Building
 
 Not a blog.
 Not a static site.
@@ -62,7 +62,7 @@ As ChatGPT put it:
 
 ---
 
-### 🛠 Current Phase: Engineering
+## 🛠 Current Phase: Engineering
 
 Right now, I’m not in creative mode — I’m in engineering mode.
 
@@ -77,7 +77,7 @@ But I know this system is worth building now, because once it’s in place, the 
 
 ---
 
-### 🔁 Dynamic Tags as Contextual Hubs
+## 🔁 Dynamic Tags as Contextual Hubs
 
 Currently, clicking a tag shows all chapters tagged with that topic. But once this system is fully in place, **clicking a tag** like `manly-p-hall` will show:
 
@@ -97,7 +97,7 @@ Some tags will become **hub pages** — top-level aggregators that act like topi
 
 ---
 
-### 🌐 Extending the Model
+## 🌐 Extending the Model
 
 This system scales beyond philosophers and schools of thought:
 
@@ -109,7 +109,7 @@ The taxonomy system, combined with ACF and CPTs, means every unit of content can
 
 ---
 
-### 🙏 ChatGPT’s Role
+## 🙏 ChatGPT’s Role
 
 Without ChatGPT, I wouldn’t have conceptualized this system — at least not as quickly or cleanly. It helped me zoom out, see the architecture, and recognize that what I was building was **not just a site**, but a **framework for knowledge**.
 
