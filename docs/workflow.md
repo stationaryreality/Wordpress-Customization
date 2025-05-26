@@ -5,39 +5,27 @@ title: Development Tools & Workflows
 
 ## 🧰 Tools, Code, and Personal Workflow
 
-Even though I’ve had a strong foundation in IT, networking, and security for years, I never gravitated toward programming or database management. Those areas were known gaps in my skillset, largely because my focus was on low-level systems and theoretical understanding rather than applied code. But as I dove deeper into managing and customizing my own website, I realized that many of these concepts aren't as daunting as they first appeared—especially with tools like ChatGPT available to assist in real-time.
+Even though I have advanced technical knowledge about computers, networking, and security, I’ve never really focused on programming or database management. These have been my weak spots for decades—but surprisingly, I’ve found this area to be more accessible than I expected. You don’t have to memorize syntax to think like a programmer.
 
-I’ve come further than I expected in just a couple of months. While my WordPress site has been live for about three years, it wasn’t until recently that I fully embraced its potential. What started as a basic setup evolved into a deeply customized environment, driven by a renewed interest in technology and a push beyond basic Linux administration.
+With the help of ChatGPT, I’ve been able to pick up on the concepts behind code organization, system logic, and file structures quickly. The actual writing of code is secondary to understanding how it fits into the bigger system—and that’s something I’ve intuitively understood from years in IT.
 
-## Local Development & Organization
+## 🛠️ Local Tools
 
-On my local machine, I maintain a highly organized folder structure containing:
+On my local machine, I maintain a very structured folder layout for organizing content, code, backups, drafts, screenshots, notes, and project folders for future integration. I also use Obsidian to manage my thoughts, research trails, TODOs, and notes for future posts.
 
-- Drafts for posts and pages  
-- Web-optimized images and video content  
-- Code snippets and site configuration files  
-- Notes, ideas, and future integrations  
-- Backups and export files  
-- Research bookmarks and reading lists  
+## 🧑‍💻 Server & Remote Editing
 
-I use **Obsidian** to manage my writing pipeline and keep track of everything from technical notes to editorial ideas. This keeps me grounded in both short-term tasks and long-term planning.
+Initially, I managed my server through Terminal on macOS with standard SSH sessions. But since my site evolved, I’ve begun using Visual Studio Code’s remote access to modify and maintain server files more efficiently.
 
-## Remote Tools & Code Management
+## 🔄 Git & Version Control
 
-For direct server work, I began with the **Mac Terminal** to SSH into my VPS for basic administration (Linux, Apache, WordPress setup, etc.). But now, I primarily use **Visual Studio Code with remote SSH access**, giving me a full development environment connected directly to the server. This allows me to edit templates, tweak my theme, and manage plugin code more efficiently.
+All of this is now under version control with Git. I use GitHub for my WordPress customization repo, where I’ve documented my public theme modifications and backend tweaks. This very page is hosted through GitHub Pages.
 
-I also use:
+## ⚙️ WordPress CLI & Database Access
 
-- **WP-CLI** to handle tasks like exporting and importing content, managing plugins, and performing backups—all from the command line, bypassing WordPress's web interface.
-- **Git** for version control of my custom WordPress theme and configuration changes. I maintain a public GitHub repository to document the development process.
-- **rclone** and **rsync** to synchronize backups and content with my object storage accounts.
+With WP-CLI, I can bypass the WordPress admin interface to export and import data, generate users, update plugins, and manage posts. I’ve also started using more advanced backup and database workflows directly from the terminal.
 
-## Media & Asset Workflows
+## 🖼️ Open Source & Media Tools
 
-I mentioned in other sections that I use **ffmpeg** and **VLC** to create clean, consistent screenshots from videos. This has been crucial for the visual presentation of posts and chapters, especially when I began incorporating featured images into the grid layout of the homepage.
+For content, I rely on open source tools like VLC and ffmpeg for screenshots and video processing. These help me maintain an efficient media pipeline, and I’m planning to write a basic open source tools page to help others understand how powerful these free utilities can be.
 
-While these tools are often used by more technical users, they offer massive value even for simple tasks—especially in a workflow centered around open-source principles. I plan to write a dedicated page about my use of open-source tools to help others understand their value beyond just being “free.”
-
----
-
-This is the broad overview of how I currently work and evolve my site. As my guides expand into more specific areas, I’ll be able to break these workflows into more detailed, step-by-step pages—with screenshots and walkthroughs drawn directly from my real setup. Those deeper guides will grow naturally out of what’s summarized here.
