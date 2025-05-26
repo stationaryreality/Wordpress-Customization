@@ -3,7 +3,7 @@ layout: default
 title: DNS and Content Delivery
 ---
 
-## 🌐 DNS and Content Delivery
+## 🌐 DNS Setup & CDN Integration
 
 All servers on the internet are ultimately accessed through IP addresses—unique numbers that identify them on the network. While this is how computers talk to each other, it’s not ideal for humans. That’s why I purchased a domain name, so people could visit my site using something readable instead of a numeric string.
 

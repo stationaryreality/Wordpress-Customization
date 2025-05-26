@@ -3,7 +3,7 @@ layout: default
 title: Security and Hardening
 ---
 
-## 🔐 Security and Hardening
+## 🔐 Server Security, Plugins & Attack Prevention
 
 Something unexpected happened right after I installed Apache and WordPress on my server: my log files lit up with hundreds of strange requests—every single day. These weren’t normal visits; they were automated “hacking” attempts.
 

@@ -3,7 +3,7 @@ layout: default
 title: Backup Strategies & Recovery
 ---
 
-## 🛡️ Backup Strategies & Recovery
+## 🛡️ Backup Methods, Scheduling & Recovery
 
 Backups are the most important part of any security strategy. They cut through idealism and confront the harsh reality: you can’t always prevent disaster, but you *can* always prepare for it. And in modern digital life, disasters can happen at multiple levels—even in a first-world context.
 

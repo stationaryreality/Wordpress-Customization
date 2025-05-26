@@ -3,7 +3,7 @@ layout: default
 title: WordPress Content Management
 ---
 
-## 📝 WordPress Content Management System
+## 📝 Managing WordPress Content, Themes & Plugins
 
 The software I use to manage my website is called **WordPress**. It originally began as a simple blogging platform but has since grown into a powerful content management system (CMS) that supports all kinds of websites—blogs, online stores, membership sites, learning platforms, and more.
 

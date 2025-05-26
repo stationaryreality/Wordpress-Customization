@@ -3,7 +3,7 @@ layout: default
 title: Contact Systems - Email & Forms
 ---
 
-## 📬 Contact Systems: Email & Forms
+## 📬 Communication Systems: Email, Forms & Routing
 
 Setting up communication on a self-hosted site isn’t as straightforward as it seems. Especially when using a VPS like Linode, where email ports are disabled by default for spam prevention. You must request manual approval to enable them.
 

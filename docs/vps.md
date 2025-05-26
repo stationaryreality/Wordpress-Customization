@@ -3,7 +3,7 @@ layout: default
 title: Cloud Server Setup
 ---
 
-## ☁️ Cloud Server Setup
+## ☁️ VPS Hosting, DNS & Cloud Configuration
 
 My site runs on a $5/month Virtual Private Server (VPS) provided by Linode, now owned by Akamai. Although the physical server hardware is shared with other users, my VPS gives me full control over a virtual instance — including root access to the Linux operating system. I am responsible for everything from OS installation to application-level configuration. Linode simply manages the physical infrastructure.
 

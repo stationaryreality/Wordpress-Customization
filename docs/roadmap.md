@@ -3,7 +3,7 @@ layout: default
 title: Current & Future Tasks
 ---
 
-## 🔄 Ongoing Projects
+## 🔄 Project Timeline & Upcoming Tasks
 
 - ✅ **Convert all site images to WebP**
   - Reducing storage usage and improving performance.

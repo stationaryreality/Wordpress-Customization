@@ -1,4 +1,9 @@
-# Development Tools & Workflows
+---
+layout: default
+title: Development Tools & Workflows
+---
+
+## 🧰 Tools, Code, and Personal Workflow
 
 Even though I’ve had a strong foundation in IT, networking, and security for years, I never gravitated toward programming or database management. Those areas were known gaps in my skillset, largely because my focus was on low-level systems and theoretical understanding rather than applied code. But as I dove deeper into managing and customizing my own website, I realized that many of these concepts aren't as daunting as they first appeared—especially with tools like ChatGPT available to assist in real-time.
 

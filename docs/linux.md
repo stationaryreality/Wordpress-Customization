@@ -3,7 +3,7 @@ layout: default
 title: Linux Server Configuration
 ---
 
-## 🐧 Linux Server Configuration
+## 🐧 Linux VPS & Server Configuration
 
 My server runs on Debian Linux, hosted virtually on Linode. That means I have full control over a real Linux installation—just in a virtual machine running on shared hardware. I don’t rent hosting from a company that manages the server for me. Instead, I own the root account and manage the system myself from the ground up.
 

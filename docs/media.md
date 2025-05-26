@@ -3,7 +3,7 @@ layout: default
 title: Media Handling & Image Strategy
 ---
 
-### 🖼️ Media Handling & Image Strategy
+## 🖼️ Image Workflow, Optimization & File Strategy
 
 I’ve put a significant amount of effort into refining how media is handled on my site. Early versions—visible on the Wayback Machine—looked rough: just grey cover blocks with text and YouTube screenshots. It was functional, but not elegant.
 
