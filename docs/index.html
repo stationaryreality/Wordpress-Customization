@@ -1,158 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>The Engine of Stationary Reality - In Progress</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Engine of My Site - In Progress</title>
   <style>
-
     body {
       font-family: sans-serif;
       margin: 0;
       padding: 0;
       background: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      text-align: center;
+      margin: 10px 0 0 0;
+    }
+
+    header img {
+      max-width: 100%;
+      height: auto;
+      max-height: 100px;
     }
 
     h1 {
       text-align: center;
+      padding: 1rem 1rem 0 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: #ffffff;
       padding: 1rem;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
     }
 
-  .subtitle {
-    text-align: center;
-  }
+    .sidebar h2 {
+      font-size: 1.1rem;
+      margin-top: 1rem;
+    }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.5rem;
-  padding: 2rem;
-  max-width: 1600px;
-  margin: auto;
-  box-sizing: border-box;
-}
-
-.card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-}
-
-.card img {
-  width: 100%;
-  height: 80px; /* Adjust as needed */
-  object-fit: contain;
-  background: #fff;
-}
-
-.card h3 {
-  padding: 0.5rem;
-  font-size: 0.95rem;
-  margin: 0;
-  text-align: center;
-}
-
-    a {
+    .sidebar a {
+      display: block;
+      padding: 0.5rem 0;
+      color: #333;
       text-decoration: none;
-      color: inherit;
     }
 
+    .sidebar a:hover {
+      text-decoration: underline;
+    }
+
+    .content {
+      flex: 1;
+      padding: 2rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      max-width: 1600px;
+      margin: auto;
+      box-sizing: border-box;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card img {
+      width: 100%;
+      height: 80px;
+      object-fit: contain;
+      background: #fff;
+    }
+
+    .card h3 {
+      padding: 0.5rem;
+      font-size: 0.95rem;
+      margin: 0;
+      text-align: center;
+    }
+
+    /* Hamburger & mobile styles */
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      margin: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        display: none;
+        width: 100%;
+      }
+
+      .sidebar.open {
+        display: block;
+      }
+
+      .hamburger {
+        display: block;
+        align-self: flex-start;
+      }
+
+      .content {
+        padding: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <div style="text-align: center; margin: 10px 0 20px 0;">
-  <a href="https://www.stationaryreality.com/"><img src="srlogo.png" alt="Site Banner" style="max-width: 100%; height: auto; max-height: 100px;"></a>
-</div>
+  <header>
+    <a href="https://www.mysite.com/">
+      <img src="logo.png" alt="Site Banner" />
+    </a>
+    <h1>The Engine of My Site</h1>
+  </header>
 
-  <h1>The Engine of Stationary Reality</h1>
+  <button class="hamburger" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰ Menu</button>
 
-  <div class="grid">
+  <div class="container">
+    <nav class="sidebar">
+      <strong>Sections</strong>
+      <a href="roadmap.html">Current & Future Tasks</a>
+      <a href="tasks.html">Completed Tasks</a>
+      <a href="vps.html">Virtual Private Server</a>
+      <a href="linux.html">Linux Server Configuration</a>
+      <a href="dns.html">DNS & Content Delivery</a>
+      <a href="wordpress.html">WordPress CMS</a>
+      <a href="security.html">Security & Hardening</a>
+      <a href="performance.html">Performance Optimization</a>
+      <a href="media.html">Media Strategy</a>
 
-<a href="roadmap.html" class="card">
-  <img src="plans.webp" alt="Roadmap">
-  <h3>Current & Future Tasks</h3>
-</a>
+      <h2>Guides</h2>
+      <a href="guides/vps-setup.html">VPS Setup (How I Did It)</a>
+      <a href="guides/nginx-hardening.html">Nginx & Firewall Config</a>
+      <a href="guides/wordpress-harden.html">Locking Down WordPress</a>
+    </nav>
 
-<a href="tasks.html" class="card">
-  <img src="completed.webp" alt="Completed Tasks">
-  <h3>Completed Tasks</h3>
-</a>
+    <main class="content">
+      <div class="grid">
 
-<a href="vps.html" class="card">
-  <img src="cloudserver.webp" alt="Virtual Private Server">
-  <h3>Virtual Private Server</h3>
-</a>
+        <a href="roadmap.html" class="card">
+          <img src="plans.webp" alt="Roadmap">
+          <h3>Current & Future Tasks</h3>
+        </a>
 
-<a href="linux.html" class="card">
-  <img src="linux.webp" alt="Linux Server Configuration">
-  <h3>Linux Server Configuration</h3>
-</a>
+        <a href="tasks.html" class="card">
+          <img src="completed.webp" alt="Completed Tasks">
+          <h3>Completed Tasks</h3>
+        </a>
 
-<a href="dns.html" class="card">
-  <img src="dnscontent.webp" alt="DNS & Content Delivery">
-  <h3>DNS & Content Delivery</h3>
-</a>
+        <a href="vps.html" class="card">
+          <img src="cloudserver.webp" alt="Virtual Private Server">
+          <h3>Virtual Private Server</h3>
+        </a>
 
-<a href="wordpress.html" class="card">
-  <img src="wordpress.webp" alt="WordPress CMS">
-  <h3>WordPress Content Management System</h3>
-</a>
+        <a href="linux.html" class="card">
+          <img src="linux.webp" alt="Linux Server Configuration">
+          <h3>Linux Server Configuration</h3>
+        </a>
 
-<a href="https://github.com/stationaryreality/Wordpress-Customization" class="card">
-  <img src="github.webp" alt="WordPress Customization on GitHub">
-  <h3>WordPress Customization on GitHub</h3>
-</a>
+        <a href="dns.html" class="card">
+          <img src="dnscontent.webp" alt="DNS & Content Delivery">
+          <h3>DNS & Content Delivery</h3>
+        </a>
 
-<a href="security.html" class="card">
-  <img src="security.webp" alt="Security & Hardening">
-  <h3>Security & Hardening</h3>
-</a>
+        <a href="wordpress.html" class="card">
+          <img src="wordpress.webp" alt="WordPress CMS">
+          <h3>WordPress Content Management System</h3>
+        </a>
 
-<a href="performance.html" class="card">
-  <img src="performance.webp" alt="Performance Optimization">
-  <h3>Performance & Optimization</h3>
-</a>
+        <a href="https://github.com/mygithubpage/Wordpress-Customization" class="card">
+          <img src="github.webp" alt="WordPress Customization on GitHub">
+          <h3>WordPress Customization on GitHub</h3>
+        </a>
 
-<a href="media.html" class="card">
-  <img src="media.webp" alt="Media Strategy">
-  <h3>Media Handling & Image Strategy</h3>
-</a>
+        <a href="security.html" class="card">
+          <img src="security.webp" alt="Security & Hardening">
+          <h3>Security & Hardening</h3>
+        </a>
 
-<a href="taxonomy.html" class="card">
-  <img src="taxonomy.webp" alt="Content Structure & Taxonomy">
-  <h3>Content Structure & Taxonomy</h3>
-</a>
+        <a href="performance.html" class="card">
+          <img src="performance.webp" alt="Performance Optimization">
+          <h3>Performance & Optimization</h3>
+        </a>
 
-<a href="backups.html" class="card">
-  <img src="backups.webp" alt="Backup Strategies">
-  <h3>Backup Strategies & Recovery</h3>
-</a>
+        <a href="media.html" class="card">
+          <img src="media.webp" alt="Media Strategy">
+          <h3>Media Handling & Image Strategy</h3>
+        </a>
 
-<a href="contact.html" class="card">
-  <img src="contact.webp" alt="Contact Systems">
-  <h3>Contact Systems: Email & Forms</h3>
-</a>
+        <a href="taxonomy.html" class="card">
+          <img src="taxonomy.webp" alt="Content Structure & Taxonomy">
+          <h3>Content Structure & Taxonomy</h3>
+        </a>
 
-<a href="ai.html" class="card">
-  <img src="ai.webp" alt="AI in Development">
-  <h3>Using AI in Site Development</h3>
-</a>
+        <a href="backups.html" class="card">
+          <img src="backups.webp" alt="Backup Strategies">
+          <h3>Backup Strategies & Recovery</h3>
+        </a>
 
-<a href="workflow.html" class="card">
-  <img src="development.webp" alt="Development Tools & Workflows">
-  <h3>Development Tools & Workflows</h3>
-</a>
+        <a href="contact.html" class="card">
+          <img src="contact.webp" alt="Contact Systems">
+          <h3>Contact Systems: Email & Forms</h3>
+        </a>
 
-</div>
+        <a href="ai.html" class="card">
+          <img src="ai.webp" alt="AI in Development">
+          <h3>Using AI in Site Development</h3>
+        </a>
+
+        <a href="workflow.html" class="card">
+          <img src="development.webp" alt="Development Tools & Workflows">
+          <h3>Development Tools & Workflows</h3>
+        </a>
+
+      </div>
+    </main>
+  </div>
 
 </body>
 </html>
