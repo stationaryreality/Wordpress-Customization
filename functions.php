@@ -142,3 +142,31 @@ add_action('do_feed_atom', 'disable_feeds', 1);
 function disable_feeds() {
     wp_die(__('No feed available, please visit the homepage.'));
 }
+
+// Disable redirects for google seo errors
+add_action('template_redirect', function() {
+    remove_filter('template_redirect', 'redirect_canonical');
+}, 1);
+
+add_filter('wpseo_breadcrumb_links', function($links) {
+    // Don't touch the last item (current page)
+    $last_index = count($links) - 1;
+
+    foreach ($links as $key => $link) {
+        // Skip the last breadcrumb (which is the current page title)
+        if ($key === $last_index) {
+            continue;
+        }
+
+        // Look for the /books/ archive link and replace it
+        if (isset($link['url']) && strpos($link['url'], '/books/') !== false) {
+            $books_cited_page = get_permalink(get_page_by_path('books-cited'));
+            if ($books_cited_page) {
+                $links[$key]['url'] = $books_cited_page;
+                $links[$key]['text'] = 'Books Cited';
+            }
+        }
+    }
+
+    return $links;
+});
