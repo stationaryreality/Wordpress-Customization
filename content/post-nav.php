@@ -12,7 +12,7 @@
     $previous_post = get_adjacent_post( false, '', true );
     if ( $previous_post ) : ?>
       <div class="previous-post">
-        <h2>Next Post</h2>
+        <h2>Next Chapter</h2>
         <div class="post-thumbnail">
           <a href="<?php echo get_permalink( $previous_post->ID ); ?>">
             <?php echo get_the_post_thumbnail( $previous_post->ID, 'medium' ); ?>
@@ -27,7 +27,7 @@
     $next_post = get_adjacent_post( false, '', false );
     if ( $next_post ) : ?>
       <div class="next-post">
-        <h2>Previous Post</h2>
+        <h2>Previous Chapter</h2>
         <div class="post-thumbnail">
           <a href="<?php echo get_permalink( $next_post->ID ); ?>">
             <?php echo get_the_post_thumbnail( $next_post->ID, 'medium' ); ?>
