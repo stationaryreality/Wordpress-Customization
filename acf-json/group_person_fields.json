@@ -1,0 +1,70 @@
+{
+    "key": "group_person_fields",
+    "title": "Person Fields",
+    "fields": [
+        {
+            "key": "field_person_portrait",
+            "label": "Portrait Image",
+            "name": "portrait_image",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "Upload a headshot for this person",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "preview_size": "medium",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": ""
+        },
+        {
+            "key": "field_person_bio",
+            "label": "Bio \/ Summary",
+            "name": "bio",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "Short biography or summary (optional)",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "new_lines": "wpautop",
+            "maxlength": "",
+            "placeholder": "",
+            "rows": 4,
+            "default_value": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "person"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": false,
+    "modified": 1750087565
+}
