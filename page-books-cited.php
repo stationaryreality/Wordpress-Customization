@@ -2,7 +2,7 @@
 /* Template Name: Books Cited */
 get_header(); ?>
 
-<div class="books-grid">
+<div class="cited-grid">
 <?php
 $books = new WP_Query(array(
   'post_type' => 'book',
@@ -13,12 +13,12 @@ $books = new WP_Query(array(
 
 if ($books->have_posts()):
   while ($books->have_posts()): $books->the_post();
-    $author = get_field('author'); // ACF field
-    $summary = get_field('summary'); // Optional ACF
-    $cover = get_field('cover_image'); // ACF image (returning array)
+    $author = get_field('author');         // ACF field
+    $summary = get_field('summary');       // Optional ACF
+    $cover = get_field('cover_image');     // ACF image (returning array)
     $img_url = $cover ? $cover['sizes']['medium'] : '';
     ?>
-    <div class="book-item">
+    <div class="cited-item">
       <a href="<?php the_permalink(); ?>">
         <?php if ($img_url): ?>
           <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>">
@@ -29,7 +29,7 @@ if ($books->have_posts()):
         <p><strong><?php echo esc_html($author); ?></strong></p>
       <?php endif; ?>
       <?php if ($summary): ?>
-        <p><?php echo esc_html($summary); ?></p>
+        <p><?php echo esc_html(wp_trim_words($summary, 25)); ?></p>
       <?php endif; ?>
     </div>
     <?php
