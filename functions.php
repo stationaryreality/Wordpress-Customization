@@ -149,24 +149,57 @@ add_action('template_redirect', function() {
 }, 1);
 
 add_filter('wpseo_breadcrumb_links', function($links) {
-    // Don't touch the last item (current page)
     $last_index = count($links) - 1;
 
     foreach ($links as $key => $link) {
-        // Skip the last breadcrumb (which is the current page title)
-        if ($key === $last_index) {
-            continue;
+        if ($key === $last_index) continue;
+
+        // Redirect Books Archive
+        if (strpos($link['url'], '/books/') !== false) {
+            $links[$key]['url'] = get_permalink(get_page_by_path('books-cited'));
+            $links[$key]['text'] = 'Books Cited';
         }
 
-        // Look for the /books/ archive link and replace it
-        if (isset($link['url']) && strpos($link['url'], '/books/') !== false) {
-            $books_cited_page = get_permalink(get_page_by_path('books-cited'));
-            if ($books_cited_page) {
-                $links[$key]['url'] = $books_cited_page;
-                $links[$key]['text'] = 'Books Cited';
-            }
+        // Redirect Artists Archive
+        if (strpos($link['url'], '/artists/') !== false) {
+            $links[$key]['url'] = get_permalink(get_page_by_path('artists-featured'));
+            $links[$key]['text'] = 'Artists Featured';
+        }
+
+        // Redirect Authors Archive (People CPT)
+        if (strpos($link['url'], '/person/') !== false || strpos($link['url'], '/authors/') !== false) {
+            $links[$key]['url'] = get_permalink(get_page_by_path('authors-cited'));
+            $links[$key]['text'] = 'Authors Cited';
         }
     }
 
     return $links;
+});
+
+
+
+add_action('template_redirect', function () {
+    // Redirect /books/ to /books-cited/
+    if (is_post_type_archive('book')) {
+        wp_redirect(home_url('/books-cited/'), 301);
+        exit;
+    }
+
+    // Redirect /artists/ to /artists-featured/
+    if (is_post_type_archive('artists')) {
+        wp_redirect(home_url('/artists-featured/'), 301);
+        exit;
+    }
+
+    // Redirect /people/ (i.e. authors) to /authors-cited/
+    if (is_post_type_archive('person')) {
+        wp_redirect(home_url('/authors-cited/'), 301);
+        exit;
+    }
+
+    // Disable all CPT archive access (except for above redirects)
+    $blocked_cpts = ['chapter'];
+    if (is_archive() && in_array(get_post_type(), $blocked_cpts)) {
+        wp_die('Archives are disabled.');
+    }
 });
