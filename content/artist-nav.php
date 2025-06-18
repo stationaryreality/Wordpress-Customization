@@ -1,7 +1,7 @@
 <?php
 $current_id = get_the_ID();
 $artist_ids = get_posts([
-  'post_type' => 'artists',
+  'post_type' => 'artist',
   'numberposts' => -1,
   'orderby' => 'title',
   'order' => 'ASC',

@@ -24,77 +24,6 @@ add_action('load-edit.php', function () {
     }
 });
 
-
-function limit_search_to_chapters($query) {
-    if (!is_admin() && $query->is_main_query() && $query->is_search()) {
-        $query->set('post_type', 'chapter');
-    }
-}
-add_action('pre_get_posts', 'limit_search_to_chapters');
-
-
-// [Search blocks by anchor across CPTS, future linking tool
-function get_blocks_by_anchor($target_anchors = []) {
-    $matching_blocks = [];
-    $args = [
-        'post_type' => ['post'],
-        'posts_per_page' => -1,
-        'post_status' => 'publish',
-    ];
-    $query = new WP_Query($args);
-    while ($query->have_posts()) {
-        $query->the_post();
-        $blocks = parse_blocks(get_the_content());
-        foreach ($blocks as $block) {
-            if (!empty($block['attrs']['anchor']) && in_array($block['attrs']['anchor'], $target_anchors)) {
-                $matching_blocks[] = $block;
-            }
-        }
-    }
-    wp_reset_postdata();
-    return $matching_blocks;
-}
-
-
-// Disable Chapter Archives Completely
-function disable_chapter_archives() {
-    if (is_archive() && 'chapter' == get_post_type()) {
-        wp_die('Archives are disabled.'); // Same as above, or use wp_redirect() if you'd like
-    }
-}
-add_action('template_redirect', 'disable_chapter_archives');
-
-
-// Disable Category Archives for Posts
-function disable_category_archives_for_posts() {
-    if (is_category() && 'post' == get_post_type()) {
-        wp_die('Category Archives are disabled for Posts.');
-    }
-}
-add_action('template_redirect', 'disable_category_archives_for_posts');
-
-
-// Disable Category Archives for Chapters
-function disable_category_archives_for_chapters() {
-    if (is_category() && 'chapter' == get_post_type()) {
-        wp_die('Category Archives are disabled for Chapters.');
-    }
-}
-add_action('template_redirect', 'disable_category_archives_for_chapters');
-
-
-// Disable Author Archive pages (redirect to 404)
-add_action('template_redirect', function () {
-    if (is_author()) {
-        global $wp_query;
-        $wp_query->set_404();
-        status_header(404);
-        nocache_headers();
-        include(get_query_template('404'));
-        exit;
-    }
-});
-
 // Remove Google Fonts from Parent Theme
 function child_theme_remove_google_fonts() {
     wp_dequeue_style('ct-author-google-fonts'); // Update handle if needed
@@ -143,10 +72,6 @@ function disable_feeds() {
     wp_die(__('No feed available, please visit the homepage.'));
 }
 
-// Disable redirects for google seo errors
-add_action('template_redirect', function() {
-    remove_filter('template_redirect', 'redirect_canonical');
-}, 1);
 
 add_filter('wpseo_breadcrumb_links', function($links) {
     $last_index = count($links) - 1;
@@ -156,20 +81,20 @@ add_filter('wpseo_breadcrumb_links', function($links) {
 
         // Redirect Books Archive
         if (strpos($link['url'], '/books/') !== false) {
-            $links[$key]['url'] = get_permalink(get_page_by_path('books-cited'));
+            $links[$key]['url']  = get_permalink(get_page_by_path('books-cited'));
             $links[$key]['text'] = 'Books Cited';
         }
 
         // Redirect Artists Archive
         if (strpos($link['url'], '/artists/') !== false) {
-            $links[$key]['url'] = get_permalink(get_page_by_path('artists-featured'));
+            $links[$key]['url']  = get_permalink(get_page_by_path('artists-featured'));
             $links[$key]['text'] = 'Artists Featured';
         }
 
-        // Redirect Authors Archive (People CPT)
-        if (strpos($link['url'], '/person/') !== false || strpos($link['url'], '/authors/') !== false) {
-            $links[$key]['url'] = get_permalink(get_page_by_path('authors-cited'));
-            $links[$key]['text'] = 'Authors Cited';
+        // Redirect Profiles Archive (formerly authors)
+        if (strpos($link['url'], '/profile/') !== false) {
+            $links[$key]['url']  = get_permalink(get_page_by_path('people-referenced'));
+            $links[$key]['text'] = 'People Referenced';
         }
     }
 
@@ -177,29 +102,23 @@ add_filter('wpseo_breadcrumb_links', function($links) {
 });
 
 
-
 add_action('template_redirect', function () {
-    // Redirect /books/ to /books-cited/
     if (is_post_type_archive('book')) {
         wp_redirect(home_url('/books-cited/'), 301);
         exit;
     }
+});
 
-    // Redirect /artists/ to /artists-featured/
-    if (is_post_type_archive('artists')) {
+add_action('template_redirect', function () {
+    if (is_post_type_archive('artist')) {
         wp_redirect(home_url('/artists-featured/'), 301);
         exit;
     }
+});
 
-    // Redirect /people/ (i.e. authors) to /authors-cited/
-    if (is_post_type_archive('person')) {
-        wp_redirect(home_url('/authors-cited/'), 301);
+add_action('template_redirect', function () {
+    if (is_post_type_archive('profile')) {
+        wp_redirect(home_url('/people-referenced/'), 301);
         exit;
-    }
-
-    // Disable all CPT archive access (except for above redirects)
-    $blocked_cpts = ['chapter'];
-    if (is_archive() && in_array(get_post_type(), $blocked_cpts)) {
-        wp_die('Archives are disabled.');
     }
 });
