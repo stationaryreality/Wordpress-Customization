@@ -21,7 +21,7 @@ $prev_id = $artist_ids[$current_index - 1] ?? null;
         <?php
         $portrait = get_field('portrait_image', $next_id);
         if ($portrait) {
-          echo '<img src="' . esc_url($portrait['sizes']['medium']) . '" alt="' . esc_attr(get_the_title($next_id)) . '" style="width:150px;height:auto;">';
+          echo '<img src="' . esc_url($portrait['sizes']['thumbnail']) . '" alt="' . esc_attr(get_the_title($next_id)) . '" style="width:100px;height:100px;object-fit:cover;border-radius:50%;margin-bottom:10px;">';
         }
         ?>
         <h3><?php echo get_the_title($next_id); ?></h3>
@@ -36,7 +36,7 @@ $prev_id = $artist_ids[$current_index - 1] ?? null;
         <?php
         $portrait = get_field('portrait_image', $prev_id);
         if ($portrait) {
-          echo '<img src="' . esc_url($portrait['sizes']['medium']) . '" alt="' . esc_attr(get_the_title($prev_id)) . '" style="width:150px;height:auto;">';
+          echo '<img src="' . esc_url($portrait['sizes']['thumbnail']) . '" alt="' . esc_attr(get_the_title($next_id)) . '" style="width:100px;height:100px;object-fit:cover;border-radius:50%;margin-bottom:10px;">';
         }
         ?>
         <h3><?php echo get_the_title($prev_id); ?></h3>
