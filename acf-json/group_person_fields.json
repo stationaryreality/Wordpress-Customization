@@ -46,6 +46,28 @@
             "placeholder": "",
             "rows": 4,
             "default_value": ""
+        },
+        {
+            "key": "field_68529fe8e9d8a",
+            "label": "Wikipedia Slug",
+            "name": "wikipedia_slug",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
         }
     ],
     "location": [
@@ -53,7 +75,7 @@
             {
                 "param": "post_type",
                 "operator": "==",
-                "value": "person"
+                "value": "profile"
             }
         ]
     ],
@@ -65,6 +87,6 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "show_in_rest": false,
-    "modified": 1750087565
+    "show_in_rest": 0,
+    "modified": 1750250658
 }
