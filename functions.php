@@ -102,6 +102,12 @@ add_filter('wpseo_breadcrumb_links', function($links) {
             $links[$key]['url']  = get_permalink(get_page_by_path('lexicon'));
             $links[$key]['text'] = 'Lexicon';
         }
+    
+        // Redirect Movie Archive
+        if (strpos($link['url'], '/movies/') !== false) {
+            $links[$key]['url']  = get_permalink(get_page_by_path('movies-referenced'));
+            $links[$key]['text'] = 'Movies Referenced';
+        }
     }
 
     return $links;
@@ -132,6 +138,13 @@ add_action('template_redirect', function () {
 add_action('template_redirect', function () {
     if (is_post_type_archive('concept')) {
         wp_redirect(home_url('/lexicon/'), 301);
+        exit;
+    }
+});
+
+add_action('template_redirect', function () {
+    if (is_post_type_archive('movie')) {
+        wp_redirect(home_url('/movies-referenced/'), 301);
         exit;
     }
 });
