@@ -14,7 +14,6 @@ $profiles = new WP_Query(array(
 
 if ($profiles->have_posts()):
   while ($profiles->have_posts()): $profiles->the_post();
-    $bio      = get_field('bio');           // Optional ACF field
     $portrait = get_field('portrait_image'); // ACF image (returning array)
     $img_url = $portrait ? $portrait['sizes']['thumbnail'] : '';
     ?>
@@ -25,9 +24,7 @@ if ($profiles->have_posts()):
         <?php endif; ?>
         <h3><?php the_title(); ?></h3>
       </a>
-      <?php if ($bio): ?>
-        <p><?php echo esc_html(wp_trim_words($bio, 20)); ?></p>
-      <?php endif; ?>
+
     </div>
     <?php
   endwhile;

@@ -96,6 +96,12 @@ add_filter('wpseo_breadcrumb_links', function($links) {
             $links[$key]['url']  = get_permalink(get_page_by_path('people-referenced'));
             $links[$key]['text'] = 'People Referenced';
         }
+
+        // Redirect Concept Archive
+        if (strpos($link['url'], '/concepts/') !== false) {
+            $links[$key]['url']  = get_permalink(get_page_by_path('lexicon'));
+            $links[$key]['text'] = 'Lexicon';
+        }
     }
 
     return $links;
@@ -119,6 +125,13 @@ add_action('template_redirect', function () {
 add_action('template_redirect', function () {
     if (is_post_type_archive('profile')) {
         wp_redirect(home_url('/people-referenced/'), 301);
+        exit;
+    }
+});
+
+add_action('template_redirect', function () {
+    if (is_post_type_archive('concept')) {
+        wp_redirect(home_url('/lexicon/'), 301);
         exit;
     }
 });
