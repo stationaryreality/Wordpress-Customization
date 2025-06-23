@@ -148,3 +148,13 @@ add_action('template_redirect', function () {
         exit;
     }
 });
+
+function render_custom_cover_block($atts) {
+    $atts = shortcode_atts(['id' => ''], $atts, 'custom_cover');
+
+    if (!$atts['id']) return '';
+
+    $html = get_field('lyric_html_block', $atts['id']);
+    return $html ?: '';
+}
+add_shortcode('custom_cover', 'render_custom_cover_block');
