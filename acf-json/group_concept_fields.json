@@ -7,20 +7,22 @@
             "label": "Definition",
             "name": "definition",
             "aria-label": "",
-            "type": "textarea",
+            "type": "text",
             "instructions": "Enter a short definition or summary of the concept.",
             "required": 0,
-            "conditional_logic": false,
+            "conditional_logic": 0,
             "wrapper": {
                 "width": "",
                 "class": "",
                 "id": ""
             },
+            "relevanssi_exclude": 0,
             "default_value": "",
-            "placeholder": "",
             "maxlength": "",
-            "rows": 4,
-            "new_lines": "wpautop"
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
         },
         {
             "key": "field_concept_portrait",
@@ -46,6 +48,28 @@
             "max_height": "",
             "max_size": "",
             "mime_types": ""
+        },
+        {
+            "key": "field_6859573a4d864",
+            "label": "Source",
+            "name": "source",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
         }
     ],
     "location": [
@@ -65,6 +89,6 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "show_in_rest": false,
-    "modified": 1750369398
+    "show_in_rest": 0,
+    "modified": 1750686358
 }
