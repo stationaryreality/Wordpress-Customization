@@ -191,6 +191,7 @@ function output_footnotes_shortcode() {
   $counter = 0;
 
   foreach ($matches as $match) {
+    $image = null;
     // Extract id and optional text manually
     preg_match('/id="([^"]+)"/', $match[1], $id_match);
     preg_match('/text="([^"]+)"/', $match[1], $text_match);
@@ -238,7 +239,14 @@ if ($source) {
 if ($title) {
   $output .= "<strong><a href=\"{$permalink}\" target=\"_blank\" rel=\"noopener noreferrer\">{$title}</a> 🔎</strong> ";
 }
-    $output .= "{$text} <a href=\"#ref-$id\" class=\"backref\">↩︎</a></p></li>";
+$output .= "{$text} <a href=\"#ref-$id\" class=\"backref\">↩︎</a>";
+
+// Image appears below reference, still inside <p>
+if (!empty($image)) {
+  $output .= "<br><a href=\"{$permalink}\"><img src=\"{$image['url']}\" alt=\"{$title}\" class=\"footnote-cover\" style=\"width:150px; height:auto; margin-top:0.5em; display:block;\" /></a>";
+}
+
+$output .= "</p></li>";
   }
 
     if (!empty($image)) {
