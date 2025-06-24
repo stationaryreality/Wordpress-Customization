@@ -132,33 +132,6 @@ ul {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* ============== LEXICON PAGE ============== */
-.lexicon-page {
-  text-align: center;
-  font-family: 'Georgia', serif;
-  font-size: 1.5rem;
-  padding: 2rem;
-  background: #fdfdfd url('/wp-content/uploads/definition.jpg') no-repeat center center fixed;
-  background-size: cover;
-  color: #333;
-}
-
-.lexicon-page h2 {
-  font-size: 1.5rem;
-  margin: 2rem 0 0.2rem;
-}
-
-.lexicon-page p {
-  font-size: 1rem;
-  margin: 0.5rem 0 1.5rem;
-  line-height: 1.6;
-}
-
-.lexicon-block {
-  margin-bottom: 2rem;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 1rem;
-}
 
 /* ============== RESPONSIVE BOOK GRID (Shared) ============== */
 @media (max-width: 900px) {
@@ -323,6 +296,11 @@ ul {
 }
 
 .concept-nav-thumb img {
+  width: 50% !important;
+  height: auto;
+}
+
+.quote-nav-thumb img {
   width: 50% !important;
   height: auto;
 }
