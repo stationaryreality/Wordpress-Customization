@@ -1,0 +1,90 @@
+{
+    "key": "group_quote_fields",
+    "title": "Quote Fields",
+    "fields": [
+        {
+            "key": "field_quote_text",
+            "label": "Quote Text (HTML Cover Block)",
+            "name": "quote_html_block",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "Paste raw HTML of the styled quote block.",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "rows": 8,
+            "new_lines": "",
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": ""
+        },
+        {
+            "key": "field_quote_attribution",
+            "label": "Attribution",
+            "name": "quote_attribution",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Optional person or source of the quote.",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_quote_portrait",
+            "label": "Portrait Image",
+            "name": "portrait_image",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "Optional image (author or symbolic thumbnail).",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "preview_size": "thumbnail",
+            "library": "all",
+            "min_width": 0,
+            "min_height": 0,
+            "min_size": 0,
+            "max_width": 0,
+            "max_height": 0,
+            "max_size": 0,
+            "mime_types": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "quote"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": false,
+    "modified": 1750723508
+}
