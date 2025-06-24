@@ -208,8 +208,22 @@ function output_footnotes_shortcode() {
       $title = '';
       $text = wp_kses_post($text_match[1]);
     } else {
+$post_type = get_post_type($id);
 $title = get_the_title($id);
 $permalink = get_permalink($id);
+
+// CPT icons
+$icons = [
+  'artist'   => '🎹',
+  'profile'  => '👤',
+  'book'     => '📚',
+  'concept'  => '🔎',
+  'movie'    => '🎬',
+  'quote'    => '💬',
+];
+
+$icon = isset($icons[$post_type]) ? $icons[$post_type] : '';
+
 $definition = get_field('definition', $id);
 $source = get_field('source', $id);
 
@@ -237,7 +251,7 @@ if ($source) {
 
 
 if ($title) {
-  $output .= "<strong><a href=\"{$permalink}\" target=\"_blank\" rel=\"noopener noreferrer\">{$title}</a> 🔎</strong> ";
+$output .= "<strong><a href=\"{$permalink}\" target=\"_blank\" rel=\"noopener noreferrer\">{$title}</a> {$icon}</strong> ";
 }
 $output .= "{$text} <a href=\"#ref-$id\" class=\"backref\">↩︎</a>";
 
