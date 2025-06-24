@@ -349,3 +349,24 @@ body .wp-block-group .wp-block-cover {
 .wp-block-cover * {
     text-align: center !important;
 }
+
+.cpt-alpha-list {
+  list-style: none;
+  padding: 0;
+  margin: 2rem auto;
+  max-width: 720px;
+}
+
+.cpt-alpha-list li {
+  display: flex;
+  align-items: center;
+  font-size: 1.125rem;
+  margin: 0.5rem 0;
+}
+
+.cpt-icon {
+  width: 2rem;
+  text-align: center;
+  margin-right: 0.5rem;
+  font-size: 1.25rem;
+}
