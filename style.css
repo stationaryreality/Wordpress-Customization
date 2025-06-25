@@ -370,3 +370,78 @@ body .wp-block-group .wp-block-cover {
   margin-right: 0.5rem;
   font-size: 1.25rem;
 }
+
+/* === Book Page Layout === */
+.book-content.centered {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.book-cover {
+  width: 150px;
+  height: auto;
+  display: block;
+  margin: 0 auto 1em;
+}
+
+.book-title {
+  margin-bottom: 1em;
+}
+
+/* === Author Section on Book Page === */
+.book-author {
+  margin-bottom: 2em;
+  text-align: center;
+}
+
+.book-author .author-link {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.author-thumbnail {
+  display: block;
+  margin: 0 auto 0.5em;
+  border-radius: 999px;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
+
+/* === Books on Profile Page === */
+.profile-books ul.profile-book-grid {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 1em;
+}
+
+.profile-book-item {
+  text-align: center;
+  max-width: 160px;
+}
+
+.profile-book-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.profile-book-cover {
+  width: 150px;
+  height: auto;
+  display: block;
+  margin: 0 auto 0.5em;
+}
+
+.profile-book-title {
+  margin-top: 0.25em;
+  font-weight: bold;
+  font-size: 1rem;
+}
