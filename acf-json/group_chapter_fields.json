@@ -25,28 +25,25 @@
             "label": "Primary Artist",
             "name": "primary_artist",
             "aria-label": "",
-            "type": "relationship",
+            "type": "post_object",
             "instructions": "",
-            "required": false,
-            "conditional_logic": false,
+            "required": 0,
+            "conditional_logic": 0,
             "wrapper": {
                 "width": "",
                 "class": "",
                 "id": ""
             },
-            "post_type": [
-                "artist"
-            ],
-            "max": 1,
+            "relevanssi_exclude": 0,
+            "post_type": "",
+            "post_status": "",
+            "taxonomy": "",
             "return_format": "object",
-            "taxonomy": [],
-            "min": 0,
-            "filters": [
-                "search",
-                "post_type",
-                "taxonomy"
-            ],
-            "elements": [],
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "bidirectional": 0,
+            "ui": 1,
             "bidirectional_target": []
         },
         {
@@ -442,9 +439,9 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "hide_on_screen": [],
+    "hide_on_screen": "",
     "active": true,
     "description": "",
-    "show_in_rest": false,
-    "modified": 1750715333
+    "show_in_rest": 0,
+    "modified": 1750936913
 }
