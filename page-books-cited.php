@@ -25,12 +25,11 @@ if ($books->have_posts()):
         <?php endif; ?>
         <h3><?php the_title(); ?></h3>
       </a>
+      
       <?php if ($author): ?>
         <p><strong><?php echo esc_html($author); ?></strong></p>
       <?php endif; ?>
-      <?php if ($summary): ?>
-        <p><?php echo esc_html(wp_trim_words($summary, 25)); ?></p>
-      <?php endif; ?>
+
     </div>
     <?php
   endwhile;
