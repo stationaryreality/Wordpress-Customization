@@ -213,11 +213,15 @@ ul {
   border-radius: 8px;
 }
 
-/* Sidebar padding fix */
+
 @media (min-width: 768px) {
-  #sidebar-primary {
+  body:not(.web-archive-mode) #sidebar-primary {
     padding-bottom: 100px;
     min-height: 100vh;
+  }
+
+  body.web-archive-mode #sidebar-primary {
+    padding-bottom: 100px; /* keep the space, remove height stretch */
   }
 }
 

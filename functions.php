@@ -36,6 +36,18 @@ function child_theme_enqueue_custom_fonts() {
 }
 add_action('wp_enqueue_scripts', 'child_theme_enqueue_custom_fonts');
 
+//wayback
+function author_child_enqueue_wayback_fix() {
+    wp_enqueue_script(
+        'author-child-wayback-fix',
+        get_stylesheet_directory_uri() . '/js/wayback-fix.js',
+        array(), // No dependencies
+        '1.0',
+        true // Load in footer
+    );
+}
+add_action('wp_enqueue_scripts', 'author_child_enqueue_wayback_fix', 20);
+
 
 // =====================================================
 // Disable Comments Site-Wide
