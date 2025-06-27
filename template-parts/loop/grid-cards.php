@@ -1,7 +1,8 @@
 <?php
+$args = get_query_var('grid_cards_args', []);
 $args = wp_parse_args($args, [
   'post_type' => 'post',
-  'posts_per_page' => $args['limit'] ?? 12,
+  'posts_per_page' => 12,
 ]);
 
 $query = new WP_Query($args);
