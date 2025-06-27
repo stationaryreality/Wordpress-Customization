@@ -21,7 +21,6 @@
 
             <div class='post-header'>
             <h1 class='post-title'><?php the_title(); ?></h1>
-            <?php get_template_part( 'content/post-meta' ); ?>
         </div>
 
   <!-- Artist Info -->
