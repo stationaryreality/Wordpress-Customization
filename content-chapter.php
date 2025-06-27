@@ -6,7 +6,7 @@
 
 <hr style="border: none; border-top: 1px solid #ccc; margin: 1.5em auto; max-width: 60%;">
 
-    <!-- Page Links Key -->
+    <!-- Page Link Key -->
   <div style="background-color:#f0f0f0; color:#111; padding:0.51em 0.68em; border-radius:6px; font-size:0.81em; line-height:1.4; margin:0 auto 1em; box-shadow:0 0 3px rgba(0,0,0,0.2); max-width:30%; text-align:left;">
     <div style="font-weight:bold; text-decoration:underline; font-size:0.92em; text-align:center; margin-bottom:0.4em;">Page Links Key:</div>
     🎹 <strong>Artist Profiles</strong><br>
@@ -130,4 +130,3 @@ foreach ($fields as $field => $type) {
     <?php comments_template(); ?>
 
 </div>
-
