@@ -94,11 +94,20 @@ foreach ($fields as $field => $type) {
   if (empty($value)) continue;
 
   if (is_array($value)) {
-    foreach ($value as $post) {
-      if ($post instanceof WP_Post) {
-        $linked_items[$post->ID] = $post;
-      }
-    }
+global $post; // make sure we can restore after loop
+$original_post = $post;
+
+foreach ($value as $acf_post) {
+  if ($acf_post instanceof WP_Post) {
+    // Temporarily switch post context
+    setup_postdata($acf_post);
+    $linked_items[$acf_post->ID] = $acf_post;
+    wp_reset_postdata();
+  }
+}
+
+$post = $original_post; // just in case
+
   } elseif ($value instanceof WP_Post) {
     $linked_items[$value->ID] = $value;
   }
