@@ -13,3 +13,19 @@
     };
   }
 })();
+
+  // Wayback Snapshot warning
+if (document.getElementById('wm-ipp')) {
+  const msg = document.createElement('div');
+  msg.innerHTML = '📌 This is an archived version — click the ❌ at the top to fix layout.';
+  msg.style.cssText = `
+    background: #fff3cd;
+    color: #856404;
+    padding: 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+    font-family: sans-serif;
+    border-bottom: 1px solid #ffeeba;
+  `;
+  document.body.insertBefore(msg, document.body.firstChild);
+}
