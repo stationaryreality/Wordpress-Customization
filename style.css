@@ -334,8 +334,10 @@ ul {
   margin: 0 auto;
   width: 90%;
   max-width: 400px;
+  aspect-ratio: 300 / 157; /* or whatever your actual ratio is */
   height: auto;
 }
+
 
 /* 1. Force ALL cover blocks to center */
 .wp-block-cover {
