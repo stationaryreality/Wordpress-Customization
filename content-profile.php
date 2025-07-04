@@ -23,22 +23,23 @@ function get_wikipedia_intro($slug) {
 
   <h1><?php echo get_the_title($profile_id); ?></h1>
 
-<div class="person-bio">
-  <?php
-    if ($bio) {
-      echo wp_kses_post($bio);
-    } elseif ($wiki_slug) {
-      $wiki_intro = get_wikipedia_intro($wiki_slug);
-      if ($wiki_intro) {
-        echo '<p>' . esc_html($wiki_intro) . '</p>';
-      } else {
-        the_content();
+  <div class="person-bio">
+    <?php
+      if ($bio) {
+        echo wp_kses_post($bio);
+      } elseif ($wiki_slug) {
+        $wiki_intro = get_wikipedia_intro($wiki_slug);
+        if ($wiki_intro) {
+          echo '<p>' . esc_html($wiki_intro) . '</p>';
+        }
       }
-    } else {
-      the_content();
-    }
-  ?>
-</div>
+    ?>
+  </div>
+
+  <!-- 🆕 Always output editor content here, for Cover Blocks etc. -->
+  <div class="person-editor-content">
+    <?php the_content(); ?>
+  </div>
 
   <?php
   // Query books where this profile is set as 'author_profile'
