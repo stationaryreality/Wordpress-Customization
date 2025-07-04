@@ -339,7 +339,7 @@ ul {
 }
 
 
-/* 1. Force ALL cover blocks to center */
+/* Keep cover blocks narrow and centered */
 .wp-block-cover {
     max-width: 645px !important;
     width: 100% !important;
@@ -352,9 +352,16 @@ ul {
     left: 0 !important;
     right: 0 !important;
     transform: none !important;
+    min-height: auto !important;
+    height: auto !important;
 }
 
-/* 2. Nuke any parent container interference */
+/* Optional: support taller covers when desired */
+.wp-block-cover.cover-tall {
+    min-height: 500px !important;
+}
+
+/* Prevent parent container and alignment issues */
 body .entry-content .wp-block-cover,
 body .wp-block-post-content .wp-block-cover,
 body .post-content__wrap .wp-block-cover,
@@ -364,7 +371,6 @@ body .wp-block-group .wp-block-cover {
     float: none !important;
 }
 
-/* 3. Absolutely prevent any text alignment issues */
 .wp-block-cover,
 .wp-block-cover * {
     text-align: center !important;
