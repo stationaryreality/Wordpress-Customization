@@ -15,12 +15,38 @@ add_action('wp_enqueue_scripts', 'ct_author_child_enqueue_styles');
 // Enable excerpts for Pages
 add_post_type_support('page', 'excerpt');
 
-// Redirect default Posts admin screen to show only published posts
+// Sort CPTs ABC, except for pages and chapters
 add_action('load-edit.php', function () {
     $screen = get_current_screen();
-    if ($screen->post_type == 'post' && !isset($_GET['post_status']) && !isset($_GET['all_posts'])) {
-        wp_redirect(admin_url('edit.php?post_status=publish&post_type=post'));
-        exit;
+
+    // CPTs to force alphabetical sorting in admin
+    $alphabetical_cpts = array(
+        'concept',
+        'lyric',
+        'quote',
+        'artist',
+        'book',
+        'movie',
+        'profile'
+    );
+
+    if (in_array($screen->post_type, $alphabetical_cpts)) {
+        // If no manual sorting in the query
+        if (!isset($_GET['orderby'])) {
+            // Force query vars to sort by title ASC
+            $_GET['orderby'] = 'title';
+            $_GET['order'] = 'ASC';
+
+            // Build redirect URL with forced query vars
+            $url = add_query_arg(array(
+                'post_type' => $screen->post_type,
+                'orderby' => 'title',
+                'order' => 'ASC',
+            ), admin_url('edit.php'));
+
+            wp_redirect($url);
+            exit;
+        }
     }
 });
 
