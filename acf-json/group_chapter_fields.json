@@ -423,6 +423,76 @@
                     "parent_repeater": "field_songs_referenced"
                 }
             ]
+        },
+        {
+            "key": "field_68693d97cfc52",
+            "label": "Other Songs Referenced",
+            "name": "other_songs_referenced",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "For songs by artists who do not have a CPT. Will appear below Referenced Works section.",
+            "required": false,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "min": 0,
+            "max": 0,
+            "rows_per_page": 20,
+            "layout": "table",
+            "button_label": "Add Row",
+            "collapsed": "",
+            "sub_fields": [
+                {
+                    "key": "field_68693ddd641a0",
+                    "label": "Artist",
+                    "name": "artist_name",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "relevanssi_exclude": 0,
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_68693d97cfc52"
+                },
+                {
+                    "key": "field_68693dfb641a1",
+                    "label": "Song Title",
+                    "name": "song_title",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "relevanssi_exclude": 0,
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_68693d97cfc52"
+                }
+            ]
         }
     ],
     "location": [
@@ -443,5 +513,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1751056363
+    "modified": 1751727619
 }
