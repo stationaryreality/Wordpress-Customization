@@ -4,21 +4,6 @@
 
 <article>
 
-<hr style="border: none; border-top: 1px solid #ccc; margin: 1.5em auto; max-width: 60%;">
-
-    <!-- Page Link Key -->
-  <div style="background-color:#f0f0f0; color:#111; padding:0.51em 0.68em; border-radius:6px; font-size:0.81em; line-height:1.4; margin:0 auto 1em; box-shadow:0 0 3px rgba(0,0,0,0.2); max-width:30%; text-align:left;">
-    <div style="font-weight:bold; text-decoration:underline; font-size:0.92em; text-align:center; margin-bottom:0.4em;">Page Links Key:</div>
-    🎹 <strong>Artist Profiles</strong><br>
-    👤 <strong>Biographical Figures</strong><br>
-    📚 <strong>Book Citations</strong><br>
-    🔎 <strong>Lexicon Entries</strong><br>
-    🎬 <strong>Movies Referenced</strong><br>
-    💬 <strong>Quote Library</strong><br>
-  </div>
-
-  <hr style="border: none; border-top: 1px solid #ccc; margin: 1.5em auto; max-width: 60%;">
-
             <div class='post-header'>
             <h1 class='post-title'><?php the_title(); ?></h1>
         </div>
@@ -66,13 +51,14 @@
 <?php
 $chapter_id = get_the_ID();
 
-$icons = [
-  'artist'   => '🎹',
-  'profile'  => '👤',
-  'book'     => '📚',
-  'concept'  => '🔎',
-  'movie'    => '🎬',
-  'quote'    => '💬',
+$group_order = [
+  'artist'  => ['title' => 'Artists Featured',    'emoji' => '🎹'],
+  'profile' => ['title' => 'People Referenced',   'emoji' => '👤'],
+  'lyric'   => ['title' => 'Song Excerpts',       'emoji' => '📻'],
+  'quote'   => ['title' => 'Quote Library',       'emoji' => '💬'],
+  'concept' => ['title' => 'Lexicon',             'emoji' => '🔎'],
+  'book'    => ['title' => 'Books Cited',         'emoji' => '📚'],
+  'movie'   => ['title' => 'Movies Referenced',   'emoji' => '🎬'],
 ];
 
 $fields = [
@@ -84,54 +70,70 @@ $fields = [
   'people_referenced'    => 'profile',
   'movies_referenced'    => 'movie',
   'quotes_referenced'    => 'quote',
+  'lyrics_referenced'    => 'lyric', // New lyric CPT
 ];
 
-$linked_items = [];
+$grouped_items = [];
 
 foreach ($fields as $field => $type) {
   $value = get_field($field, $chapter_id);
-
   if (empty($value)) continue;
 
-  if (is_array($value)) {
-global $post; // make sure we can restore after loop
-$original_post = $post;
-
-foreach ($value as $acf_post) {
-  if ($acf_post instanceof WP_Post) {
-    // Temporarily switch post context
-    setup_postdata($acf_post);
-    $linked_items[$acf_post->ID] = $acf_post;
-    wp_reset_postdata();
-  }
-}
-
-$post = $original_post; // just in case
-
-  } elseif ($value instanceof WP_Post) {
-    $linked_items[$value->ID] = $value;
+  $items = is_array($value) ? $value : [$value];
+  foreach ($items as $item) {
+    if ($item instanceof WP_Post) {
+      $grouped_items[$type][$item->ID] = $item;
+    }
   }
 }
 ?>
 
-<?php if (!empty($linked_items)) : ?>
+<?php if (!empty($grouped_items)) : ?>
   <div class="chapter-cpt-index">
     <h3 class="cpt-index-heading">Referenced Works & People</h3>
-    <ul class="cpt-index-tags">
-      <?php foreach ($linked_items as $item) :
-        $type = get_post_type($item);
-        $icon = $icons[$type] ?? '❓';
-      ?>
-        <li>
-          <a href="<?php echo get_permalink($item); ?>">
-            <span class="cpt-icon"><?php echo $icon; ?></span>
-            <?php echo get_the_title($item); ?>
-          </a>
-        </li>
-      <?php endforeach; ?>
-    </ul>
+    <?php foreach ($group_order as $type => $meta) :
+      if (empty($grouped_items[$type])) continue;
+    ?>
+      <div class="cpt-group cpt-<?php echo esc_attr($type); ?>">
+        <h4 class="cpt-group-heading">
+          <span class="cpt-icon"><?php echo $meta['emoji']; ?></span>
+          <?php echo esc_html($meta['title']); ?>
+        </h4>
+        <ul class="cpt-index-tags">
+          <?php foreach ($grouped_items[$type] as $item) :
+            $title = get_the_title($item);
+            $permalink = get_permalink($item);
+            $extra = '';
+
+            // Extra content for quotes and lyrics
+            if (in_array($type, ['quote', 'lyric'])) {
+              $field = get_field('quote_text', $item->ID) ?: get_field('lyric_text', $item->ID);
+              if ($field) {
+                $extra = '<div class="cpt-snippet">– ' . esc_html(wp_trim_words($field, 25)) . '</div>';
+              }
+            }
+
+            // Image for books/movies
+            if (in_array($type, ['book', 'movie'])) {
+              $image = get_field('cover_image', $item->ID);
+              if ($image && isset($image['url'])) {
+                $extra = '<div class="cpt-cover"><a href="' . esc_url($permalink) . '"><img src="' . esc_url($image['url']) . '" alt="' . esc_attr($title) . '" style="width:120px;height:auto;margin-top:0.5em;" /></a></div>';
+              }
+            }
+          ?>
+            <li>
+              <a href="<?php echo esc_url($permalink); ?>">
+                <?php echo esc_html($title); ?>
+              </a>
+              <?php echo $extra; ?>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+    <?php endforeach; ?>
   </div>
 <?php endif; ?>
+
 
     </article>
     <?php do_action( 'post_after' ); ?>
