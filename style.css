@@ -600,3 +600,13 @@ body .wp-block-group .wp-block-cover {
 .referenced-works li {
   margin-bottom: 0.5em;
 }
+
+.referenced-works img.book-cover,
+.referenced-works img.movie-cover {
+  width: 60px;
+  height: 90px;
+  object-fit: cover;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
