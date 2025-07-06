@@ -187,62 +187,51 @@ add_shortcode('custom_cover', 'render_custom_cover_block');
 
 function display_referenced_works() {
   ob_start();
-
   $chapter_id = get_the_ID();
 
-  $icons = [
-    'artist'   => '🎹',
-    'profile'  => '👤',
-    'book'     => '📚',
-    'concept'  => '🔎',
-    'movie'    => '🎬',
-    'quote'    => '💬',
-    'lyric'    => '📻',
-  ];
-
   $group_titles = [
-    'featured_artists'    => ['title' => 'Artists Featured',     'emoji' => '🎹', 'link' => '/artists-featured'],
-    'referenced_artists'  => ['title' => 'Artists Referenced',   'emoji' => '🎹', 'link' => '/artists-referenced'],
-    'profile'             => ['title' => 'People Referenced',    'emoji' => '👤', 'link' => '/profiles'],
-    'lyric'               => ['title' => 'Song Excerpts',        'emoji' => '📻', 'link' => '/lyrics'],
-    'quote'               => ['title' => 'Quote Library',        'emoji' => '💬', 'link' => '/quotes'],
-    'concept'             => ['title' => 'Lexicon',              'emoji' => '🔎', 'link' => '/concepts'],
-    'book'                => ['title' => 'Books Cited',          'emoji' => '📚', 'link' => '/books'],
-    'movie'               => ['title' => 'Movies Referenced',    'emoji' => '🎬', 'link' => '/movies'],
-    'manual_songs'        => ['title' => 'Songs Referenced',     'emoji' => '📻'],
+    'featured_artists' => ['title' => 'Artists Featured',     'emoji' => '🎹', 'link' => '/artists-featured'],
+    'songs_referenced' => ['title' => 'Songs Referenced',     'emoji' => '📻'],
+    'profile'          => ['title' => 'People Referenced',    'emoji' => '👤', 'link' => '/profiles'],
+    'lyric'            => ['title' => 'Song Excerpts',        'emoji' => '📻', 'link' => '/lyrics'],
+    'quote'            => ['title' => 'Quote Library',        'emoji' => '💬', 'link' => '/quotes'],
+    'concept'          => ['title' => 'Lexicon',              'emoji' => '🔎', 'link' => '/concepts'],
+    'book'             => ['title' => 'Books Cited',          'emoji' => '📚', 'link' => '/books'],
+    'movie'            => ['title' => 'Movies Referenced',    'emoji' => '🎬', 'link' => '/movies'],
   ];
 
+  // Collect featured artists (in order)
   $featured_artists = [];
   foreach (['primary_artist', 'secondary_artist', 'tertiary_artist'] as $field) {
-    $artist = get_field($field, $chapter_id);
+    $artist = get_field($field);
     if ($artist instanceof WP_Post) {
-      $featured_artists[$artist->ID] = $artist;
+      $featured_artists[] = $artist;
     }
   }
 
+  // Collect CPT-linked referenced content
   $linked_items = [
-    'featured_artists'   => $featured_artists,
-    'referenced_artists' => [],
-    'profile'            => [],
-    'lyric'              => [],
-    'quote'              => [],
-    'concept'            => [],
-    'book'               => [],
-    'movie'              => [],
+    'profile' => [],
+    'lyric'   => [],
+    'quote'   => [],
+    'concept' => [],
+    'book'    => [],
+    'movie'   => [],
   ];
 
-  $fields = [
+  $acf_map = [
     'people_referenced'    => 'profile',
     'books_cited'          => 'book',
     'concepts_referenced'  => 'concept',
     'movies_referenced'    => 'movie',
     'quotes_referenced'    => 'quote',
+    'lyrics_referenced'    => 'lyric',
   ];
 
-  foreach ($fields as $field => $type) {
-    $value = get_field($field, $chapter_id);
-    if (!empty($value) && is_array($value)) {
-      foreach ($value as $item) {
+  foreach ($acf_map as $acf => $type) {
+    $items = get_field($acf);
+    if (!empty($items)) {
+      foreach ($items as $item) {
         if ($item instanceof WP_Post) {
           $linked_items[$type][$item->ID] = $item;
         }
@@ -250,41 +239,36 @@ function display_referenced_works() {
     }
   }
 
-  $lyrics = get_field('lyrics_referenced', $chapter_id);
-  if (!empty($lyrics)) {
-    foreach ($lyrics as $item) {
-      if ($item instanceof WP_Post) {
-        $linked_items['lyric'][$item->ID] = $item;
-      }
-    }
-  }
+  // Gather referenced songs: both CPT-based and manual
+  $all_songs = ['cpt' => [], 'manual' => []];
+  $placeholder_img = wp_get_attachment_image_src(19327, 'thumbnail')[0];
 
-  $referenced_songs = get_field('songs_referenced', $chapter_id);
-  $manual_songs = [];
-  if (!empty($referenced_songs)) {
-    foreach ($referenced_songs as $row) {
+  $songs = get_field('songs_referenced');
+  if ($songs) {
+    foreach ($songs as $row) {
       $artist = $row['referenced_artist'];
       $song   = $row['referenced_song_title'];
-      if ($artist instanceof WP_Post) {
-        $linked_items['referenced_artists'][$artist->ID] = $artist;
-        $manual_songs[] = [
+      if ($artist instanceof WP_Post && $song) {
+        $portrait = get_field('portrait_image', $artist->ID);
+        $img = $portrait ? $portrait['sizes']['thumbnail'] : $placeholder_img;
+        $all_songs['cpt'][] = [
           'artist' => $artist->post_title,
-          'artist_id' => $artist->ID,
-          'link' => get_permalink($artist),
-          'is_cpt' => true,
-          'song' => $song
+          'song'   => $song,
+          'link'   => get_permalink($artist),
+          'image'  => $img,
         ];
       }
     }
   }
 
-  $other_songs = get_field('other_songs_referenced', $chapter_id);
-  if (!empty($other_songs)) {
-    foreach ($other_songs as $row) {
-      $manual_songs[] = [
+  $manual_songs = get_field('other_songs_referenced');
+  if ($manual_songs) {
+    foreach ($manual_songs as $row) {
+      if (!$row['artist_name'] || !$row['song_title']) continue;
+      $all_songs['manual'][] = [
         'artist' => $row['artist_name'],
         'song'   => $row['song_title'],
-        'is_cpt' => false
+        'image'  => $placeholder_img,
       ];
     }
   }
@@ -292,62 +276,85 @@ function display_referenced_works() {
   echo '<div class="referenced-works">';
   echo '<h3 style="margin-bottom: 1.5em;"><strong>Referenced Works & People</strong></h3>';
 
-  foreach ($group_titles as $group_key => $meta) {
-    $items = ($group_key === 'manual_songs') ? $manual_songs : ($linked_items[$group_key] ?? []);
+  // Featured Artists block
+  if (!empty($featured_artists)) {
+    $meta = $group_titles['featured_artists'];
+    echo '<div class="referenced-group" style="margin-top:2em;">';
+    echo '<h4 style="margin-bottom: 0.5em;">' .
+         ($meta['link'] ? "<a href=\"{$meta['link']}\" style=\"text-decoration:none;\"><span style=\"font-size:1.1em;\">{$meta['emoji']}</span> <span style=\"text-decoration:underline;\">{$meta['title']}</span></a>" :
+                          "<span style=\"font-size:1.1em;\">{$meta['emoji']}</span> <strong>{$meta['title']}</strong>") .
+         '</h4><ul>';
+    foreach ($featured_artists as $artist) {
+      $img = get_field('portrait_image', $artist->ID);
+      $thumb = $img ? "<img src=\"{$img['sizes']['thumbnail']}\" style=\"width:48px;height:48px;border-radius:50%;margin-right:8px;\">" : '';
+      $title = esc_html($artist->post_title);
+      $link = get_permalink($artist);
+      echo "<li style=\"display:flex;align-items:center;margin-bottom:0.6em;gap:10px;\">{$thumb}<a href=\"{$link}\"><strong>{$title}</strong></a></li>";
+    }
+    echo '</ul></div>';
+  }
+
+  // Songs Referenced
+  if (!empty($all_songs['cpt']) || !empty($all_songs['manual'])) {
+    $meta = $group_titles['songs_referenced'];
+    echo '<div class="referenced-group" style="margin-top:2em;">';
+    echo "<h4 style=\"margin-bottom: 0.5em;\"><span style=\"font-size:1.1em;\">{$meta['emoji']}</span> <strong>{$meta['title']}</strong></h4>";
+
+    echo '<ul style="margin-bottom: 1em;">';
+    foreach ($all_songs['cpt'] as $entry) {
+      echo "<li style=\"display:flex;align-items:center;gap:10px;margin-left:1em;margin-bottom:0.5em;\">";
+      echo "<img src=\"{$entry['image']}\" style=\"width:48px;height:48px;border-radius:50%;\">";
+      echo "<a href=\"{$entry['link']}\"><strong>{$entry['artist']}</strong></a> – {$entry['song']}";
+      echo "</li>";
+    }
+    foreach ($all_songs['manual'] as $entry) {
+      echo "<li style=\"display:flex;align-items:center;gap:10px;margin-left:1em;margin-bottom:0.5em;\">";
+      echo "<img src=\"{$entry['image']}\" style=\"width:48px;height:48px;border-radius:50%;\">";
+      echo "<strong>{$entry['artist']}</strong> – {$entry['song']}";
+      echo "</li>";
+    }
+    echo '</ul></div>';
+  }
+
+  // Remaining groups
+  foreach (['profile', 'lyric', 'quote', 'concept', 'book', 'movie'] as $type) {
+    $items = $linked_items[$type];
     if (empty($items)) continue;
 
-    $title = $meta['emoji'] . ' ' . $meta['title'];
-    $slug_link = $meta['link'] ?? null;
+    $meta = $group_titles[$type];
+    echo '<div class="referenced-group" style="margin-top:2em;">';
+    echo '<h4 style="margin-bottom: 0.5em;">' .
+         ($meta['link'] ? "<a href=\"{$meta['link']}\" style=\"text-decoration:none;\"><span style=\"font-size:1.1em;\">{$meta['emoji']}</span> <span style=\"text-decoration:underline;\">{$meta['title']}</span></a>" :
+                          "<span style=\"font-size:1.1em;\">{$meta['emoji']}</span> <strong>{$meta['title']}</strong>") .
+         '</h4><ul>';
 
-    echo '<div class="referenced-group" style="margin-top: 2em;">';
-    echo $slug_link
-      ? "<h4 style=\"margin-bottom: 0.5em;\"><a href=\"{$slug_link}\"><strong>{$title}</strong></a></h4>"
-      : "<h4 style=\"margin-bottom: 0.5em;\"><strong>{$title}</strong></h4>";
-    echo '<ul>';
+    foreach ($items as $item) {
+      $title = get_the_title($item);
+      $link = get_permalink($item);
+      $thumb = '';
+      $style = 'width:60px;height:auto;margin-right:10px;';
 
-    if ($group_key === 'manual_songs') {
-      usort($items, fn($a, $b) => strcasecmp($a['artist'], $b['artist']));
-      foreach ($items as $song) {
-        $artist = esc_html($song['artist']);
-        $song_title = esc_html($song['song']);
-        if ($song['is_cpt']) {
-          echo "<li><strong><a href=\"{$song['link']}\">{$artist}</a></strong> – {$song_title}</li>";
-        } else {
-          echo "<li><strong>{$artist}</strong> – {$song_title}</li>";
-        }
+      if (in_array($type, ['artist', 'profile'])) {
+        $img = get_field('portrait_image', $item->ID);
+        $thumb = $img ? "<img src=\"{$img['sizes']['thumbnail']}\" style=\"width:48px;height:48px;border-radius:50%;margin-right:10px;\">" : '';
+      } elseif (in_array($type, ['book', 'movie'])) {
+        $img = get_field('cover_image', $item->ID);
+        $style = 'width:60px;height:auto;margin-right:10px;';
+        $thumb = $img ? "<img src=\"{$img['sizes']['medium']}\" style=\"{$style}\">" : '';
+      } elseif (has_post_thumbnail($item->ID)) {
+        $thumb = get_the_post_thumbnail($item->ID, 'thumbnail', ['style' => $style]);
       }
-    } else {
-      uasort($items, fn($a, $b) => strcasecmp($a->post_title, $b->post_title));
-      foreach ($items as $item) {
-        $title = get_the_title($item);
-        $permalink = get_permalink($item);
-        $type = get_post_type($item);
-        $thumb = '';
 
-        // ACF image logic
-        if (in_array($type, ['artist', 'profile'])) {
-          $image = get_field('portrait_image', $item->ID);
-          if ($image) {
-            $thumb = "<img src=\"{$image['sizes']['thumbnail']}\" alt=\"\" style=\"width:48px;height:48px;border-radius:50%;margin-right:8px;vertical-align:middle;\">";
-          }
-        } elseif (in_array($type, ['book', 'movie'])) {
-          $image = get_field('cover_image', $item->ID);
-          if ($image) {
-            $thumb = "<img src=\"{$image['sizes']['medium']}\" alt=\"\" style=\"width:60px;height:auto;margin-right:10px;vertical-align:middle;\">";
-          }
-        } elseif (has_post_thumbnail($item->ID)) {
-          $thumb = get_the_post_thumbnail($item->ID, 'thumbnail', ['style' => 'width:48px;height:auto;margin-right:10px;vertical-align:middle;']);
-        }
-
-        echo "<li style=\"margin-left: 1em;display: flex;align-items: center;gap:10px;margin-bottom: 0.6em;\">{$thumb}<a href=\"{$permalink}\"><strong>{$title}</strong></a>";
-
-        if ($type === 'concept') {
-          $def = get_field('definition', $item->ID);
-          if ($def) echo ": <span>{$def}</span>";
-        }
-
-        echo "</li>";
+      echo "<li style=\"margin-left:1em;display:flex;align-items:flex-start;gap:10px;margin-bottom:0.6em;\">{$thumb}<div>";
+      echo "<a href=\"{$link}\"><strong>{$title}</strong></a>";
+      if ($type === 'concept') {
+        $def = get_field('definition', $item->ID);
+        if ($def) echo "<div>{$def}</div>";
+      } elseif ($type === 'quote') {
+        $quote = get_field('quote_text', $item->ID) ?: get_field('quote_html_block', $item->ID);
+        if ($quote) echo "<div>{$quote}</div>";
       }
+      echo "</div></li>";
     }
 
     echo '</ul></div>';
