@@ -380,6 +380,39 @@
                     "parent_repeater": "field_686a99bac3aba"
                 }
             ]
+        },
+        {
+            "key": "field_686bdabea3a5c",
+            "label": "Chapter References",
+            "name": "chapter_references",
+            "aria-label": "",
+            "type": "relationship",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "post_type": [
+                "reference"
+            ],
+            "post_status": "",
+            "taxonomy": "",
+            "filters": [
+                "search",
+                "post_type",
+                "taxonomy"
+            ],
+            "return_format": "object",
+            "min": "",
+            "max": "",
+            "allow_in_bindings": 0,
+            "elements": "",
+            "bidirectional": 0,
+            "bidirectional_target": []
         }
     ],
     "location": [
@@ -400,5 +433,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1751820146
+    "modified": 1751899006
 }
