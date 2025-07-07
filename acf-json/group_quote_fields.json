@@ -3,24 +3,84 @@
     "title": "Quote Fields",
     "fields": [
         {
-            "key": "field_quote_text",
-            "label": "Quote Text (HTML Cover Block)",
-            "name": "quote_html_block",
+            "key": "field_quote_plain_text",
+            "label": "Quote Text (Plain)",
+            "name": "quote_plain_text",
             "aria-label": "",
             "type": "textarea",
-            "instructions": "Paste raw HTML of the styled quote block.",
-            "required": 0,
+            "instructions": "",
+            "required": false,
             "conditional_logic": false,
             "wrapper": {
                 "width": "",
                 "class": "",
                 "id": ""
             },
-            "rows": 8,
-            "new_lines": "",
             "default_value": "",
+            "new_lines": "",
             "maxlength": "",
-            "placeholder": ""
+            "placeholder": "",
+            "rows": ""
+        },
+        {
+            "key": "field_quote_formatted_text",
+            "label": "Quote Text (Formatted)",
+            "name": "quote_formatted_text",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "new_lines": "",
+            "maxlength": "",
+            "placeholder": "",
+            "rows": ""
+        },
+        {
+            "key": "field_quote_cover_block_full",
+            "label": "Cover Block HTML (Full)",
+            "name": "quote_cover_block_full",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "new_lines": "",
+            "maxlength": "",
+            "placeholder": "",
+            "rows": ""
+        },
+        {
+            "key": "field_quote_cover_block_simple",
+            "label": "Cover Block HTML (Simplified)",
+            "name": "quote_cover_block_simple",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "new_lines": "",
+            "maxlength": "",
+            "placeholder": "",
+            "rows": ""
         },
         {
             "key": "field_quote_attribution",
@@ -28,8 +88,8 @@
             "name": "quote_attribution",
             "aria-label": "",
             "type": "text",
-            "instructions": "Optional person or source of the quote.",
-            "required": 0,
+            "instructions": "",
+            "required": false,
             "conditional_logic": false,
             "wrapper": {
                 "width": "",
@@ -43,12 +103,12 @@
             "append": ""
         },
         {
-            "key": "field_quote_portrait",
+            "key": "field_portrait_image",
             "label": "Portrait Image",
             "name": "portrait_image",
             "aria-label": "",
             "type": "image",
-            "instructions": "Optional image (author or symbolic thumbnail).",
+            "instructions": "",
             "required": false,
             "conditional_logic": false,
             "wrapper": {
@@ -56,7 +116,7 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "array",
+            "return_format": "id",
             "preview_size": "thumbnail",
             "library": "all",
             "min_width": 0,
@@ -68,58 +128,30 @@
             "mime_types": ""
         },
         {
-            "key": "field_685ee87b1aff0",
-            "label": "Styled Cover Block HTML",
-            "name": "quote_html_block",
-            "aria-label": "",
-            "type": "textarea",
-            "instructions": "Paste the raw HTML from your styled Cover block.",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "relevanssi_exclude": 0,
-            "default_value": "",
-            "maxlength": "",
-            "allow_in_bindings": 0,
-            "rows": "",
-            "placeholder": "",
-            "new_lines": ""
-        },
-        {
-            "key": "field_685f00047788d",
+            "key": "field_books_cited",
             "label": "Books Cited",
             "name": "books_cited",
             "aria-label": "",
             "type": "relationship",
             "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
+            "required": false,
+            "conditional_logic": false,
             "wrapper": {
                 "width": "",
                 "class": "",
                 "id": ""
             },
-            "relevanssi_exclude": 0,
             "post_type": [
                 "book"
             ],
-            "post_status": "",
-            "taxonomy": "",
             "filters": [
-                "search",
-                "post_type",
-                "taxonomy"
+                "search"
             ],
-            "return_format": "object",
-            "min": "",
-            "max": "",
-            "allow_in_bindings": 1,
-            "elements": "",
-            "bidirectional": 0,
+            "return_format": "id",
+            "taxonomy": [],
+            "min": 0,
+            "max": 0,
+            "elements": [],
             "bidirectional_target": []
         }
     ],
@@ -137,9 +169,9 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "hide_on_screen": "",
+    "hide_on_screen": [],
     "active": true,
     "description": "",
-    "show_in_rest": 0,
-    "modified": 1751056393
+    "show_in_rest": false,
+    "modified": 1751931759
 }
