@@ -339,61 +339,81 @@ function display_referenced_works() {
       if ($item instanceof WP_Post) $linked_items[$type][$item->ID] = $item;
     }
   }
-  foreach ($linked_items as $type => $items) {
-    if (empty($items)) continue;
-    if (in_array($type, ['book', 'movie', 'concept'])) uasort($items, fn($a, $b) => strcmp(get_the_title($a), get_the_title($b)));
-    $meta = $group_titles[$type];
-    echo '<div class="referenced-group" style="margin-top:2em;">';
-    echo "<h4><a href=\"{$meta['link']}\" style=\"text-decoration:none;\"><span style=\"font-size:1.1em;\">{$meta['emoji']}</span> <span style=\"text-decoration:underline;\">{$meta['title']}</span></a></h4><ul>";
-    foreach ($items as $item) {
-      $title = esc_html(get_the_title($item));
-      $link = get_permalink($item);
-      $thumb = '';
-      if ($type === 'profile') {
-        $img = get_field('portrait_image', $item->ID);
-        $thumb = $img ? "<img src=\"{$img['sizes']['thumbnail']}\" style=\"width:48px;height:48px;border-radius:50%;margin-right:10px;\">" : '';
-      } elseif (in_array($type, ['book', 'movie'])) {
-        $img = get_field('cover_image', $item->ID);
-        $thumb = $img ? "<img src=\"{$img['sizes']['medium']}\" style=\"width:60px;height:auto;margin-right:10px;\">" : '';
-      } elseif (has_post_thumbnail($item->ID)) {
-        $thumb = get_the_post_thumbnail($item->ID, 'thumbnail', ['style' => 'width:60px;height:auto;margin-right:10px;']);
-      }
-      echo "<li style=\"display:flex;align-items:flex-start;gap:10px;margin-bottom:0.6em;\">{$thumb}<div><a href=\"{$link}\"><strong>{$title}</strong></a>";
-      if ($type === 'concept') {
-        $def = get_field('definition', $item->ID);
-        if ($def) echo "<div>{$def}</div>";
-      } elseif ($type === 'quote') {
-        $quote = get_field('quote_text', $item->ID) ?: get_field('quote_html_block', $item->ID);
-        if ($quote) echo "<div>{$quote}</div>";
-      }
-      echo "</div></li>";
-    }
-    echo '</ul></div>';
+foreach ($linked_items as $type => $items) {
+  if (empty($items)) continue;
+  if (in_array($type, ['book', 'movie', 'concept'])) {
+    uasort($items, fn($a, $b) => strcmp(get_the_title($a), get_the_title($b)));
   }
 
-  // === Standalone External References ===
-  $refs = get_field('chapter_references') ?: [];
-  $meta = $group_titles['reference'];
-  if (!empty($refs)) {
-    echo '<div class="referenced-group" style="margin-top:2em;">';
-    echo "<h4><a href=\"{$meta['link']}\" style=\"text-decoration:none;\"><span style=\"font-size:1.1em;\">{$meta['emoji']}</span> <span style=\"text-decoration:underline;\">{$meta['title']}</span></a></h4><ul>";
-    usort($refs, fn($a, $b) => strcmp(get_the_title($a), get_the_title($b)));
-foreach ($refs as $ref) {
-  $title = esc_html(get_the_title($ref));
-  $url = get_field('url', $ref->ID);
-  $src = get_field('source_name', $ref->ID);
-  $thumb = get_the_post_thumbnail($ref->ID, 'thumbnail', ['style' => 'width:60px;height:auto;margin-right:10px;']);
+  $meta = $group_titles[$type];
+  echo '<div class="referenced-group" style="margin-top:2em;">';
+  echo "<h4><a href=\"{$meta['link']}\" style=\"text-decoration:none;\"><span style=\"font-size:1.1em;\">{$meta['emoji']}</span> <span style=\"text-decoration:underline;\">{$meta['title']}</span></a></h4><ul>";
 
-  echo "<li style=\"display:flex;align-items:flex-start;gap:10px;margin-bottom:0.6em;\">{$thumb}<div>";
-echo "<div><strong>{$title}</strong></div>";
-if ($src) echo "<div><em>{$src}</em></div>";
-if ($url) echo "<div><a href=\"{$url}\" target=\"_blank\" rel=\"noopener noreferrer\">Link</a></div>";
+  foreach ($items as $item) {
+    $title = esc_html(get_the_title($item));
+    $link = get_permalink($item);
+    $thumb = '';
 
-  echo "</div></li>";
+    if ($type === 'profile') {
+      $img = get_field('portrait_image', $item->ID);
+      if ($img) {
+        $src = $img['sizes']['thumbnail'];
+        $thumb = "<a href=\"{$link}\"><img src=\"{$src}\" style=\"width:48px;height:48px;border-radius:50%;margin-right:10px;\"></a>";
+      }
+    } elseif (in_array($type, ['concept', 'quote', 'reference'])) {
+      if (has_post_thumbnail($item->ID)) {
+        $src = get_the_post_thumbnail_url($item->ID, 'thumbnail');
+        $thumb = "<a href=\"{$link}\"><img src=\"{$src}\" style=\"width:48px;height:48px;border-radius:50%;margin-right:10px;\"></a>";
+      }
+    } elseif (in_array($type, ['book', 'movie'])) {
+      $img = get_field('cover_image', $item->ID);
+      if ($img) {
+        $src = $img['sizes']['medium'];
+        $thumb = "<a href=\"{$link}\"><img src=\"{$src}\" style=\"width:60px;height:auto;margin-right:10px;\"></a>";
+      }
+    }
+
+    echo "<li style=\"display:flex;align-items:flex-start;gap:10px;margin-bottom:0.6em;\">{$thumb}<div><a href=\"{$link}\"><strong>{$title}</strong></a>";
+
+    if ($type === 'concept') {
+      $def = get_field('definition', $item->ID);
+      if ($def) echo "<div>{$def}</div>";
+    } elseif ($type === 'quote') {
+      $quote = get_field('quote_text', $item->ID) ?: get_field('quote_html_block', $item->ID);
+      if ($quote) echo "<div>{$quote}</div>";
+    }
+
+    echo "</div></li>";
+  }
+
+  echo '</ul></div>';
 }
 
-    echo '</ul></div>';
+
+  // === Standalone External References ===
+$refs = get_field('chapter_references') ?: [];
+$meta = $group_titles['reference'];
+if (!empty($refs)) {
+  echo '<div class="referenced-group" style="margin-top:2em;">';
+  echo "<h4><a href=\"{$meta['link']}\" style=\"text-decoration:none;\"><span style=\"font-size:1.1em;\">{$meta['emoji']}</span> <span style=\"text-decoration:underline;\">{$meta['title']}</span></a></h4><ul>";
+  usort($refs, fn($a, $b) => strcmp(get_the_title($a), get_the_title($b)));
+  foreach ($refs as $ref) {
+    $title = esc_html(get_the_title($ref));
+    $url   = get_field('url', $ref->ID);
+    $src   = get_field('source_name', $ref->ID);
+    $link  = get_permalink($ref->ID);
+    $img   = get_the_post_thumbnail_url($ref->ID, 'thumbnail');
+    $thumb = $img ? "<a href=\"{$link}\"><img src=\"{$img}\" style=\"width:48px;height:48px;border-radius:50%;margin-right:10px;\"></a>" : '';
+
+    echo "<li style=\"display:flex;align-items:flex-start;gap:10px;margin-bottom:0.6em;\">{$thumb}<div>";
+    echo "<div><a href=\"{$link}\"><strong>{$title}</strong></a></div>";
+    if ($src) echo "<div><em>{$src}</em></div>";
+    if ($url) echo "<div><a href=\"{$url}\" target=\"_blank\" rel=\"noopener noreferrer\">Link</a></div>";
+    echo "</div></li>";
   }
+  echo '</ul></div>';
+}
+
 
   echo '</div>'; // .referenced-works
   return ob_get_clean();
