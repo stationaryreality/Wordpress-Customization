@@ -30,7 +30,7 @@ $related     = get_field('related_cpt');
 
   <?php if ($related): ?>
     <p class="reference-related">
-      <strong>Related:</strong>
+      <strong>Original Chapter:</strong>
       <a href="<?php echo get_permalink($related); ?>">
         <?php echo esc_html(get_the_title($related)); ?>
       </a>
