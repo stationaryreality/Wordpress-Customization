@@ -26,11 +26,12 @@
         </a>
       <?php endif; ?>
 
-      <h2 class="artist-name">
-        <a href="<?php echo esc_url($artist_link); ?>">
-          🎹 <?php echo esc_html($artist_name); ?>
-        </a>
-      </h2>
+<h2 class="artist-name">
+  <a href="<?php echo esc_url($artist_link); ?>" style="text-decoration: underline;">
+  <?php echo esc_html($artist_name); ?>
+  </a>
+</h2>
+
 
       <?php if ($song_title): ?>
         <div class="song-title"><?php echo esc_html($song_title); ?></div>
