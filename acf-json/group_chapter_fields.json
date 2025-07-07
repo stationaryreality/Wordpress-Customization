@@ -47,6 +47,26 @@
             "bidirectional_target": []
         },
         {
+            "key": "field_primary_song_title",
+            "label": "Primary Song Title",
+            "name": "primary_song_title",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
             "key": "field_686c3b4baa8a9",
             "label": "Secondary Artist",
             "name": "secondary_artist",
@@ -71,26 +91,6 @@
             "bidirectional": 0,
             "ui": 1,
             "bidirectional_target": []
-        },
-        {
-            "key": "field_primary_song_title",
-            "label": "Primary Song Title",
-            "name": "primary_song_title",
-            "aria-label": "",
-            "type": "text",
-            "instructions": "",
-            "required": false,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "maxlength": "",
-            "placeholder": "",
-            "prepend": "",
-            "append": ""
         },
         {
             "key": "field_686c3b669024b",
@@ -481,5 +481,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1751923586
+    "modified": 1751931892
 }
