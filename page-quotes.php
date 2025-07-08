@@ -19,7 +19,7 @@ $quotes = get_posts([
 
     <div class="quote-list">
       <?php foreach ($quotes as $quote): ?>
-        <?php $excerpt = get_field('quote_html_block', $quote->ID); ?>
+        <?php $excerpt = get_field('quote_plain_text', $quote->ID); ?>
         <div class="quote-entry" style="margin-bottom: 2rem; border-bottom: 1px solid #ddd; padding-bottom: 1rem;">
           <h2 style="margin-bottom: 0.5rem;">
             <a href="<?php echo get_permalink($quote); ?>">
@@ -27,7 +27,7 @@ $quotes = get_posts([
             </a>
           </h2>
           <?php if ($excerpt): ?>
-            <p style="margin: 0;"><?php echo esc_html(wp_trim_words(strip_tags($excerpt), 30)); ?></p>
+            <p style="margin: 0;"><?php echo esc_html(wp_trim_words($excerpt, 30)); ?></p>
           <?php endif; ?>
         </div>
       <?php endforeach; ?>
