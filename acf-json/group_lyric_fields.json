@@ -3,12 +3,12 @@
     "title": "Lyric Fields",
     "fields": [
         {
-            "key": "field_lyric_text",
-            "label": "Plain Text Lyric",
-            "name": "lyric_text",
+            "key": "field_lyric_plain_text",
+            "label": "Lyric Text (Plain)",
+            "name": "lyric_plain_text",
             "aria-label": "",
             "type": "textarea",
-            "instructions": "Store the plain text version of the lyric here.",
+            "instructions": "",
             "required": false,
             "conditional_logic": false,
             "wrapper": {
@@ -16,33 +16,71 @@
                 "class": "",
                 "id": ""
             },
-            "rows": 6,
-            "new_lines": "wpautop",
             "default_value": "",
+            "new_lines": "",
             "maxlength": "",
-            "placeholder": ""
+            "placeholder": "",
+            "rows": ""
         },
         {
-            "key": "field_lyric_html",
-            "label": "Styled Cover Block HTML",
-            "name": "lyric_html_block",
+            "key": "field_lyric_formatted_text",
+            "label": "Lyric Text (Formatted)",
+            "name": "lyric_formatted_text",
             "aria-label": "",
             "type": "textarea",
-            "instructions": "Paste the raw HTML from your styled Cover block.",
-            "required": 0,
-            "conditional_logic": 0,
+            "instructions": "",
+            "required": false,
+            "conditional_logic": false,
             "wrapper": {
                 "width": "",
                 "class": "",
                 "id": ""
             },
-            "relevanssi_exclude": 0,
             "default_value": "",
+            "new_lines": "",
             "maxlength": "",
-            "allow_in_bindings": 0,
-            "rows": "",
             "placeholder": "",
-            "new_lines": ""
+            "rows": ""
+        },
+        {
+            "key": "field_lyric_cover_block_full",
+            "label": "Cover Block HTML (Full)",
+            "name": "lyric_cover_block_full",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "new_lines": "",
+            "maxlength": "",
+            "placeholder": "",
+            "rows": ""
+        },
+        {
+            "key": "field_lyric_cover_block_simple",
+            "label": "Cover Block HTML (Simplified)",
+            "name": "lyric_cover_block_simple",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "new_lines": "",
+            "maxlength": "",
+            "placeholder": "",
+            "rows": ""
         },
         {
             "key": "field_lyric_artist",
@@ -62,16 +100,43 @@
                 "artist"
             ],
             "return_format": "id",
+            "ui": 1,
             "taxonomy": [],
             "allow_null": 0,
             "multiple": 0,
-            "ui": 1,
             "bidirectional_target": []
         },
         {
             "key": "field_lyric_concepts",
             "label": "Concepts",
             "name": "concepts",
+            "aria-label": "",
+            "type": "relationship",
+            "instructions": "",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "concept"
+            ],
+            "filters": [
+                "search"
+            ],
+            "return_format": "id",
+            "taxonomy": [],
+            "min": 0,
+            "max": 0,
+            "elements": [],
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_lyric_themes",
+            "label": "Themes",
+            "name": "lyric_themes",
             "aria-label": "",
             "type": "taxonomy",
             "instructions": "",
@@ -82,14 +147,14 @@
                 "class": "",
                 "id": ""
             },
-            "taxonomy": "category",
+            "taxonomy": "lyric_theme",
             "field_type": "multi_select",
-            "multiple": 0,
             "allow_null": 0,
             "return_format": "id",
             "add_term": 1,
             "load_terms": 0,
             "save_terms": 0,
+            "multiple": 0,
             "bidirectional_target": []
         }
     ],
@@ -107,9 +172,9 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "hide_on_screen": "",
+    "hide_on_screen": [],
     "active": true,
     "description": "",
-    "show_in_rest": 0,
-    "modified": 1751050338
+    "show_in_rest": false,
+    "modified": 1752004108
 }
