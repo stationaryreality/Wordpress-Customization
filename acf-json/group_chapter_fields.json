@@ -67,6 +67,28 @@
             "append": ""
         },
         {
+            "key": "field_686d68cf1feb3",
+            "label": "Primary Song Title 2",
+            "name": "primary_song_title_2",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
             "key": "field_686c3b4baa8a9",
             "label": "Secondary Artist",
             "name": "secondary_artist",
@@ -481,5 +503,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1751931892
+    "modified": 1752000741
 }
