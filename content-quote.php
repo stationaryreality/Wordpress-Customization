@@ -1,5 +1,5 @@
 <?php
-$quote_html = get_field('quote_html_block');
+$quote_html = get_field('quote_cover_block_full');
 $attribution = get_field('quote_attribution');
 $portrait = get_field('portrait_image');
 $img_url = $portrait ? $portrait['sizes']['thumbnail'] : '';
