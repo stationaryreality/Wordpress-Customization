@@ -1,6 +1,6 @@
 <?php
-$lyric_html = get_field('lyric_html_block');
-$lyric_text = get_field('lyric_text');
+$lyric_html = get_field('lyric_cover_block_full');
+$lyric_text = get_field('lyric_plain_text');
 $portrait = get_field('portrait_image', get_the_ID());
 $img_url = $portrait ? $portrait['sizes']['thumbnail'] : '';
 ?>
