@@ -21,7 +21,7 @@ $lyrics = get_posts([
     <div class="concept-list">
       <?php foreach ($lyrics as $lyric): ?>
         <?php
-          $text = get_field('lyric_text', $lyric->ID);
+          $text = get_field('lyric_plain_text', $lyric->ID);
         ?>
         <div class="concept-entry" style="margin-bottom: 2rem; border-bottom: 1px solid #ddd; padding-bottom: 1rem;">
           <h2 style="margin-bottom: 0.5rem;">
