@@ -1,0 +1,92 @@
+{
+    "key": "group_person_fields",
+    "title": "Person Fields",
+    "fields": [
+        {
+            "key": "field_person_portrait",
+            "label": "Portrait Image",
+            "name": "portrait_image",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "Upload a headshot for this person",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "preview_size": "medium",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": ""
+        },
+        {
+            "key": "field_person_bio",
+            "label": "Bio \/ Summary",
+            "name": "bio",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "Short biography or summary (optional)",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "new_lines": "wpautop",
+            "maxlength": "",
+            "placeholder": "",
+            "rows": 4,
+            "default_value": ""
+        },
+        {
+            "key": "field_68529fe8e9d8a",
+            "label": "Wikipedia Slug",
+            "name": "wikipedia_slug",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "profile"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1750873211
+}
