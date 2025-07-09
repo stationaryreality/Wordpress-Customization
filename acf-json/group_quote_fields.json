@@ -177,7 +177,7 @@
             "filters": [
                 "search"
             ],
-            "return_format": "id",
+            "return_format": "object",
             "min": "",
             "max": "",
             "allow_in_bindings": 1,
@@ -204,5 +204,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1751936111
+    "modified": 1752078073
 }
