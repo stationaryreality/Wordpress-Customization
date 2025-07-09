@@ -609,3 +609,9 @@ body .wp-block-group .wp-block-cover {
   margin-right: 10px;
   flex-shrink: 0;
 }
+
+/* This is to fix the shortcode injected links on cover blocks */
+
+.has-white-color.has-link-color a {
+  color: white !important;
+}
