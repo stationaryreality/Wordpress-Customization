@@ -5,14 +5,15 @@ $search_term = get_search_query();
 
 // CPTs mapped to display title + emoji
 $cpt_sections = [
-  'artist'  => ['title' => 'Artists Featured',    'emoji' => '🎹'],
-  'profile' => ['title' => 'People Referenced',   'emoji' => '👤'],
-  'lyric'   => ['title' => 'Song Excerpts',       'emoji' => '📻'],
-  'quote'   => ['title' => 'Quote Library',       'emoji' => '💬'],
-  'concept' => ['title' => 'Lexicon',             'emoji' => '🔎'],
-  'book'    => ['title' => 'Books Cited',         'emoji' => '📚'],
-  'movie'   => ['title' => 'Movies Referenced',   'emoji' => '🎬'],
-  'chapter' => ['title' => 'Narrative Threads',   'emoji' => '🧵'],
+  'artist'    => ['title' => 'Artists Featured',    'emoji' => '🎤'],
+  'profile'   => ['title' => 'People Referenced',   'emoji' => '👤'],
+  'lyric'     => ['title' => 'Song Excerpts',       'emoji' => '🎵'],
+  'quote'     => ['title' => 'Quote Library',       'emoji' => '💬'],
+  'concept'   => ['title' => 'Lexicon',             'emoji' => '🔎'],
+  'book'      => ['title' => 'Books Cited',         'emoji' => '📚'],
+  'movie'     => ['title' => 'Movies Referenced',   'emoji' => '🎬'],
+  'chapter'   => ['title' => 'Narrative Threads',   'emoji' => '📜'],
+  'reference' => ['title' => 'External References', 'emoji' => '📰'],
 ];
 
 $total_results = 0;
@@ -118,7 +119,7 @@ foreach ($cpt_sections as $type => $info) {
     case 'lyric':
       echo '<div class="concept-list">';
       while ($query->have_posts()): $query->the_post();
-        $field = $type === 'concept' ? 'definition' : 'lyric_text';
+        $field = $type === 'concept' ? 'definition' : 'lyric_plain_text';
         $content = get_field($field);
         ?>
         <div class="concept-entry" style="margin-bottom: 2rem; border-bottom: 1px solid #ddd; padding-bottom: 1rem;">
