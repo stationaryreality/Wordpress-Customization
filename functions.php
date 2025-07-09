@@ -218,12 +218,25 @@ add_action('template_redirect', function () {
 function render_custom_cover_block($atts) {
     $atts = shortcode_atts(['id' => ''], $atts, 'custom_cover');
 
-    if (!$atts['id']) return '';
+    $id = $atts['id'];
+    if (!$id) return '';
 
-    $html = get_field('lyric_html_block', $atts['id']);
+    $post_type = get_post_type($id);
+    if (!$post_type) return '';
+
+    // Determine correct ACF field based on post type
+    if ($post_type === 'quote') {
+        $html = get_field('quote_cover_block_full', $id);
+    } elseif ($post_type === 'lyric') {
+        $html = get_field('lyric_cover_block_full', $id);
+    } else {
+        return '';
+    }
+
     return $html ?: '';
 }
 add_shortcode('custom_cover', 'render_custom_cover_block');
+
 
 
 function display_referenced_works() {
