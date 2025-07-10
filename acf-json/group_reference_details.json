@@ -36,13 +36,13 @@
                 "Pamphlet": "Pamphlet",
                 "Other": "Other"
             },
-            "allow_null": 0,
-            "multiple": 0,
             "ui": 1,
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
             "default_value": false,
             "ajax": 0,
             "placeholder": "",
-            "return_format": "value",
             "create_options": 0,
             "save_options": 0
         },
@@ -101,6 +101,31 @@
             "placeholder": ""
         },
         {
+            "key": "field_686fbbd4135c3",
+            "label": "Cover Image",
+            "name": "cover_image",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "preview_size": "medium",
+            "library": "all",
+            "min_width": 0,
+            "min_height": 0,
+            "min_size": 0,
+            "max_width": 0,
+            "max_height": 0,
+            "max_size": 0,
+            "mime_types": ""
+        },
+        {
             "key": "field_credit_name",
             "label": "Credit Name",
             "name": "credit_name",
@@ -127,20 +152,18 @@
             "aria-label": "",
             "type": "textarea",
             "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
+            "required": false,
+            "conditional_logic": false,
             "wrapper": {
                 "width": "",
                 "class": "",
                 "id": ""
             },
-            "relevanssi_exclude": 0,
             "default_value": "",
+            "new_lines": "",
             "maxlength": "",
-            "allow_in_bindings": 1,
-            "rows": "",
             "placeholder": "",
-            "new_lines": ""
+            "rows": ""
         },
         {
             "key": "field_related_cpt",
@@ -157,11 +180,11 @@
                 "id": ""
             },
             "post_type": [],
-            "multiple": 0,
             "allow_null": 1,
-            "taxonomy": [],
             "return_format": "object",
             "ui": 1,
+            "taxonomy": [],
+            "multiple": 0,
             "bidirectional_target": []
         },
         {
@@ -198,10 +221,10 @@
                 "class": "",
                 "id": ""
             },
-            "min": 0,
-            "max": 0,
             "layout": "table",
             "button_label": "Add Note",
+            "min": 0,
+            "max": 0,
             "rows_per_page": 20,
             "collapsed": "",
             "sub_fields": [
@@ -268,6 +291,159 @@
             "message": "",
             "ui_on_text": "",
             "ui_off_text": ""
+        },
+        {
+            "key": "field_reference_excerpts",
+            "label": "Excerpts",
+            "name": "reference_excerpts",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "Store excerpts from this source, with HTML and plain-text versions.",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "row",
+            "button_label": "Add Excerpt",
+            "min": 0,
+            "max": 0,
+            "rows_per_page": 20,
+            "collapsed": "",
+            "sub_fields": [
+                {
+                    "key": "field_excerpt_html",
+                    "label": "Excerpt (HTML)",
+                    "name": "excerpt_text_html",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "Cover block or styled version (HTML allowed)",
+                    "required": false,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "rows": 6,
+                    "default_value": "",
+                    "new_lines": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "parent_repeater": "field_reference_excerpts"
+                },
+                {
+                    "key": "field_excerpt_plain",
+                    "label": "Excerpt (Plain Text)",
+                    "name": "excerpt_text_plain",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "Clean version for search\/index\/footnotes",
+                    "required": false,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "rows": 4,
+                    "default_value": "",
+                    "new_lines": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "parent_repeater": "field_reference_excerpts"
+                },
+                {
+                    "key": "field_excerpt_page",
+                    "label": "Page Number",
+                    "name": "page_number",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": false,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_reference_excerpts"
+                },
+                {
+                    "key": "field_excerpt_paragraph",
+                    "label": "Paragraph Number",
+                    "name": "paragraph_number",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": false,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_reference_excerpts"
+                },
+                {
+                    "key": "field_excerpt_chapter_used",
+                    "label": "Used In Chapter",
+                    "name": "chapter_used_in",
+                    "aria-label": "",
+                    "type": "post_object",
+                    "instructions": "",
+                    "required": false,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "post_type": [
+                        "chapter"
+                    ],
+                    "return_format": "object",
+                    "ui": 1,
+                    "taxonomy": [],
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "bidirectional_target": [],
+                    "parent_repeater": "field_reference_excerpts"
+                },
+                {
+                    "key": "field_excerpt_notes",
+                    "label": "Notes",
+                    "name": "notes",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "Optional context or citation note.",
+                    "required": false,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "rows": 2,
+                    "default_value": "",
+                    "new_lines": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "parent_repeater": "field_reference_excerpts"
+                }
+            ]
         }
     ],
     "location": [
@@ -288,5 +464,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1752013642
+    "modified": 1752160520
 }
