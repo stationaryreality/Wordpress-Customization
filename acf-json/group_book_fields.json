@@ -196,6 +196,175 @@
             ]
         },
         {
+            "key": "field_686fe9966e70a",
+            "label": "Excerpts",
+            "name": "book_excerpts",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "Store excerpts from this source, with HTML and plain-text versions.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "layout": "row",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "",
+            "button_label": "Add Excerpt",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_686fe9966e70f",
+                    "label": "Excerpt (HTML)",
+                    "name": "excerpt_text_html",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "Cover block or styled version (HTML allowed)",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "relevanssi_exclude": 0,
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 1,
+                    "rows": 6,
+                    "placeholder": "",
+                    "new_lines": "",
+                    "parent_repeater": "field_686fe9966e70a"
+                },
+                {
+                    "key": "field_686fe9966e710",
+                    "label": "Excerpt (Plain Text)",
+                    "name": "excerpt_text_plain",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "Clean version for search\/index\/footnotes",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "relevanssi_exclude": 0,
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 1,
+                    "rows": 4,
+                    "placeholder": "",
+                    "new_lines": "",
+                    "parent_repeater": "field_686fe9966e70a"
+                },
+                {
+                    "key": "field_686fe9966e711",
+                    "label": "Page Number",
+                    "name": "page_number",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "relevanssi_exclude": 0,
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 1,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_686fe9966e70a"
+                },
+                {
+                    "key": "field_686fe9966e712",
+                    "label": "Paragraph Number",
+                    "name": "paragraph_number",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "relevanssi_exclude": 0,
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 1,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_686fe9966e70a"
+                },
+                {
+                    "key": "field_686fe9966e713",
+                    "label": "Used In Chapter",
+                    "name": "chapter_used_in",
+                    "aria-label": "",
+                    "type": "post_object",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "relevanssi_exclude": 0,
+                    "post_type": [
+                        "chapter"
+                    ],
+                    "post_status": "",
+                    "taxonomy": "",
+                    "return_format": "object",
+                    "multiple": 0,
+                    "allow_null": 0,
+                    "allow_in_bindings": 1,
+                    "bidirectional": 0,
+                    "ui": 1,
+                    "bidirectional_target": [],
+                    "parent_repeater": "field_686fe9966e70a"
+                },
+                {
+                    "key": "field_686fe9966e714",
+                    "label": "Notes",
+                    "name": "notes",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "Optional context or citation note.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "relevanssi_exclude": 0,
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 1,
+                    "rows": 2,
+                    "placeholder": "",
+                    "new_lines": "",
+                    "parent_repeater": "field_686fe9966e70a"
+                }
+            ]
+        },
+        {
             "key": "field_685c1854a860f",
             "label": "Author Profile",
             "name": "author_profile",
@@ -240,5 +409,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1752153046
+    "modified": 1752164881
 }
