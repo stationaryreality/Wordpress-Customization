@@ -1,7 +1,8 @@
 <?php
-$definition = get_field('definition'); // Custom ACF field for concepts
+$definition = get_field('definition');
 $portrait   = get_field('portrait_image', get_the_ID());
 $img_url    = $portrait ? $portrait['sizes']['thumbnail'] : '';
+$related    = get_field('related_concepts'); // ACF relationship field, return format: Post Object
 ?>
 
 <div class="person-content">
@@ -18,6 +19,21 @@ $img_url    = $portrait ? $portrait['sizes']['thumbnail'] : '';
       <?php the_content(); ?>
     <?php endif; ?>
   </div>
+
+  <?php if ($related): ?>
+    <div class="related-concepts mt-6">
+      <h2 class="text-xl font-semibold mb-2">🔁 Related Concepts</h2>
+      <ul class="list-disc list-inside">
+        <?php foreach ($related as $item): ?>
+          <li>
+            <a href="<?php echo get_permalink($item->ID); ?>" class="underline hover:text-blue-600">
+              <?php echo esc_html(get_the_title($item->ID)); ?>
+            </a>
+          </li>
+        <?php endforeach; ?>
+      </ul>
+    </div>
+  <?php endif; ?>
 
   <?php get_template_part('content/concept-nav'); ?>
 </div>
