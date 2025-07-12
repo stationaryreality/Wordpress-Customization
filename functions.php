@@ -12,6 +12,18 @@ function ct_author_child_enqueue_styles() {
 }
 add_action('wp_enqueue_scripts', 'ct_author_child_enqueue_styles');
 
+
+register_taxonomy( 'theme', [ 'chapter', 'quote', 'lyric', 'concept', 'movie', 'book', 'profile', 'artist' ], [
+  'label' => 'Themes',
+  'public' => true,
+  'show_ui' => true,
+  'show_in_nav_menus' => true,
+  'show_admin_column' => true,
+  'hierarchical' => false,
+  'show_in_rest' => true, // ← REQUIRED for block editor support
+  'rewrite' => ['slug' => 'theme'],
+]);
+
 // Enable excerpts for Pages
 add_post_type_support('page', 'excerpt');
 
@@ -447,3 +459,27 @@ if (!empty($refs)) {
   return ob_get_clean();
 }
 add_shortcode('referenced_works', 'display_referenced_works');
+
+
+add_filter('relevanssi_content_to_index', 'add_artist_name_to_index', 10, 2);
+function add_artist_name_to_index($content, $post) {
+    if ($post->post_type === 'chapter') {
+        $artist = get_field('primary_artist', $post->ID);
+        $song = get_field('primary_song_title', $post->ID);
+
+        if ($artist) {
+            // Get name if it's a post object (CPT)
+            if (is_object($artist)) {
+                $content .= ' ' . get_the_title($artist->ID);
+            } else {
+                $content .= ' ' . $artist;
+            }
+        }
+
+        if ($song) {
+            $content .= ' ' . $song;
+        }
+    }
+
+    return $content;
+}
