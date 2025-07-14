@@ -47,6 +47,62 @@
             "bidirectional_target": []
         },
         {
+            "key": "field_68728f99e2dd9",
+            "label": "Primary Song",
+            "name": "primary_song",
+            "aria-label": "",
+            "type": "post_object",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "post_type": [
+                "song"
+            ],
+            "post_status": "",
+            "taxonomy": "",
+            "return_format": "object",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "bidirectional": 0,
+            "ui": 1,
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_6874f00f99719",
+            "label": "Secondary Song",
+            "name": "secondary_song",
+            "aria-label": "",
+            "type": "post_object",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "post_type": [
+                "song"
+            ],
+            "post_status": "",
+            "taxonomy": "",
+            "return_format": "object",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "bidirectional": 0,
+            "ui": 1,
+            "bidirectional_target": []
+        },
+        {
             "key": "field_primary_song_title",
             "label": "Primary Song Title",
             "name": "primary_song_title",
@@ -483,6 +539,28 @@
             "elements": "",
             "bidirectional": 0,
             "bidirectional_target": []
+        },
+        {
+            "key": "field_6874fe7eb550a",
+            "label": "Hide secondary song in footnotes",
+            "name": "hide_secondary_song_in_footnotes",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "message": "Hide secondary song in footnotes if using shortcode",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ui_on_text": "",
+            "ui_off_text": ""
         }
     ],
     "location": [
@@ -503,5 +581,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1752000741
+    "modified": 1752497887
 }
