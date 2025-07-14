@@ -256,6 +256,7 @@ function display_referenced_works() {
   $chapter_id = get_the_ID();
 
   echo '<div class="referenced-works">';
+  echo '<h3 style="font-weight:bold;margin-top:2em;">Notes & References</h3>';
 
 $group_titles = [
   'featured_artists'      => ['title' => 'Artists Featured',       'emoji' => '🎤', 'link' => '/artists-featured/'],
@@ -267,7 +268,8 @@ $group_titles = [
   'concept'               => ['title' => 'Lexicon',                'emoji' => '🔎', 'link' => '/lexicon/'],
   'book'                  => ['title' => 'Books Cited',            'emoji' => '📚', 'link' => '/books-cited/'],
   'movie'                 => ['title' => 'Movies Referenced',      'emoji' => '🎬', 'link' => '/movies-referenced/'],
-  'reference'             => ['title' => 'External References',    'emoji' => '📰', 'link' => '/research-sources/'],
+  'reference'             => ['title' => 'Other References',       'emoji' => '📰', 'link' => '/research-sources/'],
+  'theme'                 => ['title' => 'Themes',                 'emoji' => '🧵', 'link' => '/themes/'],
 ];
 
   // === Featured Artists (Primary - Manual Order) ===
@@ -317,33 +319,59 @@ $group_titles = [
     echo '</ul></div>';
   }
 
- // === Other Artists Featured ===
+  
+// === Other Artists Featured ===
 $featured_ids = array_column($featured, 'artist', 'ID');
 $cpt_songs = get_field('songs_referenced') ?: [];
 $other_artists = [];
+
 foreach ($cpt_songs as $row) {
   $artist = $row['referenced_artist'];
   $song   = $row['referenced_song_title'];
   if (!$artist instanceof WP_Post || !$song) continue;
-  if (in_array($artist->ID, array_column($featured, 'artist', 'ID'))) continue;
-  $other_artists[$artist->ID] = ['post' => $artist, 'song' => $song];
+  if (in_array($artist->ID, $featured_ids)) continue;
+
+  // Initialize if not already
+  if (!isset($other_artists[$artist->ID])) {
+    $other_artists[$artist->ID] = [
+      'post' => $artist,
+      'songs' => [],
+    ];
+  }
+
+  $other_artists[$artist->ID]['songs'][] = $song;
 }
+
 if (!empty($other_artists)) {
   uasort($other_artists, fn($a, $b) => strcmp($a['post']->post_title, $b['post']->post_title));
   $meta = $group_titles['other_artists'];
   echo '<div class="referenced-group" style="margin-top:2em;">';
   echo "<h4><a href=\"{$meta['link']}\" style=\"text-decoration:none;\"><span style=\"font-size:1.1em;\">{$meta['emoji']}</span> <span style=\"text-decoration:underline;\">{$meta['title']}</span></a></h4><ul>";
+
   foreach ($other_artists as $entry) {
     $artist = $entry['post'];
-    $song = $entry['song'];
+    $songs  = $entry['songs'];
     setup_postdata($artist);
-    $img = get_field('portrait_image', $artist->ID);
-    $link = get_permalink($artist);
+
+    $img   = get_field('portrait_image', $artist->ID);
+    $link  = get_permalink($artist);
     $title = esc_html(get_the_title($artist));
     $thumb = $img ? "<a href=\"{$link}\"><img src=\"{$img['sizes']['thumbnail']}\" style=\"width:48px;height:48px;border-radius:50%;margin-right:8px;\"></a>" : '';
-    echo "<li style=\"display:flex;align-items:center;gap:10px;margin-bottom:0.6em;\">{$thumb}<div><a href=\"{$link}\"><strong>{$title}</strong></a><br><span style=\"font-size:0.9em;color:#666;\">{$song}</span></div></li>";
+
+    echo "<li style=\"display:flex;align-items:flex-start;gap:10px;margin-bottom:0.6em;\">";
+    echo $thumb;
+    echo "<div><a href=\"{$link}\"><strong>{$title}</strong></a>";
+
+    // Output each song title on its own line
+    foreach ($songs as $song_title) {
+      $safe_title = esc_html($song_title);
+      echo "<br><span style=\"font-size:0.9em;color:#666;\">{$safe_title}</span>";
+    }
+
+    echo "</div></li>";
     wp_reset_postdata();
   }
+
   echo '</ul></div>';
 }
 
@@ -454,11 +482,94 @@ if (!empty($refs)) {
   echo '</ul></div>';
 }
 
+// === Themes ===
+$themes = get_the_terms($chapter_id, 'theme');
+if ($themes && !is_wp_error($themes)) {
+  $meta = $group_titles['theme'];
+  usort($themes, fn($a, $b) => strcmp($a->name, $b->name));
+  echo '<div class="referenced-group" style="margin-top:2em;">';
+  echo "<h4><a href=\"{$meta['link']}\" style=\"text-decoration:none;\"><span style=\"font-size:1.1em;\">{$meta['emoji']}</span> <span style=\"text-decoration:underline;\">{$meta['title']}</span></a></h4><ul>";
+  foreach ($themes as $theme) {
+    $link = get_term_link($theme);
+    $title = esc_html($theme->name);
+    echo "<li><a href=\"{$link}\"><strong>{$title}</strong></a></li>";
+  }
+  echo '</ul></div>';
+}
+
+// === Music Video Block (Primary Featured Song) ===
+$primary_song = get_field('primary_song');
+if ($primary_song instanceof WP_Post) {
+  $song_link   = get_permalink($primary_song);
+  $song_title  = get_the_title($primary_song);
+  $video_img   = get_field('video_screenshot', $primary_song->ID);
+  $video_url   = $video_img ? $video_img['sizes']['large'] : '';
+
+  echo '<div class="referenced-group" style="margin-top:2em;">';
+  echo '<h4><span style="font-size:1.1em;">🎥</span> ' . esc_html($song_title) . '</h4>';
+
+  if ($video_url) {
+    echo '<div style="margin-top:10px;">';
+    echo '<a href="' . esc_url($song_link) . '">';
+    echo '<img src="' . esc_url($video_url) . '" alt="' . esc_attr($song_title) . ' video screenshot" style="max-width:100%;height:auto;border-radius:8px;display:block;margin:0 auto;">';
+    echo '</a>';
+    echo '</div>';
+  }
+
+  echo '</div>';
+}
+
+
+// === Music Video Block (Secondary Featured Song) ===
+$secondary_song = get_field('secondary_song');
+$hide_secondary = get_field('hide_secondary_song_in_footnotes');
+
+if ($secondary_song instanceof WP_Post && !$hide_secondary) {
+  $song_link   = get_permalink($secondary_song);
+  $song_title  = get_the_title($secondary_song);
+  $video_img   = get_field('video_screenshot', $secondary_song->ID);
+  $video_url   = $video_img ? $video_img['sizes']['large'] : '';
+
+  echo '<div class="referenced-group" style="margin-top:2em;">';
+  echo '<h4><span style="font-size:1.1em;">🎥</span> ' . esc_html($song_title) . '</h4>';
+
+  if ($video_url) {
+    echo '<div style="margin-top:10px;">';
+    echo '<a href="' . esc_url($song_link) . '">';
+    echo '<img src="' . esc_url($video_url) . '" alt="' . esc_attr($song_title) . ' video screenshot" style="max-width:100%;height:auto;border-radius:8px;display:block;margin:0 auto;">';
+    echo '</a>';
+    echo '</div>';
+  }
+
+  echo '</div>';
+}
+
 
   echo '</div>'; // .referenced-works
   return ob_get_clean();
 }
 add_shortcode('referenced_works', 'display_referenced_works');
+
+
+function secondary_song_image_shortcode() {
+  $secondary_song = get_field('secondary_song');
+  if (!$secondary_song instanceof WP_Post) return '';
+
+  $song_link  = get_permalink($secondary_song);
+  $video_img  = get_field('video_screenshot', $secondary_song->ID);
+  $video_url  = $video_img ? $video_img['sizes']['large'] : '';
+
+  if (!$video_url) return '';
+
+  ob_start();
+  echo '<div class="secondary-song-image" style="margin:2em 0;text-align:center;">';
+  echo '<a href="' . esc_url($song_link) . '">';
+  echo '<img src="' . esc_url($video_url) . '" alt="" style="max-width:100%;height:auto;border-radius:8px;">';
+  echo '</a>';
+  echo '</div>';
+  return ob_get_clean();
+}
+add_shortcode('secondary_song_image', 'secondary_song_image_shortcode');
 
 
 add_filter('relevanssi_content_to_index', 'add_artist_name_to_index', 10, 2);
