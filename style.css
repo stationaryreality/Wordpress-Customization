@@ -258,6 +258,39 @@ ul {
   color: #555;
 }
 
+/* ============== SONG GRID ============== */
+.song-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+  padding: 2rem 0;
+}
+
+.song-grid .book-item {
+  text-align: center;
+  max-width: 140px;
+}
+
+.song-grid img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 1rem;
+  border-radius: 0; /* Square */
+}
+
+.song-grid h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.song-grid p {
+  font-size: 0.9rem;
+  color: #555;
+}
+
 /* ============== CITED CONTENT GRID (Books, Quotes, Artists) ============== */
 .cited-grid {
   display: grid;
