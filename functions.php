@@ -259,17 +259,19 @@ function display_referenced_works() {
   echo '<h3 style="font-weight:bold;margin-top:2em;">Notes & References</h3>';
 
 $group_titles = [
-  'featured_artists'      => ['title' => 'Artists Featured',       'emoji' => '🎤', 'link' => '/artists-featured/'],
-  'other_artists'         => ['title' => 'Other Artists Featured', 'emoji' => '🎤', 'link' => '/artists-featured/'],
-  'songs_referenced'      => ['title' => 'Songs Referenced',       'emoji' => '🎵', 'link' => '/song-excerpts/'],
-  'profile'               => ['title' => 'People Referenced',      'emoji' => '👤', 'link' => '/people-referenced/'],
-  'lyric'                 => ['title' => 'Song Excerpts',          'emoji' => '🎵', 'link' => '/song-excerpts/'],
-  'quote'                 => ['title' => 'Quote Library',          'emoji' => '💬', 'link' => '/quote-library/'],
-  'concept'               => ['title' => 'Lexicon',                'emoji' => '🔎', 'link' => '/lexicon/'],
-  'book'                  => ['title' => 'Books Cited',            'emoji' => '📚', 'link' => '/books-cited/'],
-  'movie'                 => ['title' => 'Movies Referenced',      'emoji' => '🎬', 'link' => '/movies-referenced/'],
-  'reference'             => ['title' => 'Other References',       'emoji' => '📰', 'link' => '/research-sources/'],
-  'theme'                 => ['title' => 'Themes',                 'emoji' => '🧵', 'link' => '/themes/'],
+  'featured_artists'      => ['title' => 'Artists Featured',          'emoji' => '🎤', 'link' => '/artists-featured/'],
+  'other_artists'         => ['title' => 'Other Artists Featured',    'emoji' => '🎤', 'link' => '/artists-featured/'],
+  'songs_referenced'      => ['title' => 'Songs Referenced',          'emoji' => '🎵', 'link' => '/song-excerpts/'],
+  'profile'               => ['title' => 'People Referenced',         'emoji' => '👤', 'link' => '/people-referenced/'],
+  'lyric'                 => ['title' => 'Song Excerpts',             'emoji' => '🎵', 'link' => '/song-excerpts/'],
+  'quote'                 => ['title' => 'Quote Library',             'emoji' => '💬', 'link' => '/quote-library/'],
+  'concept'               => ['title' => 'Lexicon',                   'emoji' => '🔎', 'link' => '/lexicon/'],
+  'book'                  => ['title' => 'Books Cited',               'emoji' => '📚', 'link' => '/books-cited/'],
+  'movie'                 => ['title' => 'Movies Referenced',         'emoji' => '🎬', 'link' => '/movies-referenced/'],
+  'reference'             => ['title' => 'Other References',          'emoji' => '📰', 'link' => '/research-sources/'],
+  'theme'                 => ['title' => 'Themes',                    'emoji' => '🧵', 'link' => '/themes/'],
+  'organizations'         => ['title' => 'Organizations Referenced',  'emoji' => '🏢', 'link' => '/organizations/'],
+
 ];
 
   // === Featured Artists (Primary - Manual Order) ===
@@ -454,6 +456,24 @@ foreach ($linked_items as $type => $items) {
     echo "</div></li>";
   }
 
+  echo '</ul></div>';
+}
+
+
+// === Organizations Referenced ===
+$organizations = get_field('organizations_referenced') ?: [];
+$meta = $group_titles['organizations'];
+if (!empty($organizations)) {
+  echo '<div class="referenced-group" style="margin-top:2em;">';
+  echo "<h4><a href=\"{$meta['link']}\" style=\"text-decoration:none;\"><span style=\"font-size:1.1em;\">{$meta['emoji']}</span> <span style=\"text-decoration:underline;\">{$meta['title']}</span></a></h4><ul>";
+  uasort($organizations, fn($a, $b) => strcmp(get_the_title($a), get_the_title($b)));
+  foreach ($organizations as $org) {
+    $title = esc_html(get_the_title($org));
+    $link  = get_permalink($org);
+    $cover = get_field('cover_image', $org->ID);
+    $img   = $cover ? "<a href=\"{$link}\"><img src=\"{$cover['url']}\" alt=\"{$title}\" style=\"width:60px;height:60px;object-fit:cover;margin-right:10px;\"></a>" : '';
+    echo "<li style=\"display:flex;align-items:flex-start;gap:10px;margin-bottom:0.6em;\">{$img}<div><a href=\"{$link}\"><strong>{$title}</strong></a></div></li>";
+  }
   echo '</ul></div>';
 }
 
