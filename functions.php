@@ -478,7 +478,7 @@ if (!empty($organizations)) {
 }
 
 
-  // === Standalone External References ===
+// === Standalone External References ===
 $refs = get_field('chapter_references') ?: [];
 $meta = $group_titles['reference'];
 if (!empty($refs)) {
@@ -491,16 +491,17 @@ if (!empty($refs)) {
     $src   = get_field('source_name', $ref->ID);
     $link  = get_permalink($ref->ID);
     $img   = get_the_post_thumbnail_url($ref->ID, 'thumbnail');
-    $thumb = $img ? "<a href=\"{$link}\"><img src=\"{$img}\" style=\"width:48px;height:48px;border-radius:50%;margin-right:10px;\"></a>" : '';
+    $thumb = $img ? "<a href=\"{$link}\" rel=\"noopener noreferrer\"><img src=\"{$img}\" style=\"width:48px;height:48px;border-radius:50%;margin-right:10px;\"></a>" : '';
 
     echo "<li style=\"display:flex;align-items:flex-start;gap:10px;margin-bottom:0.6em;\">{$thumb}<div>";
-    echo "<div><a href=\"{$link}\"><strong>{$title}</strong></a></div>";
+    echo "<div><a href=\"{$link}\" rel=\"noopener noreferrer\"><strong>{$title}</strong></a></div>";
     if ($src) echo "<div><em>{$src}</em></div>";
     if ($url) echo "<div><a href=\"{$url}\" target=\"_blank\" rel=\"noopener noreferrer\">Link</a></div>";
     echo "</div></li>";
   }
   echo '</ul></div>';
 }
+
 
 // === Themes ===
 $themes = get_the_terms($chapter_id, 'theme');
