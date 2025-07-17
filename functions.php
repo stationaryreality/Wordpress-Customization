@@ -163,6 +163,13 @@ add_filter('wpseo_breadcrumb_links', function($links) {
         if (strpos($link['url'], '/lyrics/') !== false) {
             $links[$key]['url']  = get_permalink(get_page_by_path('song-excerpts'));
             $links[$key]['text'] = 'Song Excerpts';
+
+        }
+
+                // Redirect Lyrics Archive
+        if (strpos($link['url'], '/organization/') !== false) {
+            $links[$key]['url']  = get_permalink(get_page_by_path('organizations'));
+            $links[$key]['text'] = 'Organizations';
         }
     }
 
@@ -222,6 +229,13 @@ add_action('template_redirect', function () {
 add_action('template_redirect', function () {
     if (is_post_type_archive('lyric')) {
         wp_redirect(home_url('/song-excerpts/'), 301);
+        exit;
+    }
+});
+
+add_action('template_redirect', function () {
+    if (is_post_type_archive('organization')) {
+        wp_redirect(home_url('/organizations/'), 301);
         exit;
     }
 });
