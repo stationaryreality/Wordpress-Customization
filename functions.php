@@ -24,6 +24,19 @@ register_taxonomy( 'theme', [ 'chapter', 'quote', 'lyric', 'concept', 'movie', '
   'rewrite' => ['slug' => 'theme'],
 ]);
 
+
+add_action('template_redirect', function () {
+    if (is_tax('theme')) {
+        $term = get_queried_object();
+
+        // If no term slug, you're on the root `/theme/` archive
+        if (empty($term->slug)) {
+            wp_redirect(home_url('/themes/'), 301);
+            exit;
+        }
+    }
+});
+
 // Enable excerpts for Pages
 add_post_type_support('page', 'excerpt');
 
@@ -166,10 +179,54 @@ add_filter('wpseo_breadcrumb_links', function($links) {
 
         }
 
-                // Redirect Lyrics Archive
+        // Redirect Organizations Archive
         if (strpos($link['url'], '/organization/') !== false) {
             $links[$key]['url']  = get_permalink(get_page_by_path('organizations'));
             $links[$key]['text'] = 'Organizations';
+        }
+
+    }
+
+    return $links;
+});
+
+
+add_filter('wpseo_breadcrumb_links', function ($links) {
+    // Only on individual theme pages
+    if (is_tax('theme')) {
+        $new_links = [];
+
+        // Manually insert "Home"
+        $new_links[] = [
+            'url'  => home_url('/'),
+            'text' => 'Home'
+        ];
+
+        // Manually insert "Themes" page
+        $themes_page = get_page_by_path('themes');
+        if ($themes_page) {
+            $new_links[] = [
+                'url'  => get_permalink($themes_page),
+                'text' => 'Themes'
+            ];
+        }
+
+        // Append the term itself
+        $term = get_queried_object();
+        $new_links[] = [
+            'url'  => '',
+            'text' => $term->name
+        ];
+
+        return $new_links;
+    }
+
+    // Optional: clean up breadcrumb on the actual /themes/ page
+    if (is_page('themes')) {
+        foreach ($links as &$link) {
+            if ($link['text'] === 'Themes') {
+                $link['url'] = ''; // Remove the link to self
+            }
         }
     }
 
