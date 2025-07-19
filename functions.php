@@ -185,6 +185,12 @@ add_filter('wpseo_breadcrumb_links', function($links) {
             $links[$key]['text'] = 'Organizations';
         }
 
+                // Redirect Songs Archive
+        if (strpos($link['url'], '/song/') !== false) {
+            $links[$key]['url']  = get_permalink(get_page_by_path('songs-featured'));
+            $links[$key]['text'] = 'Songs Featured';
+        }
+
     }
 
     return $links;
@@ -297,6 +303,12 @@ add_action('template_redirect', function () {
     }
 });
 
+add_action('template_redirect', function () {
+    if (is_post_type_archive('song')) {
+        wp_redirect(home_url('/songs-featured/'), 301);
+        exit;
+    }
+});
 
 function render_custom_cover_block($atts) {
     $atts = shortcode_atts(['id' => ''], $atts, 'custom_cover');
