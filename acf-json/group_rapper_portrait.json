@@ -1,0 +1,96 @@
+{
+    "key": "group_rapper_portrait",
+    "title": "Rapper Fields",
+    "fields": [
+        {
+            "key": "field_rapper_portrait_image",
+            "label": "Portrait Image",
+            "name": "portrait_image",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "Upload a headshot or artist image.",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "preview_size": "thumbnail",
+            "library": "all",
+            "min_width": 0,
+            "min_height": 0,
+            "min_size": 0,
+            "max_width": 0,
+            "max_height": 0,
+            "max_size": 0,
+            "mime_types": ""
+        },
+        {
+            "key": "field_rapper_wikipedia_slug",
+            "label": "Wikipedia Slug",
+            "name": "wikipedia_slug",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_rapper_feature_level",
+            "label": "Featured Status",
+            "name": "feature_level",
+            "aria-label": "",
+            "type": "radio",
+            "instructions": "Set the featured level for this rapper.",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "primary": "Primary Featured",
+                "featured": "Featured",
+                "referenced": "Referenced"
+            },
+            "default_value": "referenced",
+            "layout": "vertical",
+            "return_format": "value",
+            "other_choice": 0,
+            "save_other_choice": 0,
+            "allow_null": 0
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "rapper"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1753110107
+}
