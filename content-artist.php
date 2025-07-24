@@ -90,7 +90,7 @@ $threads = get_posts([
     <div class="artist-lyrics">
       <h2>Song Excerpts</h2>
       <?php foreach ($lyrics as $lyric):
-        $html = get_field('lyric_html_block', $lyric->ID);
+        $html = get_field('lyric_cover_block_full', $lyric->ID);
         $text = get_field('quote_text', $lyric->ID);
         if ($html) {
           echo $html;
