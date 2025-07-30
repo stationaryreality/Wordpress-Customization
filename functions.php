@@ -699,7 +699,7 @@ add_filter('relevanssi_content_to_index', 'add_artist_name_to_index', 10, 2);
 function add_artist_name_to_index($content, $post) {
     if ($post->post_type === 'chapter') {
         $artist = get_field('primary_artist', $post->ID);
-        $song = get_field('primary_song_title', $post->ID);
+        $song = get_field('primary_song', $post->ID);
 
         if ($artist) {
             // Get name if it's a post object (CPT)
@@ -710,9 +710,14 @@ function add_artist_name_to_index($content, $post) {
             }
         }
 
-        if ($song) {
-            $content .= ' ' . $song;
-        }
+ if ($song) {
+    if (is_object($song)) {
+        $content .= ' ' . get_the_title($song->ID);
+    } else {
+        $content .= ' ' . $song;
+    }
+}
+
     }
 
     return $content;
