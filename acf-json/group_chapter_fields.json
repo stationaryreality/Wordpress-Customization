@@ -103,26 +103,6 @@
             "bidirectional_target": []
         },
         {
-            "key": "field_primary_song_title",
-            "label": "Primary Song Title",
-            "name": "primary_song_title",
-            "aria-label": "",
-            "type": "text",
-            "instructions": "",
-            "required": false,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "maxlength": "",
-            "placeholder": "",
-            "prepend": "",
-            "append": ""
-        },
-        {
             "key": "field_686d68cf1feb3",
             "label": "Primary Song Title 2",
             "name": "primary_song_title_2",
@@ -616,5 +596,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1753367316
+    "modified": 1753888123
 }
