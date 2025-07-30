@@ -159,12 +159,14 @@
                 "id": ""
             },
             "relevanssi_exclude": 0,
-            "post_type": "",
+            "post_type": [
+                "artist"
+            ],
             "post_status": "",
             "taxonomy": "",
             "return_format": "object",
             "multiple": 0,
-            "allow_null": 0,
+            "allow_null": 1,
             "allow_in_bindings": 0,
             "bidirectional": 0,
             "ui": 1,
@@ -614,5 +616,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1752765762
+    "modified": 1753367316
 }
