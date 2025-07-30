@@ -11,7 +11,7 @@
   <!-- Artist Info -->
   <?php
   $primary_artist = get_field('primary_artist');
-  $song_title = get_field('primary_song_title');
+$primary_song = get_field('primary_song');
 
   if ($primary_artist):
     $portrait = get_field('portrait_image', $primary_artist->ID);
@@ -33,9 +33,18 @@
 </h2>
 
 
-      <?php if ($song_title): ?>
-        <div class="song-title"><?php echo esc_html($song_title); ?></div>
-      <?php endif; ?>
+<?php if ($primary_song): ?>
+  <?php
+    $song_title = get_the_title($primary_song->ID);
+    $song_link = get_permalink($primary_song->ID);
+  ?>
+  <div class="song-title">
+    <a href="<?php echo esc_url($song_link); ?>" style="text-decoration: none;">
+      <?php echo esc_html($song_title); ?>
+    </a>
+  </div>
+<?php endif; ?>
+
     </div>
   <?php endif; ?>
         
