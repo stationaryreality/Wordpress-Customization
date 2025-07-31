@@ -17,7 +17,7 @@ function get_wikipedia_intro($slug) {
 
 <div class="movie-content">
   <?php if ($img_url): ?>
-    <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>">
+    <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" style="display:block;margin:0 auto;">
   <?php endif; ?>
 
   <h1><?php the_title(); ?></h1>
