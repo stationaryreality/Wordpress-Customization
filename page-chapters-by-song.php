@@ -36,7 +36,7 @@ get_header();
 
                 foreach ($chapters as $post): setup_postdata($post);
                     $artist = get_field('primary_artist', $post->ID);
-                    $song   = get_field('primary_song_title', $post->ID);
+                    $song   = get_field('primary_song', $post->ID);
                 ?>
                     <tr>
                         <td>
@@ -46,7 +46,14 @@ get_header();
                                 </a>
                             <?php endif; ?>
                         </td>
-                        <td><?= esc_html($song); ?></td>
+                        <td>
+    <?php if ($song): ?>
+        <a href="<?= get_permalink($song->ID); ?>">
+            <?= esc_html(get_the_title($song->ID)); ?>
+        </a>
+    <?php endif; ?>
+</td>
+
                         <td><a href="<?= get_permalink($post->ID); ?>"><?= get_the_title($post->ID); ?></a></td>
                     </tr>
                 <?php endforeach; wp_reset_postdata(); ?>
@@ -79,7 +86,9 @@ get_header();
                             'post'        => $post,
                             'artist'      => $artist,
                             'artist_name' => get_the_title($artist->ID),
-                            'song'        => get_field('primary_song_title', $post->ID)
+                            'song' => get_field('primary_song', $post->ID),
+'ssong_title' => function($s) { return $s ? get_the_title($s->ID) : ''; }
+
                         ];
                     }
                 }
@@ -94,7 +103,14 @@ get_header();
                                 <?= esc_html($row['artist_name']); ?>
                             </a>
                         </td>
-                        <td><?= esc_html($row['song']); ?></td>
+                       <td>
+    <?php if ($row['song']): ?>
+        <a href="<?= get_permalink($row['song']->ID); ?>">
+            <?= esc_html(get_the_title($row['song']->ID)); ?>
+        </a>
+    <?php endif; ?>
+</td>
+
                         <td><a href="<?= get_permalink($row['post']->ID); ?>"><?= get_the_title($row['post']->ID); ?></a></td>
                     </tr>
                 <?php endforeach; ?>
