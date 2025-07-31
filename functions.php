@@ -200,8 +200,13 @@ add_filter('wpseo_breadcrumb_links', function($links) {
             $page = get_page_by_path('artists-featured');
             $links[$key]['url']  = get_permalink($page) . '#rappers';
             $links[$key]['text'] = 'Artists Featured';
-}
+        }
 
+        // Redirect Images Archive
+        if (strpos($link['url'], '/image/') !== false) {
+            $links[$key]['url']  = get_permalink(get_page_by_path('image-gallery'));
+            $links[$key]['text'] = 'Image Gallery';
+        }
     }
 
     return $links;
@@ -324,6 +329,13 @@ add_action('template_redirect', function () {
 add_action('template_redirect', function () {
     if (is_post_type_archive('rapper')) {
         wp_redirect(home_url('/artists-featured#rappers'), 301);
+        exit;
+    }
+});
+
+add_action('template_redirect', function () {
+    if (is_post_type_archive('image')) {
+        wp_redirect(home_url('/image-gallery/'), 301);
         exit;
     }
 });

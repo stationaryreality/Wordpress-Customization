@@ -15,13 +15,13 @@ $images = new WP_Query(array(
 if ($images->have_posts()):
   while ($images->have_posts()): $images->the_post();
     $caption = get_field('image_caption');
-    $cover = get_field('cover_image');
-    $img_url = $cover ? $cover['sizes']['thumbnail'] : '';
+    $image   = get_field('image_file');
+    $img_url = $image ? $image['sizes']['thumbnail'] : '';
     ?>
     <div class="book-item">
       <a href="<?php the_permalink(); ?>">
         <?php if ($img_url): ?>
-          <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" style="aspect-ratio:1/1;object-fit:cover;">
+          <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" style="aspect-ratio:1/1; object-fit:cover;">
         <?php endif; ?>
         <h3><?php the_title(); ?></h3>
       </a>
