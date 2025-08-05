@@ -56,7 +56,8 @@ add_action('load-edit.php', function () {
         'artist',
         'book',
         'movie',
-        'profile'
+        'profile',
+        'image'
     );
 
     if (in_array($screen->post_type, $alphabetical_cpts)) {
@@ -385,6 +386,7 @@ $group_titles = [
   'reference'             => ['title' => 'Other References',          'emoji' => '📰', 'link' => '/research-sources/'],
   'theme'                 => ['title' => 'Themes',                    'emoji' => '🧵', 'link' => '/themes/'],
   'organizations'         => ['title' => 'Organizations Referenced',  'emoji' => '🏢', 'link' => '/organizations/'],
+  'image'                 => ['title' => 'Images Referenced',         'emoji' => '🖼', 'link' => '/image-gallery/'],
 
 ];
 
@@ -612,6 +614,26 @@ if (!empty($refs)) {
     if ($src) echo "<div><em>{$src}</em></div>";
     if ($url) echo "<div><a href=\"{$url}\" target=\"_blank\" rel=\"noopener noreferrer\">Link</a></div>";
     echo "</div></li>";
+  }
+  echo '</ul></div>';
+}
+
+// === Images Referenced ===
+$images = get_field('images_linked') ?: [];
+$meta = $group_titles['image'];
+if (!empty($images)) {
+  echo '<div class="referenced-group" style="margin-top:2em;">';
+  echo "<h4><a href=\"{$meta['link']}\" style=\"text-decoration:none;\"><span style=\"font-size:1.1em;\">{$meta['emoji']}</span> <span style=\"text-decoration:underline;\">{$meta['title']}</span></a></h4><ul>";
+  uasort($images, fn($a, $b) => strcmp(get_the_title($a), get_the_title($b)));
+  foreach ($images as $img_post) {
+    $title = esc_html(get_the_title($img_post));
+    $link  = get_permalink($img_post);
+$image = get_field('image_file', $img_post->ID);
+$thumb_url = $image ? $image['sizes']['medium'] : '';
+
+    $thumb = $thumb_url ? "<a href=\"{$link}\"><img src=\"{$thumb_url}\" alt=\"{$title}\" style=\"width:60px;height:auto;margin-right:10px;\"></a>" : '';
+
+    echo "<li style=\"display:flex;align-items:flex-start;gap:10px;margin-bottom:0.6em;\">{$thumb}<div><a href=\"{$link}\"><strong>{$title}</strong></a></div></li>";
   }
   echo '</ul></div>';
 }
