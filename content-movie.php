@@ -15,12 +15,13 @@ function get_wikipedia_intro($slug) {
 }
 ?>
 
-<div class="movie-content">
+<div class="movie-content" style="text-align:center;">
   <?php if ($img_url): ?>
     <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" style="display:block;margin:0 auto;">
   <?php endif; ?>
 
   <h1><?php the_title(); ?></h1>
+      <?php the_content(); ?>
 
   <?php if ($director): ?>
     <p><strong><?php echo esc_html($director); ?></strong></p>
