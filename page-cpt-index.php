@@ -16,6 +16,7 @@ $icons = [
   'reference'     => '📰',
   'theme'         => '🧵',
   'organizations' => '🏢',
+  'image'         => '🖼',
 ];
 
 // Relevant CPTs
@@ -29,7 +30,8 @@ $post_types = [
   'quote',
   'lyric',
   'reference',
-  'organizations'
+  'organizations',
+  'image'
 ];
 
 // Query all CPT entries
@@ -96,6 +98,7 @@ $total_count = count($entries);
 <p class="post-meta">
   Total entries: <strong><?php echo $total_count; ?></strong>
 </p>
+
 
   </header>
 
