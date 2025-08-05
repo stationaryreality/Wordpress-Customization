@@ -21,7 +21,7 @@ if ($images->have_posts()):
     <div class="book-item">
       <a href="<?php the_permalink(); ?>">
         <?php if ($img_url): ?>
-          <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" style="aspect-ratio:1/1; object-fit:cover;">
+          <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" style="width:150px; height:150px; object-fit:cover;">
         <?php endif; ?>
         <h3><?php the_title(); ?></h3>
       </a>
