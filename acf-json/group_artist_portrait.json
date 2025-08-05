@@ -55,7 +55,7 @@
             "name": "feature_level",
             "aria-label": "",
             "type": "radio",
-            "instructions": "Set the featured level for this rapper.",
+            "instructions": "Set the featured level for this Artist.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -96,5 +96,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1753110136
+    "modified": 1754093534
 }
