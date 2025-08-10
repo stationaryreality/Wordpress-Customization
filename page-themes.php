@@ -5,7 +5,7 @@ Template Name: Themes Directory
 get_header(); ?>
 
 <main class="site-main max-w-screen-lg mx-auto p-6">
-  <h1 class="text-4xl font-bold mb-4">🧵 Themes</h1>
+  <h1 class="text-4xl font-bold mb-4">🎨 Themes</h1>
   <p class="mb-8 text-gray-600">Recurring symbolic structures that exist throughout lyrics, quotes, and other expressions.</p>
 
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
