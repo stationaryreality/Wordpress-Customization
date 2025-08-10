@@ -2,7 +2,7 @@
 $artist_id  = get_the_ID();
 $bio        = get_field('bio', $artist_id);
 $portrait   = get_field('portrait_image', $artist_id);
-$img_url    = $portrait ? $portrait['sizes']['thumbnail'] : '';
+$img_url    = $portrait ? $portrait['sizes']['medium'] : '';
 $wiki_slug  = get_field('wikipedia_slug', $artist_id);
 
 // Wikipedia summary
@@ -18,7 +18,7 @@ function get_wikipedia_intro($slug) {
 
 <div class="person-content">
   <?php if ($img_url): ?>
-    <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" class="author-thumbnail">
+    <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" class="artist-thumbnail">
   <?php endif; ?>
 
   <h1><?php the_title(); ?></h1>
