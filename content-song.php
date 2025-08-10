@@ -4,6 +4,17 @@ $bio       = get_field('song_bio', $song_id);
 $cover     = get_field('cover_image', $song_id);
 $img_url   = $cover ? $cover['sizes']['thumbnail'] : '';
 $wiki_slug = get_field('wikipedia_slug', $song_id);
+$artist_profile = get_field('song_artist');
+
+// If the field returns an array, just grab the first item
+if (is_array($artist_profile)) {
+    $artist_profile = $artist_profile[0];
+}
+
+// If the field returns an ID, convert it to a post object
+if (is_numeric($artist_profile)) {
+    $artist_profile = get_post($artist_profile);
+}
 
 // Wikipedia summary
 function get_wikipedia_intro($slug) {
@@ -33,6 +44,29 @@ function get_wikipedia_intro($slug) {
       <?php the_content(); ?>
     <?php endif; ?>
   </div>
+
+
+  <?php if ($artist_profile): ?>
+  <?php
+    $portrait     = get_field('portrait_image', $artist_profile->ID);
+    $thumb        = $portrait ? $portrait['sizes']['thumbnail'] : '';
+    $bio          = get_field('bio', $artist_profile->ID);
+    $profile_slug = get_field('wikipedia_slug', $artist_profile->ID);
+  ?>
+  <div class="person-content" style="margin-top: 2em;">
+    <?php if ($thumb): ?>
+      <a href="<?php echo get_permalink($artist_profile->ID); ?>" class="artist-link">
+        <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr(get_the_title($artist_profile->ID)); ?>" class="author-thumbnail rounded">
+        <h3>By <?php echo esc_html(get_the_title($artist_profile->ID)); ?></h3>
+      </a>
+    <?php else: ?>
+      <h3>By <a href="<?php echo get_permalink($artist_profile->ID); ?>">
+        <?php echo esc_html(get_the_title($artist_profile->ID)); ?>
+      </a></h3>
+    <?php endif; ?>
+  </div>
+<?php endif; ?>
+
 
   <?php
   // === Chapters Featuring This Song ===
