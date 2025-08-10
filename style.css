@@ -339,13 +339,6 @@ ul {
   text-align: center;
 }
 
-.author-thumbnail {
-  display: block;
-  margin: 0 auto 1rem;
-  border-radius: 50%;
-  max-width: 200px;
-}
-
 .concept-nav-thumb img {
   width: 50% !important;
   height: auto;
@@ -465,8 +458,26 @@ body .wp-block-group .wp-block-cover {
   display: block;
   margin: 0 auto 0.5em;
   border-radius: 999px;
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.artist-thumbnail {
+  display: block;
+  margin: 0 auto 0.5em;
+  border-radius: 999px;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.album-cover {
+  display: block;
+  margin: 0 auto 0.5em;
+  border-radius: 999px;
+  width: 200px;
+  height: 200px;
   object-fit: cover;
 }
 
