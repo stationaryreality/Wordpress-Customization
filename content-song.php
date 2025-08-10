@@ -57,7 +57,7 @@ function get_wikipedia_intro($slug) {
     <?php if ($thumb): ?>
       <a href="<?php echo get_permalink($artist_profile->ID); ?>" class="artist-link">
         <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr(get_the_title($artist_profile->ID)); ?>" class="author-thumbnail rounded">
-        <h3>By <?php echo esc_html(get_the_title($artist_profile->ID)); ?></h3>
+        <h3><?php echo esc_html(get_the_title($artist_profile->ID)); ?></h3>
       </a>
     <?php else: ?>
       <h3>By <a href="<?php echo get_permalink($artist_profile->ID); ?>">
