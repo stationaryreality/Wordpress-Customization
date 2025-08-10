@@ -2,7 +2,7 @@
 $song_id   = get_the_ID();
 $bio       = get_field('song_bio', $song_id);
 $cover     = get_field('cover_image', $song_id);
-$img_url   = $cover ? $cover['sizes']['thumbnail'] : '';
+$img_url   = $cover ? $cover['sizes']['medium'] : '';
 $wiki_slug = get_field('wikipedia_slug', $song_id);
 $artist_profile = get_field('song_artist');
 
@@ -29,7 +29,7 @@ function get_wikipedia_intro($slug) {
 
 <div class="song-header" style="text-align:center;">
   <?php if ($img_url): ?>
-    <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" class="author-thumbnail" style="border-radius:0; aspect-ratio:1/1; object-fit:cover; max-width:300px; margin-bottom:1em;">
+    <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" class="album-cover" style="border-radius:0; aspect-ratio:1/1; object-fit:cover; max-width:300px; margin-bottom:1em;">
   <?php endif; ?>
   <h1><?php the_title(); ?></h1>
 </div>
