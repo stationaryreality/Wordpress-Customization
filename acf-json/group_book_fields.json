@@ -28,24 +28,32 @@
             "mime_types": ""
         },
         {
-            "key": "field_author_name",
-            "label": "Author",
-            "name": "author_name",
+            "key": "field_685c1854a860f",
+            "label": "Author Profile",
+            "name": "author_profile",
             "aria-label": "",
-            "type": "text",
-            "instructions": "Enter the name of the author.",
-            "required": 1,
-            "conditional_logic": false,
+            "type": "post_object",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
             "wrapper": {
                 "width": "",
                 "class": "",
                 "id": ""
             },
-            "default_value": "",
-            "maxlength": "",
-            "placeholder": "",
-            "prepend": "",
-            "append": ""
+            "relevanssi_exclude": 0,
+            "post_type": [
+                "profile"
+            ],
+            "post_status": "",
+            "taxonomy": "",
+            "return_format": "object",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "bidirectional": 0,
+            "ui": 1,
+            "bidirectional_target": []
         },
         {
             "key": "field_685c348e35eec",
@@ -363,32 +371,6 @@
                     "parent_repeater": "field_686fe9966e70a"
                 }
             ]
-        },
-        {
-            "key": "field_685c1854a860f",
-            "label": "Author Profile",
-            "name": "author_profile",
-            "aria-label": "",
-            "type": "post_object",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "relevanssi_exclude": 0,
-            "post_type": "",
-            "post_status": "",
-            "taxonomy": "",
-            "return_format": "object",
-            "multiple": 0,
-            "allow_null": 0,
-            "allow_in_bindings": 0,
-            "bidirectional": 0,
-            "ui": 1,
-            "bidirectional_target": []
         }
     ],
     "location": [
@@ -409,5 +391,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1752164881
+    "modified": 1754930073
 }
