@@ -384,7 +384,7 @@ $group_titles = [
   'book'                  => ['title' => 'Books Cited',               'emoji' => '📚', 'link' => '/books-cited/'],
   'movie'                 => ['title' => 'Movies Referenced',         'emoji' => '🎬', 'link' => '/movies-referenced/'],
   'reference'             => ['title' => 'Other References',          'emoji' => '📰', 'link' => '/research-sources/'],
-  'theme'                 => ['title' => 'Themes',                    'emoji' => '🧵', 'link' => '/themes/'],
+  'theme'                 => ['title' => 'Themes',                    'emoji' => '🎨', 'link' => '/themes/'],
   'organizations'         => ['title' => 'Organizations Referenced',  'emoji' => '🏢', 'link' => '/organizations/'],
   'image'                 => ['title' => 'Images Referenced',         'emoji' => '🖼', 'link' => '/image-gallery/'],
 
