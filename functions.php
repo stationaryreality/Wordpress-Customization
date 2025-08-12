@@ -48,7 +48,6 @@ add_action('load-edit.php', function () {
     $alphabetical_cpts = array(
         'concept',
         'lyric',
-        'rapper',
         'song',
         'organization',
         'reference',
@@ -196,13 +195,6 @@ add_filter('wpseo_breadcrumb_links', function($links) {
             $links[$key]['text'] = 'Songs Featured';
         }
 
-        // Redirect Rappers Archive
-        if (strpos($link['url'], '/rappers/') !== false) {
-            $page = get_page_by_path('artists-featured');
-            $links[$key]['url']  = get_permalink($page) . '#rappers';
-            $links[$key]['text'] = 'Artists Featured';
-        }
-
         // Redirect Images Archive
         if (strpos($link['url'], '/image/') !== false) {
             $links[$key]['url']  = get_permalink(get_page_by_path('image-gallery'));
@@ -323,13 +315,6 @@ add_action('template_redirect', function () {
 add_action('template_redirect', function () {
     if (is_post_type_archive('song')) {
         wp_redirect(home_url('/songs-featured/'), 301);
-        exit;
-    }
-});
-
-add_action('template_redirect', function () {
-    if (is_post_type_archive('rapper')) {
-        wp_redirect(home_url('/artists-featured#rappers'), 301);
         exit;
     }
 });
