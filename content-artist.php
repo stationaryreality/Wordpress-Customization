@@ -34,22 +34,58 @@ function get_wikipedia_intro($slug) {
   </div>
 
   <?php
+  // === Songs by Artist ===
+  $songs = get_posts([
+    'post_type'      => 'song',
+    'posts_per_page' => -1,
+    'meta_query'     => [
+      [
+        'key'     => 'song_artist', // ACF field name
+        'value'   => $artist_id,
+        'compare' => '='
+      ]
+    ],
+    'orderby'        => 'title',
+    'order'          => 'ASC'
+  ]);
+
+  if ($songs): ?>
+    <div class="artist-songs">
+      <h2>Songs</h2>
+      <div class="song-grid">
+        <?php foreach ($songs as $song):
+          $cover = get_field('cover_image', $song->ID);
+          $img_url = $cover ? $cover['sizes']['thumbnail'] : '';
+        ?>
+          <div class="book-item">
+            <a href="<?php echo get_permalink($song->ID); ?>">
+              <?php if ($img_url): ?>
+                <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr(get_the_title($song->ID)); ?>">
+              <?php endif; ?>
+              <h3><?php echo esc_html(get_the_title($song->ID)); ?></h3>
+            </a>
+          </div>
+        <?php endforeach; ?>
+      </div>
+    </div>
+  <?php endif; ?>
+
+
+  <?php
   // === Narrative Threads ===
-$threads = get_posts([
-  'post_type'      => 'chapter',
-  'posts_per_page' => -1,
-  'orderby'        => 'menu_order',
-  'order'          => 'ASC',
-  'meta_query'     => [
-    [
-      'key'     => 'primary_artist',
-      'value'   => $artist_id,
-      'compare' => '='
+  $threads = get_posts([
+    'post_type'      => 'chapter',
+    'posts_per_page' => -1,
+    'orderby'        => 'menu_order',
+    'order'          => 'ASC',
+    'meta_query'     => [
+      [
+        'key'     => 'primary_artist',
+        'value'   => $artist_id,
+        'compare' => '='
+      ]
     ]
-  ]
-]);
-
-
+  ]);
 
   if ($threads): ?>
     <div class="narrative-threads">
