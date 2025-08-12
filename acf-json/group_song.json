@@ -3,26 +3,6 @@
     "title": "Song Details",
     "fields": [
         {
-            "key": "field_song_featured",
-            "label": "Featured Song",
-            "name": "is_featured_song",
-            "aria-label": "",
-            "type": "true_false",
-            "instructions": "",
-            "required": false,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "ui": 1,
-            "default_value": 0,
-            "message": "",
-            "ui_on_text": "",
-            "ui_off_text": ""
-        },
-        {
             "key": "field_song_artist",
             "label": "Artist",
             "name": "song_artist",
@@ -114,7 +94,7 @@
             "name": "feature_level",
             "aria-label": "",
             "type": "radio",
-            "instructions": "Set the featured level for this song.",
+            "instructions": "Set the featured level for this rapper.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -252,5 +232,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1754093569
+    "modified": 1754925224
 }
