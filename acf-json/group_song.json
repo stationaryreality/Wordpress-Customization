@@ -89,34 +89,6 @@
             "mime_types": ""
         },
         {
-            "key": "field_688d57cb9b455",
-            "label": "Featured Status",
-            "name": "feature_level",
-            "aria-label": "",
-            "type": "radio",
-            "instructions": "Set the featured level for this rapper.",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "relevanssi_exclude": 0,
-            "choices": {
-                "primary": "Primary Featured",
-                "featured": "Featured",
-                "referenced": "Referenced"
-            },
-            "default_value": "referenced",
-            "return_format": "value",
-            "allow_null": 0,
-            "other_choice": 0,
-            "allow_in_bindings": 1,
-            "layout": "vertical",
-            "save_other_choice": 0
-        },
-        {
             "key": "field_6874f5f7b8b14",
             "label": "Video Screenshot",
             "name": "video_screenshot",
@@ -232,5 +204,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1754925224
+    "modified": 1755026705
 }
