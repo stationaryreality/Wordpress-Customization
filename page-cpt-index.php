@@ -5,7 +5,6 @@ get_header();
 // Emoji mapping
 $icons = [
   'artist'        => '🎤',
-  'rapper'        => '🎧',
   'song'          => '🎵',
   'lyric'         => '🎼',
   'profile'       => '👤',
@@ -24,7 +23,6 @@ $icons = [
 // Relevant CPTs
 $post_types = [
   'artist',
-  'rapper',
   'profile',
   'book',
   'concept',
@@ -104,7 +102,7 @@ $total_count = count($entries);
 </p>
 
 <!-- wp:table {"hasFixedLayout":false,"align":"center","fontSize":"large"} -->
-<figure class="wp-block-table aligncenter has-large-font-size"><table><tbody><tr><td>🎤</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/artists-featured/">Artists</a></td></tr><tr><td>📚</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/books-cited/">Books</a></td></tr><tr><td>🖼</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/image-gallery/">Images</a></td></tr><tr><td>🔎</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/lexicon/">Lexicon Entries</a></td></tr><tr><td>🎬</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/movies-referenced/">Movies</a></td></tr><tr><td>📜</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/#narrative-threads">Narrative Threads</a></td></tr><tr><td>🏢</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/organizations/">Organizations</a></td></tr><tr><td>👤</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/people-referenced/">People Referenced</a></td></tr><tr><td>💬</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/quote-library/">Quotes</a></td></tr><tr><td>🎧</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/artists-featured/#rappers">Rappers</a></td></tr><tr><td>📰</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/research-sources/">Research Sources</a></td></tr><tr><td>🎵</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/songs-featured/">Songs</a></td></tr><tr><td>🎼</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/song-excerpts/">Song Excerpts</a></td></tr><tr><td>🎨</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/themes/">Themes</a></td></tr></tbody></table></figure>
+<figure class="wp-block-table aligncenter has-large-font-size"><table><tbody><tr><td>🎤</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/artists-featured/">Artists</a></td></tr><tr><td>📚</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/books-cited/">Books</a></td></tr><tr><td>🖼</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/image-gallery/">Images</a></td></tr><tr><td>🔎</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/lexicon/">Lexicon Entries</a></td></tr><tr><td>🎬</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/movies-referenced/">Movies</a></td></tr><tr><td>🧵</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/#narrative-threads">Narrative Threads</a></td></tr><tr><td>🏢</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/organizations/">Organizations</a></td></tr><tr><td>👤</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/people-referenced/">People Referenced</a></td></tr><tr><td>💬</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/quote-library/">Quotes</a></td></tr><tr><td>📰</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/research-sources/">Research Sources</a></td></tr><tr><td>🎵</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/songs-featured/">Songs</a></td></tr><tr><td>🎼</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/song-excerpts/">Song Excerpts</a></td></tr><tr><td>🎨</td><td class="has-text-align-left" data-align="left"><a href="https://www.stationaryreality.com/themes/">Themes</a></td></tr></tbody></table></figure>
 <!-- /wp:table -->
 
   </header>
