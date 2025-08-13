@@ -39,8 +39,10 @@ $primary_song = get_field('primary_song');
     $song_link = get_permalink($primary_song->ID);
   ?>
   <div class="song-title">
-    <a href="<?php echo esc_url($song_link); ?>" style="text-decoration: none;">
-      <?php echo esc_html($song_title); ?>
+<a href="<?php echo esc_url($song_link); ?>" style="text-decoration: underline;">
+  <?php echo esc_html($song_title); ?>
+</a>
+
     </a>
   </div>
 <?php endif; ?>
