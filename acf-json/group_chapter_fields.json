@@ -21,6 +21,84 @@
             "selected": 0
         },
         {
+            "key": "field_chapter_songs",
+            "label": "Songs Referenced",
+            "name": "chapter_songs",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "Add all songs for this chapter and mark their role (Primary, Secondary, Supporting).",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "Add Song",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_chapter_song",
+                    "label": "Song",
+                    "name": "song",
+                    "aria-label": "",
+                    "type": "post_object",
+                    "instructions": "Select the song CPT.",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "post_type": [
+                        "song"
+                    ],
+                    "return_format": "object",
+                    "multiple": 0,
+                    "allow_null": 0,
+                    "ui": 1,
+                    "taxonomy": [],
+                    "bidirectional_target": [],
+                    "parent_repeater": "field_chapter_songs"
+                },
+                {
+                    "key": "field_chapter_song_role",
+                    "label": "Role",
+                    "name": "role",
+                    "aria-label": "",
+                    "type": "select",
+                    "instructions": "Choose how this song is featured in the chapter.",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "primary": "Primary Featured Song",
+                        "secondary": "Secondary Featured Song",
+                        "supporting": "Supporting \/ Referenced Song"
+                    },
+                    "default_value": "supporting",
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 0,
+                    "ajax": 0,
+                    "return_format": "value",
+                    "placeholder": "",
+                    "create_options": 0,
+                    "save_options": 0,
+                    "parent_repeater": "field_chapter_songs"
+                }
+            ]
+        },
+        {
             "key": "field_primary_artist",
             "label": "Primary Artist",
             "name": "primary_artist",
