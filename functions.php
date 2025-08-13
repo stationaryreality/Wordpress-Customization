@@ -375,124 +375,124 @@ $group_titles = [
 
 ];
 
-  // === Featured Artists (Primary - Manual Order) ===
-  $fields = [
-    ['primary_artist', 'primary_song_title'],
-    ['secondary_artist', 'secondary_song_title'],
-    ['tertiary_artist', 'tertiary_song_title'],
-    ['quaternary_artist', 'quaternary_song_title']
-  ];
-  $featured = [];
-  foreach ($fields as [$artist_field, $song_field]) {
-    $artist = get_field($artist_field);
-    if (!$artist) continue;
-    $songs = [];
-    $main_song = get_field($song_field);
-    if ($main_song) $songs[] = $main_song;
+// === Songs Referenced (using new chapter_songs repeater) ===
+$song_rows = get_field('chapter_songs') ?: [];
+$featured  = [];
+$other_artists = [];
 
-    for ($i = 2; $i <= 10; $i++) {
-      $extra = get_field("{$song_field}_{$i}");
-      if ($extra) $songs[] = $extra;
+// Separate by role
+foreach ($song_rows as $row) {
+    if (empty($row['song']) || !$row['song'] instanceof WP_Post) {
+        continue;
     }
-    $featured[] = [
-      'artist' => $artist,
-      'songs'  => $songs
-    ];
-  }
 
-  if (!empty($featured)) {
+    $song_post   = $row['song'];
+    $song_title  = get_the_title($song_post);
+$artist_id = get_field('song_artist', $song_post->ID);
+$artist_post = $artist_id ? get_post($artist_id) : null;
+    $role        = $row['role'] ?? 'supporting';
+
+    // Fallback for missing artist
+    $artist_id   = $artist_post instanceof WP_Post ? $artist_post->ID : 'unknown';
+    $artist_obj  = $artist_post instanceof WP_Post ? $artist_post : (object)[
+        'ID' => 'unknown',
+        'post_title' => 'Unknown Artist'
+    ];
+
+    if ($role === 'primary' || $role === 'secondary') {
+        if (!isset($featured[$artist_id])) {
+            $featured[$artist_id] = [
+                'post'  => $artist_obj,
+                'songs' => [],
+            ];
+        }
+        $featured[$artist_id]['songs'][] = $song_title;
+    } else {
+        if (!isset($other_artists[$artist_id])) {
+            $other_artists[$artist_id] = [
+                'post'  => $artist_obj,
+                'songs' => [],
+            ];
+        }
+        $other_artists[$artist_id]['songs'][] = $song_title;
+    }
+}
+
+// === Output Featured Artists ===
+if (!empty($featured)) {
     $meta = $group_titles['featured_artists'];
     echo '<div class="referenced-group" style="margin-top:2em;">';
     echo "<h4><a href=\"{$meta['link']}\" style=\"text-decoration:none;\"><span style=\"font-size:1.1em;\">{$meta['emoji']}</span> <span style=\"text-decoration:underline;\">{$meta['title']}</span></a></h4><ul>";
+
     foreach ($featured as $entry) {
-      $artist = $entry['artist'];
-      $songs  = $entry['songs'];
-      setup_postdata($artist);
-      $img = get_field('portrait_image', $artist->ID);
-      $thumb = $img ? "<a href=\"" . get_permalink($artist) . "\"><img src=\"{$img['sizes']['thumbnail']}\" style=\"width:48px;height:48px;border-radius:50%;margin-right:8px;\"></a>" : '';
-      $link = get_permalink($artist);
-      $title = esc_html(get_the_title($artist));
-      echo "<li style=\"display:flex;align-items:center;gap:10px;margin-bottom:0.6em;\">{$thumb}<div><a href=\"{$link}\"><strong>{$title}</strong></a>";
-      if (!empty($songs)) {
-        foreach ($songs as $s) echo "<br><span style=\"font-size:0.9em;color:#666;\">{$s}</span>";
-      }
-      echo "</div></li>";
-      wp_reset_postdata();
+        $artist = $entry['post'];
+        $songs  = $entry['songs'];
+
+        if ($artist->ID !== 'unknown') {
+            setup_postdata($artist);
+            $img = get_field('portrait_image', $artist->ID);
+            $thumb = $img ? "<a href=\"" . get_permalink($artist) . "\"><img src=\"{$img['sizes']['thumbnail']}\" style=\"width:48px;height:48px;border-radius:50%;margin-right:8px;\"></a>" : '';
+            $link  = get_permalink($artist);
+            $title = esc_html(get_the_title($artist));
+        } else {
+            $thumb = '';
+            $link  = '#';
+            $title = esc_html($artist->post_title);
+        }
+
+        echo "<li style=\"display:flex;align-items:center;gap:10px;margin-bottom:0.6em;\">{$thumb}<div><a href=\"{$link}\"><strong>{$title}</strong></a>";
+        foreach ($songs as $s) {
+            echo "<br><span style=\"font-size:0.9em;color:#666;\">".esc_html($s)."</span>";
+        }
+        echo "</div></li>";
+
+        if ($artist->ID !== 'unknown') {
+            wp_reset_postdata();
+        }
     }
+
     echo '</ul></div>';
-  }
-
-  
-// === Other Artists Featured ===
-$featured_ids = array_column($featured, 'artist', 'ID');
-$cpt_songs = get_field('songs_referenced') ?: [];
-$other_artists = [];
-
-foreach ($cpt_songs as $row) {
-  $artist = $row['referenced_artist'];
-  $song   = $row['referenced_song_title'];
-  if (!$artist instanceof WP_Post || !$song) continue;
-  if (in_array($artist->ID, $featured_ids)) continue;
-
-  // Initialize if not already
-  if (!isset($other_artists[$artist->ID])) {
-    $other_artists[$artist->ID] = [
-      'post' => $artist,
-      'songs' => [],
-    ];
-  }
-
-  $other_artists[$artist->ID]['songs'][] = $song;
 }
 
+// === Output Other Artists ===
 if (!empty($other_artists)) {
-  uasort($other_artists, fn($a, $b) => strcmp($a['post']->post_title, $b['post']->post_title));
-  $meta = $group_titles['other_artists'];
-  echo '<div class="referenced-group" style="margin-top:2em;">';
-  echo "<h4><a href=\"{$meta['link']}\" style=\"text-decoration:none;\"><span style=\"font-size:1.1em;\">{$meta['emoji']}</span> <span style=\"text-decoration:underline;\">{$meta['title']}</span></a></h4><ul>";
-
-  foreach ($other_artists as $entry) {
-    $artist = $entry['post'];
-    $songs  = $entry['songs'];
-    setup_postdata($artist);
-
-    $img   = get_field('portrait_image', $artist->ID);
-    $link  = get_permalink($artist);
-    $title = esc_html(get_the_title($artist));
-    $thumb = $img ? "<a href=\"{$link}\"><img src=\"{$img['sizes']['thumbnail']}\" style=\"width:48px;height:48px;border-radius:50%;margin-right:8px;\"></a>" : '';
-
-    echo "<li style=\"display:flex;align-items:flex-start;gap:10px;margin-bottom:0.6em;\">";
-    echo $thumb;
-    echo "<div><a href=\"{$link}\"><strong>{$title}</strong></a>";
-
-    // Output each song title on its own line
-    foreach ($songs as $song_title) {
-      $safe_title = esc_html($song_title);
-      echo "<br><span style=\"font-size:0.9em;color:#666;\">{$safe_title}</span>";
-    }
-
-    echo "</div></li>";
-    wp_reset_postdata();
-  }
-
-  echo '</ul></div>';
-}
-
-
-  // === Manual Songs Referenced ===
-  $manual_songs = get_field('other_songs_referenced') ?: [];
-  if (!empty($manual_songs)) {
-    $meta = $group_titles['songs_referenced'];
+    uasort($other_artists, fn($a, $b) => strcmp($a['post']->post_title, $b['post']->post_title));
+    $meta = $group_titles['other_artists'];
     echo '<div class="referenced-group" style="margin-top:2em;">';
     echo "<h4><a href=\"{$meta['link']}\" style=\"text-decoration:none;\"><span style=\"font-size:1.1em;\">{$meta['emoji']}</span> <span style=\"text-decoration:underline;\">{$meta['title']}</span></a></h4><ul>";
-    usort($manual_songs, fn($a, $b) => strcmp($a['artist_name'], $b['artist_name']));
-    foreach ($manual_songs as $row) {
-      $artist = esc_html($row['artist_name']);
-      $song   = esc_html($row['song_title']);
-      echo "<li><strong>{$artist}</strong> – {$song}</li>";
+
+    foreach ($other_artists as $entry) {
+        $artist = $entry['post'];
+        $songs  = $entry['songs'];
+
+        if ($artist->ID !== 'unknown') {
+            setup_postdata($artist);
+            $img   = get_field('portrait_image', $artist->ID);
+            $link  = get_permalink($artist);
+            $title = esc_html(get_the_title($artist));
+            $thumb = $img ? "<a href=\"{$link}\"><img src=\"{$img['sizes']['thumbnail']}\" style=\"width:48px;height:48px;border-radius:50%;margin-right:8px;\"></a>" : '';
+        } else {
+            $thumb = '';
+            $link  = '#';
+            $title = esc_html($artist->post_title);
+        }
+
+        echo "<li style=\"display:flex;align-items:flex-start;gap:10px;margin-bottom:0.6em;\">";
+        echo $thumb;
+        echo "<div><a href=\"{$link}\"><strong>{$title}</strong></a>";
+        foreach ($songs as $song_title) {
+            echo "<br><span style=\"font-size:0.9em;color:#666;\">".esc_html($song_title)."</span>";
+        }
+        echo "</div></li>";
+
+        if ($artist->ID !== 'unknown') {
+            wp_reset_postdata();
+        }
     }
+
     echo '</ul></div>';
-  }
+}
+
 
   // === Remaining CPTs ===
   $acf_map = [
