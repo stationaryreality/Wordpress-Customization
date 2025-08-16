@@ -639,28 +639,38 @@ if ($themes && !is_wp_error($themes)) {
   echo '</ul></div>';
 }
 
-// === Music Video Block (Primary Featured Song) ===
-$primary_song = get_field('primary_song');
-if ($primary_song instanceof WP_Post) {
-  $song_link   = get_permalink($primary_song);
-  $song_title  = get_the_title($primary_song);
-  $video_img   = get_field('video_screenshot', $primary_song->ID);
-  $video_url   = $video_img ? $video_img['sizes']['large'] : '';
+// === Music Video Block (Primary Featured Song via repeater) ===
+$chapter_songs = get_field('chapter_songs');
+$primary_song   = null;
 
-  echo '<div class="referenced-group" style="margin-top:2em;">';
-  echo '<h4><span style="font-size:1.1em;">🎥</span> ' . esc_html($song_title) . '</h4>';
-
-  if ($video_url) {
-    echo '<div style="margin-top:10px;">';
-    echo '<a href="' . esc_url($song_link) . '">';
-    echo '<img src="' . esc_url($video_url) . '" alt="' . esc_attr($song_title) . ' video screenshot" style="max-width:100%;height:auto;border-radius:8px;display:block;margin:0 auto;">';
-    echo '</a>';
-    echo '</div>';
-  }
-
-  echo '</div>';
+if (!empty($chapter_songs) && is_array($chapter_songs)) {
+    foreach ($chapter_songs as $row) {
+        if (!empty($row['role']) && $row['role'] === 'primary' && !empty($row['song']) && $row['song'] instanceof WP_Post) {
+            $primary_song = $row['song'];
+            break; // use first primary song
+        }
+    }
 }
 
+if ($primary_song instanceof WP_Post) {
+    $song_link  = get_permalink($primary_song);
+    $song_title = get_the_title($primary_song);
+    $video_img  = get_field('video_screenshot', $primary_song->ID);
+    $video_url  = $video_img ? $video_img['sizes']['large'] : '';
+
+    echo '<div class="referenced-group" style="margin-top:2em;">';
+    echo '<h4><span style="font-size:1.1em;">🎥</span> ' . esc_html($song_title) . '</h4>';
+
+    if ($video_url) {
+        echo '<div style="margin-top:10px;">';
+        echo '<a href="' . esc_url($song_link) . '">';
+        echo '<img src="' . esc_url($video_url) . '" alt="' . esc_attr($song_title) . ' video screenshot" style="max-width:100%;height:auto;border-radius:8px;display:block;margin:0 auto;">';
+        echo '</a>';
+        echo '</div>';
+    }
+
+    echo '</div>';
+}
 
 // === Music Video Block (Secondary Featured Song) ===
 $chapter_songs = get_field('chapter_songs');
