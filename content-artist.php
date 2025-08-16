@@ -72,22 +72,35 @@ function get_wikipedia_intro($slug) {
 
 
   <?php
-  // === Narrative Threads ===
-  $threads = get_posts([
+// === Narrative Threads (artist must match a primary song) ===
+$chapters = get_posts([
     'post_type'      => 'chapter',
     'posts_per_page' => -1,
     'orderby'        => 'menu_order',
     'order'          => 'ASC',
-    'meta_query'     => [
-      [
-        'key'     => 'primary_artist',
-        'value'   => $artist_id,
-        'compare' => '='
-      ]
-    ]
-  ]);
+]);
 
-  if ($threads): ?>
+$threads = [];
+
+foreach ($chapters as $chapter) {
+    $chapter_songs = get_field('chapter_songs', $chapter->ID);
+
+    if ($chapter_songs) {
+        foreach ($chapter_songs as $row) {
+            if (!empty($row['song']) && !empty($row['role']) && $row['role'] === 'primary') {
+                $song       = $row['song']; // WP_Post (Song CPT)
+                $song_artist = get_field('song_artist', $song->ID);
+
+                if ($song_artist && intval($song_artist) === intval($artist_id)) {
+                    $threads[] = $chapter;
+                    break; // ✅ stop after finding a matching primary
+                }
+            }
+        }
+    }
+}
+
+if (!empty($threads)): ?>
     <div class="narrative-threads">
       <h2>Narrative Threads</h2>
       <div class="thread-grid">
@@ -105,7 +118,7 @@ function get_wikipedia_intro($slug) {
         <?php endforeach; ?>
       </div>
     </div>
-  <?php endif; ?>
+<?php endif; ?>
 
 
   <?php

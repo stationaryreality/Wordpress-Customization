@@ -8,47 +8,60 @@
             <h1 class='post-title'><?php the_title(); ?></h1>
         </div>
 
-  <!-- Artist Info -->
+  <!-- Artist + Primary Song Info -->
   <?php
-  $primary_artist = get_field('primary_artist');
-$primary_song = get_field('primary_song');
+  // === Get primary song from repeater ===
+  $chapter_songs = get_field('chapter_songs');
+  $primary_song = null;
 
-  if ($primary_artist):
-    $portrait = get_field('portrait_image', $primary_artist->ID);
-    $img_url  = $portrait ? $portrait['sizes']['thumbnail'] : '';
-    $artist_name = get_the_title($primary_artist->ID);
-    $artist_link = get_permalink($primary_artist->ID);
-    ?>
-    <div class="artist-meta">
-      <?php if ($img_url): ?>
-        <a href="<?php echo esc_url($artist_link); ?>">
-          <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($artist_name); ?>" class="artist-thumbnail rounded">
-        </a>
+  if (!empty($chapter_songs) && is_array($chapter_songs)) {
+      foreach ($chapter_songs as $row) {
+          if (!empty($row['role']) && $row['role'] === 'primary' && !empty($row['song']) && $row['song'] instanceof WP_Post) {
+              $primary_song = $row['song'];
+              break; // use first primary song
+          }
+      }
+  }
+
+  if ($primary_song):
+      // === Get artist (ID or object) from song CPT ===
+      $artist_field = get_field('song_artist', $primary_song->ID);
+      $primary_artist = $artist_field ? get_post($artist_field) : null;
+
+      if ($primary_artist instanceof WP_Post):
+          $portrait    = get_field('portrait_image', $primary_artist->ID);
+          $img_url     = $portrait ? $portrait['sizes']['thumbnail'] : '';
+          $artist_name = get_the_title($primary_artist->ID);
+          $artist_link = get_permalink($primary_artist->ID);
+          ?>
+          <div class="artist-meta">
+            <?php if ($img_url): ?>
+              <a href="<?php echo esc_url($artist_link); ?>">
+                <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($artist_name); ?>" class="artist-thumbnail rounded">
+              </a>
+            <?php endif; ?>
+
+            <h2 class="artist-name">
+              <a href="<?php echo esc_url($artist_link); ?>" style="text-decoration: underline;">
+                <?php echo esc_html($artist_name); ?>
+              </a>
+            </h2>
+
+            <?php
+              $song_title = get_the_title($primary_song->ID);
+              $song_link  = get_permalink($primary_song->ID);
+            ?>
+            <div class="song-title">
+              <a href="<?php echo esc_url($song_link); ?>" style="text-decoration: underline;">
+                <?php echo esc_html($song_title); ?>
+              </a>
+            </div>
+          </div>
       <?php endif; ?>
-
-<h2 class="artist-name">
-  <a href="<?php echo esc_url($artist_link); ?>" style="text-decoration: underline;">
-  <?php echo esc_html($artist_name); ?>
-  </a>
-</h2>
-
-
-<?php if ($primary_song): ?>
-  <?php
-    $song_title = get_the_title($primary_song->ID);
-    $song_link = get_permalink($primary_song->ID);
-  ?>
-  <div class="song-title">
-<a href="<?php echo esc_url($song_link); ?>" style="text-decoration: underline;">
-  <?php echo esc_html($song_title); ?>
-</a>
-
-    </a>
-  </div>
-<?php endif; ?>
-
-    </div>
   <?php endif; ?>
+
+
+
         
 		<div class="post-content">
     <?php ct_author_output_last_updated_date(); ?>

@@ -359,9 +359,9 @@ function display_referenced_works() {
   echo '<h3 style="font-weight:bold;margin-top:2em;">Notes & References</h3>';
 
 $group_titles = [
-  'featured_artists'      => ['title' => 'Artists Featured',          'emoji' => '🎤', 'link' => '/artists-featured/'],
-  'other_artists'         => ['title' => 'Other Artists Featured',    'emoji' => '🎤', 'link' => '/artists-featured/'],
-  'songs_referenced'      => ['title' => 'Songs Referenced',          'emoji' => '🎵', 'link' => '/song-excerpts/'],
+  'featured_artists'      => ['title' => 'Songs Featured',            'emoji' => '🎤', 'link' => '/artists-featured/'],
+  'other_artists'         => ['title' => 'Songs Referenced',          'emoji' => '🎤', 'link' => '/artists-featured/'],
+  'songs_referenced'      => ['title' => 'Songs Excerpts',            'emoji' => '🎵', 'link' => '/song-excerpts/'],
   'profile'               => ['title' => 'People Referenced',         'emoji' => '👤', 'link' => '/people-referenced/'],
   'lyric'                 => ['title' => 'Song Excerpts',             'emoji' => '🎵', 'link' => '/song-excerpts/'],
   'quote'                 => ['title' => 'Quote Library',             'emoji' => '💬', 'link' => '/quote-library/'],
@@ -388,8 +388,8 @@ foreach ($song_rows as $row) {
 
     $song_post   = $row['song'];
     $song_title  = get_the_title($song_post);
-$artist_id = get_field('song_artist', $song_post->ID);
-$artist_post = $artist_id ? get_post($artist_id) : null;
+    $artist_id = get_field('song_artist', $song_post->ID);
+    $artist_post = $artist_id ? get_post($artist_id) : null;
     $role        = $row['role'] ?? 'supporting';
 
     // Fallback for missing artist
@@ -663,29 +663,39 @@ if ($primary_song instanceof WP_Post) {
 
 
 // === Music Video Block (Secondary Featured Song) ===
-$secondary_song = get_field('secondary_song');
+$chapter_songs = get_field('chapter_songs');
 $hide_secondary = get_field('hide_secondary_song_in_footnotes');
 
-if ($secondary_song instanceof WP_Post && !$hide_secondary) {
-  $song_link   = get_permalink($secondary_song);
-  $song_title  = get_the_title($secondary_song);
-  $video_img   = get_field('video_screenshot', $secondary_song->ID);
-  $video_url   = $video_img ? $video_img['sizes']['large'] : '';
+$secondary_song = null;
 
-  echo '<div class="referenced-group" style="margin-top:2em;">';
-  echo '<h4><span style="font-size:1.1em;">🎥</span> ' . esc_html($song_title) . '</h4>';
-
-  if ($video_url) {
-    echo '<div style="margin-top:10px;">';
-    echo '<a href="' . esc_url($song_link) . '">';
-    echo '<img src="' . esc_url($video_url) . '" alt="' . esc_attr($song_title) . ' video screenshot" style="max-width:100%;height:auto;border-radius:8px;display:block;margin:0 auto;">';
-    echo '</a>';
-    echo '</div>';
-  }
-
-  echo '</div>';
+if (!empty($chapter_songs) && is_array($chapter_songs)) {
+    foreach ($chapter_songs as $row) {
+        if (!empty($row['role']) && $row['role'] === 'secondary' && !empty($row['song']) && $row['song'] instanceof WP_Post) {
+            $secondary_song = $row['song'];
+            break; // use first secondary song only
+        }
+    }
 }
 
+if ($secondary_song instanceof WP_Post && !$hide_secondary) {
+    $song_link  = get_permalink($secondary_song);
+    $song_title = get_the_title($secondary_song);
+    $video_img  = get_field('video_screenshot', $secondary_song->ID);
+    $video_url  = $video_img ? $video_img['sizes']['large'] : '';
+
+    echo '<div class="referenced-group" style="margin-top:2em;">';
+    echo '<h4><span style="font-size:1.1em;">🎥</span> ' . esc_html($song_title) . '</h4>';
+
+    if ($video_url) {
+        echo '<div style="margin-top:10px;">';
+        echo '<a href="' . esc_url($song_link) . '">';
+        echo '<img src="' . esc_url($video_url) . '" alt="' . esc_attr($song_title) . ' video screenshot" style="max-width:100%;height:auto;border-radius:8px;display:block;margin:0 auto;">';
+        echo '</a>';
+        echo '</div>';
+    }
+
+    echo '</div>';
+}
 
   echo '</div>'; // .referenced-works
   return ob_get_clean();
@@ -694,22 +704,35 @@ add_shortcode('referenced_works', 'display_referenced_works');
 
 
 function secondary_song_image_shortcode() {
-  $secondary_song = get_field('secondary_song');
-  if (!$secondary_song instanceof WP_Post) return '';
+    if (!function_exists('get_field')) return ''; // safety check
 
-  $song_link  = get_permalink($secondary_song);
-  $video_img  = get_field('video_screenshot', $secondary_song->ID);
-  $video_url  = $video_img ? $video_img['sizes']['large'] : '';
+    $chapter_songs = get_field('chapter_songs'); // repeater field
+    if (empty($chapter_songs) || !is_array($chapter_songs)) return '';
 
-  if (!$video_url) return '';
+    $secondary_song = null;
 
-  ob_start();
-  echo '<div class="secondary-song-image" style="margin:2em 0;text-align:center;">';
-  echo '<a href="' . esc_url($song_link) . '">';
-  echo '<img src="' . esc_url($video_url) . '" alt="" style="max-width:100%;height:auto;border-radius:8px;">';
-  echo '</a>';
-  echo '</div>';
-  return ob_get_clean();
+    foreach ($chapter_songs as $row) {
+        if (!empty($row['role']) && $row['role'] === 'secondary' && !empty($row['song']) && $row['song'] instanceof WP_Post) {
+            $secondary_song = $row['song'];
+            break; // stop at the first secondary song
+        }
+    }
+
+    if (!$secondary_song) return '';
+
+    $song_link = get_permalink($secondary_song);
+    $video_img = get_field('video_screenshot', $secondary_song->ID);
+    $video_url = $video_img ? $video_img['sizes']['large'] : '';
+
+    if (!$video_url) return '';
+
+    ob_start();
+    echo '<div class="secondary-song-image" style="margin:2em 0;text-align:center;">';
+    echo '<a href="' . esc_url($song_link) . '">';
+    echo '<img src="' . esc_url($video_url) . '" alt="" style="max-width:100%;height:auto;border-radius:8px;">';
+    echo '</a>';
+    echo '</div>';
+    return ob_get_clean();
 }
 add_shortcode('secondary_song_image', 'secondary_song_image_shortcode');
 
@@ -717,27 +740,24 @@ add_shortcode('secondary_song_image', 'secondary_song_image_shortcode');
 add_filter('relevanssi_content_to_index', 'add_artist_name_to_index', 10, 2);
 function add_artist_name_to_index($content, $post) {
     if ($post->post_type === 'chapter') {
-        $artist = get_field('primary_artist', $post->ID);
-        $song = get_field('primary_song', $post->ID);
+        $chapter_songs = get_field('chapter_songs', $post->ID);
 
-        if ($artist) {
-            // Get name if it's a post object (CPT)
-            if (is_object($artist)) {
-                $content .= ' ' . get_the_title($artist->ID);
-            } else {
-                $content .= ' ' . $artist;
+        if ($chapter_songs) {
+            foreach ($chapter_songs as $row) {
+                if (!empty($row['song'])) {
+                    $song = $row['song']; // Song CPT object
+                    $content .= ' ' . get_the_title($song->ID); // index song title
+
+                    // Only include primary artist? (change condition to include all if you want)
+                    if (!empty($row['role']) && $row['role'] === 'primary') {
+                        $artist = get_field('song_artist', $song->ID);
+                        if ($artist) {
+                            $content .= ' ' . get_the_title($artist->ID);
+                        }
+                    }
+                }
             }
         }
-
- if ($song) {
-    if (is_object($song)) {
-        $content .= ' ' . get_the_title($song->ID);
-    } else {
-        $content .= ' ' . $song;
     }
-}
-
-    }
-
     return $content;
 }
