@@ -93,7 +93,6 @@ usort($entries, function ($a, $b) {
 <main class="cpt-index-alphabetical">
   <header class="archive-header">
     <h1 class="post-title">All Entries (Alphabetical Index)</h1>
-    <p class="post-subtitle">Browse every referenced person, idea, quote, or source in one unified list.</p>
     <?php
 $total_count = count($entries);
 ?>
