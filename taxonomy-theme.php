@@ -12,38 +12,83 @@
     <?php endif; ?>
   </section>
 
+  <!-- Songs Grid -->
   <?php
-    $args = [
-      'post_type' => ['artist', 'chapter', 'quote', 'song', 'concept', 'movie', 'book', 'person'],
-      'tax_query' => [[
+    $songs = new WP_Query([
+      'post_type'      => 'song',
+      'posts_per_page' => -1,
+      'tax_query'      => [[
         'taxonomy' => 'theme',
         'field'    => 'slug',
         'terms'    => $term->slug,
       ]],
-      'posts_per_page' => -1,
-    ];
-    $query = new WP_Query($args);
-  ?>
+    ]);
 
-  <?php if ($query->have_posts()) : ?>
-    <ul class="space-y-6">
-      <?php while ($query->have_posts()) : $query->the_post(); ?>
-        <li class="border-b pb-4">
-          <div class="text-sm text-gray-500 uppercase tracking-wide mb-1">
-            <?php echo get_post_type_object(get_post_type())->labels->singular_name; ?>
+    if ($songs->have_posts()) : ?>
+      <h2 class="text-2xl font-bold mb-4">Songs</h2>
+      <div class="cited-grid">
+        <?php while ($songs->have_posts()) : $songs->the_post();
+          $thumb_url = '';
+          if (has_post_thumbnail()) {
+            $thumb_url = get_the_post_thumbnail_url(get_the_ID(), 'medium');
+          } elseif (get_field('cover_image')) {
+            $cover = get_field('cover_image');
+            $thumb_url = $cover['sizes']['medium'] ?? '';
+          } elseif (get_field('portrait_image')) {
+            $portrait = get_field('portrait_image');
+            $thumb_url = $portrait['sizes']['medium'] ?? '';
+          } elseif (get_field('image_file')) {
+            $image_file = get_field('image_file');
+            $thumb_url = $image_file['sizes']['medium'] ?? '';
+          }
+        ?>
+          <div class="cited-item">
+            <a href="<?php the_permalink(); ?>">
+              <?php if ($thumb_url): ?>
+                <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php the_title(); ?>">
+              <?php endif; ?>
+              <h3><?php the_title(); ?></h3>
+            </a>
           </div>
-          <a href="<?php the_permalink(); ?>" class="text-xl font-semibold hover:underline block">
-            <?php the_title(); ?>
-          </a>
-          <p class="text-gray-600 mt-1"><?php echo wp_trim_words(get_the_excerpt(), 25); ?></p>
-        </li>
-      <?php endwhile; ?>
-    </ul>
-  <?php else : ?>
-    <p>No content has been tagged with this theme yet.</p>
-  <?php endif; ?>
+        <?php endwhile; ?>
+      </div>
+    <?php endif; wp_reset_postdata(); ?>
 
-  <?php wp_reset_postdata(); ?>
+
+  <!-- Narrative Threads Grid (Chapters) -->
+  <?php
+    $chapters = new WP_Query([
+      'post_type'      => 'chapter',
+      'posts_per_page' => -1,
+      'tax_query'      => [[
+        'taxonomy' => 'theme',
+        'field'    => 'slug',
+        'terms'    => $term->slug,
+      ]],
+    ]);
+
+    if ($chapters->have_posts()) : ?>
+      <div class="narrative-threads mt-12">
+        <h2>
+          Narrative Thread<?php echo $chapters->found_posts > 1 ? 's' : ''; ?>
+        </h2>
+        <div class="thread-grid">
+          <?php while ($chapters->have_posts()) : $chapters->the_post();
+            $thumb = get_the_post_thumbnail_url(get_the_ID(), 'medium');
+          ?>
+            <div class="thread-item">
+              <a href="<?php the_permalink(); ?>">
+                <?php if ($thumb): ?>
+                  <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title(); ?>">
+                <?php endif; ?>
+                <h3><?php the_title(); ?></h3>
+              </a>
+            </div>
+          <?php endwhile; ?>
+        </div>
+      </div>
+    <?php endif; wp_reset_postdata(); ?>
+
 </main>
 
 <?php get_footer(); ?>
