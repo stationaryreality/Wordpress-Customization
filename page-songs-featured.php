@@ -15,19 +15,26 @@ get_header();
     ];
 
     foreach ($song_tiers as $slug => $label):
-      $songs = new WP_Query([
-        'post_type'      => 'song',
-        'posts_per_page' => -1,
-        'tax_query'      => [
-          [
-            'taxonomy' => 'feature_level',
-            'field'    => 'slug',
-            'terms'    => $slug,
-          ],
-        ],
-        'orderby'        => 'title',
-        'order'          => 'ASC',
-      ]);
+  $songs = new WP_Query([
+  'post_type'      => 'song',
+  'posts_per_page' => -1,
+  'tax_query'      => [
+    'relation' => 'AND',
+    [
+      'taxonomy' => 'feature_level',
+      'field'    => 'slug',
+      'terms'    => $slug,
+    ],
+    [
+      'taxonomy' => 'song_category',
+      'field'    => 'slug',
+      'terms'    => 'rap',
+      'operator' => 'NOT IN', // exclude rap songs here
+    ],
+  ],
+  'orderby'        => 'title',
+  'order'          => 'ASC',
+]);
 
       if ($songs->have_posts()): ?>
         <div class="feature-group">
