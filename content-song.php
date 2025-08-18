@@ -35,18 +35,18 @@ function get_wikipedia_intro($slug) {
 </div>
 
 
-  <div class="song-bio">
-    <?php if ($bio): ?>
-      <?php echo wp_kses_post($bio); ?>
-    <?php elseif ($wiki_slug): ?>
-      <p><?php echo get_wikipedia_intro($wiki_slug); ?></p>
-    <?php else: ?>
-      <?php the_content(); ?>
-    <?php endif; ?>
-  </div>
+<div class="song-bio">
+  <?php if ($bio): ?>
+    <?php echo wp_kses_post($bio); ?>
+  <?php elseif ($wiki_slug): ?>
+    <p><?php echo get_wikipedia_intro($wiki_slug); ?></p>
+  <?php else: ?>
+    <?php the_content(); ?>
+  <?php endif; ?>
+</div>
 
 
-  <?php if ($artist_profile): ?>
+<?php if ($artist_profile): ?>
   <?php
     $portrait     = get_field('portrait_image', $artist_profile->ID);
     $thumb        = $portrait ? $portrait['sizes']['thumbnail'] : '';
@@ -68,43 +68,11 @@ function get_wikipedia_intro($slug) {
 <?php endif; ?>
 
 
-  <?php
-  // === Chapters Featuring This Song ===
-  $chapters = get_posts([
-    'post_type'      => 'chapter',
-    'posts_per_page' => -1,
-    'orderby'        => 'menu_order',
-    'order'          => 'ASC',
-    'meta_query'     => [
-      'relation' => 'OR',
-      [
-        'key'     => 'primary_song',
-        'value'   => $song_id,
-        'compare' => '='
-      ],
-      [
-        'key'     => 'secondary_song',
-        'value'   => $song_id,
-        'compare' => '='
-      ],
-      [
-        'key'     => 'tertiary_song',
-        'value'   => $song_id,
-        'compare' => '='
-      ],
-      [
-        'key'     => 'quaternary_song',
-        'value'   => $song_id,
-        'compare' => '='
-      ]
-    ]
-  ]);
-
+<?php
+// === YouTube Embed ===
 $youtube_url = get_field('youtube_url');
 if ($youtube_url) {
   $embed_html = wp_oembed_get($youtube_url);
-
-  // Gutenberg-style wrapper with centering
   echo '<figure class="wp-block-embed is-type-video" style="text-align:center;margin:2em auto;">';
   echo '<div class="wp-block-embed__wrapper" style="display:inline-block;">';
   echo $embed_html;
@@ -112,7 +80,93 @@ if ($youtube_url) {
   echo '</figure>';
 }
 
+// === Gather Chapters by Role ===
+$chapters = get_posts([
+  'post_type'      => 'chapter',
+  'posts_per_page' => -1,
+  'orderby'        => 'menu_order',
+  'order'          => 'ASC',
+]);
 
+$primary   = [];
+$secondary = [];
+$supporting = [];
+
+foreach ($chapters as $chapter) {
+  $songs = get_field('chapter_songs', $chapter->ID);
+  if ($songs) {
+    foreach ($songs as $row) {
+      if (!empty($row['song']->ID) && $row['song']->ID == $song_id) {
+        if ($row['role'] === 'primary') {
+          $primary[] = $chapter;
+        } elseif ($row['role'] === 'secondary') {
+          $secondary[] = $chapter;
+        } else {
+          $supporting[] = $chapter;
+        }
+      }
+    }
+  }
+}
+?>
+
+<?php if (!empty($primary)): ?>
+  <div class="narrative-threads">
+    <h2>
+      Narrative Thread<?php echo count($primary) > 1 ? 's' : ''; ?>
+    </h2>
+    <div class="thread-grid">
+      <?php foreach ($primary as $chapter):
+        $thumb = get_the_post_thumbnail_url($chapter->ID, 'medium');
+      ?>
+        <div class="thread-item">
+          <a href="<?php echo get_permalink($chapter->ID); ?>">
+            <?php if ($thumb): ?>
+              <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr(get_the_title($chapter->ID)); ?>">
+            <?php endif; ?>
+            <h3><?php echo esc_html(get_the_title($chapter->ID)); ?></h3>
+          </a>
+        </div>
+      <?php endforeach; ?>
+    </div>
+  </div>
+<?php endif; ?>
+
+<?php if (!empty($secondary)): ?>
+  <div class="narrative-threads secondary">
+    <h2>Narrative Threads Featuring This Song</h2>
+    <div class="thread-grid small-grid">
+      <?php foreach ($secondary as $chapter):
+        $thumb = get_the_post_thumbnail_url($chapter->ID, 'medium');
+      ?>
+        <div class="thread-item">
+          <a href="<?php echo get_permalink($chapter->ID); ?>">
+            <?php if ($thumb): ?>
+              <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr(get_the_title($chapter->ID)); ?>">
+            <?php endif; ?>
+            <h3><?php echo esc_html(get_the_title($chapter->ID)); ?></h3>
+          </a>
+        </div>
+      <?php endforeach; ?>
+    </div>
+  </div>
+<?php endif; ?>
+
+<?php if (!empty($supporting)): ?>
+  <div class="narrative-threads supporting">
+    <h2>Narrative Threads Referencing This Song</h2>
+    <ul class="thread-list">
+      <?php foreach ($supporting as $chapter): ?>
+        <li><a href="<?php echo get_permalink($chapter->ID); ?>">
+          <?php echo esc_html(get_the_title($chapter->ID)); ?>
+        </a></li>
+      <?php endforeach; ?>
+    </ul>
+  </div>
+<?php endif; ?>
+
+
+<?php
 // === Isolated Lyrics (on song CPT itself) ===
 $isolated_lyrics = get_field('isolated_lyrics');
 if (!empty($isolated_lyrics)) {
@@ -130,54 +184,33 @@ if (!empty($isolated_lyrics)) {
   echo '</div>';
 }
 
-  if ($chapters): ?>
-    <div class="narrative-threads">
-      <h2>Narrative Threads Featuring This Song</h2>
-      <div class="thread-grid">
-        <?php foreach ($chapters as $chapter):
-          $thumb = get_the_post_thumbnail_url($chapter->ID, 'medium');
-        ?>
-          <div class="thread-item">
-            <a href="<?php echo get_permalink($chapter->ID); ?>">
-              <?php if ($thumb): ?>
-                <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr(get_the_title($chapter->ID)); ?>">
-              <?php endif; ?>
-              <h3><?php echo esc_html(get_the_title($chapter->ID)); ?></h3>
-            </a>
-          </div>
-        <?php endforeach; ?>
-      </div>
-    </div>
-  <?php endif; ?>
-
-  <?php
-  // === Song Excerpts ===
-  $lyrics = get_posts([
-    'post_type'      => 'lyric',
-    'posts_per_page' => -1,
-    'meta_query'     => [
-      [
-        'key'     => 'song',
-        'value'   => $song_id,
-        'compare' => '='
-      ]
+// === Lyrics CPTs (linked to this song) ===
+$lyrics = get_posts([
+  'post_type'      => 'lyric',
+  'posts_per_page' => -1,
+  'meta_query'     => [
+    [
+      'key'     => 'song',
+      'value'   => $song_id,
+      'compare' => '='
     ]
-  ]);
+  ]
+]);
 
-  if ($lyrics): ?>
-    <div class="artist-lyrics">
-      <h2>Song Excerpts</h2>
-      <?php foreach ($lyrics as $lyric):
-        $html = get_field('lyric_html_block', $lyric->ID);
-        $text = get_field('quote_text', $lyric->ID);
-        if ($html) {
-          echo $html;
-        } elseif ($text) {
-          echo '<div class="plain-lyric"><blockquote>' . esc_html($text) . '</blockquote></div>';
-        }
-      endforeach; ?>
-    </div>
-  <?php endif; ?>
+if ($lyrics): ?>
+  <div class="artist-lyrics">
+    <h2>Song Excerpts</h2>
+    <?php foreach ($lyrics as $lyric):
+      $html = get_field('lyric_html_block', $lyric->ID);
+      $text = get_field('quote_text', $lyric->ID);
+      if ($html) {
+        echo $html;
+      } elseif ($text) {
+        echo '<div class="plain-lyric"><blockquote>' . esc_html($text) . '</blockquote></div>';
+      }
+    endforeach; ?>
+  </div>
+<?php endif; ?>
 
-  <?php get_template_part('content/song-nav'); ?>
+<?php get_template_part('content/song-nav'); ?>
 </div>
