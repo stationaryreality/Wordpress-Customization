@@ -13,7 +13,7 @@ function ct_author_child_enqueue_styles() {
 add_action('wp_enqueue_scripts', 'ct_author_child_enqueue_styles');
 
 
-register_taxonomy( 'theme', [ 'chapter', 'quote', 'lyric', 'concept', 'movie', 'book', 'profile', 'artist' ], [
+register_taxonomy( 'theme', [ 'chapter', 'quote', 'lyric', 'concept', 'movie', 'book', 'profile', 'artist', 'song' ], [
   'label' => 'Themes',
   'public' => true,
   'show_ui' => true,
@@ -771,3 +771,16 @@ function add_artist_name_to_index($content, $post) {
     }
     return $content;
 }
+
+
+// Remove the default "Continue reading" junk from excerpts
+function my_clean_excerpt_more($more) {
+    return '…'; // just ellipsis, or replace with '' for nothing
+}
+add_filter('excerpt_more', 'my_clean_excerpt_more');
+
+// Optional: limit excerpt length consistently
+function my_custom_excerpt_length($length) {
+    return 30; // number of words
+}
+add_filter('excerpt_length', 'my_custom_excerpt_length');
