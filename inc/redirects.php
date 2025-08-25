@@ -1,29 +1,47 @@
 <?php
-// inc/redirects.php
-
 /**
- * Redirect CPT archive pages to their custom index pages.
+ * Redirects for CPT archives, breadcrumbs, and taxonomy
  */
-add_action('template_redirect', function() {
-    if (is_post_type_archive()) {
-        $map = [
-            'artist'       => '/artists-featured/',
-            'song'         => '/songs-featured/',
-            'chapter'      => '/chapters-by-song/',
-            'movie'        => '/movies-referenced/',
-            'book'         => '/books-cited/',
-            'organization' => '/organizations-referenced/',
-            'profile'      => '/people-referenced/',
-            'quote'        => '/quote-library/',
-            'reference'    => '/research-sources/',
-            'image'        => '/image-gallery/',
-            'lyric'        => '/song-excerpts/',
-            'concept'      => '/lexicon/',
-        ];
 
-        $pt = get_query_var('post_type');
-        if (isset($map[$pt])) {
-            wp_redirect(home_url($map[$pt]), 301);
+// CPT archive redirects
+add_action('template_redirect', function () {
+    $redirects = [
+        'book'         => '/books-cited/',
+        'artist'       => '/artists-featured/',
+        'profile'      => '/people-referenced/',
+        'concept'      => '/lexicon/',
+        'movie'        => '/movies-referenced/',
+        'quote'        => '/quote-library/',
+        'reference'    => '/research-sources/',
+        'lyric'        => '/song-excerpts/',
+        'organization' => '/organizations/',
+        'song'         => '/songs-featured/',
+        'image'        => '/image-gallery/',
+        'chapter'      => '/#narrative-threads',
+    ];
+
+    foreach ($redirects as $cpt => $url) {
+        if (is_post_type_archive($cpt)) {
+            wp_redirect(home_url($url), 301);
+            exit;
+        }
+    }
+
+    // handle paginated chapter URLs (/chapters/page/2, /chapters/page/3, etc.)
+    if (is_post_type_archive('chapter') && is_paged()) {
+        wp_redirect(home_url('/#chapters'), 301);
+        exit;
+    }
+});
+
+// Taxonomy redirect (theme archive root → /themes/)
+add_action('template_redirect', function () {
+    if (is_tax('theme')) {
+        $term = get_queried_object();
+
+        // If no specific term, redirect the taxonomy root
+        if (empty($term->slug)) {
+            wp_redirect(home_url('/themes/'), 301);
             exit;
         }
     }
