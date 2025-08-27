@@ -67,6 +67,28 @@
             "append": ""
         },
         {
+            "key": "field_68af0f7821645",
+            "label": "Wikipedia Slug",
+            "name": "wikipedia_slug_ref",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
             "key": "field_url",
             "label": "URL",
             "name": "url",
