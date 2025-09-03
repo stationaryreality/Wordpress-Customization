@@ -371,6 +371,28 @@
                     "parent_repeater": "field_686fe9966e70a"
                 }
             ]
+        },
+        {
+            "key": "field_68b769a967cac",
+            "label": "Subtitle",
+            "name": "subtitle",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
         }
     ],
     "location": [
@@ -391,5 +413,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1754930073
+    "modified": 1756850627
 }
