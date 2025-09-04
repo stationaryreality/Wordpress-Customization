@@ -717,3 +717,10 @@ body .wp-block-group .wp-block-cover {
   vertical-align: middle !important;
 }
 
+.book-subtitle {
+  font-size: 1.25rem;
+  font-style: italic;
+  color: #555;
+  margin-top: -0.5rem;
+  margin-bottom: 1.5rem;
+}
