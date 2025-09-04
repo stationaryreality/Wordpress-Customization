@@ -29,6 +29,10 @@ if (have_posts()) :
 
   <h1 class="book-title"><?php the_title(); ?></h1>
 
+  <?php if ($subtitle = get_field('subtitle')): ?>
+    <h2 class="book-subtitle"><?php echo esc_html($subtitle); ?></h2>
+  <?php endif; ?>
+
   <div class="book-description">
     <?php
       if ($summary) {
@@ -43,6 +47,8 @@ if (have_posts()) :
       }
     ?>
   </div>
+</div>
+
 
   <?php if ($author_profile): ?>
     <?php
@@ -110,9 +116,9 @@ if (have_posts()) :
     ]);
 
     if ($threads): ?>
-      <div class="narrative-threads" style="margin-top: 4em;">
-        <h2>Narrative Threads Featuring <?php the_title(); ?></h2>
-        <div class="thread-grid">
+<div class="narrative-threads" style="margin-top: 4em; text-align:center;">
+  <h2>Narrative Threads Featuring <?php the_title(); ?></h2>
+  <div class="thread-grid">
           <?php foreach ($threads as $thread):
             $thumb = get_the_post_thumbnail_url($thread->ID, 'medium');
           ?>
