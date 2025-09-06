@@ -111,7 +111,7 @@ foreach ($chapters as $chapter) {
 ?>
 
 <?php if (!empty($primary)): ?>
-  <div class="narrative-threads">
+  <div class="narrative-threads" style="margin-top: 4em; text-align:center;">
     <h2>
       Narrative Thread<?php echo count($primary) > 1 ? 's' : ''; ?>
     </h2>
@@ -133,8 +133,8 @@ foreach ($chapters as $chapter) {
 <?php endif; ?>
 
 <?php if (!empty($secondary)): ?>
-  <div class="narrative-threads secondary">
-    <h2>Narrative Threads Featuring This Song</h2>
+  <div class="narrative-threads secondary" style="margin-top: 4em; text-align:center;">
+    <h2>Featured In</h2>
     <div class="thread-grid small-grid">
       <?php foreach ($secondary as $chapter):
         $thumb = get_the_post_thumbnail_url($chapter->ID, 'medium');
@@ -153,18 +153,24 @@ foreach ($chapters as $chapter) {
 <?php endif; ?>
 
 <?php if (!empty($supporting)): ?>
-  <div class="narrative-threads supporting">
-    <h2>Narrative Threads Referencing This Song</h2>
-    <ul class="thread-list">
-      <?php foreach ($supporting as $chapter): ?>
-        <li><a href="<?php echo get_permalink($chapter->ID); ?>">
-          <?php echo esc_html(get_the_title($chapter->ID)); ?>
-        </a></li>
+  <div class="narrative-threads supporting" style="margin-top: 4em; text-align:center;">
+    <h2>Referenced In</h2>
+    <div class="thread-grid small-grid">
+      <?php foreach ($supporting as $chapter):
+        $thumb = get_the_post_thumbnail_url($chapter->ID, 'medium');
+      ?>
+        <div class="thread-item">
+          <a href="<?php echo get_permalink($chapter->ID); ?>">
+            <?php if ($thumb): ?>
+              <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr(get_the_title($chapter->ID)); ?>">
+            <?php endif; ?>
+            <h3><?php echo esc_html(get_the_title($chapter->ID)); ?></h3>
+          </a>
+        </div>
       <?php endforeach; ?>
-    </ul>
+    </div>
   </div>
 <?php endif; ?>
-
 
 <?php
 // === Isolated Lyrics (on song CPT itself) ===

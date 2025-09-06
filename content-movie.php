@@ -53,7 +53,7 @@ function get_wikipedia_intro($slug) {
 
   if ($threads): ?>
     <div class="narrative-threads">
-      <h2>Narrative Threads</h2>
+      <h2>Narrative Threads Referencing This Movie</h2>
       <div class="thread-grid">
         <?php foreach ($threads as $thread):
           $thumb = get_the_post_thumbnail_url($thread->ID, 'medium');

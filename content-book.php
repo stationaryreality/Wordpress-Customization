@@ -115,10 +115,10 @@ if (have_posts()) :
       ]
     ]);
 
-    if ($threads): ?>
-<div class="narrative-threads" style="margin-top: 4em; text-align:center;">
-  <h2>Narrative Threads Featuring <?php the_title(); ?></h2>
-  <div class="thread-grid">
+if ($threads): ?>
+  <div class="narrative-threads" style="margin-top: 4em; text-align:center;">
+    <h2>Featured In</h2>
+    <div class="thread-grid">
           <?php foreach ($threads as $thread):
             $thumb = get_the_post_thumbnail_url($thread->ID, 'medium');
           ?>
