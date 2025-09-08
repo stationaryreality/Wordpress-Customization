@@ -17,6 +17,7 @@ add_action('template_redirect', function () {
         'organization' => '/organizations/',
         'song'         => '/songs-featured/',
         'image'        => '/image-gallery/',
+        'excerpt'      => '/excerpt-library/',
         'chapter'      => '/#narrative-threads',
     ];
 

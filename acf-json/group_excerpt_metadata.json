@@ -1,0 +1,95 @@
+{
+    "key": "group_excerpt_metadata",
+    "title": "Excerpt Metadata",
+    "fields": [
+        {
+            "key": "field_excerpt_source",
+            "label": "Source",
+            "name": "excerpt_source",
+            "aria-label": "",
+            "type": "post_object",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "post_type": "",
+            "post_status": "",
+            "taxonomy": "",
+            "return_format": "object",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 1,
+            "bidirectional": 0,
+            "ui": 1,
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_excerpt_page_number",
+            "label": "Page Number",
+            "name": "excerpt_page_number",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Page number in the source text (optional).",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "min": 0,
+            "max": "",
+            "step": 1,
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_excerpt_paragraph_number",
+            "label": "Paragraph Number",
+            "name": "excerpt_paragraph_number",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Paragraph number within the page or source (optional).",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "min": 0,
+            "max": "",
+            "step": 1,
+            "prepend": "",
+            "append": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "excerpt"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1757347765
+}

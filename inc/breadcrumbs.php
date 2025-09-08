@@ -20,6 +20,8 @@ add_filter('wpseo_breadcrumb_links', function($links) {
             '/organization/' => ['organizations', 'Organizations'],
             '/song/'         => ['songs-featured', 'Songs Featured'],
             '/image/'        => ['image-gallery', 'Image Gallery'],
+            '/excerpts/'     => ['excerpt-library', 'Excerpt Library'],
+
         ];
 
         foreach ($map as $needle => [$page, $label]) {

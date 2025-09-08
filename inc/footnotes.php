@@ -25,6 +25,8 @@ $group_titles = [
   'theme'                 => ['title' => 'Themes',                    'emoji' => '🎨', 'link' => '/themes/'],
   'organizations'         => ['title' => 'Organizations Referenced',  'emoji' => '🏢', 'link' => '/organizations/'],
   'image'                 => ['title' => 'Images Referenced',         'emoji' => '🖼', 'link' => '/image-gallery/'],
+  'excerpt'               => ['title' => 'Excerpts Referenced',       'emoji' => '📖', 'link' => '/excerpt-library/'],
+
 
 ];
 
@@ -154,7 +156,8 @@ if (!empty($other_artists)) {
     'concepts_referenced'  => 'concept',
     'movies_referenced'    => 'movie',
     'quotes_referenced'    => 'quote',
-    'lyrics_referenced'    => 'lyric'
+    'lyrics_referenced'    => 'lyric',
+    'excerpts_referenced'  => 'excerpt'
   ];
   $linked_items = [];
   foreach ($acf_map as $acf => $type) {
@@ -184,7 +187,7 @@ foreach ($linked_items as $type => $items) {
         $src = $img['sizes']['thumbnail'];
         $thumb = "<a href=\"{$link}\"><img src=\"{$src}\" style=\"width:48px;height:48px;border-radius:50%;margin-right:10px;\"></a>";
       }
-    } elseif (in_array($type, ['concept', 'quote', 'reference'])) {
+    } elseif (in_array($type, ['concept', 'quote', 'reference', 'lyric', 'excerpt'])) {
       if (has_post_thumbnail($item->ID)) {
         $src = get_the_post_thumbnail_url($item->ID, 'thumbnail');
         $thumb = "<a href=\"{$link}\"><img src=\"{$src}\" style=\"width:48px;height:48px;border-radius:50%;margin-right:10px;\"></a>";
