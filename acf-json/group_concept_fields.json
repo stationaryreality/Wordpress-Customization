@@ -25,31 +25,6 @@
             "append": ""
         },
         {
-            "key": "field_concept_portrait",
-            "label": "Portrait Image",
-            "name": "portrait_image",
-            "aria-label": "",
-            "type": "image",
-            "instructions": "Optional icon or image used for navigation thumbnails.",
-            "required": 0,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "return_format": "array",
-            "preview_size": "thumbnail",
-            "library": "all",
-            "min_width": "",
-            "min_height": "",
-            "min_size": "",
-            "max_width": "",
-            "max_height": "",
-            "max_size": "",
-            "mime_types": ""
-        },
-        {
             "key": "field_6859573a4d864",
             "label": "Source",
             "name": "source",
@@ -123,5 +98,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1752271994
+    "modified": 1757458116
 }

@@ -48,26 +48,6 @@
             "rows": ""
         },
         {
-            "key": "field_image_context",
-            "label": "Image Context",
-            "name": "image_context",
-            "aria-label": "",
-            "type": "wysiwyg",
-            "instructions": "",
-            "required": false,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "tabs": "all",
-            "toolbar": "full",
-            "media_upload": true,
-            "default_value": "",
-            "delay": 0
-        },
-        {
             "key": "field_image_type",
             "label": "Image Type",
             "name": "image_type",
@@ -102,145 +82,6 @@
             "return_format": "value",
             "create_options": 0,
             "save_options": 0
-        },
-        {
-            "key": "field_related_themes",
-            "label": "Related Themes",
-            "name": "related_themes",
-            "aria-label": "",
-            "type": "taxonomy",
-            "instructions": "",
-            "required": false,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "taxonomy": "theme",
-            "field_type": "multi_select",
-            "add_term": false,
-            "save_terms": true,
-            "load_terms": true,
-            "return_format": "object",
-            "multiple": 0,
-            "allow_null": 0,
-            "bidirectional_target": []
-        },
-        {
-            "key": "field_related_songs",
-            "label": "Associated Song",
-            "name": "related_songs",
-            "aria-label": "",
-            "type": "post_object",
-            "instructions": "",
-            "required": false,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "post_type": [
-                "song"
-            ],
-            "return_format": "object",
-            "multiple": false,
-            "allow_null": true,
-            "ui": true,
-            "taxonomy": [],
-            "bidirectional_target": []
-        },
-        {
-            "key": "field_related_lyrics",
-            "label": "Associated Lyric",
-            "name": "related_lyrics",
-            "aria-label": "",
-            "type": "post_object",
-            "instructions": "",
-            "required": false,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "post_type": [
-                "lyric"
-            ],
-            "return_format": "object",
-            "multiple": false,
-            "allow_null": true,
-            "ui": true,
-            "taxonomy": [],
-            "bidirectional_target": []
-        },
-        {
-            "key": "field_related_chapters",
-            "label": "Associated Chapters",
-            "name": "related_chapters",
-            "aria-label": "",
-            "type": "relationship",
-            "instructions": "",
-            "required": false,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "post_type": [
-                "chapter"
-            ],
-            "filters": [
-                "search"
-            ],
-            "return_format": "object",
-            "taxonomy": [],
-            "min": 0,
-            "max": 0,
-            "elements": [],
-            "bidirectional_target": []
-        },
-        {
-            "key": "field_symbol_notes",
-            "label": "Symbol\/Motif Notes",
-            "name": "symbol_notes",
-            "aria-label": "",
-            "type": "textarea",
-            "instructions": "",
-            "required": false,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "new_lines": "",
-            "maxlength": "",
-            "placeholder": "",
-            "rows": ""
-        },
-        {
-            "key": "field_credit_source",
-            "label": "Credit \/ Source",
-            "name": "credit_source",
-            "aria-label": "",
-            "type": "text",
-            "instructions": "",
-            "required": false,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "maxlength": "",
-            "placeholder": "",
-            "prepend": "",
-            "append": ""
         }
     ],
     "location": [
@@ -257,9 +98,9 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "hide_on_screen": [],
+    "hide_on_screen": "",
     "active": true,
     "description": "",
-    "show_in_rest": false,
-    "modified": 1753981608
+    "show_in_rest": 0,
+    "modified": 1757445613
 }

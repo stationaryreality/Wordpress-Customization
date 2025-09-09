@@ -99,19 +99,42 @@
             ]
         },
         {
-            "key": "field_tab_referenced",
-            "label": "Referenced Material",
-            "name": "",
+            "key": "field_6874fe7eb550a",
+            "label": "Hide secondary song in footnotes",
+            "name": "hide_secondary_song_in_footnotes",
             "aria-label": "",
-            "type": "tab",
+            "type": "true_false",
             "instructions": "",
             "required": 0,
-            "conditional_logic": false,
+            "conditional_logic": 0,
             "wrapper": {
                 "width": "",
                 "class": "",
                 "id": ""
             },
+            "relevanssi_exclude": 0,
+            "message": "Hide secondary song in footnotes if using shortcode",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_tab_referenced",
+            "label": "Books",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
             "placement": "top",
             "endpoint": 0,
             "selected": 0
@@ -147,6 +170,25 @@
             "bidirectional_target": []
         },
         {
+            "key": "field_68c074f5e9b1b",
+            "label": "Concepts",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
             "key": "field_concepts_referenced",
             "label": "Concepts Referenced",
             "name": "concepts_referenced",
@@ -162,6 +204,140 @@
             },
             "post_type": [
                 "concept"
+            ],
+            "return_format": "object",
+            "multiple": true,
+            "taxonomy": [],
+            "min": 0,
+            "max": 0,
+            "filters": [
+                "search",
+                "post_type",
+                "taxonomy"
+            ],
+            "elements": [],
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_68c073adb814d",
+            "label": "Excerpts & Lyrics",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_68bf5981bc0d0",
+            "label": "Excerpts Referenced",
+            "name": "excerpts_referenced",
+            "aria-label": "",
+            "type": "relationship",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "post_type": [
+                "excerpt"
+            ],
+            "post_status": "",
+            "taxonomy": "",
+            "filters": [
+                "search",
+                "post_type",
+                "taxonomy"
+            ],
+            "return_format": "object",
+            "min": "",
+            "max": "",
+            "allow_in_bindings": 1,
+            "elements": "",
+            "bidirectional": 0,
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_68bf1b57290d1",
+            "label": "Lyrics Referenced",
+            "name": "lyrics_referenced",
+            "aria-label": "",
+            "type": "relationship",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "post_type": [
+                "lyric"
+            ],
+            "post_status": "",
+            "taxonomy": "",
+            "filters": [
+                "search",
+                "post_type",
+                "taxonomy"
+            ],
+            "return_format": "object",
+            "min": "",
+            "max": "",
+            "allow_in_bindings": 1,
+            "elements": "",
+            "bidirectional": 0,
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_68c0744c93f51",
+            "label": "Movies & Organizations",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_movies_referenced",
+            "label": "Movies Referenced",
+            "name": "movies_referenced",
+            "aria-label": "",
+            "type": "relationship",
+            "instructions": "",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "movie"
             ],
             "return_format": "object",
             "multiple": true,
@@ -210,6 +386,25 @@
             "bidirectional_target": []
         },
         {
+            "key": "field_68c0754517362",
+            "label": "People & Quotes",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
             "key": "field_people_referenced",
             "label": "People Referenced",
             "name": "people_referenced",
@@ -225,135 +420,6 @@
             },
             "post_type": [
                 "profile"
-            ],
-            "return_format": "object",
-            "multiple": true,
-            "taxonomy": [],
-            "min": 0,
-            "max": 0,
-            "filters": [
-                "search",
-                "post_type",
-                "taxonomy"
-            ],
-            "elements": [],
-            "bidirectional_target": []
-        },
-        {
-            "key": "field_68bf1b57290d1",
-            "label": "Lyrics Referenced",
-            "name": "lyrics_referenced",
-            "aria-label": "",
-            "type": "relationship",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "relevanssi_exclude": 0,
-            "post_type": [
-                "lyric"
-            ],
-            "post_status": "",
-            "taxonomy": "",
-            "filters": [
-                "search",
-                "post_type",
-                "taxonomy"
-            ],
-            "return_format": "object",
-            "min": "",
-            "max": "",
-            "allow_in_bindings": 1,
-            "elements": "",
-            "bidirectional": 0,
-            "bidirectional_target": []
-        },
-        {
-            "key": "field_68bf5981bc0d0",
-            "label": "Excerpts Referenced",
-            "name": "excerpts_referenced",
-            "aria-label": "",
-            "type": "relationship",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "relevanssi_exclude": 0,
-            "post_type": [
-                "excerpt"
-            ],
-            "post_status": "",
-            "taxonomy": "",
-            "filters": [
-                "search",
-                "post_type",
-                "taxonomy"
-            ],
-            "return_format": "object",
-            "min": "",
-            "max": "",
-            "allow_in_bindings": 1,
-            "elements": "",
-            "bidirectional": 0,
-            "bidirectional_target": []
-        },
-        {
-            "key": "field_688cfdf5a93ec",
-            "label": "Images Linked",
-            "name": "images_linked",
-            "aria-label": "",
-            "type": "relationship",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "relevanssi_exclude": 0,
-            "post_type": [
-                "image"
-            ],
-            "post_status": "",
-            "taxonomy": "",
-            "filters": [
-                "search",
-                "post_type",
-                "taxonomy"
-            ],
-            "return_format": "object",
-            "min": "",
-            "max": "",
-            "allow_in_bindings": 1,
-            "elements": "",
-            "bidirectional": 0,
-            "bidirectional_target": []
-        },
-        {
-            "key": "field_movies_referenced",
-            "label": "Movies Referenced",
-            "name": "movies_referenced",
-            "aria-label": "",
-            "type": "relationship",
-            "instructions": "",
-            "required": false,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "post_type": [
-                "movie"
             ],
             "return_format": "object",
             "multiple": true,
@@ -399,6 +465,58 @@
             "bidirectional_target": []
         },
         {
+            "key": "field_68c0756064817",
+            "label": "Images & References",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_688cfdf5a93ec",
+            "label": "Images Linked",
+            "name": "images_linked",
+            "aria-label": "",
+            "type": "relationship",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "post_type": [
+                "image"
+            ],
+            "post_status": "",
+            "taxonomy": "",
+            "filters": [
+                "search",
+                "post_type",
+                "taxonomy"
+            ],
+            "return_format": "object",
+            "min": "",
+            "max": "",
+            "allow_in_bindings": 1,
+            "elements": "",
+            "bidirectional": 0,
+            "bidirectional_target": []
+        },
+        {
             "key": "field_686bdabea3a5c",
             "label": "Chapter References",
             "name": "chapter_references",
@@ -430,28 +548,6 @@
             "elements": "",
             "bidirectional": 0,
             "bidirectional_target": []
-        },
-        {
-            "key": "field_6874fe7eb550a",
-            "label": "Hide secondary song in footnotes",
-            "name": "hide_secondary_song_in_footnotes",
-            "aria-label": "",
-            "type": "true_false",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "relevanssi_exclude": 0,
-            "message": "Hide secondary song in footnotes if using shortcode",
-            "default_value": 0,
-            "allow_in_bindings": 0,
-            "ui": 0,
-            "ui_on_text": "",
-            "ui_off_text": ""
         }
     ],
     "location": [
@@ -472,5 +568,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1757370780
+    "modified": 1757443441
 }

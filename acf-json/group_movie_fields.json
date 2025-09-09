@@ -3,26 +3,6 @@
     "title": "Movie Fields",
     "fields": [
         {
-            "key": "field_movie_director",
-            "label": "Director",
-            "name": "director",
-            "aria-label": "",
-            "type": "text",
-            "instructions": "",
-            "required": false,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "maxlength": "",
-            "placeholder": "",
-            "prepend": "",
-            "append": ""
-        },
-        {
             "key": "field_movie_summary",
             "label": "Summary",
             "name": "summary",
@@ -102,9 +82,9 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "hide_on_screen": [],
+    "hide_on_screen": "",
     "active": true,
     "description": "",
-    "show_in_rest": false,
-    "modified": 1750416867
+    "show_in_rest": 0,
+    "modified": 1757457944
 }

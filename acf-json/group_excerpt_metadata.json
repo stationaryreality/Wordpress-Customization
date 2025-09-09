@@ -17,7 +17,11 @@
                 "id": ""
             },
             "relevanssi_exclude": 0,
-            "post_type": "",
+            "post_type": [
+                "book",
+                "reference",
+                "movie"
+            ],
             "post_status": "",
             "taxonomy": "",
             "return_format": "object",
@@ -91,5 +95,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1757347765
+    "modified": 1757442480
 }

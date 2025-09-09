@@ -44,26 +44,6 @@
             "placeholder": ""
         },
         {
-            "key": "field_song_bio",
-            "label": "Custom Song Description",
-            "name": "song_bio",
-            "aria-label": "",
-            "type": "textarea",
-            "instructions": "",
-            "required": false,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "new_lines": "",
-            "maxlength": "",
-            "placeholder": "",
-            "rows": ""
-        },
-        {
             "key": "field_song_cover_image",
             "label": "Cover Image",
             "name": "cover_image",
@@ -116,26 +96,6 @@
             "preview_size": "thumbnail"
         },
         {
-            "key": "field_song_glue",
-            "label": "Used As Structural Glue?",
-            "name": "is_glue",
-            "aria-label": "",
-            "type": "true_false",
-            "instructions": "",
-            "required": false,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "ui": 1,
-            "default_value": 0,
-            "message": "",
-            "ui_on_text": "",
-            "ui_off_text": ""
-        },
-        {
             "key": "field_song_liked",
             "label": "Do You Like This Song?",
             "name": "is_liked",
@@ -154,36 +114,6 @@
             "message": "",
             "ui_on_text": "",
             "ui_off_text": ""
-        },
-        {
-            "key": "field_song_emotional_value",
-            "label": "Emotional Value",
-            "name": "emotional_value",
-            "aria-label": "",
-            "type": "select",
-            "instructions": "",
-            "required": false,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "choices": {
-                "love": "Love",
-                "respect": "Respect",
-                "neutral": "Neutral",
-                "irritating": "Irritating"
-            },
-            "allow_null": 1,
-            "ui": 1,
-            "multiple": 0,
-            "default_value": false,
-            "ajax": 0,
-            "placeholder": "",
-            "return_format": "value",
-            "create_options": 0,
-            "save_options": 0
         }
     ],
     "location": [
@@ -204,5 +134,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1755026705
+    "modified": 1757450481
 }

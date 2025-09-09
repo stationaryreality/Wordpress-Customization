@@ -23,49 +23,9 @@
             "rows": ""
         },
         {
-            "key": "field_lyric_formatted_text",
-            "label": "Lyric Text (Formatted)",
-            "name": "lyric_formatted_text",
-            "aria-label": "",
-            "type": "textarea",
-            "instructions": "",
-            "required": false,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "new_lines": "",
-            "maxlength": "",
-            "placeholder": "",
-            "rows": ""
-        },
-        {
             "key": "field_lyric_cover_block_full",
             "label": "Cover Block HTML (Full)",
             "name": "lyric_cover_block_full",
-            "aria-label": "",
-            "type": "textarea",
-            "instructions": "",
-            "required": false,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "new_lines": "",
-            "maxlength": "",
-            "placeholder": "",
-            "rows": ""
-        },
-        {
-            "key": "field_lyric_cover_block_simple",
-            "label": "Cover Block HTML (Simplified)",
-            "name": "lyric_cover_block_simple",
             "aria-label": "",
             "type": "textarea",
             "instructions": "",
@@ -104,33 +64,6 @@
             "taxonomy": [],
             "allow_null": 0,
             "multiple": 0,
-            "bidirectional_target": []
-        },
-        {
-            "key": "field_lyric_concepts",
-            "label": "Concepts",
-            "name": "concepts",
-            "aria-label": "",
-            "type": "relationship",
-            "instructions": "",
-            "required": false,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "post_type": [
-                "concept"
-            ],
-            "filters": [
-                "search"
-            ],
-            "return_format": "id",
-            "taxonomy": [],
-            "min": 0,
-            "max": 0,
-            "elements": [],
             "bidirectional_target": []
         },
         {
@@ -176,5 +109,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1752013579
+    "modified": 1757452557
 }
