@@ -19,7 +19,8 @@ add_action('load-edit.php', function () {
         'book',
         'movie',
         'profile',
-        'image'
+        'image',
+        'excerpt'
     );
 
     if (in_array($screen->post_type, $alphabetical_cpts)) {
