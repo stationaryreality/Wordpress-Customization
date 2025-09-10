@@ -1,32 +1,20 @@
 <?php
-$definition = get_field('definition');
-$portrait   = get_field('portrait_image', get_the_ID());
-$img_url    = $portrait ? $portrait['sizes']['thumbnail'] : '';
-$related    = get_field('related_concepts'); // ACF relationship field, return format: Post Object
+$related = get_field('related_concepts'); // ACF relationship field
 ?>
 
-<div class="person-content">
-  <?php if ($img_url): ?>
-    <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" class="author-thumbnail">
-  <?php endif; ?>
+<div class="concept-content" style="text-align:center;">
 
-  <h1><?php the_title(); ?></h1>
-
-  <div class="person-bio">
-    <?php if ($definition): ?>
-      <?php echo wp_kses_post($definition); ?>
-    <?php else: ?>
-      <?php the_content(); ?>
-    <?php endif; ?>
+  <div class="concept-definition">
+    <?php the_content(); ?>
   </div>
 
   <?php if ($related): ?>
-    <div class="related-concepts mt-6">
-      <h2 class="text-xl font-semibold mb-2">🔁 Related Concepts</h2>
-      <ul class="list-disc list-inside">
+    <div class="related-concepts" style="margin-top:2em;">
+      <h2>🔁 Related Concepts</h2>
+      <ul style="list-style:none; padding:0; display:inline-block; text-align:left;">
         <?php foreach ($related as $item): ?>
           <li>
-            <a href="<?php echo get_permalink($item->ID); ?>" class="underline hover:text-blue-600">
+            <a href="<?php echo get_permalink($item->ID); ?>">
               <?php echo esc_html(get_the_title($item->ID)); ?>
             </a>
           </li>

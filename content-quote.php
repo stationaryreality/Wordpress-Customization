@@ -1,12 +1,21 @@
 <?php
+$source = get_field('quote_source'); // Can be a Book or Reference CPT
 ?>
 
-<div class="person-content">
+<div class="person-content" style="text-align:center;">
   <h1><?php the_title(); ?></h1>
 
-  <div class="quote-content">
+  <div class="quote-content" style="margin-top:1em;">
     <?php the_content(); ?>
   </div>
+
+  <?php if ($source): ?>
+    <p class="quote-source" style="margin-top:1em;">
+      Source: <a href="<?php echo esc_url(get_permalink($source->ID)); ?>">
+        <?php echo esc_html(get_the_title($source->ID)); ?>
+      </a>
+    </p>
+  <?php endif; ?>
 
   <?php get_template_part('content/quote-nav'); ?>
 </div>

@@ -1,17 +1,28 @@
 <?php
-$description = get_field('description');
-$image       = get_field('cover_image');
-$img_url     = $image ? $image['sizes']['thumbnail'] : '';
+$reference_id = get_the_ID();
 
-$source_name = get_field('source_name');
-$credit_name = get_field('credit_name');
-$url         = get_field('url');
-$archive_url = get_field('archive_link');
-$notes       = get_field('citation_notes');
-$related     = get_field('related_cpt');
+$description  = get_field('description');
+$image        = get_field('cover_image');
+$img_url      = $image ? $image['sizes']['thumbnail'] : '';
+
+$source_name  = get_field('source_name');
+$credit_name  = get_field('credit_name');
+$url          = get_field('url');
+$archive_url  = get_field('archive_link');
+$wiki_slug    = get_field('reference_wiki');
+
+// Wikipedia summary fetcher
+function get_reference_wikipedia_intro($slug) {
+  $api_url = "https://en.wikipedia.org/api/rest_v1/page/summary/" . urlencode($slug);
+  $response = wp_remote_get($api_url);
+  if (is_wp_error($response)) return false;
+  $body = wp_remote_retrieve_body($response);
+  $data = json_decode($body, true);
+  return !empty($data['extract']) ? esc_html($data['extract']) : false;
+}
 ?>
 
-<div class="reference-content">
+<div class="reference-content" style="text-align:center;">
   <?php if ($img_url): ?>
     <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" class="reference-thumbnail">
   <?php endif; ?>
@@ -28,15 +39,6 @@ $related     = get_field('related_cpt');
     <p class="reference-credit"><strong>Credit:</strong> <?php echo esc_html($credit_name); ?></p>
   <?php endif; ?>
 
-  <?php if ($related): ?>
-    <p class="reference-related">
-      <strong>Original Chapter:</strong>
-      <a href="<?php echo get_permalink($related); ?>">
-        <?php echo esc_html(get_the_title($related)); ?>
-      </a>
-    </p>
-  <?php endif; ?>
-
   <?php if ($description): ?>
     <div class="reference-description">
       <?php echo wp_kses_post(wpautop($description)); ?>
@@ -47,19 +49,18 @@ $related     = get_field('related_cpt');
     </div>
   <?php endif; ?>
 
-  <?php if ($notes): ?>
-    <div class="reference-notes">
-      <h3>Details</h3>
-      <ul>
-        <?php foreach ($notes as $note): ?>
-          <li><strong><?php echo esc_html($note['label']); ?>:</strong> <?php echo esc_html($note['value']); ?></li>
-        <?php endforeach; ?>
-      </ul>
-    </div>
+  <?php if ($wiki_slug): ?>
+    <?php $wiki_intro = get_reference_wikipedia_intro($wiki_slug); ?>
+    <?php if ($wiki_intro): ?>
+      <div class="reference-wiki" style="margin-top:1.5em;">
+        <h3>Wikipedia</h3>
+        <p><?php echo esc_html($wiki_intro); ?></p>
+      </div>
+    <?php endif; ?>
   <?php endif; ?>
 
   <?php if ($url || $archive_url): ?>
-    <div class="reference-links">
+    <div class="reference-links" style="margin-top:2em;">
       <h3>Links</h3>
       <ul>
         <?php if ($url): ?>
@@ -68,6 +69,38 @@ $related     = get_field('related_cpt');
         <?php if ($archive_url): ?>
           <li><a href="<?php echo esc_url($archive_url); ?>" target="_blank" rel="noopener noreferrer">View Archive</a></li>
         <?php endif; ?>
+      </ul>
+    </div>
+  <?php endif; ?>
+
+
+  <?php
+  // Chapters that reference this Reference CPT
+  $chapters = get_posts([
+    'post_type'      => 'chapter',
+    'posts_per_page' => -1,
+    'orderby'        => 'menu_order',
+    'order'          => 'ASC',
+    'meta_query'     => [
+      [
+        'key'     => 'references_cited', // ACF relationship field on chapters
+        'value'   => $reference_id,
+        'compare' => 'LIKE'
+      ]
+    ]
+  ]);
+
+  if ($chapters): ?>
+    <div class="reference-chapters" style="margin-top:3em; text-align:center;">
+      <h3>Referenced In</h3>
+      <ul style="list-style:none; padding:0; display:inline-block; text-align:left;">
+        <?php foreach ($chapters as $chapter): ?>
+          <li>
+            <a href="<?php echo get_permalink($chapter->ID); ?>">
+              <?php echo esc_html(get_the_title($chapter->ID)); ?>
+            </a>
+          </li>
+        <?php endforeach; ?>
       </ul>
     </div>
   <?php endif; ?>

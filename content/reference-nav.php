@@ -15,7 +15,7 @@ $prev_id = $reference_ids[$current_index - 1] ?? null;
 
 <div class="post-navigation-container quote-nav" style="display: flex; justify-content: space-between; gap: 20px; margin-top: 40px;">
   <?php if ($next_id): ?>
-    <div class="previous-post">
+    <div class="previous-post" style="text-align: center;">
       <h2>Next Reference</h2>
       <div class="post-thumbnail quote-nav-thumb">
         <a href="<?php echo get_permalink($next_id); ?>">
@@ -27,7 +27,7 @@ $prev_id = $reference_ids[$current_index - 1] ?? null;
   <?php endif; ?>
 
   <?php if ($prev_id): ?>
-    <div class="next-post">
+    <div class="next-post" style="text-align: center;">
       <h2>Previous Reference</h2>
       <div class="post-thumbnail quote-nav-thumb">
         <a href="<?php echo get_permalink($prev_id); ?>">

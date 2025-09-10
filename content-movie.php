@@ -1,6 +1,5 @@
 <?php
 $movie_id  = get_the_ID();
-$director  = get_field('director');
 $summary   = get_field('summary');
 $cover     = get_field('cover_image');
 $img_url   = $cover ? $cover['sizes']['medium'] : '';
@@ -23,10 +22,6 @@ function get_wikipedia_intro($slug) {
 
   <h1><?php the_title(); ?></h1>
   <?php the_content(); ?>
-
-  <?php if ($director): ?>
-    <p><strong><?php echo esc_html($director); ?></strong></p>
-  <?php endif; ?>
 
   <div class="movie-description">
     <?php

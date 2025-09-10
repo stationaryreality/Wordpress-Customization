@@ -4,6 +4,7 @@ $bio       = get_field('org_bio', $org_id);
 $logo      = get_field('cover_image', $org_id);
 $img_url   = $logo ? $logo['sizes']['thumbnail'] : '';
 $wiki_slug = get_field('wikipedia_slug', $org_id);
+$people    = get_field('related_people', $org_id); // ACF relationship or repeater field
 
 // Wikipedia summary
 function get_wikipedia_intro($slug) {
@@ -16,14 +17,14 @@ function get_wikipedia_intro($slug) {
 }
 ?>
 
-<div class="song-header" style="text-align:center;">
+<div class="organization-header" style="text-align:center;">
   <?php if ($img_url): ?>
     <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" class="author-thumbnail" style="border-radius:0; aspect-ratio:1/1; object-fit:cover; max-width:300px; margin-bottom:1em;">
   <?php endif; ?>
   <h1><?php the_title(); ?></h1>
 </div>
 
-<div class="song-bio">
+<div class="organization-bio" style="text-align:center;">
   <?php if ($bio): ?>
     <?php echo wp_kses_post($bio); ?>
   <?php elseif ($wiki_slug): ?>
@@ -33,9 +34,22 @@ function get_wikipedia_intro($slug) {
   <?php endif; ?>
 </div>
 
+<?php if ($people): ?>
+  <div class="related-people" style="margin-top:3em; text-align:center;">
+    <h2>Related People</h2>
+    <ul style="list-style:none; padding:0; display:inline-block; text-align:left;">
+      <?php foreach ($people as $person): ?>
+        <li>
+          <a href="<?php echo get_permalink($person->ID); ?>">
+            <?php echo esc_html(get_the_title($person->ID)); ?>
+          </a>
+        </li>
+      <?php endforeach; ?>
+    </ul>
+  </div>
+<?php endif; ?>
+
 <?php
-
-
 // === Chapters Featuring This Organization ===
 $threads = get_posts([
   'post_type'      => 'chapter',
@@ -44,7 +58,7 @@ $threads = get_posts([
   'order'          => 'ASC',
   'meta_query'     => [
     [
-      'key'     => 'organizations_referenced', // relationship field on chapter CPT
+      'key'     => 'organizations_referenced',
       'value'   => '"' . $org_id . '"',
       'compare' => 'LIKE'
     ]
@@ -52,7 +66,7 @@ $threads = get_posts([
 ]);
 
 if ($threads): ?>
-  <div class="narrative-threads" style="margin-top: 4em; text-align:center;">
+  <div class="narrative-threads" style="margin-top:4em; text-align:center;">
     <h2>Featured In</h2>
     <div class="thread-grid">
       <?php foreach ($threads as $thread):
@@ -70,6 +84,5 @@ if ($threads): ?>
     </div>
   </div>
 <?php endif; ?>
-
 
 <?php get_template_part('content/organization-nav'); ?>
