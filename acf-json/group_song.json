@@ -9,21 +9,25 @@
             "aria-label": "",
             "type": "post_object",
             "instructions": "",
-            "required": false,
-            "conditional_logic": false,
+            "required": 0,
+            "conditional_logic": 0,
             "wrapper": {
                 "width": "",
                 "class": "",
                 "id": ""
             },
+            "relevanssi_exclude": 0,
             "post_type": [
                 "artist"
             ],
-            "return_format": "id",
-            "ui": 1,
-            "taxonomy": [],
-            "allow_null": 0,
+            "post_status": "",
+            "taxonomy": "",
+            "return_format": "object",
             "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 1,
+            "bidirectional": 0,
+            "ui": 1,
             "bidirectional_target": []
         },
         {
@@ -134,5 +138,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1757450481
+    "modified": 1757463298
 }

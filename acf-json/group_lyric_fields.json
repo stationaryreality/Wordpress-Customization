@@ -23,47 +23,31 @@
             "rows": ""
         },
         {
-            "key": "field_lyric_cover_block_full",
-            "label": "Cover Block HTML (Full)",
-            "name": "lyric_cover_block_full",
-            "aria-label": "",
-            "type": "textarea",
-            "instructions": "",
-            "required": false,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "new_lines": "",
-            "maxlength": "",
-            "placeholder": "",
-            "rows": ""
-        },
-        {
-            "key": "field_lyric_artist",
-            "label": "Artist",
-            "name": "artist",
+            "key": "field_68c0ca9a44fd0",
+            "label": "Song",
+            "name": "song",
             "aria-label": "",
             "type": "post_object",
             "instructions": "",
-            "required": false,
-            "conditional_logic": false,
+            "required": 0,
+            "conditional_logic": 0,
             "wrapper": {
                 "width": "",
                 "class": "",
                 "id": ""
             },
+            "relevanssi_exclude": 0,
             "post_type": [
-                "artist"
+                "song"
             ],
-            "return_format": "id",
-            "ui": 1,
-            "taxonomy": [],
-            "allow_null": 0,
+            "post_status": "",
+            "taxonomy": "",
+            "return_format": "object",
             "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 1,
+            "bidirectional": 0,
+            "ui": 1,
             "bidirectional_target": []
         },
         {
@@ -109,5 +93,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1757452557
+    "modified": 1757465382
 }
