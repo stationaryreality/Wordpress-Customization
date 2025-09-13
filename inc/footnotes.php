@@ -149,23 +149,23 @@ if (!empty($other_artists)) {
 }
 
 
-  // === Remaining CPTs ===
-  $acf_map = [
-    'people_referenced'    => 'profile',
-    'books_cited'          => 'book',
-    'concepts_referenced'  => 'concept',
-    'movies_referenced'    => 'movie',
-    'quotes_referenced'    => 'quote',
-    'lyrics_referenced'    => 'lyric',
-    'excerpts_referenced'  => 'excerpt'
-  ];
-  $linked_items = [];
-  foreach ($acf_map as $acf => $type) {
-    $items = get_field($acf) ?: [];
-    foreach ($items as $item) {
-      if ($item instanceof WP_Post) $linked_items[$type][$item->ID] = $item;
-    }
+// === Remaining CPTs ===
+$acf_map = [
+  'people_referenced'    => 'profile',
+  'books_cited'          => 'book',
+  'concepts_referenced'  => 'concept',
+  'movies_referenced'    => 'movie',
+  'quotes_referenced'    => 'quote',
+  'lyrics_referenced'    => 'lyric',
+  'excerpts_referenced'  => 'excerpt'
+];
+$linked_items = [];
+foreach ($acf_map as $acf => $type) {
+  $items = get_field($acf) ?: [];
+  foreach ($items as $item) {
+    if ($item instanceof WP_Post) $linked_items[$type][$item->ID] = $item;
   }
+}
 foreach ($linked_items as $type => $items) {
   if (empty($items)) continue;
   if (in_array($type, ['book', 'movie', 'concept'])) {
@@ -181,33 +181,85 @@ foreach ($linked_items as $type => $items) {
     $link = get_permalink($item);
     $thumb = '';
 
+    // === Thumbnails per type ===
     if ($type === 'profile') {
       $img = get_field('portrait_image', $item->ID);
       if ($img) {
         $src = $img['sizes']['thumbnail'];
-        $thumb = "<a href=\"{$link}\"><img src=\"{$src}\" style=\"width:48px;height:48px;border-radius:50%;margin-right:10px;\"></a>";
+        $thumb = "<a href=\"{$link}\"><img src=\"{$src}\" style=\"width:48px;height:48px;object-fit:cover;border-radius:50%;margin-right:10px;\"></a>";
       }
-    } elseif (in_array($type, ['concept', 'quote', 'reference', 'lyric', 'excerpt'])) {
-      if (has_post_thumbnail($item->ID)) {
-        $src = get_the_post_thumbnail_url($item->ID, 'thumbnail');
-        $thumb = "<a href=\"{$link}\"><img src=\"{$src}\" style=\"width:48px;height:48px;border-radius:50%;margin-right:10px;\"></a>";
+    } elseif ($type === 'lyric') {
+      // Get linked song's cover_image
+      $song = get_field('song', $item->ID);
+      if ($song) {
+        $img = get_field('cover_image', $song->ID);
+        if ($img) {
+          $src = $img['sizes']['thumbnail'];
+          $thumb = "<a href=\"{$link}\"><img src=\"{$src}\" style=\"width:48px;height:48px;object-fit:cover;border-radius:50%;margin-right:10px;\"></a>";
+        }
+      }
+    } elseif (in_array($type, ['quote', 'excerpt'])) {
+      // Source can be book, movie, or reference
+      $source = get_field('quote_source', $item->ID) ?: get_field('excerpt_source', $item->ID);
+      if ($source) {
+        $img = get_field('cover_image', $source->ID);
+        if ($img) {
+          $src = $img['sizes']['thumbnail'];
+          $thumb = "<a href=\"{$link}\"><img src=\"{$src}\" style=\"width:48px;height:48px;object-fit:cover;border-radius:50%;margin-right:10px;\"></a>";
+        } elseif (has_post_thumbnail($source->ID)) {
+          $src = get_the_post_thumbnail_url($source->ID, 'thumbnail');
+          $thumb = "<a href=\"{$link}\"><img src=\"{$src}\" style=\"width:48px;height:48px;object-fit:cover;border-radius:50%;margin-right:10px;\"></a>";
+        }
       }
     } elseif (in_array($type, ['book', 'movie'])) {
       $img = get_field('cover_image', $item->ID);
       if ($img) {
-        $src = $img['sizes']['medium'];
-        $thumb = "<a href=\"{$link}\"><img src=\"{$src}\" style=\"width:60px;height:auto;margin-right:10px;\"></a>";
+        $src = $img['sizes']['thumbnail'];
+        $thumb = "<a href=\"{$link}\"><img src=\"{$src}\" style=\"width:48px;height:48px;object-fit:cover;border-radius:50%;margin-right:10px;\"></a>";
+      }
+    } elseif ($type === 'concept') {
+      if (has_post_thumbnail($item->ID)) {
+        $src = get_the_post_thumbnail_url($item->ID, 'thumbnail');
+        $thumb = "<a href=\"{$link}\"><img src=\"{$src}\" style=\"width:48px;height:48px;object-fit:cover;border-radius:50%;margin-right:10px;\"></a>";
       }
     }
 
     echo "<li style=\"display:flex;align-items:flex-start;gap:10px;margin-bottom:0.6em;\">{$thumb}<div><a href=\"{$link}\"><strong>{$title}</strong></a>";
 
+    // === Extra content by type ===
     if ($type === 'concept') {
       $def = get_field('definition', $item->ID);
       if ($def) echo "<div>{$def}</div>";
     } elseif ($type === 'quote') {
-      $quote = get_field('quote_text', $item->ID) ?: get_field('quote_html_block', $item->ID);
+      $quote = get_field('quote_plain_text', $item->ID) ?: get_field('quote_html_block', $item->ID);
       if ($quote) echo "<div>{$quote}</div>";
+      $src_post = get_field('quote_source', $item->ID);
+      if ($src_post) {
+        $src_title = esc_html(get_the_title($src_post));
+        $src_link  = get_permalink($src_post);
+        echo "<p style=\"margin-top:0.4rem;font-size:0.9rem;color:#666;\">Source: <a href=\"{$src_link}\">{$src_title}</a></p>";
+      }
+    } elseif ($type === 'excerpt') {
+      $excerpt = get_field('excerpt_plain_text', $item->ID);
+      if ($excerpt) {
+        $excerpt = wp_trim_words($excerpt, 40, '...');
+        echo "<div>{$excerpt}</div>";
+      }
+      $src_post = get_field('excerpt_source', $item->ID);
+      if ($src_post) {
+        $src_title = esc_html(get_the_title($src_post));
+        $src_link  = get_permalink($src_post);
+        echo "<p style=\"margin-top:0.4rem;font-size:0.9rem;color:#666;\">Source: <a href=\"{$src_link}\">{$src_title}</a></p>";
+      }
+    } elseif ($type === 'lyric') {
+      $lyric = get_field('lyric_plain_text', $item->ID);
+      if ($lyric) echo "<div>{$lyric}</div>";
+      $song = get_field('song', $item->ID);
+      if ($song) {
+        $src_title = esc_html(get_the_title($song));
+        $src_link  = get_permalink($song);
+        echo "<p style=\"margin-top:0.4rem;font-size:0.9rem;color:#666;\">Source: <a href=\"{$src_link}\">{$src_title}</a></p>";
+      }
     }
 
     echo "</div></li>";
