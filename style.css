@@ -384,7 +384,7 @@ ul {
 
 /* Optional: support taller covers when desired */
 .wp-block-cover.cover-tall {
-    min-height: 500px !important;
+    min-height: 300px !important;
 }
 
 /* Prevent parent container and alignment issues */
