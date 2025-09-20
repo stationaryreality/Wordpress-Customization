@@ -36,16 +36,17 @@ function get_wikipedia_intro($slug) {
     ?>
   </div>
 
-  <!-- 🆕 Always output editor content here, for Cover Blocks etc. -->
+  <!-- Always output editor content (for Cover Blocks etc.) -->
   <div class="person-editor-content">
     <?php the_content(); ?>
   </div>
 
   <?php
-  // Query books where this profile is set as 'author_profile'
-  $book_query = new WP_Query([
+  // === Find books authored by this profile ===
+  $books = get_posts([
     'post_type'      => 'book',
     'posts_per_page' => -1,
+    'fields'         => 'ids',
     'meta_query'     => [
       [
         'key'     => 'author_profile',
@@ -54,9 +55,92 @@ function get_wikipedia_intro($slug) {
       ]
     ]
   ]);
+
+  // === Related Quotes (via authored books only) ===
+  $quotes = [];
+  if ($books) {
+    $quotes = get_posts([
+      'post_type'      => 'quote',
+      'posts_per_page' => -1,
+      'meta_query'     => [
+        [
+          'key'     => 'quote_source',
+          'value'   => $books,
+          'compare' => 'IN'
+        ]
+      ],
+      'orderby' => 'title',
+      'order'   => 'ASC'
+    ]);
+  }
+
+  if ($quotes): ?>
+    <div class="profile-quotes" style="margin-top:3em; margin-bottom:3em; text-align:center;">
+      <h2>Quotes</h2>
+      <ul style="list-style:none; padding:0; margin:0; text-align:center;">
+        <?php foreach ($quotes as $quote): ?>
+          <li style="margin:0.5em 0;">
+            <a href="<?php echo get_permalink($quote->ID); ?>">
+              <?php echo esc_html(get_the_title($quote->ID)); ?>
+            </a>
+          </li>
+        <?php endforeach; ?>
+      </ul>
+    </div>
+  <?php endif; ?>
+
+
+  <?php
+  // === Related Excerpts (via authored books only) ===
+  $excerpts = [];
+  if ($books) {
+    $excerpts = get_posts([
+      'post_type'      => 'excerpt',
+      'posts_per_page' => -1,
+      'meta_query'     => [
+        [
+          'key'     => 'excerpt_source',
+          'value'   => $books,
+          'compare' => 'IN'
+        ]
+      ],
+      'orderby' => 'title',
+      'order'   => 'ASC'
+    ]);
+  }
+
+  if ($excerpts): ?>
+    <div class="profile-excerpts" style="margin-top:3em; margin-bottom:4em; text-align:center;">
+      <h2>Excerpts</h2>
+      <ul style="list-style:none; padding:0; margin:0; text-align:center;">
+        <?php foreach ($excerpts as $excerpt): ?>
+          <li style="margin:0.5em 0;">
+            <a href="<?php echo get_permalink($excerpt->ID); ?>">
+              <?php echo esc_html(get_the_title($excerpt->ID)); ?>
+            </a>
+          </li>
+        <?php endforeach; ?>
+      </ul>
+    </div>
+  <?php endif; ?>
+
+
+  <?php
+  // === Books authored by profile (grid) ===
+  if ($books) {
+    $book_query = new WP_Query([
+      'post_type'      => 'book',
+      'posts_per_page' => -1,
+      'post__in'       => $books,
+      'orderby'        => 'title',
+      'order'          => 'ASC'
+    ]);
+  } else {
+    $book_query = false;
+  }
   ?>
 
-  <?php if ($book_query->have_posts()): ?>
+  <?php if ($book_query && $book_query->have_posts()): ?>
     <div class="profile-books">
       <h2>Books by <?php echo get_the_title($profile_id); ?></h2>
       <ul class="profile-book-grid">
