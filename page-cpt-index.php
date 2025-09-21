@@ -18,6 +18,7 @@ $icons = [
   'image'         => '🖼',
   'theme'         => '🎨',
   'excerpt'       => '📖',
+  'fragment'      => '🧩',
 
 ];
 
@@ -35,7 +36,8 @@ $post_types = [
   'image',
   'song',
   'chapter',
-  'excerpt'
+  'excerpt',
+  'fragment'
 ];
 
 // Query all CPT entries

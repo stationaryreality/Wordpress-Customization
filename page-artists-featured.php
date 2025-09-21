@@ -9,7 +9,7 @@ get_header();
 
     <?php
     $artist_tiers = [
-      'narrative'  => '📖 Narrative Thread Artists',
+      'narrative'  => '📖 Narrative Artists',
       'featured'   => '🎧 Featured Artists',
       'referenced' => '🎤 Referenced Artists',
     ];

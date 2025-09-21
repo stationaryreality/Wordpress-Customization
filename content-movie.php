@@ -33,7 +33,7 @@ function get_wikipedia_intro($slug) {
   <?php
   // === Narrative Threads referencing this movie ===
   $threads = get_posts([
-    'post_type'      => 'chapter',
+    'post_type'      => ['chapter', 'fragment'],
     'posts_per_page' => -1,
     'orderby'        => 'menu_order',
     'order'          => 'ASC',
@@ -48,7 +48,7 @@ function get_wikipedia_intro($slug) {
 
   if ($threads): ?>
     <div class="narrative-threads">
-      <h2>Narrative Threads Referencing This Movie</h2>
+      <h2>Referenced In</h2>
       <div class="thread-grid">
         <?php foreach ($threads as $thread):
           $thumb = get_the_post_thumbnail_url($thread->ID, 'medium');

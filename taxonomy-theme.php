@@ -58,7 +58,7 @@
   <!-- Narrative Threads Grid (Chapters) -->
   <?php
     $chapters = new WP_Query([
-      'post_type'      => 'chapter',
+      'post_type'      => ['chapter', 'fragment'],
       'posts_per_page' => -1,
       'tax_query'      => [[
         'taxonomy' => 'theme',
@@ -70,7 +70,7 @@
     if ($chapters->have_posts()) : ?>
       <div class="narrative-threads mt-12">
         <h2>
-          Narrative Thread<?php echo $chapters->found_posts > 1 ? 's' : ''; ?>
+          Themed Narratives<?php echo $chapters->found_posts > 1 ? 's' : ''; ?>
         </h2>
         <div class="thread-grid">
           <?php while ($chapters->have_posts()) : $chapters->the_post();

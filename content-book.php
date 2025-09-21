@@ -132,7 +132,7 @@ if (have_posts()) :
     if ($excerpts): ?>
       <div class="related-excerpts" style="margin-top:3em; text-align:center;">
         <h2>Excerpts</h2>
-        <ul style="list-style:none; padding:0; display:inline-block; text-align:left;">
+        <ul style="list-style:none; padding:0; display:inline-block; text-align:center;">
           <?php foreach ($excerpts as $excerpt): ?>
             <li>
               <a href="<?php echo get_permalink($excerpt->ID); ?>">
@@ -148,7 +148,7 @@ if (have_posts()) :
   <?php
     // === Narrative Threads ===
     $threads = get_posts([
-      'post_type'      => 'chapter',
+      'post_type'      => ['chapter', 'fragment'],
       'posts_per_page' => -1,
       'orderby'        => 'menu_order',
       'order'          => 'ASC',
