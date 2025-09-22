@@ -50,15 +50,24 @@ $lyrics = get_posts([
               </a>
             </h2>
 
-            <?php if ($text): ?>
-              <p style="margin:0;"><?php echo esc_html(wp_trim_words($text, 30, '...')); ?></p>
-            <?php endif; ?>
+<?php if ($text): ?>
+    <?php 
+      // Normalize line endings to \n
+      $normalized_text = str_replace(["\r\n", "\r"], "\n", $text);
+      // Split by line breaks
+      $lines = explode("\n", $normalized_text);
+      // Take first non-empty line
+      $first_line = '';
+      foreach ($lines as $line) {
+          if (trim($line) !== '') {
+              $first_line = $line;
+              break;
+          }
+      }
+    ?>
+    <p style="margin:0;"><?php echo esc_html($first_line); ?><?php if (count($lines) > 1) echo '...'; ?></p>
+<?php endif; ?>
 
-            <?php if ($song): ?>
-<p style="margin-top:0.5rem; font-size:0.9rem; color:#666;">
-                Source: <a href="<?php echo esc_url($source_link); ?>"><?php echo esc_html($source_title); ?></a>
-              </p>
-            <?php endif; ?>
           </div>
         </div>
       <?php endforeach; ?>

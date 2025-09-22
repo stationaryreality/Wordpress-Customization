@@ -18,7 +18,7 @@ $icons = [
   'image'         => '🖼',
   'theme'         => '🎨',
   'excerpt'       => '📖',
-  'fragment'      => '🧩',
+  'fragment'      => '📜',
 
 ];
 
