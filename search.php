@@ -3,24 +3,7 @@ get_header();
 
 $search_term = get_search_query();
 
-$cpt_sections = [
-  'artist'        => ['title' => 'Artists Featured',          'emoji' => '🎤'],
-  'rapper'        => ['title' => 'Artists Featured',          'emoji' => '🎧'],
-  'profile'       => ['title' => 'People Referenced',         'emoji' => '👤'],
-  'lyric'         => ['title' => 'Song Excerpts',             'emoji' => '🎼'],
-  'quote'         => ['title' => 'Quote Library',             'emoji' => '💬'],
-  'concept'       => ['title' => 'Lexicon',                   'emoji' => '🔎'],
-  'book'          => ['title' => 'Books Cited',               'emoji' => '📚'],
-  'movie'         => ['title' => 'Movies Referenced',         'emoji' => '🎬'],
-  'chapter'       => ['title' => 'Narrative Threads',         'emoji' => '🧵'],
-  'fragment'      => ['title' => 'Narrative Fragments',       'emoji' => '📜'],
-  'reference'     => ['title' => 'External References',       'emoji' => '📰'],
-  'theme'         => ['title' => 'Themes',                    'emoji' => '🎨'],
-  'organization'  => ['title' => 'Organizations Referenced',  'emoji' => '🏢'],
-  'image'         => ['title' => 'Images Referenced',         'emoji' => '🖼'],
-  'song'          => ['title' => 'Songs Featured',            'emoji' => '🎵'],
-  'excerpt'       => ['title' => 'Excerpts Referenced',       'emoji' => '📖'],
-];
+$cpt_sections = get_cpt_metadata(); // Pull everything from the central function
 
 echo '<main class="search-results">';
 echo '<h1>Search results for “' . esc_html($search_term) . '”</h1>';

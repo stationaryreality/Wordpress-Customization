@@ -26,12 +26,11 @@ function fn_videos($chapter_id, $group_titles) {
                      . esc_html($song_title) . '</h4>';
 
                 if ($video_url) {
-                    echo '<div style="margin-top:10px;">';
+                    echo '<div style="margin-top:10px;text-align:center;">';
                     echo '<a href="' . esc_url($song_link) . '">';
                     echo '<img src="' . esc_url($video_url) . '" 
                             alt="' . esc_attr($song_title) . ' video screenshot" 
-                            style="max-width:100%;height:auto;border-radius:8px;
-                            display:block;margin:0 auto;">';
+                            style="max-width:100%;height:auto;border-radius:8px;">';
                     echo '</a>';
                     echo '</div>';
                 }
@@ -43,3 +42,32 @@ function fn_videos($chapter_id, $group_titles) {
 
     return ob_get_clean();
 }
+
+// Optional: keep the shortcode pointing to the same logic
+function secondary_song_image_shortcode($atts = []) {
+    $chapter_id = get_the_ID();
+    $chapter_songs = get_field('chapter_songs', $chapter_id);
+    if (empty($chapter_songs) || !is_array($chapter_songs)) return '';
+
+    foreach ($chapter_songs as $row) {
+        if (!empty($row['role']) && $row['role'] === 'secondary' 
+            && !empty($row['song']) && $row['song'] instanceof WP_Post) {
+            $song       = $row['song'];
+            $song_link  = get_permalink($song);
+            $video_img  = get_field('video_screenshot', $song->ID);
+            $video_url  = $video_img ? $video_img['sizes']['large'] : '';
+
+            if ($video_url) {
+                return '<div class="secondary-song-image" style="margin:2em 0;text-align:center;">
+                        <a href="' . esc_url($song_link) . '">
+                            <img src="' . esc_url($video_url) . '" alt="" 
+                                 style="max-width:100%;height:auto;border-radius:8px;">
+                        </a>
+                        </div>';
+            }
+        }
+    }
+
+    return '';
+}
+add_shortcode('secondary_song_image', 'secondary_song_image_shortcode');

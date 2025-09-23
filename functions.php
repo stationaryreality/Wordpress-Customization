@@ -88,63 +88,6 @@ function disable_feeds_properly() {
 }
 
 
-function render_custom_cover_block($atts) {
-    $atts = shortcode_atts(['id' => ''], $atts, 'custom_cover');
-
-    $id = $atts['id'];
-    if (!$id) return '';
-
-    $post_type = get_post_type($id);
-    if (!$post_type) return '';
-
-    // Determine correct ACF field based on post type
-    if ($post_type === 'quote') {
-        $html = get_field('quote_cover_block_full', $id);
-    } elseif ($post_type === 'lyric') {
-        $html = get_field('lyric_cover_block_full', $id);
-    } else {
-        return '';
-    }
-
-    return $html ?: '';
-}
-add_shortcode('custom_cover', 'render_custom_cover_block');
-
-
-function secondary_song_image_shortcode() {
-    if (!function_exists('get_field')) return ''; // safety check
-
-    $chapter_songs = get_field('chapter_songs'); // repeater field
-    if (empty($chapter_songs) || !is_array($chapter_songs)) return '';
-
-    $secondary_song = null;
-
-    foreach ($chapter_songs as $row) {
-        if (!empty($row['role']) && $row['role'] === 'secondary' && !empty($row['song']) && $row['song'] instanceof WP_Post) {
-            $secondary_song = $row['song'];
-            break; // stop at the first secondary song
-        }
-    }
-
-    if (!$secondary_song) return '';
-
-    $song_link = get_permalink($secondary_song);
-    $video_img = get_field('video_screenshot', $secondary_song->ID);
-    $video_url = $video_img ? $video_img['sizes']['large'] : '';
-
-    if (!$video_url) return '';
-
-    ob_start();
-    echo '<div class="secondary-song-image" style="margin:2em 0;text-align:center;">';
-    echo '<a href="' . esc_url($song_link) . '">';
-    echo '<img src="' . esc_url($video_url) . '" alt="" style="max-width:100%;height:auto;border-radius:8px;">';
-    echo '</a>';
-    echo '</div>';
-    return ob_get_clean();
-}
-add_shortcode('secondary_song_image', 'secondary_song_image_shortcode');
-
-
 add_filter('relevanssi_content_to_index', 'add_artist_name_to_index', 10, 2);
 function add_artist_name_to_index($content, $post) {
     if ($post->post_type === 'chapter') {
@@ -193,6 +136,39 @@ add_action('template_redirect', function() {
         exit;
     }
 });
+
+
+// Emoji & Page Mapper
+/**
+ * Return CPT metadata: title, emoji, link
+ */
+function get_cpt_metadata($cpt_name = '') {
+    $all = [
+        'featured_artists'  => ['title' => 'Songs Featured',            'emoji' => '🎤', 'link' => '/artists-featured/'],
+        'other_artists'     => ['title' => 'Songs Referenced',          'emoji' => '🎤', 'link' => '/artists-featured/'],
+        'songs_referenced'  => ['title' => 'Songs Excerpts',            'emoji' => '🎵', 'link' => '/song-excerpts/'],
+        'artist'            => ['title' => 'Artists Featured',          'emoji' => '🎤', 'link' => '/artists-featured/'],
+        'profile'           => ['title' => 'People Referenced',         'emoji' => '👤', 'link' => '/people-referenced/'],
+        'lyric'             => ['title' => 'Song Excerpts',             'emoji' => '🎼', 'link' => '/song-excerpts/'],
+        'quote'             => ['title' => 'Quote Library',             'emoji' => '💬', 'link' => '/quote-library/'],
+        'concept'           => ['title' => 'Lexicon',                   'emoji' => '🔎', 'link' => '/lexicon/'],
+        'book'              => ['title' => 'Books Cited',               'emoji' => '📚', 'link' => '/books-cited/'],
+        'movie'             => ['title' => 'Movies Referenced',         'emoji' => '🎬', 'link' => '/movies-referenced/'],
+        'chapter'           => ['title' => 'Narrative Threads',         'emoji' => '🧵', 'link' => '/narrative-threads/'],
+        'fragment'          => ['title' => 'Narrative Fragments',       'emoji' => '📜', 'link' => '/narrative-fragments/'],
+        'reference'         => ['title' => 'External References',       'emoji' => '📰', 'link' => '/research-sources/'],
+        'theme'             => ['title' => 'Themes',                    'emoji' => '🎨', 'link' => '/themes/'],
+        'organization'      => ['title' => 'Organizations Referenced',  'emoji' => '🏢', 'link' => '/organizations/'],
+        'image'             => ['title' => 'Images Referenced',         'emoji' => '🖼', 'link' => '/image-gallery/'],
+        'song'              => ['title' => 'Songs Featured',            'emoji' => '🎵', 'link' => '/songs-featured/'],
+        'excerpt'           => ['title' => 'Excerpts Referenced',       'emoji' => '📖', 'link' => '/excerpt-library/'],
+    ];
+
+    if ($cpt_name) {
+        return $all[$cpt_name] ?? null;
+    }
+    return $all;
+}
 
 
 // 2025-8-18
