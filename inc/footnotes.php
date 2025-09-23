@@ -21,22 +21,11 @@ function display_referenced_works() {
     echo '<h3 style="font-weight:bold;margin-top:2em;">Notes & References</h3>';
 
     // Group title metadata (keeps output identical to previous file)
-    $group_titles = [
-      'featured_artists'      => ['title' => 'Songs Featured',            'emoji' => '🎤', 'link' => '/artists-featured/'],
-      'other_artists'         => ['title' => 'Songs Referenced',          'emoji' => '🎤', 'link' => '/artists-featured/'],
-      'songs_referenced'      => ['title' => 'Songs Excerpts',            'emoji' => '🎵', 'link' => '/song-excerpts/'],
-      'profile'               => ['title' => 'People Referenced',         'emoji' => '👤', 'link' => '/people-referenced/'],
-      'lyric'                 => ['title' => 'Song Excerpts',             'emoji' => '🎵', 'link' => '/song-excerpts/'],
-      'quote'                 => ['title' => 'Quote Library',             'emoji' => '💬', 'link' => '/quote-library/'],
-      'concept'               => ['title' => 'Lexicon',                   'emoji' => '🔎', 'link' => '/lexicon/'],
-      'book'                  => ['title' => 'Books Cited',               'emoji' => '📚', 'link' => '/books-cited/'],
-      'movie'                 => ['title' => 'Movies Referenced',         'emoji' => '🎬', 'link' => '/movies-referenced/'],
-      'reference'             => ['title' => 'Other References',          'emoji' => '📰', 'link' => '/research-sources/'],
-      'theme'                 => ['title' => 'Themes',                    'emoji' => '🎨', 'link' => '/themes/'],
-      'organizations'         => ['title' => 'Organizations Referenced',  'emoji' => '🏢', 'link' => '/organizations/'],
-      'image'                 => ['title' => 'Images Referenced',         'emoji' => '🖼', 'link' => '/image-gallery/'],
-      'excerpt'               => ['title' => 'Excerpts Referenced',       'emoji' => '📖', 'link' => '/excerpt-library/'],
-    ];
+// Centralized CPT metadata
+$group_titles = [];
+foreach (get_cpt_metadata() as $cpt => $meta) {
+    $group_titles[$cpt] = $meta;
+}
 
     // Module functions to call (in display order).
     // If a module file isn't present, it's safely skipped.
