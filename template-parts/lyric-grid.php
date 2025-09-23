@@ -5,8 +5,8 @@
  * Expects:
  * - query       => WP_Query object
  * - title       => Section/page title
- * - emoji       => Emoji (optional, from centralized lookup)
- * - search_term => Optional (only used on search)
+ * - emoji       => Emoji (optional)
+ * - search_term => Optional
  */
 $query       = $args['query'];
 $title       = $args['title'] ?? 'Lyrics';
@@ -61,7 +61,6 @@ if (!$query->have_posts()) return;
 
           <?php if ($text): ?>
             <?php 
-              // Normalize line endings to \n
               $normalized_text = str_replace(["\r\n", "\r"], "\n", $text);
               $lines = explode("\n", $normalized_text);
               $first_line = '';
@@ -74,9 +73,16 @@ if (!$query->have_posts()) return;
             ?>
             <p style="margin:0;"><?php echo esc_html($first_line); ?><?php if (count($lines) > 1) echo '...'; ?></p>
           <?php endif; ?>
+
+          <?php if ($song): ?>
+            <p style="margin-top:0.5rem; font-size:0.9rem; color:#666;">
+              Source: <a href="<?php echo esc_url($source_link); ?>"><?php echo esc_html($source_title); ?></a>
+            </p>
+          <?php endif; ?>
         </div>
       </div>
     <?php endwhile; ?>
   </div>
 </section>
+
 <?php wp_reset_postdata(); ?>

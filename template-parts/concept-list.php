@@ -1,55 +1,57 @@
 <?php
 /**
  * Template Part: Concept List
- * Renders concepts in a footnotes-style list (not a grid).
+ * Unified list style (matches lyrics, quotes, references, profiles).
  *
  * Expects:
- * - query       => WP_Query or array of posts
- * - title       => (optional) section title
- * - emoji       => (optional) emoji string
- * - search_term => (optional) search keyword
+ * - query       => WP_Query object
+ * - title       => Section/page title
+ * - emoji       => Emoji (optional)
+ * - search_term => Optional search keyword
  */
-
 $query       = $args['query'] ?? null;
-$title       = $args['title'] ?? '';
+$title       = $args['title'] ?? 'Concepts';
 $emoji       = $args['emoji'] ?? '';
 $search_term = $args['search_term'] ?? '';
 
 if (!$query || !$query->have_posts()) return;
 ?>
 
-<section class="concepts-section" style="margin:2em auto;max-width:800px;">
-  <?php if ($title): ?>
-    <h2>
-      <?php if ($emoji): ?><span style="font-size:1.2em;"><?php echo esc_html($emoji); ?></span><?php endif; ?>
-      <?php echo esc_html($title); ?>
-      <?php if ($search_term): ?>
-        containing “<?php echo esc_html($search_term); ?>”
-      <?php endif; ?>
-    </h2>
-  <?php endif; ?>
+<section class="concept-list-section container" style="max-width:800px;margin:2rem auto;padding:0 1rem;">
+  <h1>
+    <?php if ($emoji) echo esc_html($emoji) . ' '; ?>
+    <?php echo esc_html($title); ?>
+    <?php if ($search_term): ?>
+      containing “<?php echo esc_html($search_term); ?>”
+    <?php endif; ?>
+  </h1>
+    <p class="intro-text">Definitions and explanations of key terms used throughout the site.</p>
 
-  <ul class="concept-list" style="list-style:none;padding:0;">
+  <div class="concept-list">
     <?php while ($query->have_posts()): $query->the_post(); ?>
-      <li style="display:flex;align-items:flex-start;gap:10px;margin-bottom:1em;">
-        <?php if (has_post_thumbnail()): ?>
-          <a href="<?php the_permalink(); ?>">
-            <img src="<?php the_post_thumbnail_url('thumbnail'); ?>" alt="<?php the_title(); ?>"
-              style="width:48px;height:48px;object-fit:cover;border-radius:50%;">
+      <?php
+        $definition = get_field('definition', get_the_ID());
+        $thumb_url  = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'thumbnail') : '';
+      ?>
+      <div class="concept-entry" style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:2rem;border-bottom:1px solid #ddd;padding-bottom:1rem;">
+        <?php if ($thumb_url): ?>
+          <a href="<?php the_permalink(); ?>" class="concept-thumb">
+            <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr(get_the_title()); ?>"
+                 style="width:48px;height:48px;object-fit:cover;border-radius:50%;">
           </a>
         <?php endif; ?>
 
-        <div>
-          <a href="<?php the_permalink(); ?>"><strong><?php the_title(); ?></strong></a>
-          <?php
-          $def = get_field('definition', get_the_ID());
-          if ($def): ?>
-            <div style="margin-top:0.25rem;"><?php echo esc_html(wp_trim_words($def, 30)); ?></div>
+        <div class="concept-text">
+          <h2 style="margin-bottom:0.5rem;">
+            <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+          </h2>
+          <?php if ($definition): ?>
+            <p style="margin:0;"><?php echo esc_html(wp_trim_words($definition, 30, '...')); ?></p>
           <?php endif; ?>
         </div>
-      </li>
+      </div>
     <?php endwhile; ?>
-  </ul>
+  </div>
 </section>
 
 <?php wp_reset_postdata(); ?>
