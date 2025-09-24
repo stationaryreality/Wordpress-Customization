@@ -160,8 +160,8 @@ $all = [
     'artist'            => ['title' => 'Artists Featured',          'emoji' => '🎤', 'link' => '/artists-featured/'],
     'profile'           => ['title' => 'People Referenced',         'emoji' => '👤', 'link' => '/people-referenced/'],
     'theme'             => ['title' => 'Themes',                    'emoji' => '🎨', 'link' => '/themes/'],
-    'chapter'           => ['title' => 'Narrative Threads',         'emoji' => '🧵', 'link' => '/narrative-threads/'],
-    'fragment'          => ['title' => 'Narrative Fragments',       'emoji' => '📜', 'link' => '/narrative-fragments/'],
+    'chapter'           => ['title' => 'Narrative Threads',         'emoji' => '🧵', 'link' => '/#narrative-threads/'],
+    'fragment'          => ['title' => 'Narrative Fragments',       'emoji' => '📜', 'link' => '/#narrative-fragments/'],
 ];
 
     if ($cpt_name) {
