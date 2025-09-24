@@ -21,28 +21,25 @@ get_template_part('template-parts/page', 'grid', [
 
   <hr style="margin: 4em auto; max-width: 80%; border: 0; border-top: 1px solid #ccc;">
 
-  <!-- Narrative Threads Section -->
-  <section id="narrative-threads">
-  </section>
-
-<?php
-get_template_part('template-parts/chapter', 'grid', [
-  'title' => 'Narrative Threads',
-]);
-?>
+<a id="narrative-threads"></a>
+<section>
+  <?php
+    get_template_part('template-parts/chapter', 'grid', [
+      'title' => 'Narrative Threads',
+    ]);
+  ?>
 
   <hr style="margin: 4em auto; max-width: 80%; border: 0; border-top: 1px solid #ccc;">
 
   <!-- Narrative Fragments Section -->
-  <section id="narrative-fragments">
-  </section>
-
-<?php
-get_template_part('template-parts/fragment', 'grid', [
-  'title' => 'Narrative Fragments',
-]);
-?>
-
+<a id="narrative-fragments"></a>
+<section>
+  <?php
+    get_template_part('template-parts/fragment', 'grid', [
+      'title' => 'Narrative Fragments',
+    ]);
+  ?>
+</section>
 
 </main>
 
