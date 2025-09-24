@@ -23,5 +23,7 @@ $related = get_field('related_concepts'); // ACF relationship field
     </div>
   <?php endif; ?>
 
+<?php show_featured_in_threads('concepts_referenced'); ?>
+
   <?php get_template_part('content/concept-nav'); ?>
 </div>

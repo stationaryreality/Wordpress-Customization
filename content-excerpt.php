@@ -17,5 +17,7 @@ $source = get_field('excerpt_source'); // Book, Reference, etc.
     </p>
   <?php endif; ?>
 
+      <?php show_featured_in_threads('excerpts_referenced'); ?>
+
   <?php get_template_part('content/excerpt-nav'); ?>
 </div>

@@ -145,41 +145,8 @@ if (have_posts()) :
   <?php endif; ?>
 
 
-  <?php
-    // === Narrative Threads ===
-    $threads = get_posts([
-      'post_type'      => ['chapter', 'fragment'],
-      'posts_per_page' => -1,
-      'orderby'        => 'menu_order',
-      'order'          => 'ASC',
-      'meta_query'     => [
-        [
-          'key'     => 'books_cited', // Assuming it's a relationship field
-          'value'   => $book_id,
-          'compare' => 'LIKE'
-        ]
-      ]
-    ]);
+<?php show_featured_in_threads('books_cited'); ?>
 
-if ($threads): ?>
-  <div class="narrative-threads" style="margin-top: 4em; text-align:center;">
-    <h2>Featured In</h2>
-    <div class="thread-grid">
-          <?php foreach ($threads as $thread):
-            $thumb = get_the_post_thumbnail_url($thread->ID, 'medium');
-          ?>
-            <div class="thread-item">
-              <a href="<?php echo get_permalink($thread->ID); ?>">
-                <?php if ($thumb): ?>
-                  <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr(get_the_title($thread->ID)); ?>">
-                <?php endif; ?>
-                <h3><?php echo esc_html(get_the_title($thread->ID)); ?></h3>
-              </a>
-            </div>
-          <?php endforeach; ?>
-        </div>
-      </div>
-  <?php endif; ?>
 
   <?php get_template_part('content/book-nav'); ?>
 </div>

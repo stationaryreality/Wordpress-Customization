@@ -17,5 +17,7 @@ $source = get_field('song'); // Book, Reference, etc.
     </p>
   <?php endif; ?>
 
+  <?php show_featured_in_threads('lyrics_referenced'); ?>
+
   <?php get_template_part('content/lyric-nav'); ?>
 </div>

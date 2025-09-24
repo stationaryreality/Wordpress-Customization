@@ -30,41 +30,7 @@ function get_wikipedia_intro($slug) {
     ?>
   </div>
 
-  <?php
-  // === Narrative Threads referencing this movie ===
-  $threads = get_posts([
-    'post_type'      => ['chapter', 'fragment'],
-    'posts_per_page' => -1,
-    'orderby'        => 'menu_order',
-    'order'          => 'ASC',
-    'meta_query'     => [
-      [
-        'key'     => 'movies_referenced',
-        'value'   => '"' . $movie_id . '"', // ensure exact match inside serialized array
-        'compare' => 'LIKE'
-      ]
-    ]
-  ]);
-
-  if ($threads): ?>
-    <div class="narrative-threads">
-      <h2>Referenced In</h2>
-      <div class="thread-grid">
-        <?php foreach ($threads as $thread):
-          $thumb = get_the_post_thumbnail_url($thread->ID, 'medium');
-        ?>
-          <div class="thread-item">
-            <a href="<?php echo get_permalink($thread->ID); ?>">
-              <?php if ($thumb): ?>
-                <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr(get_the_title($thread->ID)); ?>">
-              <?php endif; ?>
-              <h3><?php echo esc_html(get_the_title($thread->ID)); ?></h3>
-            </a>
-          </div>
-        <?php endforeach; ?>
-      </div>
-    </div>
-  <?php endif; ?>
+  <?php show_featured_in_threads('movies_referenced'); ?>
 
   <?php get_template_part('content/movie-nav'); ?>
 </div>

@@ -179,3 +179,5 @@ require_once get_stylesheet_directory() . '/inc/redirects.php';
 require_once get_stylesheet_directory() . '/inc/footnotes.php';
 
 require_once get_stylesheet_directory() . '/inc/enqueue.php';
+
+require_once get_stylesheet_directory() . '/inc/helpers.php';

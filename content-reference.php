@@ -73,37 +73,7 @@ function get_reference_wikipedia_intro($slug) {
     </div>
   <?php endif; ?>
 
-
-  <?php
-  // Chapters that reference this Reference CPT
-  $chapters = get_posts([
-    'post_type'      => 'chapter',
-    'posts_per_page' => -1,
-    'orderby'        => 'menu_order',
-    'order'          => 'ASC',
-    'meta_query'     => [
-      [
-        'key'     => 'references_cited', // ACF relationship field on chapters
-        'value'   => $reference_id,
-        'compare' => 'LIKE'
-      ]
-    ]
-  ]);
-
-  if ($chapters): ?>
-    <div class="reference-chapters" style="margin-top:3em; text-align:center;">
-      <h3>Referenced In</h3>
-      <ul style="list-style:none; padding:0; display:inline-block; text-align:left;">
-        <?php foreach ($chapters as $chapter): ?>
-          <li>
-            <a href="<?php echo get_permalink($chapter->ID); ?>">
-              <?php echo esc_html(get_the_title($chapter->ID)); ?>
-            </a>
-          </li>
-        <?php endforeach; ?>
-      </ul>
-    </div>
-  <?php endif; ?>
+  <?php show_featured_in_threads('chapter_references'); ?>
 
   <?php get_template_part('content/reference-nav'); ?>
 </div>

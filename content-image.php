@@ -20,4 +20,6 @@ $img_url  = $image ? $image['sizes']['large'] : '';
   <?php endif; ?>
 </div>
 
+<?php show_featured_in_threads('images_linked'); ?>
+
 <?php get_template_part('content/image-nav'); ?>
