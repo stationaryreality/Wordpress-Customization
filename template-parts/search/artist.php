@@ -1,27 +1,32 @@
 <?php
-$info        = $args['info'];
-$search_term = $args['search_term'];
+/**
+ * Artist Search Template
+ *
+ * Expected args:
+ * - $info        : metadata about the CPT (emoji, title, etc.)
+ * - $search_term : the search term (or theme name if taxonomy view)
+ * - $query       : WP_Query object (already run with Relevanssi or tax_query)
+ */
 
-$artist_query = new WP_Query([
-  'post_type'      => 'artist',
-  's'              => $search_term,
-  'posts_per_page' => -1,
-  'relevanssi'     => true,
-]);
+$info        = $args['info'] ?? null;
+$search_term = $args['search_term'] ?? '';
+$query       = $args['query'] ?? null;
 
-if (function_exists('relevanssi_do_query')) {
-  relevanssi_do_query($artist_query);
+// Defensive: bail if query missing or invalid
+if ( ! $query || ! ( $query instanceof WP_Query ) || ! $query->have_posts() ) {
+    return;
 }
-
-if (!$artist_query->have_posts()) return;
 ?>
 
 <section style="margin-bottom:4rem;">
-  <h2><?php echo esc_html($info['emoji'] . ' ' . $info['title']); ?> containing “<?php echo esc_html($search_term); ?>”</h2>
+  <h2>
+    <?php echo esc_html( $info['emoji'] . ' ' . $info['title'] ); ?>
+    containing “<?php echo esc_html( $search_term ); ?>”
+  </h2>
 
   <?php 
-    // Pass the query in scope directly; the template reads $artist_query directly
-    set_query_var('artist_query', $artist_query);
-    get_template_part('template-parts/artist-grid');
+    // artist-grid expects $artist_query
+    set_query_var( 'artist_query', $query );
+    get_template_part( 'template-parts/artist-grid' );
   ?>
 </section>
