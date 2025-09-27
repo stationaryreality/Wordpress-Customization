@@ -12,7 +12,7 @@ $img_url  = $image ? $image['sizes']['large'] : '';
   <h1><?php the_title(); ?></h1>
 </div>
 
-<div class="image-caption">
+<div class="image-caption" style="text-align:center;">
   <?php if ($caption): ?>
     <?php echo wp_kses_post($caption); ?>
   <?php else: ?>

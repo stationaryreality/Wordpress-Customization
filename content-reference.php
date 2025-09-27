@@ -73,6 +73,8 @@ function get_reference_wikipedia_intro($slug) {
     </div>
   <?php endif; ?>
 
+      <?php the_content(); ?>
+
   <?php show_featured_in_threads('chapter_references'); ?>
 
   <?php get_template_part('content/reference-nav'); ?>
