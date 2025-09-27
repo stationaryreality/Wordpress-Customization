@@ -87,33 +87,6 @@ function disable_feeds_properly() {
     );
 }
 
-
-add_filter('relevanssi_content_to_index', 'add_artist_name_to_index', 10, 2);
-function add_artist_name_to_index($content, $post) {
-    if ($post->post_type === 'chapter') {
-        $chapter_songs = get_field('chapter_songs', $post->ID);
-
-        if ($chapter_songs) {
-            foreach ($chapter_songs as $row) {
-                if (!empty($row['song'])) {
-                    $song = $row['song']; // Song CPT object
-                    $content .= ' ' . get_the_title($song->ID); // index song title
-
-                    // Only include primary artist? (change condition to include all if you want)
-                    if (!empty($row['role']) && $row['role'] === 'primary') {
-                        $artist = get_field('song_artist', $song->ID);
-                        if ($artist) {
-                            $content .= ' ' . get_the_title($artist->ID);
-                        }
-                    }
-                }
-            }
-        }
-    }
-    return $content;
-}
-
-
 // Remove the default "Continue reading" junk from excerpts
 function my_clean_excerpt_more($more) {
     return '…'; // just ellipsis, or replace with '' for nothing
