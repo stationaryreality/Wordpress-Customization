@@ -102,7 +102,7 @@ if (have_posts()) :
     if ($quotes): ?>
       <div class="related-quotes" style="margin-top:3em; text-align:center;">
         <h2>Quotes</h2>
-        <ul style="list-style:none; padding:0; display:inline-block; text-align:left;">
+        <ul style="list-style:none; padding:0; display:inline-block; text-align:center;">
           <?php foreach ($quotes as $quote): ?>
             <li>
               <a href="<?php echo get_permalink($quote->ID); ?>">

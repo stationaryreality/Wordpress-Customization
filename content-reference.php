@@ -39,15 +39,15 @@ function get_reference_wikipedia_intro($slug) {
     <p class="reference-credit"><strong>Credit:</strong> <?php echo esc_html($credit_name); ?></p>
   <?php endif; ?>
 
-  <?php if ($description): ?>
-    <div class="reference-description">
-      <?php echo wp_kses_post(wpautop($description)); ?>
-    </div>
-  <?php else: ?>
-    <div class="reference-content-fallback">
-      <?php the_content(); ?>
-    </div>
-  <?php endif; ?>
+<?php if ($description): ?>
+  <div class="reference-description">
+    <?php echo wp_kses_post(wpautop($description)); ?>
+  </div>
+<?php endif; ?>
+
+<div class="reference-content">
+  <?php the_content(); ?>
+</div>
 
   <?php if ($wiki_slug): ?>
     <?php $wiki_intro = get_reference_wikipedia_intro($wiki_slug); ?>
@@ -72,8 +72,6 @@ function get_reference_wikipedia_intro($slug) {
       </ul>
     </div>
   <?php endif; ?>
-
-      <?php the_content(); ?>
 
   <?php show_featured_in_threads('chapter_references'); ?>
 
