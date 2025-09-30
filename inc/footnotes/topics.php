@@ -1,14 +1,14 @@
 <?php
-// inc/footnotes/themes.php
+// inc/footnotes/topics.php
 
-function fn_themes($chapter_id, $group_titles) {
-    $themes = get_the_terms($chapter_id, 'theme');
-    if (!$themes || is_wp_error($themes)) return '';
+function fn_topics($chapter_id, $group_titles) {
+    $topics = get_the_terms($chapter_id, 'topic');
+    if (!$topics || is_wp_error($topics)) return '';
 
-    usort($themes, fn($a, $b) => strcmp($a->name, $b->name));
+    usort($topics, fn($a, $b) => strcmp($a->name, $b->name));
 
     ob_start();
-    $meta = $group_titles['theme'];
+    $meta = $group_titles['topic'];
 
     echo '<div class="referenced-group" style="margin-top:2em;">';
     echo '<h4><a href="'.esc_url($meta['link']).'" style="text-decoration:none;">
@@ -18,11 +18,11 @@ function fn_themes($chapter_id, $group_titles) {
 
     echo '<div class="tag-bubbles">';
 
-    $count = count($themes);
+    $count = count($topics);
     $i = 0;
-foreach ($themes as $theme) {
-    $link  = esc_url(get_term_link($theme));
-    $title = esc_html($theme->name);
+foreach ($topics as $topic) {
+    $link  = esc_url(get_term_link($topic));
+    $title = esc_html($topic->name);
     
     echo "<span class=\"bubble-wrapper\"><a class=\"tag-bubble\" href=\"{$link}\">{$title}</a></span>\n";
 }

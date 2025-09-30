@@ -31,6 +31,7 @@ foreach (get_cpt_metadata() as $cpt => $meta) {
     // If a module file isn't present, it's safely skipped.
     $modules = [
         'fn_featured_artists',
+        'fn_videos',
         'fn_other_artists',
         'fn_people',
         'fn_books',
@@ -41,9 +42,9 @@ foreach (get_cpt_metadata() as $cpt => $meta) {
         'fn_organizations',
         'fn_references',
         'fn_images',
-        'fn_themes',
         'fn_concepts',
-        'fn_videos',
+        'fn_topics',
+        'fn_themes',
     ];
 
     foreach ($modules as $fn) {

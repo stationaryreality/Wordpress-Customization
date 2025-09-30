@@ -8,7 +8,7 @@ function fn_organizations($chapter_id, $group_titles) {
     uasort($items, fn($a, $b) => strcmp(get_the_title($a), get_the_title($b)));
 
     ob_start();
-    $meta = $group_titles['organizations'];
+    $meta = $group_titles['organization'];
 
     echo '<div class="referenced-group" style="margin-top:2em;">';
     echo "<h4><a href=\"{$meta['link']}\" style=\"text-decoration:none;\">

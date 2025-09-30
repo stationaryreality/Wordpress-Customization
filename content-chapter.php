@@ -59,9 +59,6 @@
           </div>
       <?php endif; ?>
   <?php endif; ?>
-
-
-
         
 		<div class="post-content">
     <?php ct_author_output_last_updated_date(); ?>

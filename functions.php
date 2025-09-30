@@ -133,6 +133,7 @@ $all = [
     'artist'            => ['title' => 'Artists Featured',          'emoji' => '🎤', 'link' => '/artists-featured/'],
     'profile'           => ['title' => 'People Referenced',         'emoji' => '👤', 'link' => '/people-referenced/'],
     'theme'             => ['title' => 'Themes',                    'emoji' => '🎨', 'link' => '/themes/'],
+    'topic'             => ['title' => 'Topics',                    'emoji' => '🧩', 'link' => '/topics/'],
     'chapter'           => ['title' => 'Narrative Threads',         'emoji' => '🧵', 'link' => '/#narrative-threads/'],
     'fragment'          => ['title' => 'Narrative Fragments',       'emoji' => '📜', 'link' => '/#narrative-fragments/'],
 ];
