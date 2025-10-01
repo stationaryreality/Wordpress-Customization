@@ -11,38 +11,6 @@
  
 /* =Theme customization starts here
 -------------------------------------------------------------- */
-/* Rokkitt Regular (400) */
-@font-face {
-    font-family: 'Rokkitt';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url('fonts/rokkitt-v36-latin-regular.woff2') format('woff2');
-  }
-  
-  /* Lato Regular (400) */
-  @font-face {
-    font-family: 'Lato';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url('fonts/lato-v24-latin-regular.woff2') format('woff2');
-  }
-  
-  /* Lato Bold (700) */
-  @font-face {
-    font-family: 'Lato';
-    font-style: normal;
-    font-weight: 700;
-    font-display: swap;
-    src: url('fonts/lato-v24-latin-700.woff2') format('woff2');
-  }
-  
-  /*
-Description: Custom styles for CPTs, grids, navigation, and layout.
-Author: You
-Version: 1.0
-*/
 
 /* ============== LIST STYLES: Post Status Icons ============== */
 ul {
@@ -70,6 +38,8 @@ ul {
 .draft::before   { content: '🟠'; }
 .updated::before { content: '🟢'; }
 
+/* ============== NAVIGATION BAR ADJUSTMENTS ============== */
+
 .nav-post-title {
   max-width: 100%;
   word-wrap: break-word;
@@ -78,15 +48,19 @@ ul {
   font-weight: normal;
 }
 
-/* ============== TYPOGRAPHY ADJUSTMENTS ============== */
-.post-title {
-  font-size: 33px;
+.nav-avatar {
+  max-width: 80px;
+  height: auto;
+  display: inline-block;
 }
 
-.artist-song {
-  text-align: center;
-  font-size: 16px;
-  margin: 20px 0;
+.nav-image {
+  display: block;
+  margin: 0 auto;
+  width: 90%;
+  max-width: 400px;
+  aspect-ratio: 300 / 157; /* or whatever your actual ratio is */
+  height: auto;
 }
 
 /* ============== GRID LAYOUTS: Tag Archives ============== */
@@ -132,30 +106,11 @@ ul {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-
-/* ============== RESPONSIVE BOOK GRID (Shared) ============== */
-@media (max-width: 900px) {
-  .book-item {
-    flex: 1 1 calc(50% - 2rem);
-    max-width: calc(50% - 2rem);
-  }
+/* ============== CHAPTER TYPOGRAPHY ADJUSTMENTS ============== */
+.post-title {
+  font-size: 33px;
 }
 
-@media (max-width: 600px) {
-  .book-item {
-    flex: 1 1 100%;
-    max-width: 100%;
-  }
-}
-
-/* ============== HUB LAYOUT CONTAINERS ============== */
-.hub-section {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-/* ============== ARTIST METADATA ============== */
 .artist-meta {
   text-align: center;
   margin: 2em 0;
@@ -185,47 +140,74 @@ ul {
   color: #444;
 }
 
-/* ============== POST NAVIGATION ============== */
-.post-navigation-container {
+/* Keep cover blocks narrow and centered */
+.wp-block-cover {
+    max-width: 645px !important;
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: block !important;
+    float: none !important;
+    clear: both !important;
+    position: relative !important;
+    left: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+    min-height: auto !important;
+    height: auto !important;
+}
+
+/* Optional: support taller covers when desired */
+.wp-block-cover.cover-tall {
+    min-height: 300px !important;
+}
+
+/* Prevent parent container and alignment issues */
+body .entry-content .wp-block-cover,
+body .wp-block-post-content .wp-block-cover,
+body .post-content__wrap .wp-block-cover,
+body .wp-block-group .wp-block-cover {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    float: none !important;
+}
+
+.wp-block-cover,
+.wp-block-cover * {
+    text-align: center !important;
+}
+
+/* ============== TAG BUBBLES ============== */
+
+
+.tag-bubbles {
   display: flex;
-  justify-content: space-between;
-  gap: 40px;
-  margin-top: 40px;
   flex-wrap: wrap;
+  gap: 6px; /* space between bubbles */
+  margin-top: 0.5em;
 }
 
-.previous-post,
-.next-post {
-  flex: 1 1 45%;
-  max-width: 45%;
+.tag-bubble {
+  display: inline-flex; /* more reliable than inline-block in Safari */
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border: 1px solid #000;
+  border-radius: 20px;
+  background: #fff;
+  color: #000;
+  text-decoration: none;
+  font-size: 0.9em;
+  line-height: 1.4;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
-.previous-post h2,
-.next-post h2 {
-  font-size: 1rem;
-  margin-bottom: 10px;
+.tag-bubble:hover {
+  background: #000;
+  color: #fff;
 }
 
-.previous-post img,
-.next-post img {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-}
-
-
-@media (min-width: 768px) {
-  body:not(.web-archive-mode) #sidebar-primary {
-    padding-bottom: 100px;
-    min-height: 100vh;
-  }
-
-  body.web-archive-mode #sidebar-primary {
-    padding-bottom: 100px; /* keep the space, remove height stretch */
-  }
-}
-
-/* ============== AUTHOR/PROFILE GRID ============== */
+/* ============== ARTIST/PROFILE GRID ============== */
 .author-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -258,40 +240,7 @@ ul {
   color: #555;
 }
 
-/* ============== SONG GRID ============== */
-.song-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 2rem;
-  justify-items: center;
-  padding: 2rem 0;
-}
-
-.song-grid .book-item {
-  text-align: center;
-  max-width: 140px;
-}
-
-.song-grid img {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  display: block;
-  margin: 0 auto 1rem;
-  border-radius: 0; /* Square */
-}
-
-.song-grid h3 {
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.song-grid p {
-  font-size: 0.9rem;
-  color: #555;
-}
-
-/* ============== CITED CONTENT GRID (Books, Quotes, Artists) ============== */
+/* ============== CITED CONTENT GRID (Books) ============== */
 .cited-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -334,10 +283,147 @@ ul {
   margin-bottom: 0.25rem;
 }
 
-/* ============== CPT-SPECIFIC STYLING ============== */
+
+/* ============== AUTHOR & ARTISTS ============== */
+.book-author {
+  margin-bottom: 2em;
+  text-align: center;
+}
+
 .person-content {
   text-align: center;
 }
+
+.book-author .author-link {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.author-thumbnail {
+  display: block;
+  margin: 0 auto 0.5em;
+  border-radius: 999px;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.artist-thumbnail {
+  display: block;
+  margin: 0 auto 0.5em;
+  border-radius: 999px;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* ============== SONG GRID ============== */
+
+.album-cover {
+  display: block;
+  margin: 0 auto 0.5em;
+  border-radius: 999px;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.song-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+  padding: 2rem 0;
+}
+
+.song-grid .book-item {
+  text-align: center;
+  max-width: 140px;
+}
+
+.song-grid img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 1rem;
+  border-radius: 0; /* Square */
+}
+
+.song-grid h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.song-grid p {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* ============== POST NAVIGATION ============== */
+.post-navigation-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+.previous-post,
+.next-post {
+  flex: 1 1 45%;
+  max-width: 45%;
+}
+
+.previous-post h2,
+.next-post h2 {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.previous-post img,
+.next-post img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* THE REST NEEDS CLEANING
+
+  /*
+Description: Custom styles for CPTs, grids, navigation, and layout.
+Author: You
+Version: 1.0
+*/
+
+/* ============== RESPONSIVE BOOK GRID (Shared) ============== */
+@media (max-width: 900px) {
+  .book-item {
+    flex: 1 1 calc(50% - 2rem);
+    max-width: calc(50% - 2rem);
+  }
+}
+
+@media (max-width: 600px) {
+  .book-item {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
+
+/* ============== HUB LAYOUT CONTAINERS ============== */
+.hub-section {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+
+
+/* ============== CPT-SPECIFIC STYLING ============== */
+
 
 .concept-nav-thumb img {
   width: 50% !important;
@@ -349,58 +435,6 @@ ul {
   height: auto;
 }
 
-.nav-avatar {
-  max-width: 80px;
-  height: auto;
-  display: inline-block;
-}
-
-.nav-image {
-  display: block;
-  margin: 0 auto;
-  width: 90%;
-  max-width: 400px;
-  aspect-ratio: 300 / 157; /* or whatever your actual ratio is */
-  height: auto;
-}
-
-
-/* Keep cover blocks narrow and centered */
-.wp-block-cover {
-    max-width: 645px !important;
-    width: 100% !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    display: block !important;
-    float: none !important;
-    clear: both !important;
-    position: relative !important;
-    left: 0 !important;
-    right: 0 !important;
-    transform: none !important;
-    min-height: auto !important;
-    height: auto !important;
-}
-
-/* Optional: support taller covers when desired */
-.wp-block-cover.cover-tall {
-    min-height: 300px !important;
-}
-
-/* Prevent parent container and alignment issues */
-body .entry-content .wp-block-cover,
-body .wp-block-post-content .wp-block-cover,
-body .post-content__wrap .wp-block-cover,
-body .wp-block-group .wp-block-cover {
-    margin-left: auto !important;
-    margin-right: auto !important;
-    float: none !important;
-}
-
-.wp-block-cover,
-.wp-block-cover * {
-    text-align: center !important;
-}
 
 .cpt-alpha-list {
   list-style: none;
@@ -441,45 +475,7 @@ body .wp-block-group .wp-block-cover {
   margin-bottom: 1em;
 }
 
-/* === Author Section on Book Page === */
-.book-author {
-  margin-bottom: 2em;
-  text-align: center;
-}
 
-.book-author .author-link {
-  display: inline-block;
-  text-align: center;
-  text-decoration: none;
-  color: inherit;
-}
-
-.author-thumbnail {
-  display: block;
-  margin: 0 auto 0.5em;
-  border-radius: 999px;
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-}
-
-.artist-thumbnail {
-  display: block;
-  margin: 0 auto 0.5em;
-  border-radius: 999px;
-  width: 200px;
-  height: 200px;
-  object-fit: cover;
-}
-
-.album-cover {
-  display: block;
-  margin: 0 auto 0.5em;
-  border-radius: 999px;
-  width: 200px;
-  height: 200px;
-  object-fit: cover;
-}
 
 /* === Books on Profile Page === */
 .profile-books ul.profile-book-grid {
@@ -725,29 +721,3 @@ body .wp-block-group .wp-block-cover {
   flex-shrink: 0;
 }
 
-.tag-bubbles {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px; /* space between bubbles */
-  margin-top: 0.5em;
-}
-
-.tag-bubble {
-  display: inline-flex; /* more reliable than inline-block in Safari */
-  align-items: center;
-  justify-content: center;
-  padding: 4px 10px;
-  border: 1px solid #000;
-  border-radius: 20px;
-  background: #fff;
-  color: #000;
-  text-decoration: none;
-  font-size: 0.9em;
-  line-height: 1.4;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.tag-bubble:hover {
-  background: #000;
-  color: #fff;
-}
