@@ -21,6 +21,7 @@ $key_cpts = [
     'reference',
     'song',
     'theme',
+    'topic',
     'chapter',    // points to homepage anchor
 ];
 
@@ -29,8 +30,8 @@ $type_counts = [];
 $total_count = 0;
 
 foreach ($key_cpts as $cpt) {
-    if ($cpt === 'theme') {
-        $count = wp_count_terms('theme', ['hide_empty' => false]);
+    if ($cpt === 'theme' || $cpt === 'topic') {
+        $count = wp_count_terms($cpt, ['hide_empty' => false]);
     } else {
         $obj = wp_count_posts($cpt);
         $count = isset($obj->publish) ? $obj->publish : 0;
@@ -78,6 +79,8 @@ $icons = [];
 foreach ($post_types as $pt) {
     $icons[$pt] = $map[$pt]['emoji'] ?? '❓';
 }
+$icons['theme'] = $map['theme']['emoji'] ?? '❓';
+$icons['topic'] = $map['topic']['emoji'] ?? '❓';
 
 // Collect entries
 $entries = [];
@@ -111,7 +114,23 @@ foreach ($themes as $term) {
     $entries[] = [
         'title' => $term->name,
         'url'   => get_term_link($term),
-        'icon'  => $map['theme']['emoji']
+        'icon'  => $icons['theme']
+    ];
+}
+
+// Add topic taxonomy terms
+$topics = get_terms([
+    'taxonomy'   => 'topic',
+    'hide_empty' => false,
+    'orderby'    => 'name',
+    'order'      => 'ASC'
+]);
+
+foreach ($topics as $term) {
+    $entries[] = [
+        'title' => $term->name,
+        'url'   => get_term_link($term),
+        'icon'  => $icons['topic']
     ];
 }
 
