@@ -21,6 +21,8 @@ add_filter('wpseo_breadcrumb_links', function($links) {
             '/song/'         => ['songs-featured', 'Songs Featured'],
             '/image/'        => ['image-gallery', 'Image Gallery'],
             '/excerpts/'     => ['excerpt-library', 'Excerpt Library'],
+            '/portals/'      => ['portal-pages', 'Portal Pages'],
+
 
         ];
 
