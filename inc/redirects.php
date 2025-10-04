@@ -1,44 +1,26 @@
 <?php
 /**
- * Redirects for CPT archives, breadcrumbs, and taxonomy
+ * Redirects for CPT archives, taxonomy roots, and consistent labels
  */
 
-// CPT archive redirects
-add_action('template_redirect', function () {
-    $redirects = [
-        'book'         => '/books-cited/',
-        'artist'       => '/artists-featured/',
-        'profile'      => '/people-referenced/',
-        'concept'      => '/lexicon/',
-        'movie'        => '/movies-referenced/',
-        'quote'        => '/quote-library/',
-        'reference'    => '/research-sources/',
-        'lyric'        => '/song-excerpts/',
-        'organization' => '/organizations/',
-        'song'         => '/songs-featured/',
-        'image'        => '/image-gallery/',
-        'excerpt'      => '/excerpt-library/',
-        'chapter'      => '/#narrative-threads',
-        'fragment'     => '/#narrative-fragments',
-        'portal'       => '/portal-pages/',
+$central_cpts = get_cpt_metadata(); // use central mapper
 
-    ];
+// --- CPT Archive Redirects ---
+add_action('template_redirect', function () use ($central_cpts) {
+    if (!is_post_type_archive()) return;
 
-    foreach ($redirects as $cpt => $url) {
-        if (is_post_type_archive($cpt)) {
-            wp_redirect(home_url($url), 301);
-            exit;
-        }
-    }
+    $cpt = get_post_type();
+    if (!$cpt || !isset($central_cpts[$cpt])) return;
 
-    // handle paginated chapter URLs (/chapters/page/2, /chapters/page/3, etc.)
-    if (is_post_type_archive('chapter') && is_paged()) {
-        wp_redirect(home_url('/#chapters'), 301);
+    $url = $central_cpts[$cpt]['link'] ?? '';
+    if ($url) {
+        wp_redirect(home_url($url), 301);
         exit;
     }
+
 });
 
-// Taxonomy redirects (archive root → custom pages)
+// --- Taxonomy Redirects ---
 add_action('template_redirect', function () {
     // Theme taxonomy
     if (is_tax('theme')) {
@@ -58,4 +40,3 @@ add_action('template_redirect', function () {
         }
     }
 });
-

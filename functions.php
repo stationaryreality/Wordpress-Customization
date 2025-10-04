@@ -116,33 +116,30 @@ add_action('template_redirect', function() {
  * Return CPT metadata: title, emoji, link
  */
 function get_cpt_metadata($cpt_name = '') {
-$all = [
-    'featured_artists'  => ['title' => 'Songs Featured',            'emoji' => '🎤', 'link' => '/artists-featured/'],
-    'other_artists'     => ['title' => 'Songs Referenced',          'emoji' => '🎤', 'link' => '/artists-featured/'],
-    'songs_referenced'  => ['title' => 'Songs Excerpts',            'emoji' => '🎵', 'link' => '/song-excerpts/'],
-    'portal'            => ['title' => 'Portal Pages',              'emoji' => '🚪', 'link' => '/#portal-pages/'],
-    'quote'             => ['title' => 'Quote Library',             'emoji' => '💬', 'link' => '/quote-library/'],
-    'excerpt'           => ['title' => 'Excerpts Referenced',       'emoji' => '📖', 'link' => '/excerpt-library/'],
-    'concept'           => ['title' => 'Lexicon',                   'emoji' => '🔎', 'link' => '/lexicon/'],
-    'lyric'             => ['title' => 'Song Excerpts',             'emoji' => '🎼', 'link' => '/song-excerpts/'],
-    'reference'         => ['title' => 'External References',       'emoji' => '📰', 'link' => '/research-sources/'],
-    'song'              => ['title' => 'Songs Featured',            'emoji' => '🎵', 'link' => '/songs-featured/'],
-    'image'             => ['title' => 'Images Referenced',         'emoji' => '🖼', 'link' => '/image-gallery/'],
-    'organization'      => ['title' => 'Organizations Referenced',  'emoji' => '🏢', 'link' => '/organizations/'],
-    'book'              => ['title' => 'Books Cited',               'emoji' => '📚', 'link' => '/books-cited/'],
-    'movie'             => ['title' => 'Movies Referenced',         'emoji' => '🎬', 'link' => '/movies-referenced/'],
-    'artist'            => ['title' => 'Artists Featured',          'emoji' => '🎤', 'link' => '/artists-featured/'],
-    'profile'           => ['title' => 'People Referenced',         'emoji' => '👤', 'link' => '/people-referenced/'],
-    'theme'             => ['title' => 'Themes',                    'emoji' => '🎨', 'link' => '/themes/'],
-    'topic'             => ['title' => 'Topics',                    'emoji' => '🧩', 'link' => '/topics/'],
-    'chapter'           => ['title' => 'Narrative Threads',         'emoji' => '🧵', 'link' => '/#narrative-threads/'],
-    'fragment'          => ['title' => 'Narrative Fragments',       'emoji' => '📜', 'link' => '/#narrative-fragments/'],
-];
+    $all = [
+        'featured_artists'  => ['title' => 'Songs Featured',            'emoji' => '🎤', 'link' => '/artists-featured/'],
+        'other_artists'     => ['title' => 'Songs Referenced',          'emoji' => '🎤', 'link' => '/artists-featured/'],
+        'songs_referenced'  => ['title' => 'Songs Excerpts',            'emoji' => '🎵', 'link' => '/song-excerpts/'],
+        'portal'            => ['title' => 'Portal Pages',              'emoji' => '🚪', 'link' => '/portal-pages/'],
+        'quote'             => ['title' => 'Quote Library',             'emoji' => '💬', 'link' => '/quote-library/'],
+        'excerpt'           => ['title' => 'Excerpts Library',          'emoji' => '📖', 'link' => '/excerpt-library/'],
+        'concept'           => ['title' => 'Lexicon',                   'emoji' => '🔎', 'link' => '/lexicon/'],
+        'lyric'             => ['title' => 'Song Excerpts',             'emoji' => '🎼', 'link' => '/song-excerpts/'],
+        'reference'         => ['title' => 'Research Sources',          'emoji' => '📰', 'link' => '/research-sources/'],
+        'song'              => ['title' => 'Songs Featured',            'emoji' => '🎵', 'link' => '/songs-featured/'],
+        'image'             => ['title' => 'Images Gallery',            'emoji' => '🖼', 'link' => '/image-gallery/'],
+        'organization'      => ['title' => 'Organizations',             'emoji' => '🏢', 'link' => '/organizations/'],
+        'book'              => ['title' => 'Books Cited',               'emoji' => '📚', 'link' => '/books-cited/'],
+        'movie'             => ['title' => 'Movies Referenced',         'emoji' => '🎬', 'link' => '/movies-referenced/'],
+        'artist'            => ['title' => 'Artists Featured',          'emoji' => '🎤', 'link' => '/artists-featured/'],
+        'profile'           => ['title' => 'People Referenced',         'emoji' => '👤', 'link' => '/people-referenced/'],
+        'theme'             => ['title' => 'Themes',                    'emoji' => '🎨', 'link' => '/themes/'],
+        'topic'             => ['title' => 'Topics',                    'emoji' => '🧩', 'link' => '/topics/'],
+        'chapter'           => ['title' => 'Narrative Threads',         'emoji' => '🧵', 'link' => '/narrative-threads/'],
+        'fragment'          => ['title' => 'Narrative Fragments',       'emoji' => '📜', 'link' => '/narrative-fragments/'],
+    ];
 
-    if ($cpt_name) {
-        return $all[$cpt_name] ?? null;
-    }
-    return $all;
+    return $cpt_name ? ($all[$cpt_name] ?? null) : $all;
 }
 
 

@@ -1,57 +1,41 @@
 <?php
 // inc/breadcrumbs.php
+/**
+ * Yoast Breadcrumb Override
+ * Uses central CPT mapper for archive labels and custom taxonomies for Themes & Topics
+ */
 
-// === Archive Breadcrumb Remaps ===
 add_filter('wpseo_breadcrumb_links', function($links) {
-    $last_index = count($links) - 1;
 
+    $central_cpts = get_cpt_metadata();
+
+    // Loop through each link
     foreach ($links as $key => $link) {
-        if ($key === $last_index) continue;
 
-        $map = [
-            '/books/'        => ['books-cited', 'Books Cited'],
-            '/artists/'      => ['artists-featured', 'Artists Featured'],
-            '/profile/'      => ['people-referenced', 'People Referenced'],
-            '/concepts/'     => ['lexicon', 'Lexicon'],
-            '/movies/'       => ['movies-referenced', 'Movies Referenced'],
-            '/quotes/'       => ['quote-library', 'Quote Library'],
-            '/references/'   => ['research-sources', 'Research Sources'],
-            '/lyrics/'       => ['song-excerpts', 'Song Excerpts'],
-            '/organization/' => ['organizations', 'Organizations'],
-            '/song/'         => ['songs-featured', 'Songs Featured'],
-            '/image/'        => ['image-gallery', 'Image Gallery'],
-            '/excerpts/'     => ['excerpt-library', 'Excerpt Library'],
-            '/portals/'      => ['portal-pages', 'Portal Pages'],
+        // Skip the last link (current page)
+        if ($key === count($links) - 1) continue;
 
+        // Replace CPT archive labels
+        foreach ($central_cpts as $cpt => $info) {
+            $archive_url = get_post_type_archive_link($cpt);
+            if (!$archive_url) continue;
 
-        ];
-
-        foreach ($map as $needle => [$page, $label]) {
-            if (strpos($link['url'], $needle) !== false) {
-                $links[$key]['url']  = get_permalink(get_page_by_path($page));
-                $links[$key]['text'] = $label;
+            if (rtrim($link['url'], '/') === rtrim($archive_url, '/')) {
+                $links[$key]['text'] = $info['title']; // mapper title
+                $links[$key]['url']  = $archive_url;   // ensure correct URL
             }
         }
     }
 
-    return $links;
-});
-
-
-// === Theme & Topic Breadcrumb Override ===
-add_filter('wpseo_breadcrumb_links', function ($links) {
-    // === Themes ===
+    // === Theme Taxonomy ===
     if (is_tax('theme')) {
-        $new_links = [];
+        $term = get_queried_object();
+        $themes_page = get_page_by_path('themes');
 
-        // Home
-        $new_links[] = [
-            'url'  => home_url('/'),
-            'text' => 'Home'
+        $new_links = [
+            ['url' => home_url('/'), 'text' => 'Home']
         ];
 
-        // Themes page
-        $themes_page = get_page_by_path('themes');
         if ($themes_page) {
             $new_links[] = [
                 'url'  => get_permalink($themes_page),
@@ -59,37 +43,20 @@ add_filter('wpseo_breadcrumb_links', function ($links) {
             ];
         }
 
-        // Current term
-        $term = get_queried_object();
-        $new_links[] = [
-            'url'  => '',
-            'text' => $term->name
-        ];
+        $new_links[] = ['url' => '', 'text' => $term->name];
 
         return $new_links;
     }
 
-    // On the actual /themes/ page
-    if (is_page('themes')) {
-        foreach ($links as &$link) {
-            if ($link['text'] === 'Themes') {
-                $link['url'] = ''; // Remove self-link
-            }
-        }
-    }
-
-    // === Topics ===
+    // === Topic Taxonomy ===
     if (is_tax('topic')) {
-        $new_links = [];
+        $term = get_queried_object();
+        $topics_page = get_page_by_path('topics');
 
-        // Home
-        $new_links[] = [
-            'url'  => home_url('/'),
-            'text' => 'Home'
+        $new_links = [
+            ['url' => home_url('/'), 'text' => 'Home']
         ];
 
-        // Topics page
-        $topics_page = get_page_by_path('topics');
         if ($topics_page) {
             $new_links[] = [
                 'url'  => get_permalink($topics_page),
@@ -97,22 +64,21 @@ add_filter('wpseo_breadcrumb_links', function ($links) {
             ];
         }
 
-        // Current term
-        $term = get_queried_object();
-        $new_links[] = [
-            'url'  => '',
-            'text' => $term->name
-        ];
+        $new_links[] = ['url' => '', 'text' => $term->name];
 
         return $new_links;
     }
 
-    // On the actual /topics/ page
+    // === Optional: remove self-link on actual Pages for Themes/Topics ===
+    if (is_page('themes')) {
+        foreach ($links as &$link) {
+            if ($link['text'] === 'Themes') $link['url'] = '';
+        }
+    }
+
     if (is_page('topics')) {
         foreach ($links as &$link) {
-            if ($link['text'] === 'Topics') {
-                $link['url'] = ''; // Remove self-link
-            }
+            if ($link['text'] === 'Topics') $link['url'] = '';
         }
     }
 
