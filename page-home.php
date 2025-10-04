@@ -19,7 +19,19 @@ get_template_part('template-parts/page', 'grid', [
 ]);
 ?>
 
-  <hr style="margin: 4em auto; max-width: 80%; border: 0; border-top: 1px solid #ccc;">
+<hr style="margin: 4em auto; max-width: 80%; border: 0; border-top: 1px solid #ccc;">
+
+<!-- Portal Pages Section -->
+<a id="portal-pages"></a>
+<section>
+  <?php
+    get_template_part('template-parts/portal', 'grid', [
+      'title' => 'Portal Pages',
+    ]);
+  ?>
+</section>
+
+<hr style="margin: 4em auto; max-width: 80%; border: 0; border-top: 1px solid #ccc;">
 
 <a id="narrative-threads"></a>
 <section>

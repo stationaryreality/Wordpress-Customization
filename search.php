@@ -7,8 +7,10 @@ $cpt_sections = get_cpt_metadata(); // central CPT metadata
 echo '<main class="search-results">';
 echo '<h1>Search results for “' . esc_html($search_term) . '”</h1>';
 
-// --- CPT Sections ---
-foreach ($cpt_sections as $type => $info) {
+/**
+ * Helper: Render CPT results
+ */
+function render_cpt_results($type, $info, $search_term) {
     $query = new WP_Query([
         'post_type'      => $type,
         's'              => $search_term,
@@ -36,7 +38,9 @@ foreach ($cpt_sections as $type => $info) {
     }
 }
 
-// --- Taxonomy Sections (Themes + Topics) ---
+/**
+ * Helper: Render taxonomy results
+ */
 function render_taxonomy_results($taxonomy, $title, $emoji, $search_term) {
     $terms = get_terms([
         'taxonomy'   => $taxonomy,
@@ -70,9 +74,26 @@ function render_taxonomy_results($taxonomy, $title, $emoji, $search_term) {
     ]);
 }
 
-// Call for both
-render_taxonomy_results('theme', 'Themes', '🎨', $search_term);
+// -------------------
+// PRIORITY ORDER
+// -------------------
+
+// 1. Portal CPT
+if (isset($cpt_sections['portal'])) {
+    render_cpt_results('portal', $cpt_sections['portal'], $search_term);
+}
+
+// 2. Topics
 render_taxonomy_results('topic', 'Topics', '🧩', $search_term);
+
+// 3. Themes
+render_taxonomy_results('theme', 'Themes', '🎨', $search_term);
+
+// 4. Remaining CPTs (excluding portal since it was handled already)
+foreach ($cpt_sections as $type => $info) {
+    if ($type === 'portal') continue;
+    render_cpt_results($type, $info, $search_term);
+}
 
 echo '</main>';
 
