@@ -5,6 +5,8 @@ function fn_excerpts($chapter_id, $group_titles) {
     $items = get_field('excerpts_referenced', $chapter_id) ?: [];
     if (empty($items)) return '';
 
+    uasort($items, fn($a, $b) => strcmp(get_the_title($a), get_the_title($b)));
+
     ob_start();
     $meta = $group_titles['excerpt'];
 

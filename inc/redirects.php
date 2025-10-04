@@ -19,7 +19,8 @@ add_action('template_redirect', function () {
         'image'        => '/image-gallery/',
         'excerpt'      => '/excerpt-library/',
         'chapter'      => '/#narrative-threads',
-        'fragment'      => '/#narrative-fragments',
+        'fragment'     => '/#narrative-fragments',
+        'portal'       => '/portal-pages/',
 
     ];
 
