@@ -12,7 +12,7 @@ $quotes = new WP_Query([
 get_template_part('template-parts/portal', 'grid', [
   'query' => $portals,
   'title' => 'Portals',
-  'emoji' => '💬',
+  'emoji' => '🚪',
 ]);
 
 get_footer();

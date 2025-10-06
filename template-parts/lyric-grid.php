@@ -1,88 +1,102 @@
 <?php
 /**
- * Shared Lyric Grid Template
+ * Unified Lyric Display (passive)
  *
  * Expects:
- * - query       => WP_Query object
- * - title       => Section/page title
- * - emoji       => Emoji (optional)
- * - search_term => Optional
+ * - query => WP_Query or array of posts
+ * - title => Section title (optional)
+ * - emoji => Optional
  */
-$query       = $args['query'];
-$title       = $args['title'] ?? 'Lyrics';
-$emoji       = $args['emoji'] ?? '';
-$search_term = $args['search_term'] ?? '';
 
-if (!$query->have_posts()) return;
+$query = $args['query'] ?? null;
+$title = $args['title'] ?? 'Lyrics';
+$emoji = $args['emoji'] ?? '';
+
+if (!$query) return;
+
+// Normalize
+$posts = $query instanceof WP_Query ? $query->posts : $query;
+if (empty($posts)) return;
 ?>
 
-<section class="lyric-grid container" style="max-width: 800px; margin: auto; padding: 2rem 1rem;">
-  <h1>
-    <?php if ($emoji) echo $emoji . ' '; ?>
-    <?php echo esc_html($title); ?>
-    <?php if ($search_term) : ?>
-      containing “<?php echo esc_html($search_term); ?>”
-    <?php endif; ?>
-  </h1>
-  <p class="intro-text">Lyrics referenced across featured chapters and profiles.</p>
+<section class="portal-section lyric-list-section">
+  <?php if ($title): ?>
+    <h2 class="portal-section-title">
+      <?php if ($emoji) echo '<span class="emoji">' . esc_html($emoji) . '</span> '; ?>
+      <?php echo esc_html($title); ?>
+    </h2>
+  <?php endif; ?>
 
-  <div class="lyric-list">
-    <?php while ($query->have_posts()) : $query->the_post(); ?>
-      <?php
-        $text  = get_field('lyric_plain_text', get_the_ID());
-        $song  = get_field('song', get_the_ID());
-        $source_link  = $song ? get_permalink($song->ID) : '';
-        $source_title = $song ? get_the_title($song->ID) : '';
+  <div class="portal-lyric-list">
+    <?php foreach ($posts as $post_obj):
+      $post_id = is_object($post_obj) ? $post_obj->ID : intval($post_obj);
 
-        // Song cover image
-        $image = '';
-        if ($song) {
-          $cover = get_field('cover_image', $song->ID);
-          if ($cover) {
-            $image = $cover['sizes']['thumbnail'];
-          } elseif (has_post_thumbnail($song->ID)) {
-            $image = get_the_post_thumbnail_url($song->ID, 'thumbnail');
+      $text  = get_field('lyric_plain_text', $post_id);
+      $song  = get_field('song', $post_id);
+      $song_link  = $song ? get_permalink($song->ID) : '';
+      $song_title = $song ? get_the_title($song->ID) : '';
+
+      // Get artist from song (ACF relationship)
+      $artist_name = '';
+      $artist_link = '';
+      if ($song) {
+        $artist = get_field('song_artist', $song->ID);
+        if ($artist) {
+          // Handle both array and single object cases
+          if (is_array($artist)) {
+            $artist = reset($artist);
           }
+          $artist_name = get_the_title($artist->ID);
+          $artist_link = get_permalink($artist->ID);
         }
-      ?>
-      <div class="lyric-entry" style="display:flex; align-items:flex-start; gap:1rem; margin-bottom:2rem; border-bottom:1px solid #ddd; padding-bottom:1rem;">
+      }
+
+      // Image: song cover preferred, fallback post thumbnail
+      $image = '';
+      if ($song) {
+        $cover = get_field('cover_image', $song->ID);
+        if ($cover && is_array($cover)) {
+          $image = $cover['sizes']['medium'] ?? ($cover['sizes']['thumbnail'] ?? ($cover['url'] ?? ''));
+        } elseif (has_post_thumbnail($song->ID)) {
+          $image = get_the_post_thumbnail_url($song->ID, 'medium');
+        }
+      }
+      if (!$image && has_post_thumbnail($post_id)) {
+        $image = get_the_post_thumbnail_url($post_id, 'medium');
+      }
+    ?>
+      <article class="portal-lyric-item">
         <?php if ($image): ?>
-          <a href="<?php echo esc_url($source_link); ?>" class="lyric-thumb">
-            <img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($source_title); ?>" style="width:48px; height:48px; border-radius:50%; object-fit:cover;">
-          </a>
+          <div class="lyric-thumb">
+            <a href="<?php echo esc_url($song_link ?: get_permalink($post_id)); ?>">
+              <img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($song_title ?: get_the_title($post_id)); ?>">
+            </a>
+          </div>
         <?php endif; ?>
 
-        <div class="lyric-text">
-          <h2 style="margin-bottom:0.5rem;">
-            <a href="<?php the_permalink(); ?>">
-              <?php the_title(); ?>
-            </a>
-          </h2>
+        <div class="lyric-content">
+          <h3 class="lyric-title">
+            <a href="<?php echo esc_url(get_permalink($post_id)); ?>"><?php echo esc_html(get_the_title($post_id)); ?></a>
+          </h3>
 
           <?php if ($text): ?>
-            <?php 
-              $normalized_text = str_replace(["\r\n", "\r"], "\n", $text);
-              $lines = explode("\n", $normalized_text);
-              $first_line = '';
-              foreach ($lines as $line) {
-                  if (trim($line) !== '') {
-                      $first_line = $line;
-                      break;
-                  }
-              }
-            ?>
-            <p style="margin:0;"><?php echo esc_html($first_line); ?><?php if (count($lines) > 1) echo '...'; ?></p>
+            <p class="lyric-snippet">
+              <?php echo esc_html(wp_trim_words($text, 80, '...')); ?>
+            </p>
           <?php endif; ?>
 
           <?php if ($song): ?>
-            <p style="margin-top:0.5rem; font-size:0.9rem; color:#666;">
-              Source: <a href="<?php echo esc_url($source_link); ?>"><?php echo esc_html($source_title); ?></a>
+            <p class="lyric-source">
+              Source: <a href="<?php echo esc_url($song_link); ?>"><?php echo esc_html($song_title); ?></a>
+              <?php if ($artist_name): ?>
+                &nbsp;by <a href="<?php echo esc_url($artist_link); ?>"><?php echo esc_html($artist_name); ?></a>
+              <?php endif; ?>
             </p>
           <?php endif; ?>
         </div>
-      </div>
-    <?php endwhile; ?>
+      </article>
+    <?php endforeach; ?>
   </div>
 </section>
 
-<?php wp_reset_postdata(); ?>
+<?php if ($query instanceof WP_Query) wp_reset_postdata(); ?>

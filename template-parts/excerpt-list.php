@@ -1,80 +1,97 @@
 <?php
 /**
- * Shared Excerpt List Template
+ * Unified Excerpt Display (passive)
  *
  * Expects:
- * - query       => WP_Query or get_posts() array
- * - title       => Section/page title
- * - emoji       => Emoji (optional)
- * - search_term => Optional (only used on search)
+ * - query => WP_Query or array of posts
+ * - title => Section title (optional)
+ * - emoji => Optional
  */
-$query       = $args['query'] ?? null;
-$title       = $args['title'] ?? 'Excerpts';
-$emoji       = $args['emoji'] ?? '';
-$search_term = $args['search_term'] ?? '';
+
+$query = $args['query'] ?? null;
+$title = $args['title'] ?? 'Excerpts';
+$emoji = $args['emoji'] ?? '📖';
 
 if (!$query) return;
 
-// Normalize to iterable
+// Normalize
 $posts = $query instanceof WP_Query ? $query->posts : $query;
 if (empty($posts)) return;
 ?>
 
-<section class="excerpt-grid container" style="max-width: 800px; margin: auto; padding: 2rem 1rem;">
-  <h1>
-    <?php if ($emoji) echo $emoji . ' '; ?>
-    <?php echo esc_html($title); ?>
-    <?php if ($search_term) : ?>
-      containing “<?php echo esc_html($search_term); ?>”
-    <?php endif; ?>
-  </h1>
+<section class="portal-section excerpt-list-section">
+  <?php if ($title): ?>
+    <h2 class="portal-section-title">
+      <?php if ($emoji) echo '<span class="emoji">' . esc_html($emoji) . '</span> '; ?>
+      <?php echo esc_html($title); ?>
+    </h2>
+  <?php endif; ?>
 
-  <p class="intro-text">Collected excerpts from books, articles, and other referenced sources.</p>
+  <div class="portal-excerpt-list">
+    <?php foreach ($posts as $post_obj):
+      $post_id = is_object($post_obj) ? $post_obj->ID : intval($post_obj);
 
-  <div class="excerpt-list">
-    <?php foreach ($posts as $excerpt_post): ?>
-      <?php 
-        $text   = get_field('excerpt_plain_text', $excerpt_post->ID);
-        $source = get_field('excerpt_source', $excerpt_post->ID);
-        $source_link  = $source ? get_permalink($source->ID) : '';
-        $source_title = $source ? get_the_title($source->ID) : '';
+      $text   = get_field('excerpt_plain_text', $post_id);
+      $source = get_field('excerpt_source', $post_id);
+      $source_link  = $source ? get_permalink($source->ID) : '';
+      $source_title = $source ? get_the_title($source->ID) : '';
 
-        // Handle source image
-        $image = '';
-        if ($source) {
-          $cover = get_field('cover_image', $source->ID);
-          if ($cover) {
-            $image = $cover['sizes']['thumbnail'];
-          } elseif (has_post_thumbnail($source->ID)) {
-            $image = get_the_post_thumbnail_url($source->ID, 'thumbnail');
+      // Author info (only if source is a book)
+      $author_name = '';
+      $author_link = '';
+      if ($source && get_post_type($source->ID) === 'book') {
+        $author = get_field('author_profile', $source->ID);
+        if ($author) {
+          if (is_array($author)) {
+            $author = reset($author);
           }
+          $author_name = get_the_title($author->ID);
+          $author_link = get_permalink($author->ID);
         }
-      ?>
-      <div class="excerpt-entry" style="display:flex; align-items:flex-start; gap:1rem; margin-bottom:2rem; border-bottom:1px solid #ddd; padding-bottom:1rem;">
+      }
+
+      // Image logic: prefer source cover -> source thumbnail -> post thumbnail
+      $image = '';
+      if ($source) {
+        $cover = get_field('cover_image', $source->ID);
+        if ($cover && is_array($cover)) {
+          $image = $cover['sizes']['medium'] ?? ($cover['sizes']['thumbnail'] ?? ($cover['url'] ?? ''));
+        } elseif (has_post_thumbnail($source->ID)) {
+          $image = get_the_post_thumbnail_url($source->ID, 'medium');
+        }
+      }
+      if (!$image && has_post_thumbnail($post_id)) {
+        $image = get_the_post_thumbnail_url($post_id, 'medium');
+      }
+    ?>
+      <article class="portal-excerpt-item">
         <?php if ($image): ?>
-          <a href="<?php echo esc_url($source_link); ?>" class="excerpt-thumb">
-            <img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($source_title); ?>" style="width:48px; height:48px; border-radius:50%; object-fit:cover;">
-          </a>
+          <div class="excerpt-thumb">
+            <a href="<?php echo esc_url($source_link ?: get_permalink($post_id)); ?>">
+              <img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($source_title ?: get_the_title($post_id)); ?>">
+            </a>
+          </div>
         <?php endif; ?>
 
-        <div class="excerpt-text">
-          <h2 style="margin-bottom:0.5rem;">
-            <a href="<?php echo get_permalink($excerpt_post); ?>">
-              <?php echo esc_html(get_the_title($excerpt_post)); ?>
-            </a>
-          </h2>
+        <div class="excerpt-content">
+          <h3 class="excerpt-title">
+            <a href="<?php echo esc_url(get_permalink($post_id)); ?>"><?php echo esc_html(get_the_title($post_id)); ?></a>
+          </h3>
 
           <?php if ($text): ?>
-            <p style="margin:0;"><?php echo esc_html(wp_trim_words($text, 30, '...')); ?></p>
+            <p class="excerpt-text"><?php echo esc_html(wp_trim_words($text, 40, '...')); ?></p>
           <?php endif; ?>
 
           <?php if ($source): ?>
-            <p style="margin-top:0.5rem; font-size:0.9rem; color:#666;">
+            <p class="excerpt-source">
               Source: <a href="<?php echo esc_url($source_link); ?>"><?php echo esc_html($source_title); ?></a>
+              <?php if ($author_name): ?>
+                &nbsp;by <a href="<?php echo esc_url($author_link); ?>"><?php echo esc_html($author_name); ?></a>
+              <?php endif; ?>
             </p>
           <?php endif; ?>
         </div>
-      </div>
+      </article>
     <?php endforeach; ?>
   </div>
 </section>
