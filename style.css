@@ -181,11 +181,14 @@ body .wp-block-group .wp-block-cover {
 
 
 .tag-bubbles {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px; /* space between bubbles */
-  margin-top: 0.5em;
+    display: inline-flex;     /* keeps the row tighter for small numbers */
+    justify-content: center;   /* centers them */
+    flex-wrap: wrap;           /* allows multiple lines if needed */
+    gap: 0.5em;                /* consistent spacing between bubbles */
+    max-width: 90%;            /* optional: prevent overly wide rows */
+    margin: 0 auto;            /* centers the container itself */
 }
+
 
 .tag-bubble {
   display: inline-flex; /* more reliable than inline-block in Safari */
@@ -752,8 +755,8 @@ Version: 1.0
 }
 
 .portal-section-title {
-  font-weight: 600;
-  font-size: 1.25rem;
+  font-weight: 500;
+  font-size: 2.25rem;
   margin-bottom: 1.5rem;
   color: #111;
 }
@@ -795,8 +798,8 @@ Version: 1.0
 
 .quote-title, .excerpt-title, .lyric-title {
   margin: 0 0 0.5rem;
-  font-size: 1.05rem;
-  font-weight: 600;
+  font-size: 2.05rem;
+  font-weight: 400;
 }
 
 .quote-excerpt, .excerpt-text, .lyric-snippet {
@@ -810,4 +813,3 @@ Version: 1.0
   color: #666;
   font-size: 0.9rem;
 }
-
