@@ -19,5 +19,7 @@ $source = get_field('quote_source'); // Can be a Book or Reference CPT
 
   <?php show_featured_in_threads('quotes_referenced'); ?>
 
+    <?php echo fn_taxonomy_bubbles(get_the_ID()); ?>
+
   <?php get_template_part('content/quote-nav'); ?>
 </div>

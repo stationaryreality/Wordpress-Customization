@@ -19,5 +19,7 @@ $source = get_field('excerpt_source'); // Book, Reference, etc.
 
       <?php show_featured_in_threads('excerpts_referenced'); ?>
 
+        <?php echo fn_taxonomy_bubbles(get_the_ID()); ?>
+
   <?php get_template_part('content/excerpt-nav'); ?>
 </div>

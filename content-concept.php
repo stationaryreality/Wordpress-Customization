@@ -25,5 +25,8 @@ $related = get_field('related_concepts'); // ACF relationship field
 
 <?php show_featured_in_threads('concepts_referenced'); ?>
 
+  <?php echo fn_taxonomy_bubbles(get_the_ID()); ?>
+
+
   <?php get_template_part('content/concept-nav'); ?>
 </div>

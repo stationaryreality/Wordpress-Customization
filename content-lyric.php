@@ -19,5 +19,7 @@ $source = get_field('song'); // Book, Reference, etc.
 
   <?php show_featured_in_threads('lyrics_referenced'); ?>
 
+  <?php echo fn_taxonomy_bubbles(get_the_ID()); ?>
+
   <?php get_template_part('content/lyric-nav'); ?>
 </div>
