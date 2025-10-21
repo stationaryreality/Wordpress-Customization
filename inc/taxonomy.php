@@ -10,8 +10,8 @@ if ( ! function_exists( 'fn_taxonomy_bubbles' ) ) {
         if ( ! $post_id ) $post_id = get_the_ID();
 
         $taxonomies = array(
-            'topic' => array( 'title' => 'Topics', 'emoji' => '🏷️', 'link' => '' ),
-            'theme' => array( 'title' => 'Themes', 'emoji' => '💭', 'link' => '' ),
+            'topic' => array( 'title' => 'Topics', 'emoji' => '🧩', 'link' => '' ),
+            'theme' => array( 'title' => 'Themes', 'emoji' => '🎨', 'link' => '' ),
         );
 
         $output = '';
