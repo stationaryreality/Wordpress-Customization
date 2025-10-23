@@ -4,50 +4,76 @@ Template Name: Themes Directory
 */
 get_header(); ?>
 
-<main class="site-main max-w-screen-lg mx-auto p-6">
-  <h1 class="text-4xl font-bold mb-4">🎨 Themes</h1>
-  <p class="mb-8 text-gray-600">Recurring symbolic structures that exist throughout lyrics, quotes, and other expressions.</p>
+<main style="max-width:800px; margin:0 auto; padding:24px; text-align:center;">
+  <h1 style="font-size:2.5rem; font-weight:bold; margin-bottom:16px;">🎨 Themes</h1>
+  <p style="margin-bottom:32px; color:#555;">
+    Recurring symbolic structures that exist throughout lyrics, quotes, and other expressions.
+  </p>
 
   <?php
   $terms = get_terms(['taxonomy' => 'theme', 'hide_empty' => false]);
+
   if (empty($terms) || is_wp_error($terms)) {
-      echo '<p class="text-gray-600">No themes found.</p>';
+      echo '<p style="color:#555;">No themes found.</p>';
   } else {
-      usort($terms, fn($a,$b) => $b->count - $a->count);
 
-      $top_terms   = array_slice($terms, 0, 20);
-      $other_terms = array_slice($terms, 20);
+      // Sort by usage count
+      usort($terms, fn($a, $b) => $b->count - $a->count);
 
-      $grid_items = [];
-      foreach ($top_terms as $term) {
-          $image_id = function_exists('get_field') ? get_field('theme_cover_image', 'term_' . $term->term_id) : '';
-          if (!$image_id) $image_id = 20262; // fallback
-
-          $grid_items[] = [
-              'image_id' => intval($image_id),
-              'title'    => $term->name,
-              'url'      => get_term_link($term),
-          ];
-      }
-
-      get_template_part('template-parts/theme-grid', null, [
-          'items' => $grid_items,
-          'title' => 'Top Themes',
-          'emoji' => '🔥'
-      ]);
-
-      if (!empty($other_terms)) {
-          usort($other_terms, fn($a,$b) => strcasecmp($a->name,$b->name));
-          echo '<h2 class="text-2xl font-semibold mt-12 mb-4">📚 Other Themes (A–Z)</h2>';
-          echo '<ul class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">';
-          foreach ($other_terms as $term) {
-              printf('<li><a class="text-blue-600 hover:underline" href="%s">%s</a></li>',
-                  esc_url(get_term_link($term)),
-                  esc_html($term->name)
-              );
+      // --- Filter top themes: exclude ones that have a portal ---
+      $top_terms = [];
+      foreach ($terms as $term) {
+          $portal = get_page_by_title($term->name, OBJECT, 'portal');
+          if (!$portal) {
+              $top_terms[] = $term;
           }
-          echo '</ul>';
+          if (count($top_terms) >= 12) break; // limit top themes to 12
       }
+
+      // --- All terms for full list ---
+      $other_terms = $terms;
+
+      // --- TOP THEMES SECTION ---
+      if (!empty($top_terms)) {
+          echo '<div style="margin-bottom:48px;">';
+          echo '<h2 style="font-size:1.5rem; font-weight:bold; margin-bottom:8px;">🔥 Top Themes</h2>';
+          echo '<p style="color:#777; margin-bottom:16px; font-style:italic;">Top Themes will likely become Portal Pages</p>';
+
+          echo '<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-bottom:32px;">';
+          foreach ($top_terms as $term) {
+              $url = get_term_link($term);
+              echo '<a href="' . esc_url($url) . '" style="display:inline-block; padding:6px 12px; background:#eee; border-radius:16px; text-decoration:none; color:#333; font-weight:500;">';
+              echo esc_html($term->name);
+              echo '</a>';
+          }
+          echo '</div>';
+          echo '</div>';
+      }
+
+      // --- ALL THEMES (A–Z) ---
+      usort($other_terms, fn($a, $b) => strcasecmp($a->name, $b->name));
+
+      echo '<div style="margin-top:32px;">';
+      echo '<h2 style="font-size:1.5rem; font-weight:bold; margin-bottom:16px;">📚 All Themes (A–Z)</h2>';
+
+      echo '<ul style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; list-style:none; padding:0; margin:0 auto; text-align:left;">';
+
+      foreach ($other_terms as $term) {
+          $portal = get_page_by_title($term->name, OBJECT, 'portal');
+          $term_link = esc_url(get_term_link($term));
+
+          echo '<li>';
+          echo '<a href="' . $term_link . '" style="color:#1a73e8; text-decoration:underline; font-weight:500;">' . esc_html($term->name) . '</a>';
+
+          if ($portal) {
+              echo ' <a href="' . get_permalink($portal->ID) . '" style="color:#777; font-size:0.85em; font-style:italic; margin-left:4px;">(Portal Page)</a>';
+          }
+
+          echo '</li>';
+      }
+
+      echo '</ul>';
+      echo '</div>';
   }
   ?>
 </main>
