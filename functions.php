@@ -142,6 +142,32 @@ function get_cpt_metadata($cpt_name = '') {
     return $cpt_name ? ($all[$cpt_name] ?? null) : $all;
 }
 
+// Add this to functions.php
+function portal_pages_list() {
+    $output = '<ul>';
+
+    $portals = new WP_Query(array(
+        'post_type'      => 'portal',
+        'posts_per_page' => -1,
+        'orderby'        => 'title',
+        'order'          => 'ASC'
+    ));
+
+    if ($portals->have_posts()) {
+        while ($portals->have_posts()) {
+            $portals->the_post();
+            $output .= '<li class="post-item stable">';
+            $output .= '<a href="' . get_permalink() . '" class="nav-post-title">' . get_the_title() . '</a>';
+            $output .= '</li>';
+        }
+        wp_reset_postdata();
+    }
+
+    $output .= '</ul>';
+    return $output;
+}
+add_shortcode('portal_pages', 'portal_pages_list');
+
 
 // 2025-8-18
 require_once get_stylesheet_directory() . '/inc/breadcrumbs.php';
@@ -154,6 +180,8 @@ require_once get_stylesheet_directory() . '/inc/enqueue.php';
 
 require_once get_stylesheet_directory() . '/inc/helpers.php';
 
+require_once get_stylesheet_directory() . '/inc/concept_relations.php';
+
 // Load shared taxonomy bubbles function
 add_action('after_setup_theme', function() {
     $file = get_stylesheet_directory() . '/inc/taxonomy.php';
@@ -161,4 +189,3 @@ add_action('after_setup_theme', function() {
         require_once $file;
     }
 });
-
