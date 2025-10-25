@@ -136,13 +136,43 @@ function get_cpt_metadata($cpt_name = '') {
         'theme'             => ['title' => 'Themes',                    'emoji' => '🎨', 'link' => '/themes/'],
         'topic'             => ['title' => 'Topics',                    'emoji' => '🧩', 'link' => '/topics/'],
         'chapter'           => ['title' => 'Narrative Threads',         'emoji' => '🧵', 'link' => '/narrative-threads/'],
-        'fragment'          => ['title' => 'Narrative Fragments',       'emoji' => '📜', 'link' => '/narrative-fragments/'],
+        'fragment'          => ['title' => 'Narrative Episodes',        'emoji' => '📜', 'link' => '/narrative-episodes/'],
+        'element'           => ['title' => 'Narrative Elements',        'emoji' => '⚛️', 'link' => '/narrative-elements/'],
+   
     ];
 
     return $cpt_name ? ($all[$cpt_name] ?? null) : $all;
 }
 
-// Add this to functions.php
+
+// Narrative Thread Pages Shortcode for Nav
+function narrative_threads_list() {
+    $output = '<ul>';
+
+    $portals = new WP_Query(array(
+        'post_type'      => 'chapter',
+        'posts_per_page' => -1,
+        'orderby'        => 'title',
+        'order'          => 'ASC'
+    ));
+
+    if ($portals->have_posts()) {
+        while ($portals->have_posts()) {
+            $portals->the_post();
+            $output .= '<li class="post-item stable">';
+            $output .= '<a href="' . get_permalink() . '" class="nav-post-title">' . get_the_title() . '</a>';
+            $output .= '</li>';
+        }
+        wp_reset_postdata();
+    }
+
+    $output .= '</ul>';
+    return $output;
+}
+add_shortcode('narrative_threads', 'narrative_threads_list');
+
+
+// Portal Pages Shortcode for Nav
 function portal_pages_list() {
     $output = '<ul>';
 
