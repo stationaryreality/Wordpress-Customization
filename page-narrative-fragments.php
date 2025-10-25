@@ -9,7 +9,7 @@ get_header(); ?>
 <section>
   <?php
     get_template_part('template-parts/fragment', 'grid', [
-      'title' => 'Narrative Fragments',
+      'title' => 'Narrative Episodes',
     ]);
   ?>
 </section>

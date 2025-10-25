@@ -11,7 +11,7 @@ $key_cpts = [
     'book',
     'concept',
     'excerpt',
-    'fragment',   // points to homepage anchor
+    'fragment',
     'image',
     'lyric',
     'movie',
@@ -22,7 +22,8 @@ $key_cpts = [
     'song',
     'theme',
     'topic',
-    'chapter',    // points to homepage anchor
+    'chapter',
+    'element'
 ];
 
 // ======= Collect counts =======
@@ -61,7 +62,8 @@ $post_types = [
     'song',
     'chapter',
     'excerpt',
-    'fragment'
+    'fragment',
+    'element'
 ];
 
 $post_args = [
@@ -157,9 +159,9 @@ usort($entries, function ($a, $b) {
 
                         // Fix anchors for homepage
                         if ($cpt === 'chapter') {
-                            $meta['link'] = '/#narrative-threads';
+                            $meta['link'] = '/narrative-threads';
                         } elseif ($cpt === 'fragment') {
-                            $meta['link'] = '/#narrative-fragments';
+                            $meta['link'] = '/narrative-episodes';
                         }
                         ?>
                         <tr>

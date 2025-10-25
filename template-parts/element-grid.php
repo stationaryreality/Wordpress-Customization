@@ -1,35 +1,35 @@
 <?php
 /**
- * Template Part: Fragment Grid
+ * Template Part: Element Grid
  *
  * Expected args:
- * - query: WP_Query object (optional, defaults to all fragments)
+ * - query: WP_Query object (optional, defaults to all elements)
  * - title: Section title (optional)
  */
 
 $query = $args['query'] ?? null;
-$title = $args['title'] ?? 'Narrative Fragments';
+$title = $args['title'] ?? 'Elements';
 
-// If no query is passed, default to all fragments (e.g., homepage)
-if ( ! $query ) {
+// Default to all elements if none are passed
+if (!$query) {
   $query = new WP_Query([
-    'post_type'      => 'fragment',
+    'post_type'      => 'element',
     'posts_per_page' => -1,
     'orderby'        => 'date',
     'order'          => 'DESC',
   ]);
 }
 
-if ( ! $query->have_posts() ) return;
+if (!$query->have_posts()) return;
 ?>
 
 <section style="margin-bottom:4rem;">
   <h2><?php echo esc_html($title); ?></h2>
   <div class="tag-posts-grid">
-    <?php while ( $query->have_posts() ) : $query->the_post(); ?>
+    <?php while ($query->have_posts()) : $query->the_post(); ?>
       <div class="tag-post-item">
         <a href="<?php the_permalink(); ?>" class="tag-post-thumbnail">
-          <?php if ( has_post_thumbnail() ) : ?>
+          <?php if (has_post_thumbnail()) : ?>
             <img src="<?php echo esc_url(get_the_post_thumbnail_url(get_the_ID(), 'medium')); ?>" alt="<?php the_title_attribute(); ?>">
           <?php endif; ?>
         </a>
