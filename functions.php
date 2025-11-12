@@ -138,7 +138,9 @@ function get_cpt_metadata($cpt_name = '') {
         'chapter'           => ['title' => 'Narrative Threads',         'emoji' => '🧵', 'link' => '/narrative-threads/'],
         'fragment'          => ['title' => 'Narrative Episodes',        'emoji' => '📜', 'link' => '/narrative-episodes/'],
         'element'           => ['title' => 'Narrative Elements',        'emoji' => '⚛️', 'link' => '/narrative-elements/'],
-   
+        'show'              => ['title' => 'TV Shows Referenced',       'emoji' => '📺', 'link' => '/tv-shows-referenced/'],
+
+
     ];
 
     return $cpt_name ? ($all[$cpt_name] ?? null) : $all;
