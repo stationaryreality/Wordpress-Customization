@@ -353,6 +353,39 @@
             "bidirectional_target": []
         },
         {
+            "key": "field_6913c3e4a929d",
+            "label": "Shows Referenced",
+            "name": "shows_referenced",
+            "aria-label": "",
+            "type": "relationship",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "post_type": [
+                "show"
+            ],
+            "post_status": "",
+            "taxonomy": "",
+            "filters": [
+                "search",
+                "post_type",
+                "taxonomy"
+            ],
+            "return_format": "object",
+            "min": "",
+            "max": "",
+            "allow_in_bindings": 1,
+            "elements": "",
+            "bidirectional": 0,
+            "bidirectional_target": []
+        },
+        {
             "key": "field_687915276e150",
             "label": "Organizations Referenced",
             "name": "organizations_referenced",
@@ -568,5 +601,6 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1757443441
+    "display_title": "",
+    "modified": 1762903032
 }
