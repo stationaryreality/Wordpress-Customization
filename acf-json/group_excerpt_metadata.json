@@ -20,7 +20,8 @@
             "post_type": [
                 "book",
                 "reference",
-                "movie"
+                "movie",
+                "show"
             ],
             "post_status": "",
             "taxonomy": "",
@@ -117,5 +118,6 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1757442480
+    "display_title": "",
+    "modified": 1762815341
 }
