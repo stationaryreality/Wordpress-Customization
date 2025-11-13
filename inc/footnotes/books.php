@@ -17,7 +17,7 @@ function fn_books($chapter_id, $group_titles) {
             $title = esc_html(get_the_title($book));
             $link  = get_permalink($book);
             $img   = get_field('cover_image', $book->ID);
-            $thumb = $img ? "<a href=\"{$link}\"><img src=\"{$img['sizes']['thumbnail']}\" style=\"width:48px;height:48px;object-fit:cover;margin-right:8px;\"></a>" : '';
+            $thumb = $img ? "<a href=\"{$link}\"><img src=\"{$img['sizes']['thumbnail']}\" style=\"width:48px;height:64px;object-fit:cover;margin-right:8px;\"></a>" : '';
             echo "<li style=\"display:flex;align-items:center;gap:10px;margin-bottom:0.6em;\">{$thumb}<a href=\"{$link}\"><strong>{$title}</strong></a></li>";
         }
         echo '</ul></div>';

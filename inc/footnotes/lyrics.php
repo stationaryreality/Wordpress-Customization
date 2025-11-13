@@ -39,13 +39,23 @@ function fn_lyrics($chapter_id, $group_titles) {
         $lyric = get_field('lyric_plain_text', $item->ID);
         if ($lyric) echo "<div>{$lyric}</div>";
 
-        if ($song) {
-            $src_title = esc_html(get_the_title($song));
-            $src_link  = get_permalink($song);
-            echo "<p style=\"margin-top:0.4rem;font-size:0.9rem;color:#666;\">
-                    Source: <a href=\"{$src_link}\">{$src_title}</a>
-                  </p>";
-        }
+if ($song) {
+    $src_title = esc_html(get_the_title($song));
+    $src_link  = get_permalink($song);
+
+    // Fetch artist
+    $artist = get_field('song_artist', $song->ID);
+    if (is_array($artist)) $artist = reset($artist);
+    $artist_name = $artist ? esc_html(get_the_title($artist)) : '';
+    $artist_link = $artist ? get_permalink($artist) : '';
+
+    echo "<p style=\"margin-top:0.4rem;font-size:0.9rem;color:#666;\">Source: 
+            <a href=\"{$src_link}\">{$src_title}</a>";
+    if ($artist_name) {
+        echo " by <a href=\"{$artist_link}\">{$artist_name}</a>";
+    }
+    echo "</p>";
+}
 
         echo "</div></li>";
     }
