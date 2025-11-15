@@ -1,110 +1,209 @@
 <?php
-/* Template Name: Portal Filtered Index */
+/**
+ * Standalone Portal Template
+ * ------------------------------------------------------------
+ * Does not rely on single-portal.php, metadata files, or shared
+ * template logic. All logic is contained inside this file.
+ */
+
 get_header();
 
-the_post();
+// Ensure we have the portal post
+global $post;
+if (! $post) {
+    $post = get_queried_object();
+}
+setup_postdata($post);
 
-// ======= Get portal's linked terms (for all taxonomies) =======
+// ============================================================
+// 1. GET TERMS FOR THIS PORTAL
+// ============================================================
+$portal_id = $post->ID;
+$portal_title = get_the_title($portal_id);
+
+$taxonomies = get_object_taxonomies('portal');
 $portal_terms = [];
-$taxonomies = get_object_taxonomies(get_post_type());
+
 foreach ($taxonomies as $taxonomy) {
-    $terms = wp_get_post_terms(get_the_ID(), $taxonomy, ['fields' => 'slugs']);
-    if (!empty($terms) && !is_wp_error($terms)) {
-        $portal_terms[$taxonomy] = $terms;
+    $slugs = wp_get_post_terms($portal_id, $taxonomy, ['fields' => 'slugs']);
+    if (!empty($slugs) && !is_wp_error($slugs)) {
+        $portal_terms = array_merge($portal_terms, $slugs);
     }
 }
 
 if (empty($portal_terms)) {
-    echo '<main class="portal-index">';
-    echo '<h1>' . esc_html(get_the_title()) . ' Portal</h1>';
-    echo '<p>No taxonomy terms found for this portal.</p>';
-    echo '</main>';
+    echo "<main class='portal-index'><h1 class='center'>{$portal_title} Portal</h1><p>No terms found.</p></main>";
     get_footer();
-    exit;
+    return;
 }
 
-// ======= Central CPT Mapping =======
-$map = get_cpt_metadata();
-
-// CPTs to show
-$post_types = [
-    'artist', 'profile', 'book', 'concept', 'movie', 'quote', 'lyric',
-    'reference', 'organization', 'image', 'song', 'chapter', 'excerpt', 'fragment'
-];
-
-// ======= Query posts matching any of the portal terms =======
-$tax_query = ['relation' => 'OR'];
-foreach ($portal_terms as $taxonomy => $slugs) {
-    $tax_query[] = [
-        'taxonomy' => $taxonomy,
-        'field'    => 'slug',
-        'terms'    => $slugs,
+// ============================================================
+// Helper — build a tax_query for all non-portal CPT queries
+// ============================================================
+function portal_tax_query($terms) {
+    return [
+        'relation' => 'OR',
+        [
+            'taxonomy' => 'topic',
+            'field'    => 'slug',
+            'terms'    => $terms,
+        ],
+        [
+            'taxonomy' => 'theme',
+            'field'    => 'slug',
+            'terms'    => $terms,
+        ],
     ];
 }
 
-$args = [
-    'post_type'      => $post_types,
-    'posts_per_page' => -1,
-    'orderby'        => 'title',
-    'order'          => 'ASC',
+// ============================================================
+// 2. FIND THE EXACT-MATCH CONCEPT CPT
+// ============================================================
+$concept_query = new WP_Query([
+    'post_type'      => 'concept',
+    'posts_per_page' => 1,
     'post_status'    => 'publish',
-    'tax_query'      => $tax_query,
-];
+    'tax_query'      => portal_tax_query($portal_terms),
+]);
 
-$query = new WP_Query($args);
-
-// ======= Collect & prepare entries =======
-$entries = [];
-
-if ($query->have_posts()) {
-    while ($query->have_posts()) {
-        $query->the_post();
-        $type = get_post_type();
-
-        // Skip portal pages themselves
-        if ($type === 'portal') continue;
-
-        $entries[] = [
-            'title' => get_the_title(),
-            'url'   => get_permalink(),
-            'icon'  => $map[$type]['emoji'] ?? '❓',
-            'type'  => $type,
-        ];
-    }
-    wp_reset_postdata();
-}
-
-// ======= Sort alphabetically by title =======
-usort($entries, function ($a, $b) {
-    return strcasecmp($a['title'], $b['title']);
-});
 ?>
-
 <main class="portal-index">
-    <header class="portal-header">
-        <h1><?php the_title(); ?> Portal</h1>
-        <?php the_excerpt(); ?>
+
+    <!-- =============================== -->
+    <!-- PORTAL TITLE CENTERED -->
+    <!-- =============================== -->
+    <header class="portal-header" style="text-align:center; margin-bottom:3rem;">
+        <h1><?php echo esc_html($portal_title); ?> Portal</h1>
     </header>
 
-    <?php if (!empty($entries)) : ?>
-        <ul class="portal-entry-list">
-            <?php foreach ($entries as $entry) : 
-                $meta = get_cpt_metadata($entry['type']);
-            ?>
-                <li>
-                    <span class="portal-icon"><?php echo $entry['icon']; ?></span>
-                    <a href="<?php echo esc_url($entry['url']); ?>">
-                        <?php echo esc_html($entry['title']); ?>
-                    </a>
-                    <span class="portal-type-label">
-                        <?php echo esc_html($meta['title'] ?? ucfirst($entry['type'])); ?>
-                    </span>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    <?php else : ?>
-        <p>No related entries found for this portal.</p>
+    <!-- =============================== -->
+    <!-- LEXICON / CONCEPT SECTION (NO TITLE) -->
+    <!-- =============================== -->
+    <?php if ($concept_query->have_posts()) : ?>
+        <?php
+        $concept_query->the_post();
+        echo "<div class='portal-concept-section'>";
+        the_content();   // render the cover block exactly as stored
+        echo "</div>";
+        wp_reset_postdata();
+        ?>
+        <hr class="portal-divider">
     <?php endif; ?>
+
+
+    <!-- ===================================================== -->
+    <!-- SECTION RENDERER FOR FULL-CONTENT CPT SECTIONS -->
+    <!-- ===================================================== -->
+    <?php
+    function portal_render_full_section($emoji, $label, $cpt, $terms, $portal_id) {
+
+        $q = new WP_Query([
+            'post_type'      => $cpt,
+            'posts_per_page' => -1,
+            'post_status'    => 'publish',
+            'orderby'        => 'title',
+            'order'          => 'ASC',
+            'tax_query'      => portal_tax_query($terms),
+        ]);
+
+        if (! $q->have_posts()) return;
+
+        echo "<section class='portal-section' style='margin:3rem 0; text-align:center;'>";
+        echo "<h2>{$emoji} {$label}</h2>";
+
+        while ($q->have_posts()) {
+            $q->the_post();
+
+            // skip portal recursion
+            if (get_post_type() === 'portal') continue;
+            if (get_the_ID() === $portal_id) continue;
+
+            echo "<div class='portal-entry-content' style='margin:2rem 0;'>";
+            the_content();
+            echo "</div>";
+
+            echo "<hr class='portal-divider'>";
+        }
+
+        wp_reset_postdata();
+        echo "</section>";
+    }
+    ?>
+
+
+    <!-- =============================== -->
+    <!-- QUOTES -->
+    <!-- =============================== -->
+    <?php portal_render_full_section("💬", "Quotes", "quote", $portal_terms, $portal_id); ?>
+
+    <!-- =============================== -->
+    <!-- EXCERPTS -->
+    <!-- =============================== -->
+    <?php portal_render_full_section("📖", "Excerpts", "excerpt", $portal_terms, $portal_id); ?>
+
+    <!-- =============================== -->
+    <!-- SONG EXCERPTS -->
+    <!-- =============================== -->
+    <?php portal_render_full_section("🎼", "Song Excerpts", "lyric", $portal_terms, $portal_id); ?>
+
+
+    <!-- ===================================================== -->
+    <!-- GRID RENDERER (IMAGES & BOOKS) -->
+    <!-- ===================================================== -->
+    <?php
+    function portal_render_grid($emoji, $label, $cpt, $terms, $portal_id) {
+
+        $q = new WP_Query([
+            'post_type'      => $cpt,
+            'posts_per_page' => -1,
+            'post_status'    => 'publish',
+            'orderby'        => 'title',
+            'order'          => 'ASC',
+            'tax_query'      => portal_tax_query($terms),
+        ]);
+
+        if (! $q->have_posts()) return;
+
+        echo "<section class='portal-grid-section' style='margin:3rem 0;'>";
+        echo "<h2 style='text-align:center;'>{$emoji} {$label}</h2>";
+
+        echo "<div class='portal-grid' style='display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1.5rem; margin-top:2rem;'>";
+
+        while ($q->have_posts()) {
+            $q->the_post();
+
+            if (get_post_type() === 'portal') continue;
+            if (get_the_ID() === $portal_id) continue;
+
+            echo "<div class='portal-grid-item'>";
+            if (has_post_thumbnail()) {
+                echo '<a href="' . get_permalink() . '">';
+                the_post_thumbnail('medium');
+                echo '</a>';
+            }
+            echo '<h3 style="text-align:center; margin-top:0.5rem;">';
+            echo '<a href="' . get_permalink() . '">' . get_the_title() . '</a>';
+            echo '</h3>';
+            echo "</div>";
+        }
+
+        echo "</div>";
+
+        wp_reset_postdata();
+        echo "</section>";
+    }
+    ?>
+
+    <!-- =============================== -->
+    <!-- IMAGES GRID -->
+    <!-- =============================== -->
+    <?php portal_render_grid("🖼", "Images", "image", $portal_terms, $portal_id); ?>
+
+    <!-- =============================== -->
+    <!-- BOOKS GRID -->
+    <!-- =============================== -->
+    <?php portal_render_grid("📚", "Books", "book", $portal_terms, $portal_id); ?>
+
 </main>
 
 <?php get_footer(); ?>
