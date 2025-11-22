@@ -30,6 +30,66 @@ function get_wikipedia_intro($slug) {
     ?>
   </div>
 
+
+  <?php
+    // === Related Quotes (from quote CPT) ===
+    $quotes = get_posts([
+      'post_type'      => 'quote',
+      'posts_per_page' => -1,
+      'meta_query'     => [
+        [
+          'key'     => 'quote_source',
+          'value'   => $show_id,
+          'compare' => '='
+        ]
+      ]
+    ]);
+
+    if ($quotes): ?>
+      <div class="related-quotes" style="margin-top:3em; text-align:center;">
+        <h2>Quotes</h2>
+        <ul style="list-style:none; padding:0; display:inline-block; text-align:center;">
+          <?php foreach ($quotes as $quote): ?>
+            <li>
+              <a href="<?php echo get_permalink($quote->ID); ?>">
+                <?php echo esc_html(get_the_title($quote->ID)); ?>
+              </a>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+  <?php endif; ?>
+
+
+  <?php
+    // === Related Excerpts (from excerpt CPT) ===
+    $excerpts = get_posts([
+      'post_type'      => 'excerpt',
+      'posts_per_page' => -1,
+      'meta_query'     => [
+        [
+          'key'     => 'excerpt_source',
+          'value'   => $show_id,
+          'compare' => '='
+        ]
+      ]
+    ]);
+
+    if ($excerpts): ?>
+      <div class="related-excerpts" style="margin-top:3em; text-align:center;">
+        <h2>Excerpts</h2>
+        <ul style="list-style:none; padding:0; display:inline-block; text-align:center;">
+          <?php foreach ($excerpts as $excerpt): ?>
+            <li>
+              <a href="<?php echo get_permalink($excerpt->ID); ?>">
+                <?php echo esc_html(get_the_title($excerpt->ID)); ?>
+              </a>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+  <?php endif; ?>
+
   <?php show_featured_in_threads('shows_referenced'); ?>
 
   <?php get_template_part('content/show-nav'); ?>
