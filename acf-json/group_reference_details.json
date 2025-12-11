@@ -67,6 +67,34 @@
             "append": ""
         },
         {
+            "key": "field_6921e1c0543e6",
+            "label": "Author Profile",
+            "name": "author_profile",
+            "aria-label": "",
+            "type": "post_object",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "post_type": [
+                "profile"
+            ],
+            "post_status": "",
+            "taxonomy": "",
+            "return_format": "object",
+            "multiple": 0,
+            "allow_null": 1,
+            "allow_in_bindings": 0,
+            "bidirectional": 0,
+            "ui": 1,
+            "bidirectional_target": []
+        },
+        {
             "key": "field_url",
             "label": "URL",
             "name": "url",
@@ -197,7 +225,7 @@
             }
         ]
     ],
-    "menu_order": 0,
+    "menu_order": 10,
     "position": "normal",
     "style": "default",
     "label_placement": "top",
@@ -206,5 +234,6 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1757513641
+    "display_title": "",
+    "modified": 1763828196
 }
