@@ -4,7 +4,7 @@ $source = get_field('song'); // Book, Reference, etc.
 
 <div class="person-content">
   <h1><?php the_title(); ?></h1>
-
+<BR>
   <div class="lyric-content">
     <?php the_content(); ?>
   </div>
