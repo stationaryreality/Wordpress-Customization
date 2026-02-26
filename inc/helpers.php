@@ -56,11 +56,13 @@ function cpt_nav_chart_shortcode() {
     $key_cpts = [
         'artist','book','concept','excerpt','fragment','image','lyric',
         'movie','organization','profile','quote','reference','song',
-        'theme','topic','chapter','element', 'show'
+        'theme','topic','chapter','element','show'
     ];
 
     // Collect counts
     $type_counts = [];
+    $grand_total = 0;
+
     foreach ($key_cpts as $cpt) {
         if ($cpt === 'theme' || $cpt === 'topic') {
             $count = wp_count_terms($cpt, ['hide_empty' => false]);
@@ -68,7 +70,9 @@ function cpt_nav_chart_shortcode() {
             $obj = wp_count_posts($cpt);
             $count = isset($obj->publish) ? $obj->publish : 0;
         }
+
         $type_counts[$cpt] = $count;
+        $grand_total += $count;
     }
 
     // Sort alphabetically by display title
@@ -79,10 +83,8 @@ function cpt_nav_chart_shortcode() {
     ob_start();
     ?>
 
-    <!-- Outermost wrapper only centers the box -->
     <div style="display:flex; justify-content:center; width:100%; margin:0.5em 0;">
 
-        <!-- White block (slimmer; centered) -->
         <div style="
             background-color:#ffffff;
             color:#111;
@@ -91,16 +93,22 @@ function cpt_nav_chart_shortcode() {
             box-shadow:0 0 4px rgba(0,0,0,0.15);
             font-size:0.93em;
             line-height:1.35;
-            width:65%;            /* <<< about 30% slimmer than full width */
-            max-width:260px;      /* <<< prevents it from growing too wide */
-            text-align:left;      /* <<< left-justify contents */
+            width:65%;
+            max-width:260px;
+            text-align:left;
         ">
+
+            <!-- Grand Total -->
+            <div style="font-weight:bold; margin-bottom:6px;">
+                Total Entries: <?php echo number_format($grand_total); ?>
+            </div>
+
+            <div style="border-top:1px solid #ddd; margin:6px 0;"></div>
 
             <?php foreach ($key_cpts as $cpt) :
                 $meta = $map[$cpt] ?? null;
                 if (!$meta) continue;
 
-                // Fix special homepage links
                 $link = $meta['link'];
                 if ($cpt === 'chapter')   $link = '/narrative-threads';
                 if ($cpt === 'fragment') $link = '/narrative-episodes';
@@ -112,7 +120,7 @@ function cpt_nav_chart_shortcode() {
                        style="text-decoration:none; color:#111; font-weight:bold;">
                         <?php echo esc_html($meta['title']); ?>
                     </a>
-                    (<?php echo $type_counts[$cpt]; ?>)
+                    (<?php echo number_format($type_counts[$cpt]); ?>)
                 </div>
 
             <?php endforeach; ?>
