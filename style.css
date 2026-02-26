@@ -813,3 +813,16 @@ Version: 1.0
   color: #666;
   font-size: 0.9rem;
 }
+
+.cpt-icon,
+.cpt-emoji,
+.cpt-key-emoji {
+  font-family:
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Noto Color Emoji",
+    system-ui,
+    sans-serif;
+  font-variant-emoji: emoji;
+  line-height: 1;
+}
