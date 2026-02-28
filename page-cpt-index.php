@@ -5,7 +5,7 @@ get_header();
 $post_types = [
  'artist','profile','book','concept','movie','quote','lyric',
  'reference','organization','image','song','chapter',
- 'excerpt','fragment','element'
+ 'excerpt','fragment','element','show'
 ];
 
 $q = new WP_Query([
