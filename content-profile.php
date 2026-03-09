@@ -267,6 +267,8 @@ $references = get_posts([
     <?php wp_reset_postdata(); ?>
   <?php endif; ?>
 
+  <?php show_featured_in_threads('people_referenced'); ?>
+
   <?php get_template_part('content/profile-nav'); ?>
 
 </div>
