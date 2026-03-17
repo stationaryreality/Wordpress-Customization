@@ -90,6 +90,8 @@ if (have_posts()) :
     $quotes = get_posts([
       'post_type'      => 'quote',
       'posts_per_page' => -1,
+      'orderby'        => 'title',
+      'order'          => 'ASC',
       'meta_query'     => [
         [
           'key'     => 'quote_source',
@@ -120,6 +122,8 @@ if (have_posts()) :
     $excerpts = get_posts([
       'post_type'      => 'excerpt',
       'posts_per_page' => -1,
+      'orderby'        => 'title',
+      'order'          => 'ASC',
       'meta_query'     => [
         [
           'key'     => 'excerpt_source',

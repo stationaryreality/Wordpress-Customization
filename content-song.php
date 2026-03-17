@@ -35,6 +35,8 @@ $artist_profile = get_field('song_artist');
 $lyrics = get_posts([
   'post_type'      => 'lyric',
   'posts_per_page' => -1,
+  'orderby'        => 'title',
+  'order'          => 'ASC',
   'meta_query'     => [
     [
       'key'     => 'song',
