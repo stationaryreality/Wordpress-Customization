@@ -25,6 +25,8 @@ $related = get_field('related_concepts'); // ACF relationship field
 
     <?php get_template_part('content/concept-nav'); ?>
 
+    <?php show_featured_in_threads('concepts_referenced'); ?>
+
   <?php
 $concept_title = get_the_title();
 $portal = get_page_by_title($concept_title, OBJECT, 'portal');
@@ -85,7 +87,5 @@ if ($portal || $topic): ?>
     </div>
   </section>
 <?php endif; ?>
-
-<?php show_featured_in_threads('concepts_referenced'); ?>
 
 </div>
