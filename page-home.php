@@ -16,6 +16,7 @@ get_header(); ?>
       'manage-subscription',
       'contact',
       'privacy-policy',
+      'admin-tools-public',
     ],
   ]);
   ?>
