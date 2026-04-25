@@ -5,6 +5,10 @@ $related = get_field('related_concepts'); // ACF relationship field
 <div class="concept-content" style="text-align:center;">
 
   <div class="concept-definition">
+
+        <?php get_template_part('content/concept-nav'); ?>
+        <BR>
+
     <?php the_content(); ?>
   </div>
 
@@ -22,8 +26,6 @@ $related = get_field('related_concepts'); // ACF relationship field
     </div>
   </div>
 <?php endif; ?>
-
-    <?php get_template_part('content/concept-nav'); ?>
 
     <?php show_featured_in_threads('concepts_referenced'); ?>
 
