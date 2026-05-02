@@ -56,7 +56,7 @@ function cpt_nav_chart_shortcode() {
     $key_cpts = [
         'artist','book','concept','excerpt','fragment','image','lyric',
         'movie','organization','profile','quote','reference','song',
-        'theme','topic','chapter','element','show'
+        'theme','topic','chapter','element','show', 'game'
     ];
 
     // Collect counts

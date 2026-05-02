@@ -305,7 +305,7 @@
         },
         {
             "key": "field_68c0744c93f51",
-            "label": "Movies & Organizations",
+            "label": "Movies, Shows, Games & Orgs",
             "name": "",
             "aria-label": "",
             "type": "tab",
@@ -369,6 +369,39 @@
             "relevanssi_exclude": 0,
             "post_type": [
                 "show"
+            ],
+            "post_status": "",
+            "taxonomy": "",
+            "filters": [
+                "search",
+                "post_type",
+                "taxonomy"
+            ],
+            "return_format": "object",
+            "min": "",
+            "max": "",
+            "allow_in_bindings": 1,
+            "elements": "",
+            "bidirectional": 0,
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_69f612bf3c53b",
+            "label": "Games Referenced",
+            "name": "games_referenced",
+            "aria-label": "",
+            "type": "relationship",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "post_type": [
+                "game"
             ],
             "post_status": "",
             "taxonomy": "",
@@ -602,5 +635,7 @@
     "description": "",
     "show_in_rest": 0,
     "display_title": "",
-    "modified": 1772301933
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1777734463
 }

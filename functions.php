@@ -20,7 +20,9 @@ add_action('load-edit.php', function () {
         'movie',
         'profile',
         'image',
-        'excerpt'
+        'excerpt',
+        'show',
+        'game'
     );
 
     if (in_array($screen->post_type, $alphabetical_cpts)) {
@@ -139,6 +141,7 @@ function get_cpt_metadata($cpt_name = '') {
         'fragment'          => ['title' => 'Narrative Episodes',        'emoji' => '📜', 'link' => '/narrative-episodes/'],
         'element'           => ['title' => 'Narrative Elements',        'emoji' => '⚛️', 'link' => '/narrative-elements/'],
         'show'              => ['title' => 'TV Shows Referenced',       'emoji' => '📺', 'link' => '/tv-shows-referenced/'],
+        'game'              => ['title' => 'Video Games',               'emoji' => '🎮', 'link' => '/video-games/'],
 
 
     ];
