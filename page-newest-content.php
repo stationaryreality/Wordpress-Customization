@@ -1,8 +1,8 @@
 <?php
-/* Template Name: Newest Content (Chronological) */
+/* Template Name: Recent Additions (Minimal) */
 get_header();
 
-$map = get_cpt_metadata();
+/* ===== CONFIG ===== */
 
 $post_types = [
  'artist','profile','book','concept','movie','quote','lyric',
@@ -10,133 +10,78 @@ $post_types = [
  'excerpt','fragment','element','show', 'game'
 ];
 
-$icons = [];
-foreach ($post_types as $pt) {
-    $icons[$pt] = $map[$pt]['emoji'] ?? '❓';
-}
+$limit = 400;
 
-/* ===== QUERY POSTS ===== */
+/* ===== QUERY ===== */
+
 $q = new WP_Query([
- 'post_type'=>$post_types,
- 'posts_per_page'=>-1,
- 'orderby'=>'date',
- 'order'=>'DESC',
- 'post_status'=>'publish'
+  'post_type'      => $post_types,
+  'posts_per_page' => $limit,
+  'orderby'        => 'date',
+  'order'          => 'DESC',
+  'post_status'    => 'publish'
 ]);
 
-$tree = [];
-$total_count = 0;
+$posts = $q->posts;
 
-/* ===== POSTS ===== */
-while ($q->have_posts()) {
-$q->the_post();
+/* ===== GROUP BY MONTH ===== */
 
-$t = get_post_time('U');
+$grouped = [];
 
-$y=date('Y',$t);
-$m=date('n',$t);
-$d=date('j',$t);
-
-$tree[$y][$m][$d][]=[
- 'title'=>get_the_title(),
- 'url'=>get_permalink(),
- 'time'=>date('H:i',$t),
- 'icon'=>$icons[get_post_type()]
-];
-
-$total_count++;
-}
-wp_reset_postdata();
-
-/* ===== TAXONOMY TERMS ===== */
-foreach (['theme','topic'] as $tax) {
-
-  $terms = get_terms([
-    'taxonomy'=>$tax,
-    'hide_empty'=>false
-  ]);
-
-  foreach ($terms as $t_obj) {
-
-    // Use term creation proxy (first associated post date)
-    $term_posts = get_posts([
-        'post_type'=>$post_types,
-        'posts_per_page'=>1,
-        'orderby'=>'date',
-        'order'=>'DESC',
-        'tax_query'=>[
-            [
-                'taxonomy'=>$tax,
-                'field'=>'term_id',
-                'terms'=>$t_obj->term_id
-            ]
-        ]
-    ]);
-
-    if (!$term_posts) continue;
-
-    $t = get_post_time('U', false, $term_posts[0]);
-
-    $y=date('Y',$t);
-    $m=date('n',$t);
-    $d=date('j',$t);
-
-    $meta  = get_cpt_metadata($tax);
-    $emoji = $meta['emoji'] ?? '•';
-
-    $tree[$y][$m][$d][]=[
-      'title'=>$t_obj->name,
-      'url'=>get_term_link($t_obj),
-      'time'=>date('H:i',$t),
-      'icon'=>$emoji
-    ];
-
-    $total_count++;
-  }
-}
-
-/* ===== FORCE ORDER ===== */
-krsort($tree);
-foreach ($tree as &$months){
-    krsort($months);
-    foreach ($months as &$days){
-        krsort($days);
-    }
+foreach ($posts as $p) {
+  $month = date('F Y', strtotime($p->post_date));
+  $grouped[$month][] = $p;
 }
 ?>
 
-<main class="cpt-index-chronological">
+<main class="cpt-index-clean">
 
 <header class="archive-header">
-<h1>Newest Content</h1>
+  <h1><?php the_title(); ?></h1>
 
-<p class="cpt-total" style="margin:0.75em 0 1.5em 0;">
-<?php echo number_format($total_count); ?> total entries
-</p>
+  <p style="margin:0.75em 0 1.5em 0;">
+    Showing latest <?php echo $limit; ?> additions
+  </p>
 
-<p><a href="/site-index/">← Alphabetical Index</a></p>
+  <p style="margin:1.5em 0;">
+    <a href="/site-index/">← View Alphabetical Index</a>
+  </p>
 </header>
 
-<?php foreach ($tree as $year=>$months): ?>
-<h2><?php echo $year; ?></h2>
+<?php foreach ($grouped as $month => $items): ?>
 
-<?php foreach ($months as $month=>$days): ?>
-<h3><?php echo date('F', mktime(0,0,0,$month,1)); ?></h3>
+  <h2 style="margin-top:2em;"><?php echo esc_html($month); ?></h2>
 
-<?php foreach ($days as $day=>$items): ?>
-<h4><?php echo $day; ?></h4>
+  <ul class="cpt-clean-list">
 
-<ul>
-<?php foreach ($items as $item): ?>
-<li>
-<span class="cpt-icon"><?php echo $item['icon']; ?></span>
-<a href="<?php echo $item['url']; ?>"><?php echo $item['title']; ?></a>
-</li>
-<?php endforeach; ?>
-</ul>
+  <?php foreach ($items as $post_obj):
 
-<?php endforeach; ?>
-<?php endforeach; ?>
+    $post_id = $post_obj->ID;
+    $type = get_post_type($post_id);
+
+    $meta  = get_cpt_metadata($type);
+    $emoji = $meta['emoji'] ?? '•';
+
+    $date = get_the_date('Y-m-d', $post_id);
+
+  ?>
+
+    <li>
+      <span class="entry-emoji"><?php echo esc_html($emoji); ?></span>
+
+      <a href="<?php echo esc_url(get_permalink($post_id)); ?>" target="_blank" rel="noopener">
+        <?php echo esc_html(get_the_title($post_id)); ?>
+      </a>
+
+      <span class="entry-date" style="margin-left:10px; opacity:0.6;">
+        <?php echo esc_html($date); ?>
+      </span>
+    </li>
+
+  <?php endforeach; ?>
+
+  </ul>
+
 <?php endforeach; ?>
 
 </main>
