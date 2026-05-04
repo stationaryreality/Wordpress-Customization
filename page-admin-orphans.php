@@ -8,7 +8,7 @@ $excluded_types = ['chapter','fragment','element'];
 
 $all_types = [
  'profile','book','movie','quote','lyric',
- 'reference','organization','image','song','excerpt','show'
+ 'reference','organization','image','song','excerpt','show','game'
 ];
 
 /* Relationship fields */
