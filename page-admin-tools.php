@@ -18,6 +18,7 @@ $allowed_tools = [
   'footnotes',
   'index',
   'inspector',
+  'live-filter',
   'live-search',
   'media-library',
   'newest',
@@ -77,11 +78,18 @@ Public admin tools for exploring site structure, taxonomy behavior, and a visual
       Media Library
     </a>
 
-       <!-- LIVE SEARCH -->
+    <!-- LIVE FILTER -->
+
+    <a href="?tool=live-filter"
+       class="<?php echo $tool === 'live-filter' ? 'active' : ''; ?>">
+      Live Content Filter
+    </a>
+
+    <!-- LIVE SEARCH -->
 
     <a href="?tool=live-search"
        class="<?php echo $tool === 'live-search' ? 'active' : ''; ?>">
-      Live Content Explorer
+      Live Content Search
     </a>
 
     <!-- NEWEST -->
@@ -144,6 +152,12 @@ elseif ($tool === 'index') {
 elseif ($tool === 'inspector') {
 
   get_template_part('template-parts/tools/tool', 'inspector');
+
+}
+
+elseif ($tool === 'live-filter') {
+
+  get_template_part('template-parts/tools/tool', 'live-filter');
 
 }
 

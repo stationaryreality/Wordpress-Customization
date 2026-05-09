@@ -977,3 +977,19 @@ Version: 1.0
 .tool-live-search .entry-emoji {
     margin-right: 0.5rem;
 }
+
+.live-search-export {
+    margin-top: 2rem;
+}
+
+.live-search-export button {
+    margin-bottom: 1rem;
+}
+
+.live-search-export textarea {
+    width: 100%;
+    min-height: 220px;
+    padding: 1rem;
+    font-family: monospace;
+    font-size: 0.95rem;
+}

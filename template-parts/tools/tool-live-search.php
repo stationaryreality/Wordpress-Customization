@@ -2,7 +2,7 @@
 
 /*
 |--------------------------------------------------------------------------
-| Live Content Explorer
+| Live Content Search
 |--------------------------------------------------------------------------
 */
 
@@ -29,31 +29,49 @@ $post_types = [
 
 $map = get_cpt_metadata();
 
-$entries = [];
+$search = isset($_GET['q'])
+    ? sanitize_text_field($_GET['q'])
+    : '';
 
-$q = new WP_Query([
-    'post_type'      => $post_types,
-    'posts_per_page' => -1,
-    'post_status'    => 'publish',
-    'orderby'        => 'title',
-    'order'          => 'ASC'
-]);
+$results = [];
 
-while ($q->have_posts()) {
+if (!empty($search)) {
 
-    $q->the_post();
+    $q = new WP_Query([
+        'post_type'      => $post_types,
+        'posts_per_page' => -1,
+        'post_status'    => 'publish',
+        's'              => $search,
+        'relevanssi'     => true,
+    ]);
 
-    $type = get_post_type();
+    /*
+    |--------------------------------------------------------------------------
+    | Relevanssi
+    |--------------------------------------------------------------------------
+    */
 
-    $entries[] = [
-        'title' => get_the_title(),
-        'url'   => get_permalink(),
-        'type'  => $type,
-        'emoji' => $map[$type]['emoji'] ?? '•'
-    ];
+    if (function_exists('relevanssi_do_query')) {
+        relevanssi_do_query($q);
+    }
+
+    while ($q->have_posts()) {
+
+        $q->the_post();
+
+        $type = get_post_type();
+
+        $results[] = [
+            'id'    => get_the_ID(),
+            'title' => get_the_title(),
+            'url'   => get_permalink(),
+            'type'  => $type,
+            'emoji' => $map[$type]['emoji'] ?? '•'
+        ];
+    }
+
+    wp_reset_postdata();
 }
-
-wp_reset_postdata();
 
 ?>
 
@@ -61,11 +79,10 @@ wp_reset_postdata();
 
 <header class="tool-header">
 
-    <h2>Live Content Explorer</h2>
+    <h2>Plain Content Search</h2>
 
     <p>
-        Instantly filter and explore all published content
-        across the site.
+        Search titles and content across all published CPTs.
     </p>
 
 </header>
@@ -74,26 +91,47 @@ wp_reset_postdata();
 <!-- SEARCH -->
 <!-- ====================================================== -->
 
-<div class="live-search-box">
+<form method="get" class="live-search-box">
 
-    <input type="text"
-           id="liveSearch"
-           placeholder="Type to explore content...">
+    <input
+        type="hidden"
+        name="tool"
+        value="live-search"
+    >
 
-</div>
+    <input
+        type="text"
+        name="q"
+        value="<?php echo esc_attr($search); ?>"
+        placeholder="Search content..."
+    >
+
+    <button type="submit">
+        Search
+    </button>
+
+</form>
 
 <!-- ====================================================== -->
 <!-- RESULTS -->
 <!-- ====================================================== -->
 
+<?php if (!empty($search)): ?>
+
 <div class="live-search-results">
+
+    <p style="margin-bottom:1rem;">
+        <?php echo count($results); ?> results found
+    </p>
 
     <ul id="liveSearchList">
 
-        <?php foreach ($entries as $e): ?>
+        <?php foreach ($results as $e): ?>
 
-            <li data-title="<?php echo esc_attr(strtolower($e['title'])); ?>"
-                data-type="<?php echo esc_attr($e['type']); ?>">
+            <li
+                data-type="<?php echo esc_attr($e['type']); ?>"
+                data-id="<?php echo intval($e['id']); ?>"
+            >
 
                 <span class="entry-emoji">
                     <?php echo esc_html($e['emoji']); ?>
@@ -118,6 +156,29 @@ wp_reset_postdata();
 
 </div>
 
+<!-- ====================================================== -->
+<!-- EXPORT -->
+<!-- ====================================================== -->
+
+<div class="live-search-export">
+
+    <button type="button"
+            onclick="generateIdExport()">
+
+        Generate ID Export
+
+    </button>
+
+    <textarea
+        id="idExportOutput"
+        readonly
+        placeholder="Grouped CPT IDs will appear here..."
+    ></textarea>
+
+</div>
+
+<?php endif; ?>
+
 </section>
 
 <!-- ====================================================== -->
@@ -126,29 +187,37 @@ wp_reset_postdata();
 
 <script>
 
-document.addEventListener('DOMContentLoaded', function() {
+function generateIdExport() {
 
-    const input = document.getElementById('liveSearch');
     const items = document.querySelectorAll('#liveSearchList li');
 
-    input.addEventListener('input', function() {
+    const grouped = {};
 
-        const q = this.value.toLowerCase().trim();
+    items.forEach(item => {
 
-        items.forEach(item => {
+        const type = item.dataset.type;
+        const id   = item.dataset.id;
 
-            const title = item.dataset.title;
+        if (!grouped[type]) {
+            grouped[type] = [];
+        }
 
-            if (title.includes(q)) {
-                item.style.display = '';
-            } else {
-                item.style.display = 'none';
-            }
-
-        });
+        grouped[type].push(id);
 
     });
 
-});
+    let output = '';
+
+    Object.keys(grouped).sort().forEach(type => {
+
+        output += type + ': ';
+        output += grouped[type].join(',');
+        output += "\n\n";
+
+    });
+
+    document.getElementById('idExportOutput').value = output;
+
+}
 
 </script>

@@ -204,6 +204,12 @@ function portal_pages_list() {
 add_shortcode('portal_pages', 'portal_pages_list');
 
 
+// 2026-05-09
+
+//require_once get_template_directory() . '/inc/admin/admin-menu.php';
+//require_once get_template_directory() . '/inc/admin/admin-content-operations.php';
+//require_once get_template_directory() . '/inc/admin/admin-cpt-menu-order.php';
+
 // 2025-8-18
 require_once get_stylesheet_directory() . '/inc/breadcrumbs.php';
 
