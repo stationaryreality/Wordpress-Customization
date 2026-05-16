@@ -532,7 +532,7 @@
         },
         {
             "key": "field_68c0756064817",
-            "label": "Images & References",
+            "label": "Images, Videos & Refs",
             "name": "",
             "aria-label": "",
             "type": "tab",
@@ -566,6 +566,39 @@
             "relevanssi_exclude": 0,
             "post_type": [
                 "image"
+            ],
+            "post_status": "",
+            "taxonomy": "",
+            "filters": [
+                "search",
+                "post_type",
+                "taxonomy"
+            ],
+            "return_format": "object",
+            "min": "",
+            "max": "",
+            "allow_in_bindings": 1,
+            "elements": "",
+            "bidirectional": 0,
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_6a034d24e0165",
+            "label": "Videos Linked",
+            "name": "videos_linked",
+            "aria-label": "",
+            "type": "relationship",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "post_type": [
+                "video"
             ],
             "post_status": "",
             "taxonomy": "",
@@ -637,5 +670,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1777734306
+    "modified": 1778767697
 }

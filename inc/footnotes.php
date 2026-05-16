@@ -44,6 +44,7 @@ foreach (get_cpt_metadata() as $cpt => $meta) {
         'fn_organizations',
         'fn_references',
         'fn_images',
+        'fn_cptvideos',
         'fn_concepts',
         'fn_topics',
         'fn_themes',

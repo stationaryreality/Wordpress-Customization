@@ -15,6 +15,7 @@ $tool = $_GET['tool'] ?? 'newest';
 
 $allowed_tools = [
   'chapters-by-song',
+  'content-density',
   'footnotes',
   'index',
   'inspector',
@@ -38,7 +39,6 @@ if (!in_array($tool, $allowed_tools)) {
   <h1><?php the_title(); ?></h1>
 
   <p class="archive-description">
-Public admin tools for exploring site structure, taxonomy behavior, and a visual archive of published media attachments.
   </p>
 
   <nav class="admin-tools-nav"
@@ -49,6 +49,13 @@ Public admin tools for exploring site structure, taxonomy behavior, and a visual
     <a href="?tool=chapters-by-song"
        class="<?php echo $tool === 'chapters-by-song' ? 'active' : ''; ?>">
       Chapters by Song (Table)
+    </a>
+
+    <!-- CONTENT DENSITY -->
+
+    <a href="?tool=content-density"
+       class="<?php echo $tool === 'content-density' ? 'active' : ''; ?>">
+      Content Density Analyzer
     </a>
 
         <!-- FOOTNOTES -->
@@ -106,11 +113,29 @@ Public admin tools for exploring site structure, taxonomy behavior, and a visual
       Orphaned CPTs
     </a>
 
+    <!-- Portals -->
+
+    <a href="/portals/" target="_blank">
+      Portals (Link)
+    </a>
+
     <!-- TAG AUDIT -->
 
     <a href="?tool=tag-audit"
        class="<?php echo $tool === 'tag-audit' ? 'active' : ''; ?>">
       Tag Audit
+    </a>
+
+    <!-- THEMES -->
+
+    <a href="/themes/" target="_blank">
+      Themes (Link)
+    </a>
+
+    <!-- TOPICS -->
+
+    <a href="/topics/" target="_blank">
+      Topics (Link)
     </a>
 
     <!-- XML SITEMAP -->
@@ -134,6 +159,12 @@ Public admin tools for exploring site structure, taxonomy behavior, and a visual
 if ($tool === 'chapters-by-song') {
 
   get_template_part('template-parts/tools/tool', 'chapters-by-song');
+
+}
+
+elseif ($tool === 'content-density') {
+
+  get_template_part('template-parts/tools/tool', 'content-density');
 
 }
 

@@ -20,42 +20,6 @@ get_header(); ?>
   ]);
   ?>
 
-  <hr style="margin: 4em auto; max-width: 80%; border: 0; border-top: 1px solid #ccc;">
-
-  <!-- Narrative Threads Section -->
-  <a id="narrative-threads"></a>
-  <section>
-    <?php
-    get_template_part('template-parts/chapter', 'grid', [
-      'title' => 'Narrative Threads',
-    ]);
-    ?>
-  </section>
-
-  <hr style="margin: 4em auto; max-width: 80%; border: 0; border-top: 1px solid #ccc;">
-
-  <!-- Portal Pages Section -->
-  <a id="portal-pages"></a>
-  <section>
-    <?php
-    get_template_part('template-parts/portal', 'grid', [
-      'title' => 'Portal Pages',
-    ]);
-    ?>
-  </section>
-
-  <hr style="margin: 4em auto; max-width: 80%; border: 0; border-top: 1px solid #ccc;">
-
-  <!-- Narrative Fragments Section -->
-  <a id="narrative-fragments"></a>
-  <section>
-    <?php
-    get_template_part('template-parts/fragment', 'grid', [
-      'title' => 'Narrative Episodes',
-    ]);
-    ?>
-  </section>
-
 </main>
 
 <?php get_footer(); ?>

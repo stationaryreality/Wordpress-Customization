@@ -142,7 +142,7 @@ function get_cpt_metadata($cpt_name = '') {
         'element'           => ['title' => 'Narrative Elements',        'emoji' => '⚛️', 'link' => '/narrative-elements/'],
         'show'              => ['title' => 'TV Shows Referenced',       'emoji' => '📺', 'link' => '/tv-shows-referenced/'],
         'game'              => ['title' => 'Video Games',               'emoji' => '🎮', 'link' => '/video-games/'],
-
+        'video'             => ['title' => 'Video Room',                'emoji' => '📼', 'link' => '/video-room/'],
 
     ];
 
