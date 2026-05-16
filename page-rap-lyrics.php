@@ -1,10 +1,10 @@
 <?php
 /**
- * Template Name: Lyrics Directory
+ * Template Name: Rap Lyrics
  */
 get_header();
 
-$lyrics_query = new WP_Query([
+$rap_lyrics_query = new WP_Query([
   'post_type'      => 'lyric',
   'posts_per_page' => -1,
   'orderby'        => 'title',
@@ -14,15 +14,15 @@ $lyrics_query = new WP_Query([
       'taxonomy' => 'song_category',
       'field'    => 'slug',
       'terms'    => ['rap'],
-      'operator' => 'NOT IN',
+      'operator' => 'IN',
     ],
   ],
 ]);
 
 get_template_part('template-parts/lyric', 'grid', [
-  'query' => $lyrics_query,
-  'title' => 'Lyrics',
-  'emoji' => '🎼',
+  'query' => $rap_lyrics_query,
+  'title' => 'Rap Lyrics',
+  'emoji' => '🎤',
 ]);
 
 get_footer();
