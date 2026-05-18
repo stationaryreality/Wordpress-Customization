@@ -149,6 +149,190 @@ function get_cpt_metadata($cpt_name = '') {
     return $cpt_name ? ($all[$cpt_name] ?? null) : $all;
 }
 
+/*
+|--------------------------------------------------------------------------
+| Homepage Navigation Configuration
+|--------------------------------------------------------------------------
+| Central source of truth for homepage + sidebar navigation
+|--------------------------------------------------------------------------
+*/
+
+function site_get_navigation_sections() {
+
+    return [
+
+        'Narrative Content' => [
+            [
+                'title'       => 'Narrative Threads',
+                'slug'        => 'narrative-threads',
+                'description' => 'Large-scale interconnected narrative structures',
+            ],
+            [
+                'title'       => 'Narrative Episodes',
+                'slug'        => 'narrative-episodes',
+                'description' => 'Coherent, self-contained units offering insight in compact form',
+            ],
+            [
+                'title'       => 'Narrative Elements',
+                'slug'        => 'narrative-elements',
+                'description' => 'Characters, concepts, motifs, and recurring structures',
+            ],
+        ],
+
+                'Site Resources' => [
+            [
+                'title'       => 'Newest Content',
+                'slug'        => 'newest-content',
+                'description' => 'Recently added material across the site',
+            ],
+
+            [
+                'title'       => 'Behind the Build',
+                'slug'        => 'developer-notes',
+                'description' => 'Development notes and site construction insights',
+            ],
+
+            [
+                'title'       => 'Site Index',
+                'slug'        => 'site-index',
+                'description' => 'Complete index of available site content',
+            ],
+
+        ],
+
+        'Media & Music' => [
+                        [
+                'title'       => 'Song Excerpts',
+                'slug'        => 'song-excerpts',
+                'description' => 'Lyrics and excerpts connected to site themes',
+            ],
+                        [
+                'title'       => 'Image Gallery',
+                'slug'        => 'image-gallery',
+                'description' => 'Visual material and related imagery',
+            ],
+                        [
+                'title'       => 'Video Room',
+                'slug'        => 'video-room',
+                'description' => 'Video content and media collections',
+            ],
+            [
+                'title'       => 'Movies Referenced',
+                'slug'        => 'movies-referenced',
+                'description' => 'Films referenced throughout the site',
+            ],
+            [
+                'title'       => 'TV Shows Referenced',
+                'slug'        => 'tv-shows-referenced',
+                'description' => 'Television references and related material',
+            ],
+            [
+                'title'       => 'Video Games',
+                'slug'        => 'video-games',
+                'description' => 'Games referenced within the narrative structure',
+            ],
+            [
+                'title'       => 'Artists Featured',
+                'slug'        => 'artists-featured',
+                'description' => 'Artists referenced throughout the narrative system',
+            ],
+            [
+                'title'       => 'Songs Featured',
+                'slug'        => 'songs-featured',
+                'description' => 'Songs tied to narrative and thematic structures',
+            ],
+
+            [
+                'title'       => 'Rap Pages',
+                'slug'        => 'rap-pages',
+                'description' => 'Rap artists, songs, and lyrics grouped together',
+            ],
+        ],
+
+        'Research' => [
+
+            [
+                'title'       => 'Excerpt Library',
+                'slug'        => 'excerpt-library',
+                'description' => 'Curated excerpts and reference material',
+            ],
+            [
+                'title'       => 'Quote Library',
+                'slug'        => 'quote-library',
+                'description' => 'Standalone quotations and citations',
+            ],
+                                    [
+                'title'       => 'Portal Pages',
+                'slug'        => 'portal-pages',
+                'description' => 'Curated entry points into major areas of the site',
+            ],
+                                    [
+                'title'       => 'People Referenced',
+                'slug'        => 'people-referenced',
+                'description' => 'People referenced throughout the site',
+            ],
+                        [
+                'title'       => 'Books Cited',
+                'slug'        => 'books-cited',
+                'description' => 'Books referenced throughout the site',
+            ],
+            [
+                'title'       => 'Lexicon',
+                'slug'        => 'lexicon',
+                'description' => 'Definitions and conceptual terminology',
+            ],
+            [
+                'title'       => 'Organizations',
+                'slug'        => 'organizations',
+                'description' => 'Referenced groups, institutions, and entities',
+            ],
+                                [
+                'title'       => 'Site Tools',
+                'slug'        => 'site-tools',
+                'description' => 'Public utility tools and navigation helpers',
+            ],
+            [
+                'title'       => 'Research Sources',
+                'slug'        => 'research-sources',
+                'description' => 'Primary and secondary research materials',
+            ],
+
+            [
+                'title'       => 'Topics',
+                'slug'        => 'topics',
+                'description' => 'Topical organization across the site',
+            ],
+            [
+                'title'       => 'Themes',
+                'slug'        => 'themes',
+                'description' => 'Major recurring conceptual themes',
+            ],
+        ],
+
+        'Utility' => [
+
+
+                        [
+                'title'       => 'Get Updates',
+                'slug'        => 'get-updates',
+                'description' => 'Subscribe and receive updates',
+            ],
+                                    [
+                'title'       => 'Contact',
+                'slug'        => 'contact',
+                'description' => 'Contact Site Author',
+            ],
+                                    [
+                'title'       => 'Privacy Policy',
+                'slug'        => 'privacy-policy',
+                'description' => 'Privacy Policy',
+            ],
+            
+        ],
+
+    ];
+}
+
 
 // Narrative Thread Pages Shortcode for Nav
 function narrative_threads_list() {
@@ -177,7 +361,78 @@ function narrative_threads_list() {
 add_shortcode('narrative_threads', 'narrative_threads_list');
 
 
-// Portal Pages Shortcode for Nav
+/*
+|--------------------------------------------------------------------------
+| Sidebar Navigation Shortcode
+|--------------------------------------------------------------------------
+| Usage:
+| [site_sidebar_navigation]
+|--------------------------------------------------------------------------
+*/
+
+function site_sidebar_navigation_shortcode() {
+
+    $sections = site_get_navigation_sections();
+
+    ob_start();
+
+    foreach ($sections as $section_title => $pages) {
+
+        echo '<div class="sidebar-nav-section">';
+
+        echo '<h2 class="sidebar-nav-heading">' . esc_html($section_title) . '</h2>';
+
+        foreach ($pages as $item) {
+
+            $page = get_page_by_path($item['slug']);
+
+            if (!$page) {
+                continue;
+            }
+
+            $image = get_the_post_thumbnail_url($page->ID, 'medium');
+
+            ?>
+
+            <div style="text-align:center; margin-bottom:1.5rem;">
+
+                <a href="<?php echo get_permalink($page->ID); ?>">
+
+                    <h3 style="margin-bottom:0.5em;">
+                        <?php echo esc_html($item['title']); ?>
+                    </h3>
+
+                    <?php if ($image) : ?>
+
+                        <img
+                            src="<?php echo esc_url($image); ?>"
+                            alt="<?php echo esc_attr($item['title']); ?>"
+                            width="300"
+                            class="nav-image"
+                        >
+
+                    <?php endif; ?>
+
+                </a>
+
+                <div style="font-size:13px; margin-top:0.5em;">
+                    <?php echo esc_html($item['description']); ?>
+                </div>
+
+            </div>
+
+            <?php
+        }
+
+        echo '</div>';
+    }
+
+    return ob_get_clean();
+}
+add_shortcode('site_sidebar_navigation', 'site_sidebar_navigation_shortcode');
+
+
+// Portal Pages Shortcode for Nav - Not sure if even using anymore
 function portal_pages_list() {
     $output = '<ul>';
 
