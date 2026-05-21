@@ -185,19 +185,28 @@ function site_get_navigation_sections() {
                 'slug'        => 'newest-content',
                 'description' => 'Recently added material across the site',
             ],
+                                                [
+                'title'       => 'Portal Pages',
+                'slug'        => 'portal-pages',
+                'description' => 'Curated entry points into major areas of the site',
+            ],
 
-            [
+                                            [
+                'title'       => 'Site Index & Tools',
+                'slug'        => 'site-tools',
+                'description' => 'Public utility tools and navigation helpers',
+            ],
+  [
                 'title'       => 'Behind the Build',
                 'slug'        => 'developer-notes',
                 'description' => 'Development notes and site construction insights',
             ],
 
-            [
-                'title'       => 'Site Index',
-                'slug'        => 'site-index',
-                'description' => 'Complete index of available site content',
+                                    [
+                'title'       => 'Get Updates',
+                'slug'        => 'get-updates',
+                'description' => 'Subscribe and receive updates',
             ],
-
         ],
 
         'Media & Music' => [
@@ -261,11 +270,7 @@ function site_get_navigation_sections() {
                 'slug'        => 'quote-library',
                 'description' => 'Standalone quotations and citations',
             ],
-                                    [
-                'title'       => 'Portal Pages',
-                'slug'        => 'portal-pages',
-                'description' => 'Curated entry points into major areas of the site',
-            ],
+
                                     [
                 'title'       => 'People Referenced',
                 'slug'        => 'people-referenced',
@@ -286,16 +291,6 @@ function site_get_navigation_sections() {
                 'slug'        => 'organizations',
                 'description' => 'Referenced groups, institutions, and entities',
             ],
-                                [
-                'title'       => 'Site Tools',
-                'slug'        => 'site-tools',
-                'description' => 'Public utility tools and navigation helpers',
-            ],
-            [
-                'title'       => 'Research Sources',
-                'slug'        => 'research-sources',
-                'description' => 'Primary and secondary research materials',
-            ],
 
             [
                 'title'       => 'Topics',
@@ -309,26 +304,6 @@ function site_get_navigation_sections() {
             ],
         ],
 
-        'Utility' => [
-
-
-                        [
-                'title'       => 'Get Updates',
-                'slug'        => 'get-updates',
-                'description' => 'Subscribe and receive updates',
-            ],
-                                    [
-                'title'       => 'Contact',
-                'slug'        => 'contact',
-                'description' => 'Contact Site Author',
-            ],
-                                    [
-                'title'       => 'Privacy Policy',
-                'slug'        => 'privacy-policy',
-                'description' => 'Privacy Policy',
-            ],
-            
-        ],
 
     ];
 }
@@ -415,9 +390,6 @@ function site_sidebar_navigation_shortcode() {
 
                 </a>
 
-                <div style="font-size:13px; margin-top:0.5em;">
-                    <?php echo esc_html($item['description']); ?>
-                </div>
 
             </div>
 

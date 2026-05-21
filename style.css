@@ -12,31 +12,6 @@
 /* =Theme customization starts here
 -------------------------------------------------------------- */
 
-/* ============== LIST STYLES: Post Status Icons ============== */
-ul {
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
-}
-
-.post-item {
-  display: flex;
-  align-items: flex-start;
-  padding-left: 0;
-}
-
-.post-item::before {
-  content: '⚪';
-  margin-right: 8px;
-  font-size: 13px;
-}
-
-/* Status variations */
-.stable::before { content: '⚪'; }
-.newest::before { content: '🔵'; }
-.progress::before { content: '🟡'; }
-.draft::before   { content: '🟠'; }
-.updated::before { content: '🟢'; }
 
 /* ============== NAVIGATION BAR ADJUSTMENTS ============== */
 
@@ -1091,4 +1066,3 @@ Version: 1.0
 .sidebar-nav-heading {
     text-align: center;
 }
-
