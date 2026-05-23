@@ -180,16 +180,22 @@ function site_get_navigation_sections() {
         ],
 
                 'Site Resources' => [
+                                                                                        [
+                'title'       => 'Top Content',
+                'slug'        => 'top-content',
+                'description' => 'Top Excerpts, Quotes, and Lyrics',
+            ],
+                                                                    [
+                'title'       => 'Portal Pages',
+                'slug'        => 'portal-pages',
+                'description' => 'Curated entry points into major areas of the site',
+            ],
             [
                 'title'       => 'Newest Content',
                 'slug'        => 'newest-content',
                 'description' => 'Recently added material across the site',
             ],
-                                                [
-                'title'       => 'Portal Pages',
-                'slug'        => 'portal-pages',
-                'description' => 'Curated entry points into major areas of the site',
-            ],
+
 
                                             [
                 'title'       => 'Site Index & Tools',
@@ -270,6 +276,11 @@ function site_get_navigation_sections() {
                 'slug'        => 'quote-library',
                 'description' => 'Standalone quotations and citations',
             ],
+                        [
+                'title'       => 'Lexicon',
+                'slug'        => 'lexicon',
+                'description' => 'Definitions and conceptual terminology',
+            ],
 
                                     [
                 'title'       => 'People Referenced',
@@ -281,11 +292,7 @@ function site_get_navigation_sections() {
                 'slug'        => 'books-cited',
                 'description' => 'Books referenced throughout the site',
             ],
-            [
-                'title'       => 'Lexicon',
-                'slug'        => 'lexicon',
-                'description' => 'Definitions and conceptual terminology',
-            ],
+
             [
                 'title'       => 'Organizations',
                 'slug'        => 'organizations',
