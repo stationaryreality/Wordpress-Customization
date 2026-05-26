@@ -58,7 +58,7 @@
 .tag-post-thumbnail img {
   width: 100%;
   height: auto;
-  max-height: 140px;
+  max-height: 115px;
   object-fit: cover;
   border-radius: 8px;
 }

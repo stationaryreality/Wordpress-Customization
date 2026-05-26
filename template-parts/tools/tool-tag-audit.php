@@ -3,9 +3,7 @@
 /* ===== CONFIG ===== */
 
 $all_types = [
- 'profile','book','movie','quote','lyric',
- 'reference','organization','image','song',
- 'excerpt','show','game'
+ 'book','quote','lyric','image','excerpt','show',
 ];
 
 $mode = $_GET['mode'] ?? 'missing-both';

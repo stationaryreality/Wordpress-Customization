@@ -51,6 +51,14 @@ $sections = [
     'description' => 'Curated visual works from across the archive.',
 ],
 
+    'portals' => [
+    'title'       => 'Portals',
+    'post_type'   => 'portal',
+    'theme_slug'  => 'top-portals',
+    'layout'      => 'grid',
+    'description' => 'Curated works from across the archive.',
+],
+
     'quotes' => [
         'title'       => 'Quotes',
         'post_type'   => 'quote',
@@ -768,11 +776,11 @@ $query = new WP_Query([
     <footer class="top-content-footer">
 
             <a href="/narrative-threads/">
-            Full Narrative Threads
+            Full Threads
         </a>
 
                 <a href="/narrative-episodes/">
-            Full Narrative Episodes
+            Full Episodes
         </a>
 
         <a href="/song-excerpts/">
@@ -785,6 +793,10 @@ $query = new WP_Query([
 
                 <a href="/image-gallery/">
             Full Image Gallery
+        </a>
+
+                <a href="/portals/">
+            Full Portals
         </a>
 
         <a href="/quote-library/">

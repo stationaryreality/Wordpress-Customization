@@ -5,8 +5,10 @@
 | ACF / Relationship Inspector
 |--------------------------------------------------------------------------
 |
-| Public object inspector for CPT relationships,
-| metadata, taxonomies, and structural debugging.
+| Optimized inspector:
+| 1. First dropdown = CPT type only
+| 2. Second dropdown loads ONLY posts for selected CPT
+| 3. Prevents massive 2,000+ option rendering
 |
 */
 
@@ -30,6 +32,10 @@ $cpts = [
     'show'         => '📺 TV Shows Referenced',
     'game'         => '🎮 Video Games',
 ];
+
+$selected_cpt = isset($_GET['inspector_cpt'])
+    ? sanitize_text_field($_GET['inspector_cpt'])
+    : '';
 
 $selected_post_id = isset($_GET['inspector_post'])
     ? intval($_GET['inspector_post'])
@@ -58,50 +64,82 @@ $selected_post_id = isset($_GET['inspector_post'])
 
     <input type="hidden" name="tool" value="inspector">
 
-    <label for="inspector_post">
-        Select Entry
+    <!-- ============================================== -->
+    <!-- CPT SELECT -->
+    <!-- ============================================== -->
+
+    <label for="inspector_cpt">
+        Select Content Type
     </label>
 
-    <select name="inspector_post"
-            id="inspector_post"
+    <select name="inspector_cpt"
+            id="inspector_cpt"
             onchange="this.form.submit()">
 
         <option value="">
-            -- Select Entry --
+            -- Select Content Type --
         </option>
 
         <?php foreach ($cpts as $pt => $label): ?>
 
-            <optgroup label="<?php echo esc_attr($label); ?>">
+            <option value="<?php echo esc_attr($pt); ?>"
+                <?php selected($selected_cpt, $pt); ?>>
 
-                <?php
+                <?php echo esc_html($label); ?>
 
-                $posts = get_posts([
-                    'post_type'      => $pt,
-                    'posts_per_page' => -1,
-                    'orderby'        => 'title',
-                    'order'          => 'ASC',
-                    'post_status'    => 'publish'
-                ]);
-
-                foreach ($posts as $p):
-
-                ?>
-
-                    <option value="<?php echo $p->ID; ?>"
-                        <?php selected($selected_post_id, $p->ID); ?>>
-
-                        <?php echo esc_html(get_the_title($p->ID)); ?>
-
-                    </option>
-
-                <?php endforeach; ?>
-
-            </optgroup>
+            </option>
 
         <?php endforeach; ?>
 
     </select>
+
+    <!-- ============================================== -->
+    <!-- POST SELECT -->
+    <!-- ============================================== -->
+
+    <?php if ($selected_cpt): ?>
+
+        <?php
+
+        $posts = get_posts([
+            'post_type'      => $selected_cpt,
+            'posts_per_page' => -1,
+            'orderby'        => 'title',
+            'order'          => 'ASC',
+            'post_status'    => 'publish',
+            'fields'         => 'ids',
+        ]);
+
+        ?>
+
+        <label for="inspector_post"
+               style="margin-top:1rem; display:block;">
+
+            Select Entry
+        </label>
+
+        <select name="inspector_post"
+                id="inspector_post"
+                onchange="this.form.submit()">
+
+            <option value="">
+                -- Select Entry --
+            </option>
+
+            <?php foreach ($posts as $post_id): ?>
+
+                <option value="<?php echo intval($post_id); ?>"
+                    <?php selected($selected_post_id, $post_id); ?>>
+
+                    <?php echo esc_html(get_the_title($post_id)); ?>
+
+                </option>
+
+            <?php endforeach; ?>
+
+        </select>
+
+    <?php endif; ?>
 
 </form>
 
@@ -240,7 +278,7 @@ if ($post):
 
                 /*
                 |--------------------------------------------------------------------------
-                | Relationship Fields
+                | Relationship Arrays
                 |--------------------------------------------------------------------------
                 */
 
@@ -251,8 +289,6 @@ if ($post):
                     foreach ($value as $item) {
 
                         echo '<li>';
-
-                        // Relationship object
 
                         if ($item instanceof WP_Post) {
 
@@ -267,16 +303,12 @@ if ($post):
                                 ')</em>';
                         }
 
-                        // Repeater rows / arrays
-
                         elseif (is_array($item)) {
 
                             echo '<pre>';
                             print_r($item);
                             echo '</pre>';
                         }
-
-                        // Plain values
 
                         else {
 
@@ -314,13 +346,13 @@ if ($post):
 
                     </p>
 
-                <?php
+                    <?php
 
                 }
 
                 /*
                 |--------------------------------------------------------------------------
-                | Scalars
+                | Scalar Values
                 |--------------------------------------------------------------------------
                 */
 
