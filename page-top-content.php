@@ -16,6 +16,7 @@ $sections = [
         'post_type'   => 'chapter',
         'theme_slug'  => 'top-threads',
         'layout'      => 'grid',
+            'full_page'   => '/narrative-threads/',
         'description' => 'Curated narrative threads from across the archive.',
     ],
 
@@ -24,6 +25,7 @@ $sections = [
         'post_type'   => 'fragment',
         'theme_slug'  => 'top-episodes',
         'layout'      => 'grid',
+                'full_page'   => '/narrative-episodes/',
         'description' => 'Curated narrative episodes and fragments.',
     ],
 
@@ -32,6 +34,7 @@ $sections = [
         'post_type'   => 'lyric',
         'theme_slug'  => 'top-lyrics',
         'layout'      => 'stream',
+            'full_page' => '/song-excerpts/',
         'description' => 'Selected lyrical works from across the archive.',
     ],
 
@@ -40,6 +43,7 @@ $sections = [
         'post_type'   => 'excerpt',
         'theme_slug'  => 'top-excerpts',
         'layout'      => 'stream',
+            'full_page' => '/excerpt-library/',
         'description' => 'Selected excerpts and passages.',
     ],
 
@@ -48,6 +52,7 @@ $sections = [
     'post_type'   => 'image',
     'theme_slug'  => 'top-images',
     'layout'      => 'image-grid',
+        'full_page' => '/image-gallery/',
     'description' => 'Curated visual works from across the archive.',
 ],
 
@@ -56,6 +61,7 @@ $sections = [
     'post_type'   => 'portal',
     'theme_slug'  => 'top-portals',
     'layout'      => 'grid',
+        'full_page' => '/portals/',
     'description' => 'Curated works from across the archive.',
 ],
 
@@ -64,6 +70,7 @@ $sections = [
         'post_type'   => 'quote',
         'theme_slug'  => 'top-quotes',
         'layout'      => 'stream',
+            'full_page' => '/quote-library/',
         'description' => 'Selected quotes from the archive.',
     ],
 ];
@@ -550,7 +557,7 @@ $query = new WP_Query([
 
 .top-content-footer {
 
-    padding-top: 70px;
+    padding-top: 1px;
 
     border-top: 1px solid rgba(255,255,255,.08);
 
@@ -773,37 +780,15 @@ $query = new WP_Query([
 
     </section>
 
-    <footer class="top-content-footer">
+<footer class="top-content-footer">
 
-            <a href="/narrative-threads/">
-            Full Threads
-        </a>
+    <a href="<?php echo esc_url($config['full_page']); ?>">
 
-                <a href="/narrative-episodes/">
-            Full Episodes
-        </a>
+        Explore Full <?php echo esc_html($config['title']); ?>
 
-        <a href="/song-excerpts/">
-            Full Lyrics
-        </a>
+    </a>
 
-        <a href="/excerpt-library/">
-            Full Excerpts
-        </a>
-
-                <a href="/image-gallery/">
-            Full Image Gallery
-        </a>
-
-                <a href="/portals/">
-            Full Portals
-        </a>
-
-        <a href="/quote-library/">
-            Full Quotes
-        </a>
-
-    </footer>
+</footer>
 
 </main>
 

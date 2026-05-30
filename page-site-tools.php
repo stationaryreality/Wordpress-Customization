@@ -14,7 +14,9 @@ $allowed_tools = [
   'media-library',
   'newest',
   'orphans',
+  'plaintext',
   'tag-audit',
+
 ];
 
 if (!in_array($tool, $allowed_tools)) {
@@ -235,6 +237,11 @@ body.site-tools-app::before {
                 Orphaned CPTs
             </a>
 
+                <a href="?tool=plaintext"
+               class="<?php echo $tool === 'plaintext' ? 'active' : ''; ?>">
+                Plain Text Viewer
+            </a>
+
             <a href="?tool=tag-audit"
                class="<?php echo $tool === 'tag-audit' ? 'active' : ''; ?>">
                 Tag Audit
@@ -242,8 +249,13 @@ body.site-tools-app::before {
 
             <hr>
 
+
+
             <a href="/portals/" target="_blank">
                 Portals
+            </a>
+                                    <a href="/developer-notes/" target="_blank">
+                Site Development
             </a>
 
             <a href="/themes/" target="_blank">
@@ -333,6 +345,12 @@ body.site-tools-app::before {
         elseif ($tool === 'orphans') {
 
           get_template_part('template-parts/tools/tool', 'orphans');
+
+        }
+
+                elseif ($tool === 'plaintext') {
+
+          get_template_part('template-parts/tools/tool', 'plaintext');
 
         }
 

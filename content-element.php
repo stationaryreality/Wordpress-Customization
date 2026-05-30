@@ -1,6 +1,6 @@
 <div <?php post_class(); ?>>
     <?php do_action( 'post_before' ); ?>
-
+<?php ct_author_featured_image(); ?>
 <article>
 
     <div class='post-header'>

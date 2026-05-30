@@ -1,6 +1,7 @@
 <?php
 /**
- * Template Part: Element Grid (Image-style)
+ * Template Part: Element Grid
+ * Styled to visually align with Chapter / Fragment grids
  *
  * Expected args:
  * - query: WP_Query object (optional)
@@ -14,23 +15,25 @@ $title       = $args['title'] ?? 'Elements';
 $emoji       = $args['emoji'] ?? '';
 $search_term = $args['search_term'] ?? '';
 
-// Default to all elements if no query passed
+// Default query
 if (!$query) {
   $query = new WP_Query([
     'post_type'      => 'element',
     'posts_per_page' => -1,
-    'orderby'        => 'title',
-    'order'          => 'ASC',
+    'orderby'        => 'date',
+    'order'          => 'DESC',
   ]);
 }
 
 if (!$query->have_posts()) return;
 ?>
 
-<section style="margin-bottom:4rem;">
+<section class="cpt-section element-grid" style="margin-bottom:4rem;">
+
   <h2>
-    <?php if ($emoji) echo $emoji . ' '; ?>
+    <?php if ($emoji) echo esc_html($emoji) . ' '; ?>
     <?php echo esc_html($title); ?>
+
     <?php if ($search_term): ?>
       <span style="font-weight:normal;font-size:0.9em;color:#666;">
         containing “<?php echo esc_html($search_term); ?>”
@@ -38,39 +41,48 @@ if (!$query->have_posts()) return;
     <?php endif; ?>
   </h2>
 
-  <div class="cited-grid">
+  <div class="tag-posts-grid">
+
     <?php while ($query->have_posts()): $query->the_post(); ?>
+
       <?php
-        // You can swap this for another ACF field if Elements use a specific image field
         $image = get_field('image_file') ?: get_post_thumbnail_id();
         $img_url = '';
 
         if (is_array($image)) {
-          $img_url = $image['sizes']['medium'] ?? $image['url'];
+          $img_url = $image['sizes']['large'] ?? $image['url'];
         } elseif ($image) {
-          $img_url = wp_get_attachment_image_url($image, 'medium');
+          $img_url = wp_get_attachment_image_url($image, 'large');
         }
-
-        $excerpt = get_the_excerpt();
       ?>
-      <div class="cited-item">
-        <a href="<?php the_permalink(); ?>">
+
+      <div class="tag-post-item">
+
+        <a href="<?php the_permalink(); ?>" class="tag-post-thumbnail">
           <?php if ($img_url): ?>
-            <img src="<?php echo esc_url($img_url); ?>"
-                 alt="<?php the_title_attribute(); ?>"
-                 style="width:150px; height:150px; object-fit:cover;">
+            <img
+              src="<?php echo esc_url($img_url); ?>"
+              alt="<?php the_title_attribute(); ?>"
+            >
           <?php endif; ?>
-          <h3><?php the_title(); ?></h3>
         </a>
 
-        <?php if ($excerpt): ?>
-          <p style="margin:0.5rem 0 0;font-size:0.9em;color:#555;">
-            <?php echo esc_html(wp_trim_words($excerpt, 20)); ?>
+        <a href="<?php the_permalink(); ?>" class="tag-post-title">
+          <?php the_title(); ?>
+        </a>
+
+        <?php if (get_the_excerpt()): ?>
+          <p class="tag-post-excerpt">
+            <?php echo esc_html(wp_trim_words(get_the_excerpt(), 20)); ?>
           </p>
         <?php endif; ?>
+
       </div>
+
     <?php endwhile; ?>
+
   </div>
+
 </section>
 
 <?php wp_reset_postdata(); ?>

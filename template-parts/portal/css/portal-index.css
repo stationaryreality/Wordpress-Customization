@@ -1,0 +1,111 @@
+.portal-index {
+
+    max-width: 1200px;
+
+    margin: 0 auto;
+
+    padding: 40px 24px 100px;
+}
+
+.portal-index-header {
+
+    margin-bottom: 40px;
+}
+
+.portal-index-total {
+
+    opacity: .7;
+}
+
+.portal-view-switcher {
+
+    max-width: 1200px;
+
+    margin: 20px auto;
+
+    padding: 0 24px;
+}
+
+.portal-view-switcher select {
+
+    padding: 8px 12px;
+}
+
+.portal-index-filters {
+
+    margin-bottom: 40px;
+}
+
+.portal-filter-list {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+    margin-top: 16px;
+}
+
+.portal-alpha-nav {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-bottom: 40px;
+}
+
+.portal-alpha-nav a {
+
+    text-decoration: none;
+
+    padding: 6px 10px;
+
+    border-radius: 6px;
+
+    background: rgba(255,255,255,.05);
+}
+
+.portal-alpha-group {
+
+    margin-bottom: 48px;
+}
+
+.portal-alpha-letter {
+
+    font-size: 2rem;
+
+    margin-bottom: 16px;
+
+    border-bottom: 1px solid rgba(255,255,255,.1);
+
+    padding-bottom: 8px;
+}
+
+.portal-alpha-list {
+
+    list-style: none;
+
+    margin: 0;
+
+    padding: 0;
+}
+
+.portal-alpha-list li {
+
+    display: flex;
+
+    gap: 10px;
+
+    padding: 6px 0;
+}
+
+.portal-entry-icon {
+
+    width: 24px;
+
+    text-align: center;
+}
