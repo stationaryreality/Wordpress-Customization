@@ -9,6 +9,19 @@ add_filter('wpseo_breadcrumb_links', function($links) {
 
     $central_cpts = get_cpt_metadata();
 
+     /*
+     * RAP HUB OVERRIDE
+     */
+    $hub_override = get_content_hub_override();
+
+    if ($hub_override && count($links) >= 3) {
+
+        $middle = count($links) - 2;
+
+        $links[$middle]['text'] = $hub_override['title'];
+        $links[$middle]['url']  = $hub_override['url'];
+    }
+
     // Loop through each link
     foreach ($links as $key => $link) {
 

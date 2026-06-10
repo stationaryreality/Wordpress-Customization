@@ -58,7 +58,7 @@
 .tag-post-thumbnail img {
   width: 100%;
   height: auto;
-  max-height: 115px;
+  max-height: 140px;
   object-fit: cover;
   border-radius: 8px;
 }
@@ -376,30 +376,6 @@ body .wp-block-group .wp-block-cover {
   width: 100%;
   height: auto;
   border-radius: 8px;
-}
-
-.portal-entry-list {
-  list-style: none;
-  padding: 0;
-  margin: 2em auto;
-  max-width: 800px;
-}
-
-.portal-entry-list li {
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
-  margin-bottom: 0.4em;
-}
-
-.portal-icon {
-  font-size: 1.2em;
-}
-
-.portal-type-label {
-  color: #777;
-  font-size: 0.85em;
-  margin-left: auto;
 }
 
 /* THE REST NEEDS CLEANING

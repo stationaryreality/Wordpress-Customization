@@ -134,7 +134,6 @@ function cpt_nav_chart_shortcode() {
 
 add_shortcode('cpt_nav_chart', 'cpt_nav_chart_shortcode');
 
-
 /* -------------------------------------------
  * SHORTCODE B: Last Updated Date
  * ------------------------------------------- */
@@ -161,3 +160,46 @@ function site_last_updated_shortcode() {
     return '<div style="font-size:12px; text-align:center; margin-top:6px;">Site Updated: ' . esc_html($updated) . '</div>';
 }
 add_shortcode('site_last_updated', 'site_last_updated_shortcode');
+
+function get_content_hub_override($post_id = 0) {
+
+    $post_id = $post_id ?: get_the_ID();
+
+    switch (get_post_type($post_id)) {
+
+        case 'artist':
+
+            if (has_term('rapper', 'artist_type', $post_id)) {
+                return [
+                    'title' => 'Rap Pages',
+                    'url'   => home_url('/rap-pages/')
+                ];
+            }
+
+            break;
+
+        case 'song':
+
+            if (has_term('rap', 'song_category', $post_id)) {
+                return [
+                    'title' => 'Rap Pages',
+                    'url'   => home_url('/rap-pages/')
+                ];
+            }
+
+            break;
+
+        case 'lyric':
+
+            if (has_term('rap', 'song_category', $post_id)) {
+                return [
+                    'title' => 'Rap Pages',
+                    'url'   => home_url('/rap-pages/')
+                ];
+            }
+
+            break;
+    }
+
+    return false;
+}

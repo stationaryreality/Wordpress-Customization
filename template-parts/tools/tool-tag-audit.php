@@ -1,159 +1,372 @@
 <?php
 
-/* ===== CONFIG ===== */
+/*
+|--------------------------------------------------------------------------
+| CPT TYPES
+|--------------------------------------------------------------------------
+*/
 
-$all_types = [
- 'book','quote','lyric','image','excerpt','show',
+$exclude = [
+    'topic',
+    'theme',
+    'portal',
+    'featured_artists',
+    'other_artists',
+    'songs_referenced'
 ];
 
-$mode = $_GET['mode'] ?? 'missing-both';
+$cpt_map = get_cpt_metadata();
 
-$valid_modes = [
-  'all',
-  'missing-theme',
-  'missing-topic',
-  'missing-both'
-];
+$allowed_types = [];
 
-if (!in_array($mode, $valid_modes)) {
-  $mode = 'missing-both';
-}
+foreach ($cpt_map as $key => $meta) {
 
-/* ===== QUERY ===== */
-
-$q = new WP_Query([
-  'post_type' => $all_types,
-  'posts_per_page' => -1,
-  'orderby' => 'title',
-  'order' => 'ASC',
-  'post_status' => 'publish'
-]);
-
-$entries = [];
-$type_counts = [];
-
-/* ===== LOOP ===== */
-
-while ($q->have_posts()) {
-
-  $q->the_post();
-
-  $id   = get_the_ID();
-  $type = get_post_type();
-
-  $themes = get_the_terms($id, 'theme');
-  $topics = get_the_terms($id, 'topic');
-
-  $has_theme = !empty($themes) && !is_wp_error($themes);
-  $has_topic = !empty($topics) && !is_wp_error($topics);
-
-  $include = false;
-
-  switch ($mode) {
-
-    case 'all':
-      $include = true;
-      break;
-
-    case 'missing-theme':
-      $include = !$has_theme;
-      break;
-
-    case 'missing-topic':
-      $include = !$has_topic;
-      break;
-
-    case 'missing-both':
-      $include = !$has_theme && !$has_topic;
-      break;
-  }
-
-  if ($include) {
-
-    $meta  = get_cpt_metadata($type);
-    $emoji = $meta['emoji'] ?? '•';
-
-    $entries[] = [
-      'title' => get_the_title(),
-      'url'   => get_permalink(),
-      'emoji' => $emoji,
-      'type'  => $type,
-      'theme' => $has_theme,
-      'topic' => $has_topic
-    ];
-
-    if (!isset($type_counts[$type])) {
-      $type_counts[$type] = 0;
+    if (in_array($key, $exclude)) {
+        continue;
     }
 
-    $type_counts[$type]++;
-  }
+    $allowed_types[] = $key;
 }
 
-wp_reset_postdata();
+/*
+|--------------------------------------------------------------------------
+| TAXONOMY LISTS
+|--------------------------------------------------------------------------
+*/
 
-/* ===== SORT ===== */
+$themes = get_terms([
+    'taxonomy'   => 'theme',
+    'hide_empty' => true,
+    'orderby'    => 'count',
+    'order'      => 'DESC',
+    'number'     => 50
+]);
 
-usort($entries, fn($a,$b)=>strcasecmp($a['title'],$b['title']));
-ksort($type_counts);
+$topics = get_terms([
+    'taxonomy'   => 'topic',
+    'hide_empty' => true,
+    'orderby'    => 'count',
+    'order'      => 'DESC',
+    'number'     => 50
+]);
 
-$total_count = count($entries);
+/*
+|--------------------------------------------------------------------------
+| TERM RENDERER
+|--------------------------------------------------------------------------
+*/
+
+function render_taxonomy_review_term($term, $taxonomy, $allowed_types) {
+
+    $posts = get_posts([
+        'post_type'      => $allowed_types,
+        'posts_per_page' => -1,
+        'post_status'    => 'publish',
+        'orderby'        => 'title',
+        'order'          => 'ASC',
+        'tax_query'      => [
+            [
+                'taxonomy' => $taxonomy,
+                'field'    => 'term_id',
+                'terms'    => $term->term_id
+            ]
+        ]
+    ]);
+
+    if (!$posts) {
+        return;
+    }
+
+    $type_counts = [];
+
+    foreach ($posts as $post) {
+
+        $type = $post->post_type;
+
+        if (!isset($type_counts[$type])) {
+            $type_counts[$type] = 0;
+        }
+
+        $type_counts[$type]++;
+    }
+
+    ?>
+
+    <details class="taxonomy-review">
+
+        <summary>
+
+            <?php echo esc_html($term->name); ?>
+
+            <span style="opacity:.6;">
+                (<?php echo number_format($term->count); ?>)
+            </span>
+
+        </summary>
+
+        <div class="taxonomy-review-inner">
+
+            <div class="taxonomy-breakdown">
+
+                <?php foreach ($type_counts as $type => $count): ?>
+
+                    <?php
+                    $meta = get_cpt_metadata($type);
+                    ?>
+
+                    <span>
+
+                        <?php echo $meta['emoji'] ?? '•'; ?>
+                        <?php echo esc_html($type); ?>
+                        (<?php echo $count; ?>)
+
+                    </span>
+
+                <?php endforeach; ?>
+
+            </div>
+
+            <p>
+
+                <button
+                    class="select-all"
+                    data-term="<?php echo esc_attr($term->slug); ?>">
+                    Select All
+                </button>
+
+                <button
+                    class="clear-all"
+                    data-term="<?php echo esc_attr($term->slug); ?>">
+                    Clear
+                </button>
+
+            </p>
+
+            <ul class="cpt-clean-list">
+
+            <?php foreach ($posts as $post): ?>
+
+                <?php
+
+                $type = $post->post_type;
+
+                $meta = get_cpt_metadata($type);
+
+                ?>
+
+                <li
+                    data-taxonomy="<?php echo esc_attr($taxonomy); ?>"
+                    data-term="<?php echo esc_attr($term->name); ?>"
+                    data-id="<?php echo $post->ID; ?>"
+                    data-type="<?php echo esc_attr($type); ?>"
+                    data-group="<?php echo esc_attr($term->slug); ?>"
+                >
+
+                    <label>
+
+                        <input
+                            type="checkbox"
+                            class="review-checkbox"
+                        >
+
+                        <span class="entry-emoji">
+                            <?php echo $meta['emoji'] ?? '•'; ?>
+                        </span>
+
+                        <a
+                            href="<?php echo get_permalink($post); ?>"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            <?php echo esc_html($post->post_title); ?>
+                        </a>
+
+                    </label>
+
+                </li>
+
+            <?php endforeach; ?>
+
+            </ul>
+
+        </div>
+
+    </details>
+
+    <?php
+}
+
 ?>
 
 <section class="admin-tool-section">
 
-<h2>Tag Audit</h2>
+<h2>Portal Taxonomy Review</h2>
 
-<p style="margin:0.75em 0 1.5em 0;">
-<?php echo number_format($total_count); ?> matching entries
+<p>
+Review high-volume Topics and Themes and export IDs for taxonomy removal scripts.
 </p>
 
-<div style="margin-bottom:1.5em; display:flex; gap:12px; flex-wrap:wrap;">
+<p>
 
-<a href="?tool=tag-audit&mode=missing-both">Missing Both</a>
+<button onclick="generateRemovalExport()">
+Generate Removal Export
+</button>
 
-<a href="?tool=tag-audit&mode=missing-theme">Missing Theme</a>
+</p>
 
-<a href="?tool=tag-audit&mode=missing-topic">Missing Topic</a>
+<textarea
+    id="removalExportOutput"
+    style="width:100%;height:250px;"
+></textarea>
 
-<a href="?tool=tag-audit&mode=all">Show All</a>
+<hr>
 
-</div>
+<h3>Top Themes</h3>
 
-<?php get_template_part('template-parts/tools/tool', 'filters', [
-  'type_counts' => $type_counts
-]); ?>
+<?php
+foreach ($themes as $theme) {
+    render_taxonomy_review_term(
+        $theme,
+        'theme',
+        $allowed_types
+    );
+}
+?>
 
-<ul class="cpt-clean-list">
+<hr>
 
-<?php foreach ($entries as $e): ?>
+<h3>Top Topics</h3>
 
-<li data-type="<?php echo esc_attr($e['type']); ?>">
-
-<span class="entry-emoji">
-<?php echo $e['emoji']; ?>
-</span>
-
-<a href="<?php echo esc_url($e['url']); ?>" target="_blank" rel="noopener">
-<?php echo esc_html($e['title']); ?>
-</a>
-
-<span style="margin-left:10px; opacity:0.7; font-size:0.9em;">
-
-Theme:
-<?php echo $e['theme'] ? '✅' : '❌'; ?>
-
-&nbsp;&nbsp;
-
-Topic:
-<?php echo $e['topic'] ? '✅' : '❌'; ?>
-
-</span>
-
-</li>
-
-<?php endforeach; ?>
-
-</ul>
+<?php
+foreach ($topics as $topic) {
+    render_taxonomy_review_term(
+        $topic,
+        'topic',
+        $allowed_types
+    );
+}
+?>
 
 </section>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+    /*
+    |--------------------------------------------------------------------------
+    | SELECT ALL
+    |--------------------------------------------------------------------------
+    */
+
+    document.querySelectorAll('.select-all').forEach(button => {
+
+        button.addEventListener('click', () => {
+
+            const slug = button.dataset.term;
+
+            document
+                .querySelectorAll(
+                    `[data-group="${slug}"] .review-checkbox`
+                )
+                .forEach(cb => cb.checked = true);
+
+        });
+
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | CLEAR ALL
+    |--------------------------------------------------------------------------
+    */
+
+    document.querySelectorAll('.clear-all').forEach(button => {
+
+        button.addEventListener('click', () => {
+
+            const slug = button.dataset.term;
+
+            document
+                .querySelectorAll(
+                    `[data-group="${slug}"] .review-checkbox`
+                )
+                .forEach(cb => cb.checked = false);
+
+        });
+
+    });
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| EXPORT
+|--------------------------------------------------------------------------
+*/
+
+window.generateRemovalExport = function() {
+
+    const checked = document.querySelectorAll(
+        '.review-checkbox:checked'
+    );
+
+    if (!checked.length) {
+        return;
+    }
+
+    const grouped = {};
+
+    checked.forEach(cb => {
+
+        const li = cb.closest('li');
+
+        const taxonomy = li.dataset.taxonomy;
+        const term     = li.dataset.term;
+        const type     = li.dataset.type;
+        const id       = li.dataset.id;
+
+        const key = taxonomy + '|' + term;
+
+        if (!grouped[key]) {
+            grouped[key] = {};
+        }
+
+        if (!grouped[key][type]) {
+            grouped[key][type] = [];
+        }
+
+        grouped[key][type].push(id);
+
+    });
+
+    let output = '';
+
+    Object.keys(grouped).forEach(group => {
+
+        output += group + "\n\n";
+
+        Object.keys(grouped[group])
+            .sort()
+            .forEach(type => {
+
+                output +=
+                    type +
+                    ':' +
+                    grouped[group][type].join(',');
+
+                output += "\n";
+
+            });
+
+        output += "\n-----------------\n\n";
+
+    });
+
+    document.getElementById(
+        'removalExportOutput'
+    ).value = output;
+
+};
+
+</script>
