@@ -91,10 +91,19 @@ foreach ($chapters as $chapter) {
                 $song       = $row['song']; // WP_Post (Song CPT)
                 $song_artist = get_field('song_artist', $song->ID);
 
-                if ($song_artist && intval($song_artist) === intval($artist_id)) {
-                    $threads[] = $chapter;
-                    break; // ✅ stop after finding a matching primary
-                }
+$song_artist_id = 0;
+
+if ($song_artist instanceof WP_Post) {
+    $song_artist_id = $song_artist->ID;
+} elseif (is_numeric($song_artist)) {
+    $song_artist_id = intval($song_artist);
+}
+
+if ($song_artist_id === intval($artist_id)) {
+    $threads[] = $chapter;
+    break;
+}
+
             }
         }
     }
