@@ -203,7 +203,7 @@ function site_get_navigation_sections() {
                 'description' => 'Public utility tools and navigation helpers',
             ],
   [
-                'title'       => 'dev. Development Site',
+                'title'       => 'Development Site',
                 'slug'        => 'developer-notes',
                 'description' => 'Development notes and site construction insights',
             ],
