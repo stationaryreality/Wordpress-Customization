@@ -74,7 +74,7 @@ function get_wikipedia_intro($slug) {
   <?php
 // === Narrative Threads (artist must match a primary song) ===
 $chapters = get_posts([
-    'post_type'      => 'chapter',
+    'post_type' => ['chapter', 'fragment'],
     'posts_per_page' => -1,
     'orderby'        => 'menu_order',
     'order'          => 'ASC',
