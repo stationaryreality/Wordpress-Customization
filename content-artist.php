@@ -72,92 +72,115 @@ function get_wikipedia_intro($slug) {
 
 
   <?php
-// === Narrative Threads (artist must match a primary song) ===
-$chapters = get_posts([
-    'post_type' => ['chapter', 'fragment'],
-    'posts_per_page' => -1,
-    'orderby'        => 'menu_order',
-    'order'          => 'ASC',
-]);
+// === Lyrics (via Songs → Artist) ===
+$lyrics = [];
 
-$threads = [];
+foreach ($songs as $song) {
 
-foreach ($chapters as $chapter) {
-    $chapter_songs = get_field('chapter_songs', $chapter->ID);
+    $song_lyrics = get_posts([
+        'post_type'      => 'lyric',
+        'posts_per_page' => -1,
+        'orderby'        => 'title',
+        'order'          => 'ASC',
+        'meta_query'     => [
+            [
+                'key'     => 'song',
+                'value'   => $song->ID,
+                'compare' => '='
+            ]
+        ]
+    ]);
 
-    if ($chapter_songs) {
-        foreach ($chapter_songs as $row) {
-            if (!empty($row['song']) && !empty($row['role']) && $row['role'] === 'primary') {
-                $song       = $row['song']; // WP_Post (Song CPT)
-                $song_artist = get_field('song_artist', $song->ID);
-
-$song_artist_id = 0;
-
-if ($song_artist instanceof WP_Post) {
-    $song_artist_id = $song_artist->ID;
-} elseif (is_numeric($song_artist)) {
-    $song_artist_id = intval($song_artist);
-}
-
-if ($song_artist_id === intval($artist_id)) {
-    $threads[] = $chapter;
-    break;
-}
-
-            }
-        }
+    foreach ($song_lyrics as $lyric) {
+        $lyrics[$lyric->ID] = $lyric;
     }
 }
 
-if (!empty($threads)): ?>
-    <div class="narrative-threads">
-      <h2>Narrative Threads</h2>
-      <div class="thread-grid">
-        <?php foreach ($threads as $thread):
-          $thumb = get_the_post_thumbnail_url($thread->ID, 'medium');
-        ?>
-          <div class="thread-item">
-            <a href="<?php echo get_permalink($thread->ID); ?>">
-              <?php if ($thumb): ?>
-                <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr(get_the_title($thread->ID)); ?>">
-              <?php endif; ?>
-              <h3><?php echo esc_html(get_the_title($thread->ID)); ?></h3>
-            </a>
-          </div>
-        <?php endforeach; ?>
-      </div>
-    </div>
+$lyrics = array_values($lyrics);
+
+if (!empty($lyrics)): ?>
+  <div class="artist-lyrics" style="margin-top:3em; text-align:center;">
+    <h2>Song Excerpts</h2>
+
+    <ul style="list-style:none; padding:0; display:inline-block; text-align:center;">
+      <?php foreach ($lyrics as $lyric): ?>
+        <li>
+          <a href="<?php echo get_permalink($lyric->ID); ?>">
+            <?php echo esc_html(get_the_title($lyric->ID)); ?>
+          </a>
+        </li>
+      <?php endforeach; ?>
+    </ul>
+
+  </div>
 <?php endif; ?>
 
 
-  <?php
-  // === Song Excerpts ===
-  $lyrics = get_posts([
-    'post_type'      => 'lyric',
-    'posts_per_page' => -1,
-    'meta_query'     => [
-      [
-        'key'     => 'artist',
-        'value'   => $artist_id,
-        'compare' => '='
-      ]
-    ]
-  ]);
+<?php
 
-  if ($lyrics): ?>
-    <div class="artist-lyrics">
-      <h2>Song Excerpts</h2>
-      <?php foreach ($lyrics as $lyric):
-        $html = get_field('lyric_cover_block_full', $lyric->ID);
-        $text = get_field('quote_text', $lyric->ID);
-        if ($html) {
-          echo $html;
-        } elseif ($text) {
-          echo '<div class="plain-lyric"><blockquote>' . esc_html($text) . '</blockquote></div>';
-        }
-      endforeach; ?>
-    </div>
-  <?php endif; ?>
+$featured_chapters  = [];
+$featured_fragments = [];
+$referenced_in      = [];
+
+foreach ($songs as $song) {
+
+    $roles = kp_get_song_thread_roles($song->ID);
+
+    foreach (
+        array_merge(
+            $roles['chapter']['primary'],
+            $roles['chapter']['secondary']
+        ) as $item
+    ) {
+        $featured_chapters[$item->ID] = $item;
+    }
+
+    foreach (
+        array_merge(
+            $roles['fragment']['primary'],
+            $roles['fragment']['secondary']
+        ) as $item
+    ) {
+        $featured_fragments[$item->ID] = $item;
+    }
+
+    foreach (
+        array_merge(
+            $roles['chapter']['supporting'],
+            $roles['fragment']['supporting']
+        ) as $item
+    ) {
+        $referenced_in[$item->ID] = $item;
+    }
+}
+
+get_template_part(
+    'template-parts/views/featured-in-grid',
+    null,
+    [
+        'title' => 'Narrative Threads',
+        'items' => $featured_chapters,
+    ]
+);
+
+get_template_part(
+    'template-parts/views/featured-in-grid',
+    null,
+    [
+        'title' => 'Narrative Fragments',
+        'items' => $featured_fragments,
+    ]
+);
+
+get_template_part(
+    'template-parts/views/featured-in-grid',
+    null,
+    [
+        'title' => 'Referenced In',
+        'items' => $referenced_in,
+    ]
+);
+?>
 
   <?php get_template_part('content/artist-nav'); ?>
 </div>

@@ -455,6 +455,8 @@ require_once get_stylesheet_directory() . '/inc/enqueue.php';
 
 require_once get_stylesheet_directory() . '/inc/helpers.php';
 
+require_once get_stylesheet_directory() . '/inc/relationships/song-relationships.php';
+
 //disabled - require_once get_stylesheet_directory() . '/inc/concept_relations.php';
 
 // Load shared taxonomy bubbles function

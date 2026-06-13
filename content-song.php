@@ -105,58 +105,58 @@ function collect_song_roles($post_type, $song_id) {
   return $roles;
 }
 
-$chapter_roles  = collect_song_roles('chapter', $song_id);
-$fragment_roles = collect_song_roles('fragment', $song_id);
+$roles = kp_get_song_thread_roles($song_id);
+
+$chapter_roles  = $roles['chapter'];
+$fragment_roles = $roles['fragment'];
+
+$featured_chapters = array_merge(
+    $chapter_roles['primary'],
+    $chapter_roles['secondary']
+);
+
+$featured_fragments = array_merge(
+    $fragment_roles['primary'],
+    $fragment_roles['secondary']
+);
+
+$referenced_in = array_merge(
+    $chapter_roles['supporting'],
+    $fragment_roles['supporting']
+);
+
 ?>
 
 
-<?php if (!empty($chapter_roles['primary']) || !empty($chapter_roles['secondary'])): ?>
-  <div class="narrative-threads" style="margin-top: 4em; text-align:center;">
-    <h2>Narrative Thread</h2>
-    <div class="thread-grid">
-      <?php foreach (array_merge($chapter_roles['primary'], $chapter_roles['secondary']) as $chapter):
-        $thumb = get_the_post_thumbnail_url($chapter->ID, 'medium');
-      ?>
-        <div class="thread-item">
-          <a href="<?php echo get_permalink($chapter->ID); ?>">
-            <?php if ($thumb): ?>
-              <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr(get_the_title($chapter->ID)); ?>">
-            <?php endif; ?>
-            <h3><?php echo esc_html(get_the_title($chapter->ID)); ?></h3>
-          </a>
-        </div>
-      <?php endforeach; ?>
-    </div>
-  </div>
-<?php endif; ?>
+<?php
+get_template_part(
+    'template-parts/views/featured-in-grid',
+    null,
+    [
+        'title' => 'Narrative Threads',
+        'items' => $featured_chapters,
+    ]
+);
+?>
 
 
-<?php if (!empty($fragment_roles['primary']) || !empty($fragment_roles['secondary'])): ?>
-  <div class="narrative-fragments" style="margin-top: 4em; text-align:center;">
-    <h2>Narrative Fragment</h2>
-    <div class="thread-grid">
-      <?php foreach (array_merge($fragment_roles['primary'], $fragment_roles['secondary']) as $fragment):
-        $thumb = get_the_post_thumbnail_url($fragment->ID, 'medium');
-      ?>
-        <div class="thread-item">
-          <a href="<?php echo get_permalink($fragment->ID); ?>">
-            <?php if ($thumb): ?>
-              <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr(get_the_title($fragment->ID)); ?>">
-            <?php endif; ?>
-            <h3><?php echo esc_html(get_the_title($fragment->ID)); ?></h3>
-          </a>
-        </div>
-      <?php endforeach; ?>
-    </div>
-  </div>
-<?php endif; ?>
+<?php
+get_template_part(
+    'template-parts/views/featured-in-grid',
+    null,
+    [
+        'title' => 'Narrative Fragments',
+        'items' => $featured_fragments,
+    ]
+);
+?>
 
 
-<?php if (!empty($chapter_roles['supporting']) || !empty($fragment_roles['supporting'])): ?>
+<?php if (!empty($referenced_in)): ?>
   <div class="narrative-supporting" style="margin-top: 4em; text-align:center;">
     <h2>Referenced In</h2>
     <div class="thread-grid small-grid">
-      <?php foreach (array_merge($chapter_roles['supporting'], $fragment_roles['supporting']) as $item):
+      <?php foreach ($referenced_in as $item):
         $thumb = get_the_post_thumbnail_url($item->ID, 'medium');
       ?>
         <div class="thread-item">
