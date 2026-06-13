@@ -111,6 +111,7 @@ if (!empty($lyrics)): ?>
         </li>
       <?php endforeach; ?>
     </ul>
+    
 
   </div>
 <?php endif; ?>
