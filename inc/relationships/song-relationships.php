@@ -75,5 +75,6 @@ function kp_get_song_thread_roles($song_id) {
         }
     }
 
+
     return $results;
 }
