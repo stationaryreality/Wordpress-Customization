@@ -9,17 +9,6 @@ $portrait   = get_field('portrait_image', $profile_id);
 $img_url    = $portrait ? $portrait['sizes']['thumbnail'] : '';
 $wiki_slug  = get_field('wikipedia_slug', $profile_id);
 
-/* ----------------------------------------------------
-   Fetch Wikipedia intro (fallback)
------------------------------------------------------ */
-function get_wikipedia_intro($slug) {
-    $api_url = "https://en.wikipedia.org/api/rest_v1/page/summary/" . urlencode($slug);
-    $response = wp_remote_get($api_url);
-    if (is_wp_error($response)) return false;
-    $body = wp_remote_retrieve_body($response);
-    $data = json_decode($body, true);
-    return !empty($data['extract']) ? esc_html($data['extract']) : false;
-}
 
 /* ----------------------------------------------------
    Gather all authored content
@@ -147,7 +136,7 @@ $references = get_posts([
       if ($bio) {
         echo wp_kses_post($bio);
       } elseif ($wiki_slug) {
-        if ($wiki_intro = get_wikipedia_intro($wiki_slug)) {
+        if ($wiki_intro = kp_get_wikipedia_intro($wiki_slug)) {
           echo '<p>' . esc_html($wiki_intro) . '</p>';
         }
       }

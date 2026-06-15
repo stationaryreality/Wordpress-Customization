@@ -6,15 +6,6 @@ $img_url   = $logo ? $logo['sizes']['thumbnail'] : '';
 $wiki_slug = get_field('wikipedia_slug', $org_id);
 $people    = get_field('related_people', $org_id); // ACF relationship or repeater field
 
-// Wikipedia summary
-function get_wikipedia_intro($slug) {
-  $api_url = "https://en.wikipedia.org/api/rest_v1/page/summary/" . urlencode($slug);
-  $response = wp_remote_get($api_url);
-  if (is_wp_error($response)) return false;
-  $body = wp_remote_retrieve_body($response);
-  $data = json_decode($body, true);
-  return !empty($data['extract']) ? esc_html($data['extract']) : false;
-}
 ?>
 
 <div class="organization-header" style="text-align:center;">
@@ -28,7 +19,7 @@ function get_wikipedia_intro($slug) {
   <?php if ($bio): ?>
     <?php echo wp_kses_post($bio); ?>
   <?php elseif ($wiki_slug): ?>
-    <p><?php echo get_wikipedia_intro($wiki_slug); ?></p>
+    <p><?php echo kp_get_wikipedia_intro($wiki_slug); ?></p>
   <?php else: ?>
     <?php the_content(); ?>
   <?php endif; ?>
