@@ -11,15 +11,6 @@ $url          = get_field('url');
 $archive_url  = get_field('archive_link');
 $wiki_slug    = get_field('reference_wiki');
 
-// Wikipedia summary fetcher
-function get_reference_wikipedia_intro($slug) {
-  $api_url = "https://en.wikipedia.org/api/rest_v1/page/summary/" . urlencode($slug);
-  $response = wp_remote_get($api_url);
-  if (is_wp_error($response)) return false;
-  $body = wp_remote_retrieve_body($response);
-  $data = json_decode($body, true);
-  return !empty($data['extract']) ? esc_html($data['extract']) : false;
-}
 ?>
 
 <div class="reference-content" style="text-align:center;">
@@ -50,7 +41,7 @@ function get_reference_wikipedia_intro($slug) {
 </div>
 
   <?php if ($wiki_slug): ?>
-    <?php $wiki_intro = get_reference_wikipedia_intro($wiki_slug); ?>
+    <?php $wiki_intro = kp_get_wikipedia_intro($wiki_slug); ?>
     <?php if ($wiki_intro): ?>
       <div class="reference-wiki" style="margin-top:1.5em;">
         <h3>Wikipedia</h3>

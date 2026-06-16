@@ -1044,3 +1044,32 @@ Version: 1.0
 .sidebar-nav-heading {
     text-align: center;
 }
+
+
+.content-objects-section {
+    margin: 3rem 0;
+}
+
+.content-objects-title {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.content-objects-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.content-object {
+    text-align: center;
+}
+
+.content-object-title {
+    margin-bottom: 1rem;
+}
+
+.content-object-render {
+    display: flex;
+    justify-content: center;
+}

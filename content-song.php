@@ -47,18 +47,18 @@ $lyrics = get_posts([
 ]);
 
 if ($lyrics): ?>
-  <div class="artist-lyrics" style="margin-top:3em; text-align:center;">
-    <h2>Song Excerpts</h2>
-    <ul style="list-style:none; padding:0; display:inline-block; text-align:center;">
-      <?php foreach ($lyrics as $lyric): ?>
-        <li>
-          <a href="<?php echo get_permalink($lyric->ID); ?>">
-            <?php echo esc_html(get_the_title($lyric->ID)); ?>
-          </a>
-        </li>
-      <?php endforeach; ?>
-    </ul>
-  </div>
+<?php
+if (!empty($lyrics)) {
+    get_template_part(
+        'template-parts/render/content-objects',
+        null,
+        [
+            'posts' => $lyrics,
+            'title' => 'Song Excerpts'
+        ]
+    );
+}
+?>
 <?php endif; ?>
 
 
