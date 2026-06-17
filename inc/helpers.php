@@ -166,6 +166,32 @@ function get_content_hub_override($post_id = 0) {
     return false;
 }
 
+/**
+ * Determine whether a taxonomy term is a system-only term.
+ */
+function kp_is_system_term( $term ) {
+
+    if ( empty( $term ) || empty( $term->slug ) ) {
+        return false;
+    }
+
+    return strpos( $term->slug, 'top-' ) === 0;
+}
+
+/**
+ * Remove system terms from a term array.
+ */
+function kp_filter_system_terms( $terms ) {
+
+    if ( empty( $terms ) || ! is_array( $terms ) ) {
+        return [];
+    }
+
+    return array_filter( $terms, function( $term ) {
+        return ! kp_is_system_term( $term );
+    });
+}
+
 require_once get_stylesheet_directory() . '/inc/helpers/wikipedia.php';
 
 require_once get_stylesheet_directory() . '/inc/helpers/featured-in.php';

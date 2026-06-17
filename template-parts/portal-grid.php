@@ -43,23 +43,26 @@ while ($query->have_posts()) {
 
   /*
   =========================================
-  TOPIC PORTALS
+  TOPIC & THEME PORTALS
   =========================================
   */
 
-  if (has_term('', 'topic', $post_id)) {
+$topic_terms = kp_filter_system_terms(
+    get_the_terms($post_id, 'topic') ?: []
+);
+
+$theme_terms = kp_filter_system_terms(
+    get_the_terms($post_id, 'theme') ?: []
+);
+
+if (!empty($topic_terms)) {
     $topics[] = get_post();
-  }
+}
 
-  /*
-  =========================================
-  THEME PORTALS
-  =========================================
-  */
-
-  if (has_term('', 'theme', $post_id)) {
+if (!empty($theme_terms)) {
     $themes[] = get_post();
-  }
+}
+
 }
 
 wp_reset_postdata();
