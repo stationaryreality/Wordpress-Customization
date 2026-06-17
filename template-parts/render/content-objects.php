@@ -16,8 +16,21 @@ if (empty($posts)) {
         </h2>
     <?php endif; ?>
 
-    <div class="content-objects-grid">
+<?php
 
+$count = count($posts);
+
+if ($count >= 25) {
+    $layout_class = 'layout-3col';
+} elseif ($count >= 9) {
+    $layout_class = 'layout-2col';
+} else {
+    $layout_class = 'layout-1col';
+}
+?>
+
+<div class="content-objects-grid <?php echo esc_attr($layout_class); ?>">
+    
         <?php foreach ($posts as $post_obj):
 
             $post_id = is_object($post_obj)
