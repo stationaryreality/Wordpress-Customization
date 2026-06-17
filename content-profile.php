@@ -65,6 +65,12 @@ $quote_meta[] = [
     'compare' => '='
 ];
 
+$quote_meta[] = [
+    'key'     => 'related_profiles',
+    'value'   => '"' . $profile_id . '"',
+    'compare' => 'LIKE'
+];
+
 $quotes = get_posts([
     'post_type'      => 'quote',
     'posts_per_page' => -1,
@@ -92,6 +98,12 @@ $excerpt_meta[] = [
     'key'     => 'author_profile',
     'value'   => $profile_id,
     'compare' => '='
+];
+
+$excerpt_meta[] = [
+    'key'     => 'related_profiles',
+    'value'   => '"' . $profile_id . '"',
+    'compare' => 'LIKE'
 ];
 
 $excerpts = get_posts([
