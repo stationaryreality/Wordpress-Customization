@@ -1,0 +1,25 @@
+
+.homepage-section {
+  margin-bottom: 16px;
+}
+
+/* ============== CHAPTER TYPOGRAPHY ADJUSTMENTS ============== */
+.post-title {
+  font-size: 33px;
+}
+
+/* ============== HUB LAYOUT CONTAINERS ============== */
+.hub-section {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.plain-lyric blockquote {
+  font-style: italic;
+  padding: 1em;
+  margin: 1.5em auto;
+  background: #f9f9f9;
+  border-left: 4px solid #ccc;
+  max-width: 600px;
+}

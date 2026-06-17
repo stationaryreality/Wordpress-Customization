@@ -1,0 +1,34 @@
+
+.video-title-a {
+    font-size: 1.1rem;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+}
+
+
+.video-card-a:hover .video-thumb-a {
+    transform: scale(1.02);
+}
+
+@media (max-width: 1000px) {
+    .video-grid-a {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .video-grid-a {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+.mini-video-title {
+    margin: 0.45em 0 0;
+
+    font-size: 0.78em;
+    line-height: 1.3;
+
+    color: #555;
+}
+

@@ -1,0 +1,26 @@
+/* === Book Page Layout === */
+.book-content.centered {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.book-cover {
+  width: 150px;
+  height: auto;
+  display: block;
+  margin: 0 auto 1em;
+}
+
+.book-title {
+  margin-bottom: 1em;
+}
+
+.book-subtitle {
+  font-size: 1.25rem;
+  font-style: italic;
+  color: #555;
+  margin-top: -0.5rem;
+  margin-bottom: 1.5rem;
+}
+

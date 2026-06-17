@@ -1,0 +1,66 @@
+/* ============== NAVIGATION BAR ADJUSTMENTS ============== */
+
+.nav-post-title {
+  max-width: 100%;
+  word-wrap: break-word;
+  font-size: 13px;
+  line-height: 1.5;
+  font-weight: normal;
+}
+
+.nav-avatar {
+  max-width: 80px;
+  height: auto;
+  display: inline-block;
+}
+
+.nav-image {
+  display: block;
+  margin: 0 auto;
+  width: 90%;
+  max-width: 400px;
+  aspect-ratio: 300 / 157; /* or whatever your actual ratio is */
+  height: auto;
+}
+
+/* ============== POST NAVIGATION ============== */
+.post-navigation-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+.previous-post,
+.next-post {
+  flex: 1 1 45%;
+  max-width: 45%;
+}
+
+.previous-post h2,
+.next-post h2 {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.previous-post img,
+.next-post img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.concept-nav-thumb img {
+  width: 50% !important;
+  height: auto;
+}
+
+.quote-nav-thumb img {
+  width: 50% !important;
+  height: auto;
+}
+
+.sidebar-nav-heading {
+    text-align: center;
+}

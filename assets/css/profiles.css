@@ -1,0 +1,67 @@
+.artist-meta {
+  text-align: center;
+  margin: 2em 0;
+}
+
+.artist-meta img.artist-thumbnail {
+  width: 150px;
+  height: 150px;
+  border-radius: 999px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 0.5em;
+}
+
+.author-thumbnail {
+  display: block;
+  margin: 0 auto 0.5em;
+  border-radius: 999px;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.artist-thumbnail {
+  display: block;
+  margin: 0 auto 0.5em;
+  border-radius: 999px;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.artist-name {
+  font-size: 1.4em;
+  margin: 0.3em 0;
+}
+
+.artist-name a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.song-title {
+  font-size: 1.1em;
+  color: #444;
+}
+
+/* ============== AUTHOR & ARTISTS ============== */
+.book-author {
+  margin-bottom: 2em;
+  text-align: center;
+}
+
+.book-author .author-link {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.person-content {
+  text-align: center;
+}
+
+.artist-lyrics {
+  margin-top: 3em;
+}

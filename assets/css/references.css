@@ -1,0 +1,29 @@
+.referenced-works h3 {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-top: 2em;
+}
+
+.referenced-works h4 {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+
+.referenced-works ul {
+  margin-left: 1em;
+  padding-left: 1em;
+}
+
+.referenced-works li {
+  margin-bottom: 0.5em;
+}
+
+.referenced-works img.book-cover,
+.referenced-works img.movie-cover {
+  width: 60px;
+  height: 90px;
+  object-fit: cover;
+  margin-right: 10px;
+  flex-shrink: 0;
+}

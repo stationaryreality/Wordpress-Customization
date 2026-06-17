@@ -30,3 +30,34 @@ function child_theme_enqueue_custom_fonts() {
     );
 }
 add_action('wp_enqueue_scripts', 'child_theme_enqueue_custom_fonts');
+
+//css files loader
+$css_files = [
+    'navigation',
+    'content-grids',
+    'profiles',
+    'books',
+    'portal',
+    'taxonomy',
+    'wordpress-overrides',
+    'tools',
+    'tables',
+    'content-objects',
+    'videos',
+    'image-gallery',
+    'references',
+    'misc'
+];
+
+foreach ($css_files as $file) {
+
+    wp_enqueue_style(
+        $file,
+        get_stylesheet_directory_uri() . "/assets/css/{$file}.css",
+        [],
+        filemtime(
+            get_stylesheet_directory() . "/assets/css/{$file}.css"
+        )
+    );
+
+}

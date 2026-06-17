@@ -1,0 +1,38 @@
+
+.album-cover {
+  display: block;
+  margin: 0 auto 0.5em;
+  border-radius: 999px;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.video-thumb-a {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+
+    border-radius: 10px;
+
+    transition: transform 0.25s ease;
+}
+
+.mini-video-thumb {
+    width: 100%;
+
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 0 4px rgba(0,0,0,0.2);
+
+    transition:
+        transform 0.2s ease;
+}
+
+.mini-video-thumb:hover {
+    transform: scale(1.02);
+}

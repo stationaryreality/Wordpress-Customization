@@ -1,0 +1,41 @@
+.content-objects-section {
+    margin: 3rem 0;
+}
+
+.content-objects-title {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.content-object {
+    text-align: center;
+}
+
+.content-object-title {
+    margin-bottom: 1rem;
+}
+
+.content-object-render {
+    display: flex;
+    justify-content: center;
+}
+
+/* layouts */
+
+.content-objects-grid.layout-1col {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+.content-objects-grid.layout-2col {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+}
+
+.content-objects-grid.layout-3col {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
+}

@@ -1,0 +1,66 @@
+/* ============== TAG BUBBLES ============== */
+
+
+.tag-bubbles {
+    display: inline-flex;     /* keeps the row tighter for small numbers */
+    justify-content: center;   /* centers them */
+    flex-wrap: wrap;           /* allows multiple lines if needed */
+    gap: 0.5em;                /* consistent spacing between bubbles */
+    max-width: 90%;            /* optional: prevent overly wide rows */
+    margin: 0 auto;            /* centers the container itself */
+}
+
+
+.tag-bubble {
+  display: inline-flex; /* more reliable than inline-block in Safari */
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border: 1px solid #000;
+  border-radius: 20px;
+  background: #fff;
+  color: #000;
+  text-decoration: none;
+  font-size: 0.9em;
+  line-height: 1.4;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.tag-bubble:hover {
+  background: #000;
+  color: #fff;
+}
+
+.cpt-alpha-list {
+  list-style: none;
+  padding: 0;
+  margin: 2rem auto;
+  max-width: 720px;
+}
+
+.cpt-alpha-list li {
+  display: flex;
+  align-items: center;
+  font-size: 1.125rem;
+  margin: 0.5rem 0;
+}
+
+.cpt-icon {
+  width: 2rem;
+  text-align: center;
+  margin-right: 0.5rem;
+  font-size: 1.25rem;
+}
+
+.cpt-icon,
+.cpt-emoji,
+.cpt-key-emoji {
+  font-family:
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Noto Color Emoji",
+    system-ui,
+    sans-serif;
+  font-variant-emoji: emoji;
+  line-height: 1;
+}
