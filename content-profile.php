@@ -9,7 +9,6 @@ $portrait   = get_field('portrait_image', $profile_id);
 $img_url    = $portrait ? $portrait['sizes']['thumbnail'] : '';
 $wiki_slug  = get_field('wikipedia_slug', $profile_id);
 
-
 /* ----------------------------------------------------
    Gather all authored content
 ----------------------------------------------------- */
@@ -121,6 +120,21 @@ $references = get_posts([
     'order'   => 'DESC'
 ]);
 
+// Unique filter for quotes/excerpts to prevent duplicates
+$seen_quotes = [];
+$unique_quotes = array_filter($quotes, function($q) use (&$seen_quotes) {
+    if (in_array($q->ID, $seen_quotes)) return false;
+    $seen_quotes[] = $q->ID;
+    return true;
+});
+
+$seen_excerpts = [];
+$unique_excerpts = array_filter($excerpts, function($e) use (&$seen_excerpts) {
+    if (in_array($e->ID, $seen_excerpts)) return false;
+    $seen_excerpts[] = $e->ID;
+    return true;
+});
+
 ?>
 
 <div class="person-content">
@@ -133,70 +147,30 @@ $references = get_posts([
 
   <div class="person-bio">
     <?php
-      if ($bio) {
+    if ($bio) {
         echo wp_kses_post($bio);
-      } elseif ($wiki_slug) {
-        if ($wiki_intro = kp_get_wikipedia_intro($wiki_slug)) {
-          echo '<p>' . esc_html($wiki_intro) . '</p>';
+    } elseif ($wiki_slug) {
+        $wiki_intro = kp_get_wikipedia_intro($wiki_slug);
+        if ($wiki_intro) {
+            echo '<p>' . esc_html($wiki_intro) . '</p>';
         }
-      }
+    }
     ?>
   </div>
 
-  <div class="person-editor-content">
-    <?php the_content(); ?>
-  </div>
+  <?php
+  // === Quotes (using unified renderer) ===
+  if (!empty($unique_quotes)) {
+      get_template_part('template-parts/render/content-objects', null, ['posts' => $unique_quotes, 'title' => 'Quotes']);
+  }
 
-  <!-- ======================
-       QUOTES
-  ======================= -->
-  <?php if ($quotes): ?>
-    <div class="profile-quotes" style="margin-top:3em; margin-bottom:3em; text-align:center;">
-      <h2>Quotes</h2>
-      <ul style="list-style:none; padding:0; margin:0;">
-        <?php 
-        $seen = [];
-        foreach ($quotes as $quote):
-          if (in_array($quote->ID, $seen, true)) continue;
-          $seen[] = $quote->ID;
-        ?>
-          <li style="margin:0.5em 0;">
-            <a href="<?php echo get_permalink($quote->ID); ?>">
-              <?php echo esc_html(get_the_title($quote->ID)); ?>
-            </a>
-          </li>
-        <?php endforeach; ?>
-      </ul>
-    </div>
-  <?php endif; ?>
+  // === Excerpts (using unified renderer) ===
+  if (!empty($unique_excerpts)) {
+      get_template_part('template-parts/render/content-objects', null, ['posts' => $unique_excerpts, 'title' => 'Excerpts']);
+  }
 
-  <!-- ======================
-       EXCERPTS
-  ======================= -->
-  <?php if ($excerpts): ?>
-    <div class="profile-excerpts" style="margin-top:3em; margin-bottom:3em; text-align:center;">
-      <h2>Excerpts</h2>
-      <ul style="list-style:none; padding:0; margin:0;">
-        <?php 
-        $seen = [];
-        foreach ($excerpts as $excerpt):
-          if (in_array($excerpt->ID, $seen, true)) continue;
-          $seen[] = $excerpt->ID;
-        ?>
-          <li style="margin:0.5em 0;">
-            <a href="<?php echo get_permalink($excerpt->ID); ?>">
-              <?php echo esc_html(get_the_title($excerpt->ID)); ?>
-            </a>
-          </li>
-        <?php endforeach; ?>
-      </ul>
-    </div>
-  <?php endif; ?>
-
-  <!-- ======================
-       REFERENCES GRID
-  ======================= -->
-  <?php if ($references): ?>
+  // === References Grid ===
+  if (!empty($references)): ?>
     <div class="profile-references" style="margin-top:3em; margin-bottom:3em; text-align:center;">
       <h2>Content by <?php echo esc_html(get_the_title($profile_id)); ?></h2>
 
@@ -217,47 +191,46 @@ $references = get_posts([
         <?php endforeach; ?>
       </ul>
     </div>
-  <?php endif; ?>
+  <?php endif;
 
-  <!-- ======================
-       BOOK GRID
-  ======================= -->
-  <?php
-  $book_query = (!empty($books))
-    ? new WP_Query([
+  // === Books Grid ===
+  if (!empty($books)):
+    $book_query = new WP_Query([
         'post_type'      => 'book',
         'posts_per_page' => -1,
         'post__in'       => $books,
         'orderby'        => 'title',
         'order'          => 'ASC'
-      ])
-    : false;
+    ]);
+
+    if ($book_query->have_posts()): ?>
+      <div class="profile-books">
+        <h2>Books by <?php echo esc_html(get_the_title($profile_id)); ?></h2>
+        <ul class="profile-book-grid">
+          <?php while ($book_query->have_posts()): $book_query->the_post();
+            $cover = get_field('cover_image');
+            $img   = $cover ? $cover['sizes']['medium'] : '';
+          ?>
+            <li>
+              <a href="<?php the_permalink(); ?>">
+                <?php if ($img): ?>
+                  <img src="<?php echo esc_url($img); ?>" alt="<?php the_title_attribute(); ?>">
+                <?php endif; ?>
+                <div><?php the_title(); ?></div>
+              </a>
+            </li>
+          <?php endwhile; ?>
+        </ul>
+      </div>
+      <?php wp_reset_postdata(); ?>
+    <?php endif;
+  endif;
+
+  // === Featured in threads ===
+  show_featured_in_threads('people_referenced');
+
+  // === Profile navigation ===
+  get_template_part('content/profile-nav');
   ?>
 
-  <?php if ($book_query && $book_query->have_posts()): ?>
-    <div class="profile-books">
-      <h2>Books by <?php echo esc_html(get_the_title($profile_id)); ?></h2>
-      <ul class="profile-book-grid">
-        <?php while ($book_query->have_posts()): $book_query->the_post();
-          $cover = get_field('cover_image');
-          $img   = $cover ? $cover['sizes']['medium'] : '';
-        ?>
-          <li>
-            <a href="<?php the_permalink(); ?>">
-              <?php if ($img): ?>
-                <img src="<?php echo esc_url($img); ?>" alt="<?php the_title_attribute(); ?>">
-              <?php endif; ?>
-              <div><?php the_title(); ?></div>
-            </a>
-          </li>
-        <?php endwhile; ?>
-      </ul>
-    </div>
-    <?php wp_reset_postdata(); ?>
-  <?php endif; ?>
-
-  <?php show_featured_in_threads('people_referenced'); ?>
-
-  <?php get_template_part('content/profile-nav'); ?>
-
-</div>
+</div>   <!-- end person-content -->
