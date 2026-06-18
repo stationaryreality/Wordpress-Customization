@@ -1,6 +1,6 @@
 <?php
 
-function fn_references($chapter_id, $group_titles) {
+function fn_sources($chapter_id, $group_titles) {
 
     if (!function_exists('kp_render_references')) {
         return '';
