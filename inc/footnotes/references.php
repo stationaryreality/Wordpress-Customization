@@ -7,5 +7,5 @@ function fn_references($chapter_id, $group_titles) {
         return '';
     }
 
-    return kp_render_references($chapter_id, true);
+    return kp_render_references_shortcode($chapter_id, true);
 }
