@@ -445,6 +445,8 @@ add_shortcode('portal_pages', 'portal_pages_list');
 //require_once get_template_directory() . '/inc/admin/admin-cpt-menu-order.php';
 
 // 2025-8-18
+
+
 require_once get_stylesheet_directory() . '/inc/breadcrumbs.php';
 
 require_once get_stylesheet_directory() . '/inc/redirects.php';
@@ -456,6 +458,9 @@ require_once get_stylesheet_directory() . '/inc/enqueue.php';
 require_once get_stylesheet_directory() . '/inc/helpers.php';
 
 require_once get_stylesheet_directory() . '/inc/relationships/song-relationships.php';
+
+require_once get_stylesheet_directory() . '/inc/references.php';
+
 
 //disabled - require_once get_stylesheet_directory() . '/inc/concept_relations.php';
 
