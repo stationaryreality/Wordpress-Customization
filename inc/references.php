@@ -116,10 +116,10 @@ function kp_render_related_references($chapter_id) {
     }
 
     $groups = [
-        'quote'   => get_field('chapter_quotes', $chapter_id) ?: [],
-        'excerpt' => get_field('chapter_excerpts', $chapter_id) ?: [],
-        'image'   => get_field('chapter_images', $chapter_id) ?: [],
-        'lyric'   => get_field('chapter_lyrics', $chapter_id) ?: [],
+        'quote'   => get_field('quotes_referenced', $chapter_id) ?: [],
+        'excerpt' => get_field('excerpts_referenced', $chapter_id) ?: [],
+        'image'   => get_field('images_linked', $chapter_id) ?: [],
+        'lyric'   => get_field('lyrics_referenced', $chapter_id) ?: [],
     ];
 
     $metadata = get_cpt_metadata();
