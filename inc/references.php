@@ -103,3 +103,63 @@ function kp_references_shortcode() {
 }
 
 add_shortcode('references', 'kp_references_shortcode');
+
+
+/**
+ * CPT renderer
+ */
+
+function kp_render_related_references($chapter_id) {
+
+    if (!function_exists('get_cpt_metadata')) {
+        return '';
+    }
+
+    $groups = [
+        'quote'   => get_field('chapter_quotes', $chapter_id) ?: [],
+        'excerpt' => get_field('chapter_excerpts', $chapter_id) ?: [],
+        'image'   => get_field('chapter_images', $chapter_id) ?: [],
+        'lyric'   => get_field('chapter_lyrics', $chapter_id) ?: [],
+    ];
+
+    $metadata = get_cpt_metadata();
+
+    ob_start();
+
+    foreach ($groups as $post_type => $items) {
+
+        if (empty($items)) {
+            continue;
+        }
+
+        $found_sources = false;
+
+        foreach ($items as $item) {
+
+            if (have_rows('references', $item->ID)) {
+
+                if (!$found_sources) {
+
+                    $emoji = $metadata[$post_type]['emoji'] ?? '📄';
+                    $title = $metadata[$post_type]['title'] ?? ucfirst($post_type);
+
+                    echo "<h5>{$emoji} {$title}</h5>";
+
+                    $found_sources = true;
+                }
+
+                echo '<div style="margin-bottom:1em;">';
+
+                echo '<strong>' .
+                    esc_html(get_the_title($item->ID)) .
+                    '</strong>';
+
+                echo kp_render_references($item->ID);
+
+                echo '</div>';
+            }
+        }
+    }
+
+    return ob_get_clean();
+}
