@@ -1,22 +1,22 @@
 <?php
 /**
- * References Shortcode
- *
- * Usage:
- * [references]
+ * Universal Sources Renderer
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-function kp_render_references_shortcode() {
+/**
+ * Main renderer
+ */
+function kp_render_references($post_id = null) {
 
     if (!function_exists('have_rows')) {
         return '';
     }
 
-    $post_id = get_the_ID();
+    $post_id = $post_id ?: get_the_ID();
 
     if (!$post_id || !have_rows('references', $post_id)) {
         return '';
@@ -38,39 +38,46 @@ function kp_render_references_shortcode() {
             <?php while (have_rows('references', $post_id)) : the_row(); ?>
 
                 <?php
-
-                $reference_type  = get_sub_field('reference_type');
-                $reference_title = get_sub_field('reference_title');
-                $reference_url   = get_sub_field('reference_url');
-                $reference_note  = get_sub_field('reference_note');
-
+                $label = get_sub_field('reference_label');
+                $title = get_sub_field('reference_title');
+                $type  = get_sub_field('reference_type');
+                $url   = get_sub_field('reference_url');
+                $note  = get_sub_field('reference_note');
                 ?>
 
-                <div class="reference-entry">
+                <div class="reference-entry" style="margin-bottom:1.25em;">
 
-                    <?php if ($reference_title) : ?>
-                        <div class="reference-title">
-                            <?php echo esc_html($reference_title); ?>
+                    <?php if ($label) : ?>
+                        <div>
+                            <strong><?php echo esc_html($label); ?></strong>
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($reference_type) : ?>
-                        <div class="reference-type">
-                            <?php echo esc_html($reference_type); ?>
+                    <?php if ($title) : ?>
+                        <div>
+                            <?php echo esc_html($title); ?>
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($reference_url) : ?>
-                        <div class="reference-url">
-                            <a href="<?php echo esc_url($reference_url); ?>" target="_blank" rel="noopener noreferrer">
+                    <?php if ($type) : ?>
+                        <div>
+                            <em><?php echo esc_html($type); ?></em>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($url) : ?>
+                        <div>
+                            <a href="<?php echo esc_url($url); ?>"
+                               target="_blank"
+                               rel="noopener noreferrer">
                                 View Source
                             </a>
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($reference_note) : ?>
-                        <div class="reference-note">
-                            <?php echo wp_kses_post($reference_note); ?>
+                    <?php if ($note) : ?>
+                        <div>
+                            <?php echo wp_kses_post($note); ?>
                         </div>
                     <?php endif; ?>
 
@@ -87,4 +94,12 @@ function kp_render_references_shortcode() {
     return ob_get_clean();
 }
 
-add_shortcode('references', 'kp_render_references_shortcode');
+
+/**
+ * Shortcode
+ */
+function kp_references_shortcode() {
+    return kp_render_references(get_the_ID());
+}
+
+add_shortcode('references', 'kp_references_shortcode');
