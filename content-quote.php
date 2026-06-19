@@ -17,6 +17,13 @@ $source = get_field('quote_source'); // Can be a Book or Reference CPT
     </p>
   <?php endif; ?>
 
+    <?php
+  // New References System
+  if (function_exists('kp_render_references')) {
+      echo kp_render_references(get_the_ID());
+  }
+  ?>
+
   <?php show_featured_in_threads('quotes_referenced'); ?>
 
     <?php echo fn_taxonomy_bubbles(get_the_ID()); ?>
