@@ -23,13 +23,15 @@ $img_full_url   = $image ? $image['url'] : '';
   <?php endif; ?>
 </div>
 
+<div style="text-align:center;">
+    <?php echo kp_render_references(get_the_ID()); ?>
+</div>
+
 <?php show_featured_in_threads('images_linked'); ?>
 
 <div style="text-align:center;">
   <?php echo fn_taxonomy_bubbles(get_the_ID()); ?>
 </div>
-
-<?php echo kp_render_references(get_the_ID()); ?>
 
 <?php get_template_part('content/image-nav'); ?>
 
