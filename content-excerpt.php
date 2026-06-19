@@ -1,5 +1,5 @@
 <?php
-$source = get_field('excerpt_source'); // Book, Reference, etc.
+$source = get_field('excerpt_source'); // Book, Movie, Show, etc.
 ?>
 
 <div class="person-content" style="text-align:center;">
@@ -11,17 +11,23 @@ $source = get_field('excerpt_source'); // Book, Reference, etc.
 
   <?php if ($source): ?>
     <p class="excerpt-source" style="margin-top:1em;">
-      Source: <a href="<?php echo esc_url(get_permalink($source->ID)); ?>">
+      Source:
+      <a href="<?php echo esc_url(get_permalink($source->ID)); ?>">
         <?php echo esc_html(get_the_title($source->ID)); ?>
       </a>
     </p>
   <?php endif; ?>
 
-      <?php show_featured_in_threads('excerpts_referenced'); ?>
+  <?php
+  // New References System
+  if (function_exists('kp_render_references')) {
+      echo kp_render_references(get_the_ID());
+  }
+  ?>
 
-        <?php echo fn_taxonomy_bubbles(get_the_ID()); ?>
+  <?php show_featured_in_threads('excerpts_referenced'); ?>
 
-        <?php echo kp_render_references(get_the_ID()); ?>
+  <?php echo fn_taxonomy_bubbles(get_the_ID()); ?>
 
   <?php get_template_part('content/excerpt-nav'); ?>
 </div>
