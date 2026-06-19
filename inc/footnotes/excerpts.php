@@ -24,32 +24,83 @@ function fn_excerpts($chapter_id, $group_titles) {
         $title = esc_html(get_the_title($item));
         $link  = get_permalink($item);
 
-        // Default thumbnail image
-        $default_thumb = wp_get_attachment_image_url(20123, 'thumbnail');
-
         $thumb = '';
+        $source_text = '';
 
-        if ($default_thumb) {
-            $thumb = "<a href=\"{$link}\">
-                        <img src=\"{$default_thumb}\"
-                             style=\"width:48px;height:48px;
-                                    object-fit:cover;
-                                    border-radius:50%;
-                                    margin-right:10px;\">
-                      </a>";
+        // --------------------------------------------------
+        // ORIGINAL SOURCE CPT LOGIC
+        // --------------------------------------------------
+
+        $source = get_field('excerpt_source', $item->ID);
+
+        if ($source) {
+
+            $img = get_field('cover_image', $source->ID);
+
+            if ($img) {
+                $src = $img['sizes']['thumbnail'];
+            } elseif (has_post_thumbnail($source->ID)) {
+                $src = get_the_post_thumbnail_url($source->ID, 'thumbnail');
+            }
+
+            if (!empty($src)) {
+                $thumb = "<a href=\"{$link}\">
+                            <img src=\"{$src}\"
+                                 style=\"width:48px;height:48px;
+                                        object-fit:cover;
+                                        border-radius:50%;
+                                        margin-right:10px;\">
+                          </a>";
+            }
+
+            $src_title = esc_html(get_the_title($source));
+
+            $author = get_field('author_profile', $source->ID);
+
+            if (is_array($author)) {
+                $author = reset($author);
+            }
+
+            $author_name = $author
+                ? esc_html(get_the_title($author))
+                : '';
+
+            $source_text = "Source: {$src_title}";
+
+            if ($author_name) {
+                $source_text .= " by {$author_name}";
+            }
         }
 
-        // First source label from references repeater
-        $source_label = '';
+        // --------------------------------------------------
+        // FALLBACK FOR MIGRATED REFERENCES
+        // --------------------------------------------------
 
-        if (have_rows('references', $item->ID)) {
+        else {
 
-            the_row();
+            if (have_rows('references', $item->ID)) {
 
-            $source_label = get_sub_field('reference_label');
+                the_row();
 
-            // Reset repeater pointer just in case
-            reset_rows();
+                $label = get_sub_field('reference_label');
+
+                if ($label) {
+                    $source_text = 'Source: ' . esc_html($label);
+                }
+
+                if ($default_thumb = wp_get_attachment_image_url(20123, 'thumbnail')) {
+
+                    $thumb = "<a href=\"{$link}\">
+                                <img src=\"{$default_thumb}\"
+                                     style=\"width:48px;height:48px;
+                                            object-fit:cover;
+                                            border-radius:50%;
+                                            margin-right:10px;\">
+                              </a>";
+                }
+
+                reset_rows();
+            }
         }
 
         echo "<li style=\"display:flex;align-items:flex-start;gap:10px;
@@ -66,13 +117,11 @@ function fn_excerpts($chapter_id, $group_titles) {
             echo "<div>{$excerpt}</div>";
         }
 
-        if (!empty($source_label)) {
+        if (!empty($source_text)) {
 
             echo "<p style=\"margin-top:0.4rem;
                            font-size:0.9rem;
-                           color:#666;\">
-                    Source: " . esc_html($source_label) . "
-                  </p>";
+                           color:#666;\">{$source_text}</p>";
         }
 
         echo "</div></li>";
