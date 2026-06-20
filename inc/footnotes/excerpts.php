@@ -83,16 +83,32 @@ function fn_excerpts($chapter_id, $group_titles) {
             if (have_rows('references', $item->ID)) {
                 $has_migrated_refs = true;
 
-                // Set default thumbnail if available
-                if ($default_thumb = wp_get_attachment_image_url(20123, 'thumbnail')) {
+                // ---- Get the first reference's custom thumbnail ----
+                $refs = get_field('references', $item->ID);
+                $first_ref = $refs[0] ?? null;
+
+                $thumb_src = '';
+
+                if ($first_ref && !empty($first_ref['reference_image'])) {
+                    $img = $first_ref['reference_image'];
+                    $thumb_src = $img['sizes']['thumbnail'] ?? $img['url'] ?? '';
+                }
+
+                // Fallback to generic default if no custom image
+                if (empty($thumb_src)) {
+                    $thumb_src = wp_get_attachment_image_url(20123, 'thumbnail');
+                }
+
+                if ($thumb_src) {
                     $thumb = "<a href=\"{$link}\">
-                                <img src=\"{$default_thumb}\"
+                                <img src=\"{$thumb_src}\"
                                      style=\"width:48px;height:48px;
                                             object-fit:cover;
                                             border-radius:50%;
                                             margin-right:10px;\">
                               </a>";
                 }
+
                 // Do NOT call the_row() or reset_rows() here
             }
         }
