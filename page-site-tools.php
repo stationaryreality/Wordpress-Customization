@@ -15,8 +15,8 @@ $allowed_tools = [
   'newest',
   'orphans',
   'plaintext',
+  'sources',
   'tag-audit',
-
 ];
 
 if (!in_array($tool, $allowed_tools)) {
@@ -242,6 +242,11 @@ body.site-tools-app::before {
                 Plain Text Viewer
             </a>
 
+                <a href="?tool=sources"
+               class="<?php echo $tool === 'plaintext' ? 'active' : ''; ?>">
+                Sources
+            </a>
+
             <a href="?tool=tag-audit"
                class="<?php echo $tool === 'tag-audit' ? 'active' : ''; ?>">
                 Tag Audit
@@ -351,6 +356,12 @@ body.site-tools-app::before {
                 elseif ($tool === 'plaintext') {
 
           get_template_part('template-parts/tools/tool', 'plaintext');
+
+        }
+
+         elseif ($tool === 'sources') {
+
+          get_template_part('template-parts/tools/tool', 'sources');
 
         }
 
