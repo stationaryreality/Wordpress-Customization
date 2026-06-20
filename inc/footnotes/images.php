@@ -44,6 +44,86 @@ echo '<div class="mini-image-grid" style="
               . esc_html(wp_trim_words($caption ?: $title, 6)) .
              "</p>
               </div>";
+
+              $images_with_sources = [];
+
+foreach ($items as $img_post) {
+
+    $references = get_field('references', $img_post->ID);
+
+    if (!empty($references)) {
+
+        $images_with_sources[] = [
+            'title'      => get_the_title($img_post),
+            'references' => $references,
+            'link'       => get_permalink($img_post)
+        ];
+    }
+}
+
+if (!empty($images_with_sources)) {
+
+    echo '<div style="
+        margin:1.25rem 0 0 1.5rem;
+        padding-left:1rem;
+        border-left:2px solid #ddd;
+    ">';
+
+    echo '<strong>';
+
+    echo count($images_with_sources) > 1
+        ? 'Sources:'
+        : 'Source:';
+
+    echo '</strong>';
+
+    foreach ($images_with_sources as $image_source) {
+
+        echo '<div style="margin-top:1rem;">';
+
+        echo '<div>
+            <strong>
+                <a href="' . esc_url($image_source['link']) . '">
+                    ' . esc_html($image_source['title']) . '
+                </a>
+            </strong>
+        </div>';
+
+        foreach ($image_source['references'] as $ref) {
+
+            $label = $ref['reference_label'] ?? '';
+            $title = $ref['reference_title'] ?? '';
+            $type  = $ref['reference_type'] ?? '';
+            $url   = $ref['reference_url'] ?? '';
+
+            if ($label) {
+                echo '<div>' . esc_html($label) . '</div>';
+            }
+
+            if ($title) {
+                echo '<div>' . esc_html($title) . '</div>';
+            }
+
+            if ($type) {
+                echo '<div><em>' . esc_html($type) . '</em></div>';
+            }
+
+            if ($url) {
+                echo '<div>
+                    <a href="' . esc_url($url) . '"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                       View Source
+                    </a>
+                </div>';
+            }
+        }
+
+        echo '</div>';
+    }
+
+    echo '</div>';
+}
     }
 
     echo '</div></div>';

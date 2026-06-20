@@ -18,7 +18,7 @@ function fn_sources($chapter_id, $group_titles) {
 
     return '
         <div class="referenced-group" style="margin-top:2em;">
-            <h4>🔗 Sources</h4>
+            <h4>🔗 Other Sources</h4>
             ' . $output . '
         </div>
     ';
