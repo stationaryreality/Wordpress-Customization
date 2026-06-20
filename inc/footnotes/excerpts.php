@@ -90,7 +90,7 @@ function fn_excerpts($chapter_id, $group_titles) {
                 $thumb_src = '';
 
                 if ($first_ref && !empty($first_ref['reference_image'])) {
-                    $img = $first_ref['reference_image'];
+                    $img = $first_ref['reference_thumbnail'];
                     $thumb_src = $img['sizes']['thumbnail'] ?? $img['url'] ?? '';
                 }
 
