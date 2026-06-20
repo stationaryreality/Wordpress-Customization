@@ -163,3 +163,64 @@ function kp_render_related_references($chapter_id) {
 
     return ob_get_clean();
 }
+
+function kp_render_references_flat($post_id = null) {
+
+    if (!function_exists('have_rows')) {
+        return '';
+    }
+
+    $post_id = $post_id ?: get_the_ID();
+
+    if (!$post_id || !have_rows('references', $post_id)) {
+        return '';
+    }
+
+    ob_start();
+
+    while (have_rows('references', $post_id)) : the_row();
+
+        $label = get_sub_field('reference_label');
+        $title = get_sub_field('reference_title');
+        $type  = get_sub_field('reference_type');
+        $url   = get_sub_field('reference_url');
+        $note  = get_sub_field('reference_note');
+
+        ?>
+
+        <div class="reference-entry" style="margin-bottom:1.25em;">
+
+            <?php if ($label) : ?>
+                <div><strong><?php echo esc_html($label); ?></strong></div>
+            <?php endif; ?>
+
+            <?php if ($title) : ?>
+                <div><?php echo esc_html($title); ?></div>
+            <?php endif; ?>
+
+            <?php if ($type) : ?>
+                <div><em><?php echo esc_html($type); ?></em></div>
+            <?php endif; ?>
+
+            <?php if ($url) : ?>
+                <div>
+                    <a href="<?php echo esc_url($url); ?>"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        View Source
+                    </a>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($note) : ?>
+                <div><?php echo wp_kses_post($note); ?></div>
+            <?php endif; ?>
+
+        </div>
+
+        <?php
+
+    endwhile;
+
+    return ob_get_clean();
+}
