@@ -66,11 +66,17 @@ function fn_quotes($chapter_id, $group_titles) {
                 ? esc_html(get_the_title($author))
                 : '';
 
-            $source_text = "Source: {$src_title}";
+$src_link = get_permalink($source);
 
-            if ($author_name) {
-                $source_text .= " by {$author_name}";
-            }
+$source_text = 'Source: <a href="' . esc_url($src_link) . '">' . $src_title . '</a>';
+
+if ($author_name) {
+
+    $author_link = get_permalink($author);
+
+    $source_text .= ' by <a href="' . esc_url($author_link) . '">' . $author_name . '</a>';
+}
+
         }
 
         // --------------------------------------------------
