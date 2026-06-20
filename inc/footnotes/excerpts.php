@@ -79,34 +79,38 @@ function fn_excerpts($chapter_id, $group_titles) {
 // --------------------------------------------------
 else {
 
-    // Check if there are any references
     if (have_rows('references', $item->ID)) {
         $has_migrated_refs = true;
 
-        // ---- Get the first reference ----
+        // Get first reference
         $refs = get_field('references', $item->ID);
-        var_dump($refs); // DEBUG - remove after checking
-
         $first_ref = $refs[0] ?? null;
-        var_dump($first_ref); // DEBUG - remove after checking
 
         $thumb_src = '';
 
+        // 1. Try custom image
         if ($first_ref && !empty($first_ref['reference_thumbnail'])) {
             $img = $first_ref['reference_thumbnail'];
-            // If ACF returns array, get thumbnail
-            $thumb_src = is_array($img) ? ($img['sizes']['thumbnail'] ?? $img['url'] ?? '') : '';
-            // If ACF returns ID, use wp_get_attachment_image_url
-            if (empty($thumb_src) && is_numeric($img)) {
-                $thumb_src = wp_get_attachment_image_url($img, 'thumbnail');
+            // Just use the URL – no thumbnail size required
+            if (is_array($img)) {
+                $thumb_src = $img['url']; // full image
+            } elseif (is_numeric($img)) {
+                $thumb_src = wp_get_attachment_image_url($img, 'full'); // full size
             }
         }
 
-        // Fallback to your new generic ID if no custom image
+        // 2. If still empty, use your fallback image (full URL)
         if (empty($thumb_src)) {
-            $thumb_src = wp_get_attachment_image_url(22614, 'thumbnail');
+            // Option A: Use ID with 'full' size
+            $thumb_src = wp_get_attachment_image_url(22614, 'full');
+            
+            // Option B: If that fails, hardcode the URL (most reliable)
+            if (empty($thumb_src)) {
+                $thumb_src = 'https://yourdomain.com/wp-content/uploads/your-default-image.jpg';
+            }
         }
 
+        // 3. Build thumbnail HTML
         if ($thumb_src) {
             $thumb = "<a href=\"{$link}\">
                         <img src=\"{$thumb_src}\"
