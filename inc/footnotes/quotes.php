@@ -27,9 +27,10 @@ function fn_quotes($chapter_id, $group_titles) {
 
         $thumb = '';
         $source_text = '';
+        $has_migrated_refs = false;   // flag for non‑CPT references
 
         // --------------------------------------------------
-        // ORIGINAL SOURCE CPT LOGIC
+        // ORIGINAL SOURCE CPT LOGIC (unchanged)
         // --------------------------------------------------
 
         $source = get_field('quote_source', $quote->ID);
@@ -66,37 +67,28 @@ function fn_quotes($chapter_id, $group_titles) {
                 ? esc_html(get_the_title($author))
                 : '';
 
-$src_link = get_permalink($source);
+            $src_link = get_permalink($source);
 
-$source_text = 'Source: <a href="' . esc_url($src_link) . '">' . $src_title . '</a>';
+            $source_text = 'Source: <a href="' . esc_url($src_link) . '">' . $src_title . '</a>';
 
-if ($author_name) {
-
-    $author_link = get_permalink($author);
-
-    $source_text .= ' by <a href="' . esc_url($author_link) . '">' . $author_name . '</a>';
-}
-
+            if ($author_name) {
+                $author_link = get_permalink($author);
+                $source_text .= ' by <a href="' . esc_url($author_link) . '">' . $author_name . '</a>';
+            }
         }
 
         // --------------------------------------------------
-        // FALLBACK FOR MIGRATED REFERENCES
+        // FALLBACK FOR MIGRATED REFERENCES (non‑CPT)
         // --------------------------------------------------
 
         else {
 
+            // Check if there are any references (without advancing the row pointer)
             if (have_rows('references', $quote->ID)) {
+                $has_migrated_refs = true;
 
-                the_row();
-
-                $label = get_sub_field('reference_label');
-
-                if ($label) {
-                    $source_text = 'Source: ' . esc_html($label);
-                }
-
+                // Set default thumbnail if available
                 $default_thumb = wp_get_attachment_image_url(19766, 'thumbnail');
-
                 if ($default_thumb) {
                     $thumb = "<a href=\"{$link}\">
                                 <img src=\"{$default_thumb}\"
@@ -106,11 +98,11 @@ if ($author_name) {
                                             margin-right:10px;\">
                               </a>";
                 }
-
-                reset_rows();
+                // Do NOT call the_row() or reset_rows() here
             }
         }
 
+        // --- Output list item ---
         echo "<li style=\"display:flex;align-items:flex-start;gap:10px;
                           margin-bottom:0.6em;\">
                 {$thumb}
@@ -118,12 +110,28 @@ if ($author_name) {
 
         echo "<a href=\"{$link}\"><strong>{$title}</strong></a>";
 
+        // --- Quote content ---
         if ($content) {
             echo "<div style=\"font-size:0.9em;color:#444;margin-top:2px;\">"
                  . esc_html($content) .
                  "</div>";
         }
 
+        // --- For migrated references, output the universal references block ---
+        if ($has_migrated_refs) {
+            echo '<div style="
+                    margin-top:0.6rem;
+                    margin-left:1rem;
+                    padding-left:1rem;
+                    border-left:2px solid #ddd;
+                    font-size:0.9rem;
+                ">';
+            // Use the universal renderer – it handles the details toggle and all fields
+            echo kp_render_references($quote->ID);
+            echo '</div>';
+        }
+
+        // --- CPT source line (only when $source exists) ---
         if (!empty($source_text)) {
             echo "<p style=\"margin-top:0.4rem;
                            font-size:0.9rem;
