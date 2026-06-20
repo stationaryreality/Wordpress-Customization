@@ -26,11 +26,11 @@ function fn_excerpts($chapter_id, $group_titles) {
 
         $thumb = '';
         $source_text = '';
+        $has_migrated_refs = false;   // flag for non‑CPT references
 
         // --------------------------------------------------
-        // ORIGINAL SOURCE CPT LOGIC
+        // ORIGINAL SOURCE CPT LOGIC (unchanged)
         // --------------------------------------------------
-
         $source = get_field('excerpt_source', $item->ID);
 
         if ($source) {
@@ -54,7 +54,6 @@ function fn_excerpts($chapter_id, $group_titles) {
             }
 
             $src_title = esc_html(get_the_title($source));
-
             $author = get_field('author_profile', $source->ID);
 
             if (is_array($author)) {
@@ -65,36 +64,27 @@ function fn_excerpts($chapter_id, $group_titles) {
                 ? esc_html(get_the_title($author))
                 : '';
 
-$src_link = get_permalink($source);
+            $src_link = get_permalink($source);
 
-$source_text = 'Source: <a href="' . esc_url($src_link) . '">' . $src_title . '</a>';
+            $source_text = 'Source: <a href="' . esc_url($src_link) . '">' . $src_title . '</a>';
 
-if ($author_name) {
-
-    $author_link = get_permalink($author);
-
-    $source_text .= ' by <a href="' . esc_url($author_link) . '">' . $author_name . '</a>';
-}
+            if ($author_name) {
+                $author_link = get_permalink($author);
+                $source_text .= ' by <a href="' . esc_url($author_link) . '">' . $author_name . '</a>';
+            }
         }
 
         // --------------------------------------------------
-        // FALLBACK FOR MIGRATED REFERENCES
+        // FALLBACK FOR MIGRATED REFERENCES (non‑CPT)
         // --------------------------------------------------
-
         else {
 
+            // Check if there are any references (without advancing the row pointer)
             if (have_rows('references', $item->ID)) {
+                $has_migrated_refs = true;
 
-                the_row();
-
-                $label = get_sub_field('reference_label');
-
-                if ($label) {
-                    $source_text = 'Source: ' . esc_html($label);
-                }
-
+                // Set default thumbnail if available
                 if ($default_thumb = wp_get_attachment_image_url(20123, 'thumbnail')) {
-
                     $thumb = "<a href=\"{$link}\">
                                 <img src=\"{$default_thumb}\"
                                      style=\"width:48px;height:48px;
@@ -103,11 +93,11 @@ if ($author_name) {
                                             margin-right:10px;\">
                               </a>";
                 }
-
-                reset_rows();
+                // Do NOT call the_row() or reset_rows() here
             }
         }
 
+        // --- Output list item ---
         echo "<li style=\"display:flex;align-items:flex-start;gap:10px;
                           margin-bottom:0.6em;\">
                 {$thumb}
@@ -119,68 +109,25 @@ if ($author_name) {
 
         if ($excerpt) {
             $excerpt = wp_trim_words($excerpt, 40, '...');
-echo "<div>{$excerpt}</div>";
+            echo "<div>{$excerpt}</div>";
 
-$references = get_field('references', $item->ID);
-
-if (!empty($references)) {
-
-    echo '<div style="
-        margin-top:0.6rem;
-        margin-left:1rem;
-        padding-left:1rem;
-        border-left:2px solid #ddd;
-        font-size:0.9rem;
-    ">';
-
-    echo '<strong>';
-
-    echo count($references) > 1
-        ? 'Sources:'
-        : 'Source:';
-
-    echo '</strong>';
-
-    foreach ($references as $ref) {
-
-        $label = $ref['reference_label'] ?? '';
-        $title = $ref['reference_title'] ?? '';
-        $type  = $ref['reference_type'] ?? '';
-        $url   = $ref['reference_url'] ?? '';
-
-        echo '<div style="margin-top:0.5rem;">';
-
-        if ($label) {
-            echo '<div><strong>' . esc_html($label) . '</strong></div>';
+            // --- For migrated references, output the universal references block ---
+            if ($has_migrated_refs) {
+                echo '<div style="
+                        margin-top:0.6rem;
+                        margin-left:1rem;
+                        padding-left:1rem;
+                        border-left:2px solid #ddd;
+                        font-size:0.9rem;
+                    ">';
+                // Use the universal renderer – it handles the details toggle and all fields
+                echo kp_render_references($item->ID);
+                echo '</div>';
+            }
         }
 
-        if ($title) {
-            echo '<div>' . esc_html($title) . '</div>';
-        }
-
-        if ($type) {
-            echo '<div><em>' . esc_html($type) . '</em></div>';
-        }
-
-        if ($url) {
-            echo '<div>
-                <a href="' . esc_url($url) . '"
-                   target="_blank"
-                   rel="noopener noreferrer">
-                   View Source
-                </a>
-            </div>';
-        }
-
-        echo '</div>';
-    }
-
-    echo '</div>';
-}
-        }
-
+        // --- CPT source line (only when $source exists) ---
         if (!empty($source_text)) {
-
             echo "<p style=\"margin-top:0.4rem;
                            font-size:0.9rem;
                            color:#666;\">{$source_text}</p>";
