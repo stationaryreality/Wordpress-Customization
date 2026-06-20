@@ -119,7 +119,64 @@ if ($author_name) {
 
         if ($excerpt) {
             $excerpt = wp_trim_words($excerpt, 40, '...');
-            echo "<div>{$excerpt}</div>";
+echo "<div>{$excerpt}</div>";
+
+$references = get_field('references', $item->ID);
+
+if (!empty($references)) {
+
+    echo '<div style="
+        margin-top:0.6rem;
+        margin-left:1rem;
+        padding-left:1rem;
+        border-left:2px solid #ddd;
+        font-size:0.9rem;
+    ">';
+
+    echo '<strong>';
+
+    echo count($references) > 1
+        ? 'Sources:'
+        : 'Source:';
+
+    echo '</strong>';
+
+    foreach ($references as $ref) {
+
+        $label = $ref['reference_label'] ?? '';
+        $title = $ref['reference_title'] ?? '';
+        $type  = $ref['reference_type'] ?? '';
+        $url   = $ref['reference_url'] ?? '';
+
+        echo '<div style="margin-top:0.5rem;">';
+
+        if ($label) {
+            echo '<div><strong>' . esc_html($label) . '</strong></div>';
+        }
+
+        if ($title) {
+            echo '<div>' . esc_html($title) . '</div>';
+        }
+
+        if ($type) {
+            echo '<div><em>' . esc_html($type) . '</em></div>';
+        }
+
+        if ($url) {
+            echo '<div>
+                <a href="' . esc_url($url) . '"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                   View Source
+                </a>
+            </div>';
+        }
+
+        echo '</div>';
+    }
+
+    echo '</div>';
+}
         }
 
         if (!empty($source_text)) {
