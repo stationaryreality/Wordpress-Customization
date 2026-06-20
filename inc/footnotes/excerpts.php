@@ -74,44 +74,53 @@ function fn_excerpts($chapter_id, $group_titles) {
             }
         }
 
-        // --------------------------------------------------
-        // FALLBACK FOR MIGRATED REFERENCES (non‑CPT)
-        // --------------------------------------------------
-        else {
+// --------------------------------------------------
+// FALLBACK FOR MIGRATED REFERENCES (non‑CPT)
+// --------------------------------------------------
+else {
 
-            // Check if there are any references (without advancing the row pointer)
-            if (have_rows('references', $item->ID)) {
-                $has_migrated_refs = true;
+    // Check if there are any references
+    if (have_rows('references', $item->ID)) {
+        $has_migrated_refs = true;
 
-                // ---- Get the first reference's custom thumbnail ----
-                $refs = get_field('references', $item->ID);
-                $first_ref = $refs[0] ?? null;
+        // ---- Get the first reference ----
+        $refs = get_field('references', $item->ID);
+        var_dump($refs); // DEBUG - remove after checking
 
-                $thumb_src = '';
+        $first_ref = $refs[0] ?? null;
+        var_dump($first_ref); // DEBUG - remove after checking
 
-                if ($first_ref && !empty($first_ref['reference_image'])) {
-                    $img = $first_ref['reference_thumbnail'];
-                    $thumb_src = $img['sizes']['thumbnail'] ?? $img['url'] ?? '';
-                }
+        $thumb_src = '';
 
-                // Fallback to generic default if no custom image
-                if (empty($thumb_src)) {
-                    $thumb_src = wp_get_attachment_image_url(20123, 'thumbnail');
-                }
-
-                if ($thumb_src) {
-                    $thumb = "<a href=\"{$link}\">
-                                <img src=\"{$thumb_src}\"
-                                     style=\"width:48px;height:48px;
-                                            object-fit:cover;
-                                            border-radius:50%;
-                                            margin-right:10px;\">
-                              </a>";
-                }
-
-                // Do NOT call the_row() or reset_rows() here
+        if ($first_ref && !empty($first_ref['reference_thumbnail'])) {
+            $img = $first_ref['reference_thumbnail'];
+            // If ACF returns array, get thumbnail
+            $thumb_src = is_array($img) ? ($img['sizes']['thumbnail'] ?? $img['url'] ?? '') : '';
+            // If ACF returns ID, use wp_get_attachment_image_url
+            if (empty($thumb_src) && is_numeric($img)) {
+                $thumb_src = wp_get_attachment_image_url($img, 'thumbnail');
             }
         }
+
+        // Fallback to your new generic ID if no custom image
+        if (empty($thumb_src)) {
+            $thumb_src = wp_get_attachment_image_url(22614, 'thumbnail');
+        }
+
+        if ($thumb_src) {
+            $thumb = "<a href=\"{$link}\">
+                        <img src=\"{$thumb_src}\"
+                             style=\"width:48px;height:48px;
+                                    object-fit:cover;
+                                    border-radius:50%;
+                                    margin-right:10px;\">
+                      </a>";
+        }
+
+        // Do NOT call the_row() or reset_rows() here
+    }
+}
+        
 
         // --- Output list item ---
         echo "<li style=\"display:flex;align-items:flex-start;gap:10px;
