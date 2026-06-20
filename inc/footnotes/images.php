@@ -17,12 +17,14 @@ function fn_images($chapter_id, $group_titles) {
             <span style=\"text-decoration:underline;\">{$meta['title']}</span>
           </a></h4>";
 
-    // --- Grid container ---
+    // --- Grid container (centered) ---
     echo '<div class="mini-image-grid" style="
         display:grid;
         grid-template-columns:repeat(auto-fill, minmax(90px, 1fr));
         gap:10px;
-        margin:0.8em 0 0 1.5em;
+        margin:0.8em auto 0;          /* ← center the block */
+        max-width:800px;              /* ← optional, adjust as needed */
+        justify-content:center;
     ">';
 
     // We'll collect images that have references here
@@ -51,13 +53,8 @@ function fn_images($chapter_id, $group_titles) {
               </div>";
 
         // --- Check for references and store if any ---
-        $references = get_field('references', $img_post->ID);
-        if (!empty($references)) {
-            $images_with_sources[] = [
-                'title'      => get_the_title($img_post),
-                'link'       => get_permalink($img_post),
-                'references' => $references,
-            ];
+        if (have_rows('references', $img_post->ID)) {
+            $images_with_sources[] = $img_post;   // store the post object
         }
     }
 
@@ -66,57 +63,22 @@ function fn_images($chapter_id, $group_titles) {
 
     // --- Sources section (rendered after the grid) ---
     if (!empty($images_with_sources)) {
-        echo '<div style="
-            margin:1.5rem 0 0 1.5rem;
-            padding-left:1rem;
-            border-left:2px solid #ddd;
-        ">';
+        echo '<div style="margin:1.5rem auto 0; max-width:800px; padding-left:1rem; border-left:2px solid #ddd;">';
+        echo '<strong>' . (count($images_with_sources) > 1 ? 'Sources:' : 'Source:') . '</strong>';
 
-        echo '<strong>';
-        echo count($images_with_sources) > 1 ? 'Sources:' : 'Source:';
-        echo '</strong>';
-
-        foreach ($images_with_sources as $image_source) {
+        foreach ($images_with_sources as $img_post) {
             echo '<div style="margin-top:1rem;">';
-
             // Image title as a link
-            echo '<div><strong>
-                    <a href="' . esc_url($image_source['link']) . '">
-                        ' . esc_html($image_source['title']) . '
-                    </a>
-                  </strong></div>';
+            echo '<div><strong><a href="' . esc_url(get_permalink($img_post)) . '">'
+                . esc_html(get_the_title($img_post)) . '</a></strong></div>';
 
-            // References for this image
-            foreach ($image_source['references'] as $ref) {
-                $label = $ref['reference_label'] ?? '';
-                $title = $ref['reference_title'] ?? '';
-                $type  = $ref['reference_type'] ?? '';
-                $url   = $ref['reference_url'] ?? '';
+            // Use the universal references renderer
+            echo kp_render_references($img_post->ID);
 
-                if ($label) {
-                    echo '<div>' . esc_html($label) . '</div>';
-                }
-                if ($title) {
-                    echo '<div>' . esc_html($title) . '</div>';
-                }
-                if ($type) {
-                    echo '<div><em>' . esc_html($type) . '</em></div>';
-                }
-                if ($url) {
-                    echo '<div>
-                        <a href="' . esc_url($url) . '"
-                           target="_blank"
-                           rel="noopener noreferrer">
-                           View Source
-                        </a>
-                    </div>';
-                }
-            }
-
-            echo '</div>'; // end each image source block
+            echo '</div>';
         }
 
-        echo '</div>'; // end sources wrapper
+        echo '</div>';
     }
 
     echo '</div>'; // end referenced-group
