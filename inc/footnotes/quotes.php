@@ -77,7 +77,7 @@ function fn_quotes($chapter_id, $group_titles) {
             }
         }
 
-        // --------------------------------------------------
+                // --------------------------------------------------
         // FALLBACK FOR MIGRATED REFERENCES (non‑CPT)
         // --------------------------------------------------
 
@@ -87,17 +87,44 @@ function fn_quotes($chapter_id, $group_titles) {
             if (have_rows('references', $quote->ID)) {
                 $has_migrated_refs = true;
 
-                // Set default thumbnail if available
-                $default_thumb = wp_get_attachment_image_url(19766, 'thumbnail');
-                if ($default_thumb) {
+                // ---- Get the first reference ----
+                $refs = get_field('references', $quote->ID);
+                $first_ref = $refs[0] ?? null;
+
+                $thumb_src = '';
+
+                // 1. Try custom image from first reference
+                if ($first_ref && !empty($first_ref['reference_thumbnail'])) {
+                    $img = $first_ref['reference_thumbnail'];
+                    // Use full URL – no thumbnail sizes
+                    if (is_array($img)) {
+                        $thumb_src = $img['url']; // full image
+                    } elseif (is_numeric($img)) {
+                        $thumb_src = wp_get_attachment_image_url($img, 'full');
+                    }
+                }
+
+                // 2. If no custom image, use your fallback (full size)
+                if (empty($thumb_src)) {
+                    // Use the default ID but with 'full' size
+                    $thumb_src = wp_get_attachment_image_url(19766, 'full');
+                    // If that still fails, hardcode a URL (optional, change if needed)
+                    if (empty($thumb_src)) {
+                        $thumb_src = 'https://yourdomain.com/wp-content/uploads/default-quote-image.jpg';
+                    }
+                }
+
+                // 3. Build the thumbnail HTML
+                if ($thumb_src) {
                     $thumb = "<a href=\"{$link}\">
-                                <img src=\"{$default_thumb}\"
+                                <img src=\"{$thumb_src}\"
                                      style=\"width:48px;height:48px;
                                             object-fit:cover;
                                             border-radius:50%;
                                             margin-right:10px;\">
                               </a>";
                 }
+
                 // Do NOT call the_row() or reset_rows() here
             }
         }
