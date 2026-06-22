@@ -246,6 +246,11 @@ function kp_render_element_related_sources($element_id) {
         }
 
         $type = get_post_type($item);
+
+        if (in_array($type, ['chapter', 'fragment'])) {
+            continue;
+        }
+        
         $meta = get_cpt_metadata($type);
 
         echo '<div style="margin-bottom:1rem;">';
