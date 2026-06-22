@@ -224,3 +224,42 @@ function kp_render_references_flat($post_id = null) {
 
     return ob_get_clean();
 }
+
+/**
+ * Element renderer
+ */
+
+function kp_render_element_related_sources($element_id) {
+
+    $related = get_field('related_content', $element_id);
+
+    if (empty($related)) {
+        return '';
+    }
+
+    ob_start();
+
+    foreach ($related as $item) {
+
+        if (!have_rows('references', $item->ID)) {
+            continue;
+        }
+
+        $type = get_post_type($item);
+        $meta = get_cpt_metadata($type);
+
+        echo '<div style="margin-bottom:1rem;">';
+
+        echo '<strong>'
+            . ($meta['emoji'] ?? '📄')
+            . ' '
+            . esc_html(get_the_title($item))
+            . '</strong>';
+
+        echo kp_render_references($item->ID);
+
+        echo '</div>';
+    }
+
+    return ob_get_clean();
+}
