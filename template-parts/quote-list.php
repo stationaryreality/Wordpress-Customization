@@ -55,20 +55,60 @@ if (empty($posts)) return;
         }
       }
 
-      // Image resolution logic: prefer source cover, then source featured, then post featured
-      $image = '';
-      if ($source) {
-        $cover = get_field('cover_image', $source->ID);
-        if ($cover && is_array($cover)) {
-          $image = $cover['sizes']['medium'] ?? ($cover['sizes']['thumbnail'] ?? ($cover['url'] ?? ''));
-        } elseif (has_post_thumbnail($source->ID)) {
-          $image = get_the_post_thumbnail_url($source->ID, 'medium');
-        }
-      }
+// --------------------------------------------------
+// IMAGE LOGIC
+// Source CPT → Excerpt Thumbnail → Reference Thumbnail → Default
+// --------------------------------------------------
 
-      if (!$image && has_post_thumbnail($post_id)) {
-        $image = get_the_post_thumbnail_url($post_id, 'medium');
-      }
+$image = '';
+
+// 1. Source CPT image
+if ($source) {
+
+    $cover = get_field('cover_image', $source->ID);
+
+    if ($cover && is_array($cover)) {
+        $image = $cover['sizes']['medium']
+            ?? $cover['sizes']['thumbnail']
+            ?? $cover['url']
+            ?? '';
+    }
+
+    elseif (has_post_thumbnail($source->ID)) {
+        $image = get_the_post_thumbnail_url($source->ID, 'medium');
+    }
+}
+
+// 2. Excerpt featured image
+if (!$image && has_post_thumbnail($post_id)) {
+    $image = get_the_post_thumbnail_url($post_id, 'medium');
+}
+
+// 3. First reference thumbnail
+if (!$image && have_rows('references', $post_id)) {
+
+    $refs = get_field('references', $post_id);
+    $first_ref = $refs[0] ?? null;
+
+    if ($first_ref && !empty($first_ref['reference_thumbnail'])) {
+
+        $img = $first_ref['reference_thumbnail'];
+
+        if (is_array($img)) {
+            $image = $img['url'];
+        }
+
+        elseif (is_numeric($img)) {
+            $image = wp_get_attachment_image_url($img, 'medium');
+        }
+    }
+}
+
+// 4. Final fallback image
+if (!$image) {
+    $image = wp_get_attachment_image_url(19766, 'medium');
+}
+
     ?>
       <article class="portal-quote-item">
         <?php if ($image): ?>
