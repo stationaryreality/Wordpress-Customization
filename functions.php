@@ -438,6 +438,13 @@ function portal_pages_list() {
 add_shortcode('portal_pages', 'portal_pages_list');
 
 
+
+// 2026-06-23 - limit page-links-to to only pages, can add cpts if needed
+
+add_filter('page-links-to-post-types', function() {
+    return ['page'];
+});
+
 // 2026-05-09
 
 //require_once get_template_directory() . '/inc/admin/admin-menu.php';
