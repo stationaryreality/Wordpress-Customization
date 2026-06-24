@@ -4,18 +4,19 @@
     "fields": [
         {
             "key": "field_tab_main_song",
-            "label": "Main Song",
+            "label": "Main",
             "name": "",
             "aria-label": "",
             "type": "tab",
             "instructions": "",
             "required": 0,
-            "conditional_logic": false,
+            "conditional_logic": 0,
             "wrapper": {
                 "width": "",
                 "class": "",
                 "id": ""
             },
+            "relevanssi_exclude": 0,
             "placement": "top",
             "endpoint": 0,
             "selected": 0
@@ -122,7 +123,7 @@
         },
         {
             "key": "field_tab_referenced",
-            "label": "Books",
+            "label": "Books & Lex",
             "name": "",
             "aria-label": "",
             "type": "tab",
@@ -168,25 +169,6 @@
             ],
             "elements": [],
             "bidirectional_target": []
-        },
-        {
-            "key": "field_68c074f5e9b1b",
-            "label": "Concepts",
-            "name": "",
-            "aria-label": "",
-            "type": "tab",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "relevanssi_exclude": 0,
-            "placement": "top",
-            "endpoint": 0,
-            "selected": 0
         },
         {
             "key": "field_concepts_referenced",
@@ -305,7 +287,7 @@
         },
         {
             "key": "field_68c0744c93f51",
-            "label": "Movies, Shows, Games & Orgs",
+            "label": "Mov, TV, Game & Orgs",
             "name": "",
             "aria-label": "",
             "type": "tab",
@@ -532,7 +514,7 @@
         },
         {
             "key": "field_68c0756064817",
-            "label": "Images, Videos & Refs",
+            "label": "Images, Videos, Refs & Elements",
             "name": "",
             "aria-label": "",
             "type": "tab",
@@ -647,6 +629,193 @@
             "elements": "",
             "bidirectional": 0,
             "bidirectional_target": []
+        },
+        {
+            "key": "field_6a33f1a19af71",
+            "label": "References",
+            "name": "references",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "layout": "table",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "",
+            "button_label": "Add Row",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_6a34006d35ca2",
+                    "label": "Reference Label",
+                    "name": "reference_label",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "relevanssi_exclude": 0,
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_6a33f1a19af71"
+                },
+                {
+                    "key": "field_6a33f280f1eb5",
+                    "label": "Reference Title",
+                    "name": "reference_title",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "relevanssi_exclude": 0,
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_6a33f1a19af71"
+                },
+                {
+                    "key": "field_6a33f1f59af72",
+                    "label": "Reference Type",
+                    "name": "reference_type",
+                    "aria-label": "",
+                    "type": "select",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "relevanssi_exclude": 0,
+                    "choices": {
+                        "Book": "Book",
+                        "Article": "Article",
+                        "Website": "Website",
+                        "Wikipedia": "Wikipedia",
+                        "Video": "Video",
+                        "Interview": "Interview",
+                        "Conference": "Conference",
+                        "Magazine": "Magazine",
+                        "Journal": "Journal",
+                        "Government Report": "Government Report",
+                        "Other": "Other"
+                    },
+                    "default_value": false,
+                    "return_format": "value",
+                    "multiple": 0,
+                    "allow_null": 0,
+                    "allow_in_bindings": 0,
+                    "ui": 0,
+                    "ajax": 0,
+                    "placeholder": "",
+                    "create_options": 0,
+                    "save_options": 0,
+                    "parent_repeater": "field_6a33f1a19af71"
+                },
+                {
+                    "key": "field_6a33f2a721f57",
+                    "label": "Reference URL",
+                    "name": "reference_url",
+                    "aria-label": "",
+                    "type": "url",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "relevanssi_exclude": 0,
+                    "default_value": "",
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "parent_repeater": "field_6a33f1a19af71"
+                },
+                {
+                    "key": "field_6a33f2d16b287",
+                    "label": "Reference Note",
+                    "name": "reference_note",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "relevanssi_exclude": 0,
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 0,
+                    "rows": "",
+                    "placeholder": "",
+                    "new_lines": "",
+                    "parent_repeater": "field_6a33f1a19af71"
+                }
+            ]
+        },
+        {
+            "key": "field_6a3928e8eef32",
+            "label": "Attached Elements",
+            "name": "attached_elements",
+            "aria-label": "",
+            "type": "relationship",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "post_type": [
+                "element"
+            ],
+            "post_status": "",
+            "taxonomy": "",
+            "filters": [
+                "search",
+                "post_type",
+                "taxonomy"
+            ],
+            "return_format": "object",
+            "min": "",
+            "max": "",
+            "allow_in_bindings": 0,
+            "elements": "",
+            "bidirectional": 0,
+            "bidirectional_target": []
         }
     ],
     "location": [
@@ -670,5 +839,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1778767697
+    "modified": 1782135659
 }
