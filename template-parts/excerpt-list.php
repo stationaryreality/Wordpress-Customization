@@ -74,11 +74,6 @@ if ($source) {
     }
 }
 
-// 2. Excerpt featured image
-if (!$image && has_post_thumbnail($post_id)) {
-    $image = get_the_post_thumbnail_url($post_id, 'medium');
-}
-
 // 3. First reference thumbnail
 if (!$image && have_rows('references', $post_id)) {
 
@@ -97,6 +92,11 @@ if (!$image && have_rows('references', $post_id)) {
             $image = wp_get_attachment_image_url($img, 'medium');
         }
     }
+}
+
+// 2. Excerpt featured image
+if (!$image && has_post_thumbnail($post_id)) {
+    $image = get_the_post_thumbnail_url($post_id, 'medium');
 }
 
 // 4. Final fallback image
