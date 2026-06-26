@@ -127,7 +127,6 @@ function get_cpt_metadata($cpt_name = '') {
         'quote'             => ['title' => 'Quote Library',             'emoji' => '💬', 'link' => '/quote-library/'],
         'excerpt'           => ['title' => 'Excerpts Library',          'emoji' => '📖', 'link' => '/excerpt-library/'],
         'lyric'             => ['title' => 'Song Excerpts',             'emoji' => '🎼', 'link' => '/song-excerpts/'],
-        'reference'         => ['title' => 'Research Sources',          'emoji' => '📰', 'link' => '/research-sources/'],
         'song'              => ['title' => 'Songs Featured',            'emoji' => '🎵', 'link' => '/songs-featured/'],
         'image'             => ['title' => 'Images Gallery',            'emoji' => '🖼', 'link' => '/image-gallery/'],
         'organization'      => ['title' => 'Organizations',             'emoji' => '🏢', 'link' => '/organizations/'],

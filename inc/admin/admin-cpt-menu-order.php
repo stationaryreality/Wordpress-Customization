@@ -55,7 +55,6 @@ add_action('admin_menu', function () {
         'portal'       => 'Portal Pages',
         'profile'      => 'People Referenced',
         'quote'        => 'Quote Library',
-        'reference'    => 'Research Sources',
         'show'         => 'TV Shows Referenced',
         'song'         => 'Songs Featured',
 
@@ -126,7 +125,6 @@ add_action('load-edit.php', function () {
         'organization',
         'profile',
         'quote',
-        'reference',
         'show',
         'song'
 

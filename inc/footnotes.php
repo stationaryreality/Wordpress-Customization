@@ -42,7 +42,6 @@ foreach (get_cpt_metadata() as $cpt => $meta) {
         'fn_lyrics',
         'fn_excerpts',
         'fn_organizations',
-        'fn_references',
         'fn_sources',
         'fn_images',
         'fn_elements',
