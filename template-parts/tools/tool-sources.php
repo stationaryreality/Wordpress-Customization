@@ -141,8 +141,8 @@ foreach ($entry['references'] as $ref) :
 
     $label = $ref['reference_label'] ?? '';
     $title = $ref['reference_title'] ?? '';
-    $note  = $ref['reference_note'] ?? '';
     $url   = $ref['reference_url'] ?? '';
+    $note  = $ref['reference_note'] ?? '';   // ← new field
 ?>
 
 <div style="margin-bottom:1.25rem;">
@@ -156,7 +156,7 @@ foreach ($entry['references'] as $ref) :
 <?php endif; ?>
 
 <?php if ($note) : ?>
-<div><em><?php echo esc_html($type); ?></em></div>
+<div><strong>Note:</strong> <?php echo esc_html($note); ?></div>
 <?php endif; ?>
 
 <?php if ($url) : ?>
