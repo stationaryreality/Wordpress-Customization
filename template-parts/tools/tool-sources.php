@@ -141,7 +141,7 @@ foreach ($entry['references'] as $ref) :
 
     $label = $ref['reference_label'] ?? '';
     $title = $ref['reference_title'] ?? '';
-    $type  = $ref['reference_type'] ?? '';
+    $note  = $ref['reference_note'] ?? '';
     $url   = $ref['reference_url'] ?? '';
 ?>
 
@@ -155,7 +155,7 @@ foreach ($entry['references'] as $ref) :
 <div><?php echo esc_html($title); ?></div>
 <?php endif; ?>
 
-<?php if ($type) : ?>
+<?php if ($note) : ?>
 <div><em><?php echo esc_html($type); ?></em></div>
 <?php endif; ?>
 
