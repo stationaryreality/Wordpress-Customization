@@ -19,7 +19,6 @@
             "relevanssi_exclude": 0,
             "post_type": [
                 "book",
-                "reference",
                 "movie",
                 "show",
                 "game"
@@ -332,5 +331,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1781973006
+    "modified": 1782486401
 }
