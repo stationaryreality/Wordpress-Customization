@@ -1,25 +1,14 @@
 <?php
 /**
  * Universal Sources Renderer
- *
- * This file is a complete replacement.
- * - Type is removed from all entries; note is displayed instead.
- * - Element sources are flat (no nested details).
- * - Chapter inheritance collects direct + attached Element related content,
- *   deduplicates, and renders a single flat list (one hop only).
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-/* --------------------------------------------------------------------------
-   Core renderers
--------------------------------------------------------------------------- */
-
 /**
- * Renders references inside a <details> accordion.
- * Used where legacy nested output is expected.
+ * Main renderer
  */
 function kp_render_references($post_id = null) {
 
@@ -51,6 +40,7 @@ function kp_render_references($post_id = null) {
                 <?php
                 $label = get_sub_field('reference_label');
                 $title = get_sub_field('reference_title');
+                $type  = get_sub_field('reference_type');
                 $url   = get_sub_field('reference_url');
                 $note  = get_sub_field('reference_note');
                 ?>
@@ -66,6 +56,12 @@ function kp_render_references($post_id = null) {
                     <?php if ($title) : ?>
                         <div>
                             <?php echo esc_html($title); ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($type) : ?>
+                        <div>
+                            <em><?php echo esc_html($type); ?></em>
                         </div>
                     <?php endif; ?>
 
@@ -100,9 +96,74 @@ function kp_render_references($post_id = null) {
 
 
 /**
- * Flat reference renderer (no <details> wrapper, no type).
- * Used by the collector and the Element page.
+ * Shortcode
  */
+function kp_references_shortcode() {
+    return kp_render_references(get_the_ID());
+}
+
+add_shortcode('references', 'kp_references_shortcode');
+
+
+/**
+ * CPT renderer
+ */
+
+function kp_render_related_references($chapter_id) {
+
+    if (!function_exists('get_cpt_metadata')) {
+        return '';
+    }
+
+    $groups = [
+        'quote'   => get_field('quotes_referenced', $chapter_id) ?: [],
+        'excerpt' => get_field('excerpts_referenced', $chapter_id) ?: [],
+        'image'   => get_field('images_linked', $chapter_id) ?: [],
+        'lyric'   => get_field('lyrics_referenced', $chapter_id) ?: [],
+    ];
+
+    $metadata = get_cpt_metadata();
+
+    ob_start();
+
+    foreach ($groups as $post_type => $items) {
+
+        if (empty($items)) {
+            continue;
+        }
+
+        $found_sources = false;
+
+        foreach ($items as $item) {
+
+            if (have_rows('references', $item->ID)) {
+
+                if (!$found_sources) {
+
+                    $emoji = $metadata[$post_type]['emoji'] ?? '📄';
+                    $title = $metadata[$post_type]['title'] ?? ucfirst($post_type);
+
+                    echo "<h5>{$emoji} {$title}</h5>";
+
+                    $found_sources = true;
+                }
+
+                echo '<div style="margin-bottom:1em;">';
+
+                echo '<strong>' .
+                    esc_html(get_the_title($item->ID)) .
+                    '</strong>';
+
+                echo kp_render_references($item->ID);
+
+                echo '</div>';
+            }
+        }
+    }
+
+    return ob_get_clean();
+}
+
 function kp_render_references_flat($post_id = null) {
 
     if (!function_exists('have_rows')) {
@@ -121,6 +182,7 @@ function kp_render_references_flat($post_id = null) {
 
         $label = get_sub_field('reference_label');
         $title = get_sub_field('reference_title');
+        $type  = get_sub_field('reference_type');
         $url   = get_sub_field('reference_url');
         $note  = get_sub_field('reference_note');
 
@@ -134,6 +196,10 @@ function kp_render_references_flat($post_id = null) {
 
             <?php if ($title) : ?>
                 <div><?php echo esc_html($title); ?></div>
+            <?php endif; ?>
+
+            <?php if ($type) : ?>
+                <div><em><?php echo esc_html($type); ?></em></div>
             <?php endif; ?>
 
             <?php if ($url) : ?>
@@ -159,137 +225,10 @@ function kp_render_references_flat($post_id = null) {
     return ob_get_clean();
 }
 
-
-/* --------------------------------------------------------------------------
-   Shortcode
--------------------------------------------------------------------------- */
-
-function kp_references_shortcode() {
-    return kp_render_references(get_the_ID());
-}
-add_shortcode('references', 'kp_references_shortcode');
-
-
-/* --------------------------------------------------------------------------
-   Chapter inheritance collector (one‑hop)
--------------------------------------------------------------------------- */
-
 /**
- * Renders a flat, deduplicated source list for a Chapter.
- *
- * Collects:
- *   – direct CPTs (quotes, excerpts, images, lyrics)
- *   – CPTs from attached Elements' related_content (one hop)
- *
- * Deduplicates by post ID and renders a single flat list.
+ * Element renderer
  */
-function kp_render_related_references($chapter_id) {
 
-    if (!function_exists('get_cpt_metadata')) {
-        return '';
-    }
-
-    $source_posts = [];
-
-    /* -------------------------------------------------------------
-       Step 1: Collect direct CPTs attached to the Chapter
-    ------------------------------------------------------------- */
-
-    $direct_fields = [
-        'quotes_referenced',
-        'excerpts_referenced',
-        'images_linked',
-        'lyrics_referenced',
-    ];
-
-    foreach ($direct_fields as $field_key) {
-        $items = get_field($field_key, $chapter_id);
-        if (!empty($items) && is_array($items)) {
-            foreach ($items as $item) {
-                // Only keep posts that actually have references
-                if (have_rows('references', $item->ID)) {
-                    $source_posts[$item->ID] = $item;
-                }
-            }
-        }
-    }
-
-    /* -------------------------------------------------------------
-       Step 2: Collect attached Elements → their related_content
-       (one hop only – no deeper recursion)
-    ------------------------------------------------------------- */
-
-    $attached_elements = get_field('attached_elements', $chapter_id);
-
-    if (!empty($attached_elements) && is_array($attached_elements)) {
-        foreach ($attached_elements as $element) {
-            $related = get_field('related_content', $element->ID);
-            if (!empty($related) && is_array($related)) {
-                foreach ($related as $item) {
-                    // Only keep posts that actually have references
-                    if (have_rows('references', $item->ID)) {
-                        $source_posts[$item->ID] = $item;
-                    }
-                }
-            }
-        }
-    }
-
-    // No sources found
-    if (empty($source_posts)) {
-        return '';
-    }
-
-    /* -------------------------------------------------------------
-       Step 3: Render the deduplicated list (flat)
-    ------------------------------------------------------------- */
-
-    $metadata = get_cpt_metadata();
-
-    ob_start();
-    ?>
-
-    <div class="chapter-sources">
-
-        <h4>Sources</h4>
-
-        <?php foreach ($source_posts as $post) : ?>
-
-            <?php
-            $type = get_post_type($post);
-            $emoji = $metadata[$type]['emoji'] ?? '📄';
-            ?>
-
-            <div class="source-group" style="margin-bottom:1.5rem;">
-
-                <strong>
-                    <?php echo esc_html($emoji . ' ' . get_the_title($post)); ?>
-                </strong>
-
-                <?php echo kp_render_references_flat($post->ID); ?>
-
-            </div>
-
-        <?php endforeach; ?>
-
-    </div>
-
-    <?php
-
-    return ob_get_clean();
-}
-
-
-/* --------------------------------------------------------------------------
-   Element page sources (flat, no nested accordions)
--------------------------------------------------------------------------- */
-
-/**
- * Renders flat sources for an Element page.
- *
- * Lists each related_content item (skipping Chapters/Fragments)
- * with its title/emoji and flat references.
- */
 function kp_render_element_related_sources($element_id) {
 
     $related = get_field('related_content', $element_id);
@@ -298,52 +237,34 @@ function kp_render_element_related_sources($element_id) {
         return '';
     }
 
-    if (!function_exists('get_cpt_metadata')) {
-        return '';
-    }
-
-    $metadata = get_cpt_metadata();
-
     ob_start();
-    ?>
 
-    <div class="element-sources">
+    foreach ($related as $item) {
 
-        <h4>Sources</h4>
+        if (!have_rows('references', $item->ID)) {
+            continue;
+        }
 
-        <?php foreach ($related as $item) : ?>
+        $type = get_post_type($item);
 
-            <?php
-            // Skip if this post has no references
-            if (!have_rows('references', $item->ID)) {
-                continue;
-            }
+        if (in_array($type, ['chapter', 'fragment'])) {
+            continue;
+        }
+        
+        $meta = get_cpt_metadata($type);
 
-            $type = get_post_type($item);
+        echo '<div style="margin-bottom:1rem;">';
 
-            // Skip chapters and fragments (they act as aggregators, not sources)
-            if (in_array($type, ['chapter', 'fragment'])) {
-                continue;
-            }
+        echo '<strong>'
+            . ($meta['emoji'] ?? '📄')
+            . ' '
+            . esc_html(get_the_title($item))
+            . '</strong>';
 
-            $emoji = $metadata[$type]['emoji'] ?? '📄';
-            ?>
+        echo kp_render_references($item->ID);
 
-            <div class="source-group" style="margin-bottom:1.5rem;">
-
-                <strong>
-                    <?php echo esc_html($emoji . ' ' . get_the_title($item)); ?>
-                </strong>
-
-                <?php echo kp_render_references_flat($item->ID); ?>
-
-            </div>
-
-        <?php endforeach; ?>
-
-    </div>
-
-    <?php
+        echo '</div>';
+    }
 
     return ob_get_clean();
 }
