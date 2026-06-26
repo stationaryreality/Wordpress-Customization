@@ -2,7 +2,7 @@
 
 $post_types = [
  'artist','profile','book','concept','movie','quote','lyric',
- 'reference','organization','image','song','chapter',
+ 'organization','image','song','chapter',
  'excerpt','fragment','element','show','game', 'portal'
 ];
 

@@ -12,7 +12,6 @@ $post_types = [
     'quote',
     'excerpt',
     'lyric',
-    'reference',
     'song',
     'image',
     'organization',

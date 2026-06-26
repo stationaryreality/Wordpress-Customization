@@ -18,7 +18,6 @@ $cpts = [
     'quote'        => '💬 Quote Library',
     'excerpt'      => '📖 Excerpts Library',
     'lyric'        => '🎼 Song Excerpts',
-    'reference'    => '📰 Research Sources',
     'song'         => '🎵 Songs Featured',
     'image'        => '🖼 Images Gallery',
     'organization' => '🏢 Organizations',

@@ -6,7 +6,7 @@ $excluded_types = ['chapter','fragment','element'];
 
 $all_types = [
  'profile','book','movie','quote','lyric',
- 'reference','organization','image','song',
+ 'organization','image','song',
  'excerpt','show','game'
 ];
 
@@ -22,8 +22,7 @@ $relationship_fields = [
  'people_referenced',
  'quotes_referenced',
  'images_linked',
- 'games_referenced',
- 'chapter_references'
+ 'games_referenced'
 ];
 
 /* ===== STEP 1: COLLECT REFERENCED IDS ===== */
