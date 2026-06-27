@@ -3,8 +3,13 @@
 
 function fn_excerpts($chapter_id, $group_titles) {
 
-    $items = get_field('excerpts_referenced', $chapter_id) ?: [];
-    if (empty($items)) return '';
+$context = kp_build_reference_context($chapter_id);
+
+$items = $context['excerpt'] ?? [];
+
+if (empty($items)) {
+    return '';
+}
 
     uasort($items, fn($a, $b) => strcmp(get_the_title($a), get_the_title($b)));
 
