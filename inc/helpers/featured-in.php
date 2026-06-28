@@ -81,7 +81,8 @@ function show_featured_in_threads($meta_key, $post_id = null) {
                 <h3>Elements</h3>
                 <div style="
                     display:grid;
-                    grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
+                    grid-template-columns:repeat(auto-fit, minmax(110px,110px))
+justify-content:center;
                     gap:12px;
                     max-width:700px;
                     margin:1rem auto 0;
