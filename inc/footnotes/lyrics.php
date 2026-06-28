@@ -2,8 +2,13 @@
 // inc/footnotes/lyrics.php
 
 function fn_lyrics($chapter_id, $group_titles) {
-    $items = get_field('lyrics_referenced', $chapter_id) ?: [];
-    if (empty($items)) return '';
+$context = kp_build_reference_context($chapter_id);
+
+$items = $context['lyric'] ?? [];
+
+if (empty($items)) {
+    return '';
+}
 
     uasort($items, fn($a, $b) => strcmp(get_the_title($a), get_the_title($b)));
 
