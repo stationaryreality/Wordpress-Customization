@@ -79,14 +79,14 @@ function show_featured_in_threads($meta_key, $post_id = null) {
         <?php if (!empty($elements)) : ?>
             <div style="margin-top:2.5rem;">
                 <h3>Elements</h3>
-                <div style="
-                    display:grid;
-                    grid-template-columns:repeat(auto-fit, minmax(110px,110px))
-justify-content:center;
-                    gap:12px;
-                    max-width:700px;
-                    margin:1rem auto 0;
-                ">
+<div style="
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(110px, 110px));
+    justify-content:center;
+    gap:12px;
+    max-width:700px;
+    margin:1rem auto 0;
+">
                     <?php foreach ($elements as $element) :
                         $image = get_field('element_image', $element->ID);
                         if (is_array($image)) {
