@@ -18,7 +18,7 @@ function kp_build_reference_context($post_id) {
         'excerpt'      => 'excerpts_referenced',
         'image'        => 'images_linked',
         'lyric'        => 'lyrics_referenced',
-        'book'         => 'books_referenced',
+        'book'         => 'books_cited',
         'movie'        => 'movies_referenced',
         'show'         => 'shows_referenced',
         'game'         => 'games_referenced',
