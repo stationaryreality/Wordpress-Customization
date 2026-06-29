@@ -23,7 +23,6 @@ $relationship_fields = [
  'quotes_referenced',
  'images_linked',
  'games_referenced',
- 'attached_elements'
 ];
 
 /* ===== STEP 1: COLLECT REFERENCED IDS ===== */
@@ -31,46 +30,55 @@ $relationship_fields = [
 $referenced_ids = [];
 
 $containers = new WP_Query([
-  'post_type' => $excluded_types,
-  'posts_per_page' => -1,
-  'post_status' => 'publish'
+    'post_type'      => $excluded_types,
+    'posts_per_page' => -1,
+    'post_status'    => 'publish',
 ]);
 
 while ($containers->have_posts()) {
-  $containers->the_post();
 
-  $id = get_the_ID();
+    $containers->the_post();
 
-  foreach ($relationship_fields as $field) {
+    $context = kp_build_reference_context(get_the_ID());
 
-    $items = get_field($field, $id);
+    foreach ($context as $items) {
 
-    if ($items) {
-      foreach ($items as $item) {
+        foreach ($items as $item) {
 
-        if (is_object($item)) {
-          $referenced_ids[] = $item->ID;
+            if ($item instanceof WP_Post) {
+                $referenced_ids[$item->ID] = true;
+            }
+
         }
-      }
     }
-  }
 
-  /* chapter_songs repeater */
-  $songs = get_field('chapter_songs', $id);
+    // --------------------------------------
+    // Songs are NOT part of Reference Context
+    // yet, so keep the existing logic.
+    // --------------------------------------
 
-  if ($songs) {
-    foreach ($songs as $row) {
+    $songs = get_field('chapter_songs', get_the_ID());
 
-      if (!empty($row['song']) && is_object($row['song'])) {
-        $referenced_ids[] = $row['song']->ID;
-      }
+    if ($songs) {
+
+        foreach ($songs as $row) {
+
+            if (!empty($row['song']) && $row['song'] instanceof WP_Post) {
+
+                $referenced_ids[$row['song']->ID] = true;
+
+            }
+
+        }
+
     }
-  }
+
 }
 
 wp_reset_postdata();
 
-$referenced_ids = array_unique($referenced_ids);
+$referenced_ids = array_keys($referenced_ids);
+
 
 /* ===== STEP 2: GET ALL POSTS ===== */
 
