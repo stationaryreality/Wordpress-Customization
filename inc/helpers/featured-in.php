@@ -11,35 +11,14 @@ function show_featured_in_threads($meta_key, $post_id = null) {
         return;
     }
 
-    // 1. Get Chapters and Fragments that reference this post via the dynamic meta_key
-    $threads = get_posts([
-        'post_type'      => ['chapter', 'fragment'],
-        'posts_per_page' => -1,
-        'orderby'        => 'menu_order',
-        'order'          => 'ASC',
-        'meta_query'     => [
-            [
-                'key'     => $meta_key,
-                'value'   => '"' . $post_id . '"',
-                'compare' => 'LIKE'
-            ]
-        ]
-    ]);
+$context = kp_build_featured_context($meta_key, $post_id);
 
-    // 2. Get Elements that reference this post via the fixed 'related_content' field
-    $elements = get_posts([
-        'post_type'      => ['element'],
-        'posts_per_page' => -1,
-        'orderby'        => 'title',
-        'order'          => 'ASC',
-        'meta_query'     => [
-            [
-                'key'     => 'related_content',
-                'value'   => '"' . $post_id . '"',
-                'compare' => 'LIKE'
-            ]
-        ]
-    ]);
+$threads = array_merge(
+    $context['chapters'],
+    $context['fragments']
+);
+
+$elements = $context['elements'];
 
     // If nothing found, exit quietly
     if (empty($threads) && empty($elements)) {

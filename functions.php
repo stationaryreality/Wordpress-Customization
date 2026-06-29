@@ -467,6 +467,8 @@ require_once get_stylesheet_directory() . '/inc/relationships/song-relationships
 
 require_once get_stylesheet_directory() . '/inc/collectors/reference-context.php';
 
+require_once get_stylesheet_directory() . '/inc/collectors/featured-context.php';
+
 require_once get_stylesheet_directory() . '/inc/references.php';
 
 
