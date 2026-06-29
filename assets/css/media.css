@@ -18,6 +18,15 @@
     transition: transform 0.25s ease;
 }
 
+.mini-video-title {
+    margin: 0.45em 0 0;
+
+    font-size: 0.78em;
+    line-height: 1.3;
+
+    color: #555;
+}
+
 .mini-video-thumb {
     width: 100%;
 
