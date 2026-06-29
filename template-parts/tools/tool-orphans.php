@@ -22,7 +22,8 @@ $relationship_fields = [
  'people_referenced',
  'quotes_referenced',
  'images_linked',
- 'games_referenced'
+ 'games_referenced',
+ 'attached_elements'
 ];
 
 /* ===== STEP 1: COLLECT REFERENCED IDS ===== */
