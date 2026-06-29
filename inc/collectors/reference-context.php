@@ -8,70 +8,97 @@
 function kp_build_reference_context($post_id) {
 
     $context = [];
+    $type = get_post_type($post_id);
 
-    // --------------------------
-    // Direct Chapter/Fragment fields
-    // --------------------------
+// --------------------------
+// Elements are different.
+// They store everything in one related_content field.
+// --------------------------
 
-    $field_map = [
-        'quote'        => 'quotes_referenced',
-        'excerpt'      => 'excerpts_referenced',
-        'image'        => 'images_linked',
-        'lyric'        => 'lyrics_referenced',
-        'book'         => 'books_cited',
-        'movie'        => 'movies_referenced',
-        'show'         => 'shows_referenced',
-        'game'         => 'games_referenced',
-        'organization' => 'organizations_referenced',
-        'concept'      => 'concepts_referenced',
-        'person'       => 'people_referenced',
-        'video'        => 'videos_referenced',
-        'profile'      => 'profiles_referenced',
-        'artist'       => 'artists_referenced',
-    ];
+if ($type === 'element') {
 
-    foreach ($field_map as $type => $field) {
+    $related = get_field('related_content', $post_id);
 
-        $items = get_field($field, $post_id);
+    if ($related) {
 
-        if (!$items) {
-            continue;
-        }
+        foreach ($related as $item) {
 
-        foreach ($items as $item) {
-            $context[$type][$item->ID] = $item;
-        }
-    }
+            $item_type = get_post_type($item);
 
-    // --------------------------
-    // Attached Elements
-    // --------------------------
-
-    $elements = get_field('attached_elements', $post_id);
-
-    if ($elements) {
-
-        foreach ($elements as $element) {
-
-            $related = get_field('related_content', $element->ID);
-
-            if (!$related) {
+            // Never recurse into narrative containers
+            if (in_array($item_type, ['chapter', 'fragment', 'element'])) {
                 continue;
             }
 
-            foreach ($related as $item) {
-
-                $type = get_post_type($item);
-
-                // Never recurse into narrative containers
-                if (in_array($type, ['chapter', 'fragment', 'element'])) {
-                    continue;
-                }
-
-                $context[$type][$item->ID] = $item;
-            }
+            $context[$item_type][$item->ID] = $item;
         }
     }
 
     return $context;
+}
+
+// --------------------------
+// Chapter / Fragment fields
+// --------------------------
+
+$field_map = [
+    'quote'        => 'quotes_referenced',
+    'excerpt'      => 'excerpts_referenced',
+    'image'        => 'images_linked',
+    'lyric'        => 'lyrics_referenced',
+    'book'         => 'books_cited',
+    'movie'        => 'movies_referenced',
+    'show'         => 'shows_referenced',
+    'game'         => 'games_referenced',
+    'organization' => 'organizations_referenced',
+    'concept'      => 'concepts_referenced',
+    'person'       => 'people_referenced',
+    'video'        => 'videos_referenced',
+    'profile'      => 'profiles_referenced',
+    'artist'       => 'artists_referenced',
+];
+
+foreach ($field_map as $item_type => $field) {
+
+    $items = get_field($field, $post_id);
+
+    if (!$items) {
+        continue;
+    }
+
+    foreach ($items as $item) {
+        $context[$item_type][$item->ID] = $item;
+    }
+}
+
+// --------------------------
+// Expand attached Elements
+// --------------------------
+
+$elements = get_field('attached_elements', $post_id);
+
+if ($elements) {
+
+    foreach ($elements as $element) {
+
+        $related = get_field('related_content', $element->ID);
+
+        if (!$related) {
+            continue;
+        }
+
+        foreach ($related as $item) {
+
+            $item_type = get_post_type($item);
+
+            if (in_array($item_type, ['chapter', 'fragment', 'element'])) {
+                continue;
+            }
+
+            $context[$item_type][$item->ID] = $item;
+        }
+    }
+}
+
+return $context;
 }
