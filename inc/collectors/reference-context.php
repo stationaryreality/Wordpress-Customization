@@ -1,5 +1,30 @@
 <?php
 /**
+ * Add related CPTs to a reference context.
+ *
+ * Filters out narrative containers and automatically
+ * deduplicates entries by post ID.
+ */
+function kp_add_related_items_to_context(&$context, $related) {
+
+    if (!$related) {
+        return;
+    }
+
+    foreach ($related as $item) {
+
+        $item_type = get_post_type($item);
+
+        // Never include narrative containers
+        if (in_array($item_type, ['chapter', 'fragment', 'element'])) {
+            continue;
+        }
+
+        $context[$item_type][$item->ID] = $item;
+    }
+}
+
+/**
  * Build complete footnote context.
  *
  * Expands attached Elements into their contained CPTs while
@@ -17,24 +42,12 @@ function kp_build_reference_context($post_id) {
 
 if ($type === 'element') {
 
-    $related = get_field('related_content', $post_id);
+$related = get_field('related_content', $post_id);
 
-    if ($related) {
+kp_add_related_items_to_context($context, $related);
 
-        foreach ($related as $item) {
+return $context;
 
-            $item_type = get_post_type($item);
-
-            // Never recurse into narrative containers
-            if (in_array($item_type, ['chapter', 'fragment', 'element'])) {
-                continue;
-            }
-
-            $context[$item_type][$item->ID] = $item;
-        }
-    }
-
-    return $context;
 }
 
 // --------------------------
@@ -81,24 +94,12 @@ if ($elements) {
 
     foreach ($elements as $element) {
 
-        $related = get_field('related_content', $element->ID);
+    $related = get_field('related_content', $element->ID);
 
-        if (!$related) {
-            continue;
-        }
-
-        foreach ($related as $item) {
-
-            $item_type = get_post_type($item);
-
-            if (in_array($item_type, ['chapter', 'fragment', 'element'])) {
-                continue;
-            }
-
-            $context[$item_type][$item->ID] = $item;
-        }
+    kp_add_related_items_to_context($context, $related);
     }
 }
 
 return $context;
+
 }
