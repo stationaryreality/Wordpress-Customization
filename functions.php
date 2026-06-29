@@ -444,7 +444,7 @@ add_filter('page-links-to-post-types', function() {
     return ['page'];
 });
 
-// 2026-05-09
+// 2026-05-09 - did these not work because it used template instead of stylesheet?
 
 //require_once get_template_directory() . '/inc/admin/admin-menu.php';
 //require_once get_template_directory() . '/inc/admin/admin-content-operations.php';
