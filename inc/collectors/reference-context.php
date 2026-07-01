@@ -1,10 +1,14 @@
 <?php
 /**
- * Add related CPTs to a reference context.
+ * Shared relationship traversal helper.
  *
- * Filters out narrative containers and automatically
- * deduplicates entries by post ID.
+ * Centralizes Element expansion and relationship insertion so every
+ * collector applies identical traversal and deduplication rules.
+ *
+ * Keeping this logic in one location prevents collectors from
+ * gradually diverging over time.
  */
+
 function kp_add_related_items_to_context(&$context, $related) {
 
     if (!$related) {
@@ -25,11 +29,15 @@ function kp_add_related_items_to_context(&$context, $related) {
 }
 
 /**
- * Build complete footnote context.
+ * Builds the complete relationship context for a narrative object.
  *
- * Expands attached Elements into their contained CPTs while
- * preventing Chapter/Fragment recursion.
+ * This collector acts as the primary entry point for discovering
+ * all CPT relationships belonging to a Chapter, Fragment, or Element.
+ *
+ * Renderers should consume this context instead of querying ACF
+ * directly, allowing traversal rules to remain centralized.
  */
+
 function kp_build_reference_context($post_id) {
 
     $context = [];

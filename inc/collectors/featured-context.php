@@ -1,21 +1,12 @@
 <?php
 /**
- * Build the Featured In context for a referenced CPT.
+ * Builds reverse relationship context.
  *
- * Finds:
- * - Chapters that reference this post directly.
- * - Fragments that reference this post directly.
- * - Elements that reference this post.
- * - Chapters/Fragments that contain those Elements.
- *
- * Returns:
- *
- * [
- *     'chapters'  => [],
- *     'fragments' => [],
- *     'elements'  => [],
- * ]
+ * Finds every narrative object that references the supplied CPT,
+ * regardless of whether the relationship is direct or inherited
+ * through an attached Element.
  */
+
 function kp_build_featured_context($meta_key, $post_id) {
 
     $context = [
