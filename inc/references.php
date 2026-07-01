@@ -302,7 +302,7 @@ function kp_render_grouped_references($items) {
 
             <?php foreach ($items as $item) : ?>
 
-                <div style="margin-bottom:1.5rem;">
+                    <div style="margin-bottom:.5rem;">
 
                     <strong>
                         <a href="<?php echo esc_url(get_permalink($item)); ?>">
