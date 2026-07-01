@@ -302,15 +302,17 @@ function kp_render_grouped_references($items) {
 
             <?php foreach ($items as $item) : ?>
 
-                    <div style="margin-bottom:.5rem;">
+<div style="margin-bottom:.5rem;">
 
-                    <strong>
-                        <a href="<?php echo esc_url(get_permalink($item)); ?>">
-                            <?php echo esc_html(get_the_title($item)); ?>
-                        </a>
-                    </strong>
+    <strong>
+        <a href="<?php echo esc_url(get_permalink($item)); ?>">
+            <?php echo esc_html(get_the_title($item)); ?>
+        </a>
+    </strong>
 
-                    <?php echo kp_render_references_flat($item->ID); ?>
+</div>
+
+<?php echo kp_render_references_flat($item->ID); ?>
 
                 </div>
 
