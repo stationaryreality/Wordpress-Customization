@@ -93,47 +93,7 @@ function fn_elements($chapter_id, $group_titles) {
 
     echo '</div>';
 
-    /*
-    ---------------------------------------------------
-    Sources Section
-    ---------------------------------------------------
-    */
-
-    if (!empty($elements_with_sources)) {
-
-        echo '
-        <div style="
-            margin:1.5rem auto 0;
-            max-width:800px;
-            padding-left:1rem;
-            border-left:2px solid #ddd;
-        ">';
-
-        echo '<strong>' .
-            (count($elements_with_sources) > 1
-                ? 'Element Sources:'
-                : 'Element Source:')
-            . '</strong>';
-
-        foreach ($elements_with_sources as $element) {
-
-            echo '<div style="margin-top:1rem;">';
-
-            echo '<div>
-                    <strong>
-                        <a href="' . esc_url(get_permalink($element)) . '">
-                            ' . esc_html(get_the_title($element)) . '
-                        </a>
-                    </strong>
-                  </div>';
-
-            echo kp_render_references($element->ID);
-
-            echo '</div>';
-        }
-
-        echo '</div>';
-    }
+    echo kp_render_grouped_references($elements_with_sources);
 
     echo '</div>';
 

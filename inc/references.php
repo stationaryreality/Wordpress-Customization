@@ -268,3 +268,59 @@ function kp_render_element_related_sources($element_id) {
 
     return ob_get_clean();
 }
+
+/**
+ * Render one flat Sources section for a group of posts.
+ *
+ * Used by grid-based CPTs (Images, Elements).
+ */
+function kp_render_grouped_references($items) {
+
+    if (empty($items)) {
+        return '';
+    }
+
+    // Keep only items that actually have references
+    $items = array_filter($items, function($item) {
+        return have_rows('references', $item->ID);
+    });
+
+    if (empty($items)) {
+        return '';
+    }
+
+    ob_start();
+    ?>
+
+    <details class="content-references" style="margin-top:1.5rem;">
+
+        <summary>
+            Sources (<?php echo count($items); ?>)
+        </summary>
+
+        <div class="content-references-inner">
+
+            <?php foreach ($items as $item) : ?>
+
+                <div style="margin-bottom:1.5rem;">
+
+                    <strong>
+                        <a href="<?php echo esc_url(get_permalink($item)); ?>">
+                            <?php echo esc_html(get_the_title($item)); ?>
+                        </a>
+                    </strong>
+
+                    <?php echo kp_render_references_flat($item->ID); ?>
+
+                </div>
+
+            <?php endforeach; ?>
+
+        </div>
+
+    </details>
+
+    <?php
+
+    return ob_get_clean();
+}
