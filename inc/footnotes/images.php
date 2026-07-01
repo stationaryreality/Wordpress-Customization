@@ -61,25 +61,7 @@ function fn_images($chapter_id, $group_titles) {
     // --- Close grid ---
     echo '</div>';
 
-    // --- Sources section (rendered after the grid) ---
-    if (!empty($images_with_sources)) {
-        echo '<div style="margin:1.5rem auto 0; max-width:800px; padding-left:1rem; border-left:2px solid #ddd;">';
-        echo '<strong>' . (count($images_with_sources) > 1 ? 'Sources:' : 'Source:') . '</strong>';
-
-        foreach ($images_with_sources as $img_post) {
-            echo '<div style="margin-top:1rem;">';
-            // Image title as a link
-            echo '<div><strong><a href="' . esc_url(get_permalink($img_post)) . '">'
-                . esc_html(get_the_title($img_post)) . '</a></strong></div>';
-
-            // Use the universal references renderer
-            echo kp_render_references($img_post->ID);
-
-            echo '</div>';
-        }
-
-        echo '</div>';
-    }
+    echo kp_render_grouped_references($images_with_sources);
 
     echo '</div>'; // end referenced-group
     return ob_get_clean();
