@@ -226,9 +226,11 @@ function kp_render_references_flat($post_id = null) {
 }
 
 /**
- * Element renderer
+ * Element page related sources renderer.
+ *
+ * Renders one flat Sources section for all related CPTs.
+ * Chapters and Fragments are intentionally excluded.
  */
-
 function kp_render_element_related_sources($element_id) {
 
     $related = get_field('related_content', $element_id);
@@ -237,90 +239,14 @@ function kp_render_element_related_sources($element_id) {
         return '';
     }
 
-    ob_start();
-
-    foreach ($related as $item) {
-
-        if (!have_rows('references', $item->ID)) {
-            continue;
-        }
+    // Remove Chapters & Fragments
+    $related = array_filter($related, function($item) {
 
         $type = get_post_type($item);
 
-        if (in_array($type, ['chapter', 'fragment'])) {
-            continue;
-        }
-        
-        $meta = get_cpt_metadata($type);
+        return !in_array($type, ['chapter', 'fragment']);
 
-        echo '<div style="margin-bottom:1rem;">';
-
-        echo '<strong>'
-            . ($meta['emoji'] ?? '📄')
-            . ' '
-            . esc_html(get_the_title($item))
-            . '</strong>';
-
-        echo kp_render_references($item->ID);
-
-        echo '</div>';
-    }
-
-    return ob_get_clean();
-}
-
-/**
- * Render one flat Sources section for a group of posts.
- *
- * Used by grid-based CPTs (Images, Elements).
- */
-function kp_render_grouped_references($items) {
-
-    if (empty($items)) {
-        return '';
-    }
-
-    // Keep only items that actually have references
-    $items = array_filter($items, function($item) {
-        return have_rows('references', $item->ID);
     });
 
-    if (empty($items)) {
-        return '';
-    }
-
-    ob_start();
-    ?>
-
-    <details class="content-references" style="margin-top:1.5rem;">
-
-        <summary>
-            Sources (<?php echo count($items); ?>)
-        </summary>
-
-        <div class="content-references-inner">
-
-            <?php foreach ($items as $item) : ?>
-
-                <div style="margin-bottom:.5rem;">
-
-                    <strong>
-                        <a href="<?php echo esc_url(get_permalink($item)); ?>">
-                            <?php echo esc_html(get_the_title($item)); ?>
-                        </a>
-                    </strong>
-
-                </div>
-
-                <?php echo kp_render_references_flat($item->ID); ?>
-
-            <?php endforeach; ?>
-
-        </div>
-
-    </details>
-
-    <?php
-
-    return ob_get_clean();
+    return kp_render_grouped_references($related);
 }
