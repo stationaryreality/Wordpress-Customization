@@ -11,57 +11,102 @@
             <?php the_content(); ?>
         </div>
 
-        <?php
+<?php show_featured_in_threads('attached_elements'); ?>
+
+
+<?php
 
 $related = get_field('related_content');
 
 if (!empty($related)) :
 
-    usort($related, fn($a, $b) =>
-        strcmp(get_the_title($a), get_the_title($b))
-    );
+    // ---------------------------------
+    // Group by CPT
+    // ---------------------------------
+
+    $groups = [];
+
+    foreach ($related as $item) {
+
+        $type = get_post_type($item);
+
+        // Chapters & Fragments now belong in Featured In
+        if (in_array($type, ['chapter', 'fragment'])) {
+            continue;
+        }
+
+        $groups[$type][] = $item;
+    }
+
+    if (!empty($groups)) :
+
 ?>
 
 <details style="margin-top:2rem;">
 
     <summary>
-        Related Content (<?php echo count($related); ?>)
+        Related Content
     </summary>
 
-    <ul style="
-        list-style:none;
-        padding-left:0;
-        margin-top:1rem;
-    ">
+    <?php
 
-        <?php foreach ($related as $item) :
+    ksort($groups);
 
-            $type = get_post_type($item);
+    foreach ($groups as $type => $items) :
 
-            $meta = get_cpt_metadata($type);
+        usort($items, fn($a, $b) =>
+            strcmp(get_the_title($a), get_the_title($b))
+        );
 
-            $emoji = $meta['emoji'] ?? '•';
-        ?>
+        $meta = get_cpt_metadata($type);
 
-            <li style="margin-bottom:.4rem;">
+    ?>
 
-                <?php echo esc_html($emoji); ?>
+        <div style="margin-top:1.5rem;">
 
-                <a href="<?php echo esc_url(get_permalink($item)); ?>">
-                    <?php echo esc_html(get_the_title($item)); ?>
-                </a>
+            <h4 style="margin-bottom:.5rem;">
 
-            </li>
+                <?php echo esc_html($meta['emoji'] ?? '•'); ?>
 
-        <?php endforeach; ?>
+                <?php echo esc_html($meta['title'] ?? ucfirst($type)); ?>
 
-    </ul>
+                (<?php echo count($items); ?>)
+
+            </h4>
+
+            <ul style="
+                list-style:none;
+                padding-left:1rem;
+                margin:0;
+            ">
+
+                <?php foreach ($items as $item) : ?>
+
+                    <li style="margin-bottom:.35rem;">
+
+                        <a href="<?php echo esc_url(get_permalink($item)); ?>">
+                            <?php echo esc_html(get_the_title($item)); ?>
+                        </a>
+
+                    </li>
+
+                <?php endforeach; ?>
+
+            </ul>
+
+        </div>
+
+    <?php endforeach; ?>
 
 </details>
 
-<?php endif; ?>
+<?php
 
-<?php show_featured_in_threads('attached_elements'); ?>
+    endif;
+
+endif;
+
+?>
 
 <?php echo kp_render_references(get_the_ID()); ?>
 
