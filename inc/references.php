@@ -261,7 +261,7 @@ function kp_render_element_related_sources($element_id) {
             . esc_html(get_the_title($item))
             . '</strong>';
 
-        echo kp_render_references($item->ID);
+        echo kp_render_references_flat($item->ID);
 
         echo '</div>';
     }
