@@ -7,8 +7,11 @@
 function fn_games($chapter_id, $group_titles) {
     ob_start();
 
-    $games = get_field('games_referenced', $chapter_id) ?: [];
-    if (!empty($games)) {
+$context = kp_build_reference_context($chapter_id);
+
+$games = $context['game'] ?? [];
+
+if (!empty($games)) {
         uasort($games, fn($a, $b) => strcmp(get_the_title($a), get_the_title($b)));
         $meta = $group_titles['game'];
         echo '<div class="referenced-group" style="margin-top:2em;">';
