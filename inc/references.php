@@ -22,16 +22,14 @@ function kp_render_references($post_id = null) {
         return '';
     }
 
-    $count = count(get_field('references', $post_id));
-
     ob_start();
     ?>
 
     <details class="content-references">
 
-        <summary>
-            Sources (<?php echo esc_html($count); ?>)
-        </summary>
+    <summary>
+        Sources
+    </summary>
 
         <div class="content-references-inner">
 
@@ -295,7 +293,7 @@ function kp_render_grouped_references($items) {
     <details class="content-references" style="margin-top:1.5rem;">
 
         <summary>
-            Sources (<?php echo count($items); ?>)
+            Sources
         </summary>
 
         <div class="content-references-inner">
