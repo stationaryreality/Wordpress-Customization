@@ -7,8 +7,11 @@
 function fn_books($chapter_id, $group_titles) {
     ob_start();
 
-    $books = get_field('books_cited', $chapter_id) ?: [];
-    if (!empty($books)) {
+$context = kp_build_reference_context($chapter_id);
+
+$books = $context['book'] ?? [];
+
+if (!empty($books)) {
         uasort($books, fn($a, $b) => strcmp(get_the_title($a), get_the_title($b)));
         $meta = $group_titles['book'];
         echo '<div class="referenced-group" style="margin-top:2em;">';
