@@ -267,11 +267,22 @@ function kp_render_element_related_sources($element_id) {
     return ob_get_clean();
 }
 
-/**
- * Render one flat Sources section for a group of posts.
- *
- * Used by grid-based CPTs (Images, Elements).
- */
+/*
+|--------------------------------------------------------------------------
+| Grouped Sources Renderer
+|--------------------------------------------------------------------------
+|
+| Grid-based content (Images, Elements) can contain multiple content
+| owners, each with their own reference list.
+|
+| Rather than rendering multiple nested Sources accordions, this renderer
+| presents all owners beneath a single expandable Sources section while
+| preserving ownership attribution.
+|
+| This function is presentation-only. It assumes the caller has already
+| determined which posts should be displayed.
+|
+*/
 function kp_render_grouped_references($items) {
 
     if (empty($items)) {
@@ -323,16 +334,20 @@ function kp_render_grouped_references($items) {
     return ob_get_clean();
 }
 
-/**
- * Render one unified Sources section for an Element page.
- *
- * Includes:
- *  - the Element's own sources
- *  - sources from related CPTs
- *
- * Chapters & Fragments are intentionally excluded because they
- * appear in Featured In.
- */
+/*
+|--------------------------------------------------------------------------
+| Unified Element Sources
+|--------------------------------------------------------------------------
+|
+| Element pages expose sources from two locations:
+|
+| • references attached directly to the Element
+| • references attached to related content
+|
+| Both are rendered as a single Sources section so visitors see one
+| coherent bibliography regardless of where the source originated.
+|
+*/
 function kp_render_element_sources($element_id) {
 
     $items = [];
