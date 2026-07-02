@@ -9,7 +9,7 @@ function fn_movies($chapter_id, $group_titles) {
 
 $context = kp_build_reference_context($chapter_id);
 
-$books = $context['movie'] ?? [];
+$movies = $context['movie'] ?? [];
 
 if (!empty($movies)) {
         uasort($movies, fn($a, $b) => strcmp(get_the_title($a), get_the_title($b)));
