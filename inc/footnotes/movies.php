@@ -7,8 +7,11 @@
 function fn_movies($chapter_id, $group_titles) {
     ob_start();
 
-    $movies = get_field('movies_referenced', $chapter_id) ?: [];
-    if (!empty($movies)) {
+$context = kp_build_reference_context($chapter_id);
+
+$books = $context['movie'] ?? [];
+
+if (!empty($movies)) {
         uasort($movies, fn($a, $b) => strcmp(get_the_title($a), get_the_title($b)));
         $meta = $group_titles['movie'];
         echo '<div class="referenced-group" style="margin-top:2em;">';
