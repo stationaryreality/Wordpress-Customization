@@ -108,9 +108,7 @@ endif;
 
 ?>
 
-<?php echo kp_render_references(get_the_ID()); ?>
-
-<?php echo kp_render_element_related_sources(get_the_ID()); ?>
+<?php echo kp_render_element_sources(get_the_ID()); ?>
 
         <?php wp_link_pages([
             'before' => '<p class="singular-pagination">',

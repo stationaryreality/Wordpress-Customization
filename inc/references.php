@@ -324,3 +324,42 @@ function kp_render_grouped_references($items) {
 
     return ob_get_clean();
 }
+
+/**
+ * Render one unified Sources section for an Element page.
+ *
+ * Includes:
+ *  - the Element's own sources
+ *  - sources from related CPTs
+ *
+ * Chapters & Fragments are intentionally excluded because they
+ * appear in Featured In.
+ */
+function kp_render_element_sources($element_id) {
+
+    $items = [];
+
+    // Include the Element itself first
+    if (have_rows('references', $element_id)) {
+        $items[] = get_post($element_id);
+    }
+
+    // Include related content
+    $related = get_field('related_content', $element_id) ?: [];
+
+    foreach ($related as $item) {
+
+        $type = get_post_type($item);
+
+        // Skip narrative containers
+        if (in_array($type, ['chapter', 'fragment'])) {
+            continue;
+        }
+
+        if (have_rows('references', $item->ID)) {
+            $items[] = $item;
+        }
+    }
+
+    return kp_render_grouped_references($items);
+}
