@@ -3,7 +3,9 @@
 
 function fn_cptvideos($chapter_id, $group_titles) {
 
-    $videos = get_field('videos_linked', $chapter_id);
+$context = kp_build_reference_context($chapter_id);
+
+$$videos = $context['cptvideo'] ?? [];
 
     if (empty($videos) || !is_array($videos)) {
         return '';
