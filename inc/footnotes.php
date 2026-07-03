@@ -33,6 +33,7 @@ foreach (get_cpt_metadata() as $cpt => $meta) {
         'fn_featured_artists',
         'fn_videos',
         'fn_other_artists',
+        'fn_artists_referenced',
         'fn_people',
         'fn_books',
         'fn_movies',
