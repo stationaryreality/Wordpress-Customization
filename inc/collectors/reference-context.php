@@ -75,7 +75,6 @@ $field_map = [
     'concept'      => 'concepts_referenced',
     'profile'      => 'people_referenced',
     'video'        => 'videos_referenced',
-    'profile'      => 'profiles_referenced',
     'artist'       => 'artists_referenced',
 ];
 
