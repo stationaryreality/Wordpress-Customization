@@ -7,8 +7,11 @@
 function fn_shows($chapter_id, $group_titles) {
     ob_start();
 
-    $shows = get_field('shows_referenced', $chapter_id) ?: [];
-    if (!empty($shows)) {
+$context = kp_build_reference_context($chapter_id);
+
+$shows = $context['show'] ?? [];
+
+if (!empty($shows)) {
         uasort($shows, fn($a, $b) => strcmp(get_the_title($a), get_the_title($b)));
         $meta = $group_titles['show'];
         echo '<div class="referenced-group" style="margin-top:2em;">';
