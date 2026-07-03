@@ -5,7 +5,7 @@ function fn_cptvideos($chapter_id, $group_titles) {
 
 $context = kp_build_reference_context($chapter_id);
 
-$$videos = $context['cptvideo'] ?? [];
+$videos = $context['video'] ?? [];
 
     if (empty($videos) || !is_array($videos)) {
         return '';
