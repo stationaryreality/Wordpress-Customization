@@ -1,307 +1,514 @@
 <?php
 /*
 |--------------------------------------------------------------------------
-| Hierarchical CPT Density & Structural Pressure Analyzer
+| Content Density Analyzer - Chapter, Fragment & Element Sorter
 |--------------------------------------------------------------------------
 |
-| Analyzes structural density across:
-| Chapters → Fragments → Elements
-|
-| Outputs:
-| - Fragment demotion candidates (too small / underused)
-| - Fragment promotion candidates (too dense / overloaded)
-| - Element promotion candidates (too dense, should become fragment)
+| Sorts chapters by number of attached CPTs (content density),
+| lists fragments that may be eligible for promotion to chapters,
+| and shows elements that could become fragments or fragments that
+| might be demoted to elements.
 |
 */
 
-$all_posts = get_posts([
-    'post_type'      => ['chapter', 'fragment', 'element'],
+// ===== CONFIGURABLE THRESHOLDS =====
+$element_to_fragment_threshold = 10;   // Elements with ≥ this many CPTs → promote to Fragment
+$fragment_to_element_threshold = 15;   // Fragments with ≤ this many CPTs → demote to Element
+$fragment_to_chapter_threshold = 20;   // Fragments with ≥ this many CPTs → promote to Chapter
+
+// Get all chapters, fragments, and elements
+$chapters = get_posts([
+    'post_type'      => 'chapter',
     'posts_per_page' => -1,
     'post_status'    => 'publish'
 ]);
 
-/*
-|--------------------------------------------------------------------------
-| CONFIG (tweak freely)
-|--------------------------------------------------------------------------
-*/
-$CONFIG = [
-    'element_promotion_threshold'  => 8,   // element → fragment
-    'fragment_demotion_threshold'  => 15,  // fragment → element
-    'fragment_promotion_threshold' => 25,  // fragment → chapter (optional future rule)
-];
+$fragments = get_posts([
+    'post_type'      => 'fragment',
+    'posts_per_page' => -1,
+    'post_status'    => 'publish'
+]);
 
-/*
-|--------------------------------------------------------------------------
-| STORAGE
-|--------------------------------------------------------------------------
-*/
-$cf_map = []; // chapter → fragment
-$fe_map = []; // fragment → element
+$elements = get_posts([
+    'post_type'      => 'element',
+    'posts_per_page' => -1,
+    'post_status'    => 'publish'
+]);
 
-$chapter_stats  = [];
-$fragment_stats = [];
-$element_stats  = [];
-
-/*
-|--------------------------------------------------------------------------
-| BUILD STRUCTURE MAPS
-|--------------------------------------------------------------------------
-*/
-foreach ($all_posts as $post) {
-
-    $type = get_post_type($post->ID);
-
-    /*
-    |--------------------------------------------------------------------------
-    | ELEMENT LOGIC
-    |--------------------------------------------------------------------------
-    */
-    if ($type === 'element') {
-
-        $element_stats[$post->ID]['title'] = get_the_title($post->ID);
-        $element_stats[$post->ID]['count'] = ($element_stats[$post->ID]['count'] ?? 0) + 1;
-
-        // find parent fragments (ACF or relationship field assumed)
-        $parent_fragments = get_field('parent_fragments', $post->ID) ?: [];
-
-        foreach ($parent_fragments as $fragment_id) {
-
-            $fe_map[$fragment_id][$post->ID] = ($fe_map[$fragment_id][$post->ID] ?? 0) + 1;
+// Function to count relationships for a post
+function count_relationships($post_id) {
+    $acf_fields = get_fields($post_id);
+    $total_count = 0;
+    
+    if ($acf_fields) {
+        foreach ($acf_fields as $field_name => $value) {
+            // Count relationship fields (arrays of posts)
+            if (is_array($value)) {
+                foreach ($value as $item) {
+                    if ($item instanceof WP_Post) {
+                        $total_count++;
+                    }
+                }
+            }
+            // Count single relationship fields
+            elseif ($value instanceof WP_Post) {
+                $total_count++;
+            }
         }
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | FRAGMENT LOGIC
-    |--------------------------------------------------------------------------
-    */
-    if ($type === 'fragment') {
-
-        $fragment_stats[$post->ID]['title'] = get_the_title($post->ID);
-        $fragment_stats[$post->ID]['element_count'] = 0;
-
-        $parent_chapters = get_field('parent_chapters', $post->ID) ?: [];
-
-        foreach ($parent_chapters as $chapter_id) {
-
-            $cf_map[$chapter_id][$post->ID] = ($cf_map[$chapter_id][$post->ID] ?? 0) + 1;
-        }
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | CHAPTER LOGIC
-    |--------------------------------------------------------------------------
-    */
-    if ($type === 'chapter') {
-
-        $chapter_stats[$post->ID]['title'] = get_the_title($post->ID);
-        $chapter_stats[$post->ID]['fragment_count'] = 0;
-    }
+    
+    return $total_count;
 }
 
-/*
-|--------------------------------------------------------------------------
-| ANALYSIS PASS
-|--------------------------------------------------------------------------
-*/
-$insights = [];
-
-/*
-|--------------------------------------------------------------------------
-| ELEMENT → FRAGMENT PROMOTION CHECK
-|--------------------------------------------------------------------------
-*/
-foreach ($fe_map as $fragment_id => $elements) {
-
-    $element_count = array_sum($elements);
-
-    $fragment_title = $fragment_stats[$fragment_id]['title'] ?? 'Unknown Fragment';
-
-    if ($element_count >= $CONFIG['element_promotion_threshold']) {
-
-        $insights[] = [
-            'type'    => 'ELEMENT_PROMOTE',
-            'parent'  => 'Fragment',
-            'name'    => $fragment_title,
-            'score'   => $element_count,
-            'message' => 'Element density is high — candidate for promotion into Fragment'
-        ];
-    }
+// ---- Chapters ----
+$chapter_data = [];
+foreach ($chapters as $chapter) {
+    $chapter_data[] = [
+        'id'        => $chapter->ID,
+        'title'     => get_the_title($chapter->ID),
+        'cpt_count' => count_relationships($chapter->ID),
+        'date'      => get_the_date('', $chapter->ID)
+    ];
 }
+usort($chapter_data, function($a, $b) {
+    return $b['cpt_count'] - $a['cpt_count'];
+});
 
-/*
-|--------------------------------------------------------------------------
-| FRAGMENT → ELEMENT DEMOTION CHECK
-|--------------------------------------------------------------------------
-*/
-foreach ($fe_map as $fragment_id => $elements) {
-
-    $element_count = array_sum($elements);
-
-    $fragment_title = $fragment_stats[$fragment_id]['title'] ?? 'Unknown Fragment';
-
-    if ($element_count <= $CONFIG['fragment_demotion_threshold']) {
-
-        $insights[] = [
-            'type'    => 'FRAGMENT_DEMOTE',
-            'parent'  => 'Fragment',
-            'name'    => $fragment_title,
-            'score'   => $element_count,
-            'message' => 'Fragment is underutilized — candidate for collapse into Elements'
-        ];
-    }
+// ---- Fragments ----
+$fragment_data = [];
+foreach ($fragments as $fragment) {
+    $cpt_count = count_relationships($fragment->ID);
+    $fragment_data[] = [
+        'id'            => $fragment->ID,
+        'title'         => get_the_title($fragment->ID),
+        'cpt_count'     => $cpt_count,
+        'date'          => get_the_date('', $fragment->ID),
+        'ready_for_chapter' => $cpt_count >= $fragment_to_chapter_threshold,
+        'ready_for_element'  => $cpt_count <= $fragment_to_element_threshold
+    ];
 }
+usort($fragment_data, function($a, $b) {
+    return $b['cpt_count'] - $a['cpt_count'];
+});
 
-/*
-|--------------------------------------------------------------------------
-| CHAPTER → FRAGMENT OVERLOAD CHECK
-|--------------------------------------------------------------------------
-*/
-foreach ($cf_map as $chapter_id => $fragments) {
-
-    $fragment_count = array_sum($fragments);
-
-    $chapter_title = $chapter_stats[$chapter_id]['title'] ?? 'Unknown Chapter';
-
-    if ($fragment_count > 30) {
-
-        $insights[] = [
-            'type'    => 'CHAPTER_OVERLOAD',
-            'parent'  => 'Chapter',
-            'name'    => $chapter_title,
-            'score'   => $fragment_count,
-            'message' => 'Chapter is highly fragmented — consider breaking into multiple Chapters'
-        ];
-    }
+// ---- Elements ----
+$element_data = [];
+foreach ($elements as $element) {
+    $cpt_count = count_relationships($element->ID);
+    $element_data[] = [
+        'id'            => $element->ID,
+        'title'         => get_the_title($element->ID),
+        'cpt_count'     => $cpt_count,
+        'date'          => get_the_date('', $element->ID),
+        'ready_for_fragment' => $cpt_count >= $element_to_fragment_threshold
+    ];
 }
+usort($element_data, function($a, $b) {
+    return $b['cpt_count'] - $a['cpt_count'];
+});
 
-/*
-|--------------------------------------------------------------------------
-| SORT INSIGHTS BY SEVERITY
-|--------------------------------------------------------------------------
-*/
-usort($insights, function($a, $b) {
-    return $b['score'] <=> $a['score'];
+// ---- Statistics ----
+$total_chapters   = count($chapter_data);
+$total_fragments  = count($fragment_data);
+$total_elements   = count($element_data);
+
+$avg_chapter_density  = $total_chapters  > 0 ? array_sum(array_column($chapter_data, 'cpt_count')) / $total_chapters  : 0;
+$avg_fragment_density = $total_fragments > 0 ? array_sum(array_column($fragment_data, 'cpt_count')) / $total_fragments : 0;
+$avg_element_density  = $total_elements  > 0 ? array_sum(array_column($element_data, 'cpt_count')) / $total_elements  : 0;
+
+$promotable_fragments = array_filter($fragment_data, function($f) {
+    return $f['ready_for_chapter'];
+});
+$demotable_fragments  = array_filter($fragment_data, function($f) {
+    return $f['ready_for_element'];
+});
+$promotable_elements  = array_filter($element_data, function($e) {
+    return $e['ready_for_fragment'];
 });
 ?>
 
-<section class="hierarchical-density-tool">
+<section class="tool-content-density-analyzer">
+    <style>
+        .density-tool {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            border-left: 4px solid #007cba;
+            padding: 1rem;
+            border-radius: 4px;
+        }
+        .stat-card h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            color: #666;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1e1e1e;
+        }
+        .density-section {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .density-section h2 {
+            margin-top: 0;
+            border-bottom: 2px solid #007cba;
+            padding-bottom: 0.5rem;
+        }
+        .content-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .content-table th,
+        .content-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .content-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #1e1e1e;
+        }
+        .content-table tr:hover {
+            background: #f9f9f9;
+        }
+        .density-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .density-high {
+            background: #d4edda;
+            color: #155724;
+        }
+        .density-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .density-low {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .promotion-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: #cce5ff;
+            color: #004085;
+        }
+        .demotion-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: #ffe5cc;
+            color: #854d00;
+        }
+        .threshold-note {
+            background: #e7f3ff;
+            border-left: 4px solid #007cba;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+        .recommendation-box {
+            background: #f0f7ff;
+            border: 1px solid #b8d4f0;
+            border-radius: 4px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+    </style>
 
-<style>
+    <div class="density-tool">
+        <header class="tool-header">
+            <h1>📊 Content Density Analyzer</h1>
+            <p>
+                Sort chapters, fragments, and elements by content density (number of attached CPTs).
+                Thresholds: <?php echo $element_to_fragment_threshold; ?>+ CPTs for Element → Fragment,
+                ≤<?php echo $fragment_to_element_threshold; ?> CPTs for Fragment → Element,
+                and <?php echo $fragment_to_chapter_threshold; ?>+ CPTs for Fragment → Chapter.
+            </p>
+        </header>
 
-.hierarchical-density-tool {
-    font-family: sans-serif;
-    max-width: 1400px;
-    margin: 0 auto;
-}
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Chapters</h3>
+                <div class="stat-number"><?php echo $total_chapters; ?></div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Fragments</h3>
+                <div class="stat-number"><?php echo $total_fragments; ?></div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Elements</h3>
+                <div class="stat-number"><?php echo $total_elements; ?></div>
+            </div>
+            <div class="stat-card">
+                <h3>Avg Chapter Density</h3>
+                <div class="stat-number"><?php echo round($avg_chapter_density, 1); ?></div>
+                <small>CPTs per chapter</small>
+            </div>
+            <div class="stat-card">
+                <h3>Avg Fragment Density</h3>
+                <div class="stat-number"><?php echo round($avg_fragment_density, 1); ?></div>
+                <small>CPTs per fragment</small>
+            </div>
+            <div class="stat-card">
+                <h3>Avg Element Density</h3>
+                <div class="stat-number"><?php echo round($avg_element_density, 1); ?></div>
+                <small>CPTs per element</small>
+            </div>
+            <div class="stat-card">
+                <h3>Ready for Promotion</h3>
+                <div class="stat-number"><?php echo count($promotable_fragments); ?></div>
+                <small>Fragments ≥<?php echo $fragment_to_chapter_threshold; ?> CPTs</small>
+            </div>
+            <div class="stat-card">
+                <h3>Demotion Candidates</h3>
+                <div class="stat-number"><?php echo count($demotable_fragments); ?></div>
+                <small>Fragments ≤<?php echo $fragment_to_element_threshold; ?> CPTs</small>
+            </div>
+            <div class="stat-card">
+                <h3>Elements → Fragments</h3>
+                <div class="stat-number"><?php echo count($promotable_elements); ?></div>
+                <small>Elements ≥<?php echo $element_to_fragment_threshold; ?> CPTs</small>
+            </div>
+        </div>
 
-.semantic-table {
-    width: 100%;
-    border-collapse: collapse;
-}
+        <!-- ===== CHAPTERS SECTION ===== -->
+        <div class="density-section">
+            <h2>📚 Chapters by Content Density</h2>
+            <p>Sorted from highest to lowest number of attached CPTs</p>
+            
+            <?php if (count($chapter_data) > 0): ?>
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Chapter Title</th>
+                            <th>Content Density</th>
+                            <th>Published Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($chapter_data as $index => $chapter): 
+                            $density_class = $chapter['cpt_count'] > 20 ? 'density-high' : ($chapter['cpt_count'] > 10 ? 'density-medium' : 'density-low');
+                        ?>
+                            <tr>
+                                <td><?php echo $index + 1; ?></td>
+                                <td><strong><?php echo esc_html($chapter['title']); ?></strong></td>
+                                <td>
+                                    <span class="density-badge <?php echo $density_class; ?>">
+                                        <?php echo $chapter['cpt_count']; ?> CPTs
+                                    </span>
+                                </td>
+                                <td><?php echo esc_html($chapter['date']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p>No chapters found.</p>
+            <?php endif; ?>
+        </div>
 
-.semantic-table th,
-.semantic-table td {
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
-    text-align: left;
-}
+        <!-- ===== FRAGMENTS SECTION ===== -->
+        <div class="density-section">
+            <h2>📜 Fragments by Content Density</h2>
+            <p>Sorted from highest to lowest number of attached CPTs</p>
+            
+            <?php if (count($fragment_data) > 0): ?>
+                <div class="threshold-note">
+                    💡 <strong>Promotion Tip:</strong> Fragments with <?php echo $fragment_to_chapter_threshold; ?>+ CPTs are strong candidates for promotion to chapters.<br>
+                    🔽 <strong>Demotion Tip:</strong> Fragments with ≤<?php echo $fragment_to_element_threshold; ?> CPTs may be better off as elements.
+                </div>
+                
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Fragment Title</th>
+                            <th>Content Density</th>
+                            <th>Recommendation</th>
+                            <th>Published Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($fragment_data as $index => $fragment): 
+                            $density_class = $fragment['cpt_count'] > 20 ? 'density-high' : ($fragment['cpt_count'] > 10 ? 'density-medium' : 'density-low');
+                        ?>
+                            <tr>
+                                <td><?php echo $index + 1; ?></td>
+                                <td><strong><?php echo esc_html($fragment['title']); ?></strong></td>
+                                <td>
+                                    <span class="density-badge <?php echo $density_class; ?>">
+                                        <?php echo $fragment['cpt_count']; ?> CPTs
+                                    </span>
+                                </td>
+                                <td>
+                                    <?php if ($fragment['ready_for_chapter']): ?>
+                                        <span class="promotion-badge">↑ Promote to Chapter</span>
+                                    <?php elseif ($fragment['ready_for_element']): ?>
+                                        <span class="demotion-badge">↓ Demote to Element</span>
+                                    <?php else: ?>
+                                        <span style="color: #999;">Keep as Fragment</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td><?php echo esc_html($fragment['date']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p>No fragments found.</p>
+            <?php endif; ?>
+        </div>
 
-.semantic-table th {
-    background: #f5f5f5;
-}
+        <!-- ===== ELEMENTS SECTION ===== -->
+        <div class="density-section">
+            <h2>🧩 Elements by Content Density</h2>
+            <p>Sorted from highest to lowest number of attached CPTs (via <code>related_content</code> field)</p>
+            
+            <?php if (count($element_data) > 0): ?>
+                <div class="threshold-note">
+                    💡 <strong>Promotion Tip:</strong> Elements with <?php echo $element_to_fragment_threshold; ?>+ CPTs are candidates for promotion to fragments.
+                </div>
+                
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Element Title</th>
+                            <th>Content Density</th>
+                            <th>Recommendation</th>
+                            <th>Published Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($element_data as $index => $element): 
+                            $density_class = $element['cpt_count'] >= $element_to_fragment_threshold ? 'density-high' : ($element['cpt_count'] > 5 ? 'density-medium' : 'density-low');
+                        ?>
+                            <tr>
+                                <td><?php echo $index + 1; ?></td>
+                                <td><strong><?php echo esc_html($element['title']); ?></strong></td>
+                                <td>
+                                    <span class="density-badge <?php echo $density_class; ?>">
+                                        <?php echo $element['cpt_count']; ?> CPTs
+                                    </span>
+                                </td>
+                                <td>
+                                    <?php if ($element['ready_for_fragment']): ?>
+                                        <span class="promotion-badge">↑ Promote to Fragment</span>
+                                    <?php else: ?>
+                                        <span style="color: #999;">Keep as Element</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td><?php echo esc_html($element['date']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p>No elements found.</p>
+            <?php endif; ?>
+        </div>
 
-.density-high {
-    color: #155724;
-    font-weight: bold;
-}
+        <!-- ===== RECOMMENDATIONS SUMMARY ===== -->
+        <div class="density-section">
+            <h2>📈 Promotion & Demotion Recommendations</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <!-- Promote to Chapter -->
+                <div class="recommendation-box">
+                    <h3 style="margin-top:0;">Fragments → Chapters</h3>
+                    <?php
+                    $top_chapter_candidates = array_slice(array_filter($fragment_data, function($f) {
+                        return $f['ready_for_chapter'];
+                    }), 0, 10);
+                    if (count($top_chapter_candidates) > 0): ?>
+                        <ul>
+                            <?php foreach ($top_chapter_candidates as $f): ?>
+                                <li><strong><?php echo esc_html($f['title']); ?></strong> (<?php echo $f['cpt_count']; ?> CPTs)</li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <p>No fragments have reached the <?php echo $fragment_to_chapter_threshold; ?>‑CPT threshold yet.</p>
+                    <?php endif; ?>
+                </div>
 
-.density-medium {
-    color: #856404;
-}
+                <!-- Demote to Element -->
+                <div class="recommendation-box" style="border-color: #d39e00;">
+                    <h3 style="margin-top:0;">Fragments → Elements</h3>
+                    <?php
+                    $top_demotion_candidates = array_slice(array_filter($fragment_data, function($f) {
+                        return $f['ready_for_element'];
+                    }), 0, 10);
+                    if (count($top_demotion_candidates) > 0): ?>
+                        <ul>
+                            <?php foreach ($top_demotion_candidates as $f): ?>
+                                <li><strong><?php echo esc_html($f['title']); ?></strong> (<?php echo $f['cpt_count']; ?> CPTs)</li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <p>No fragments have ≤<?php echo $fragment_to_element_threshold; ?> CPTs.</p>
+                    <?php endif; ?>
+                </div>
 
-.density-low {
-    color: #721c24;
-}
+                <!-- Elements → Fragments -->
+                <div class="recommendation-box" style="grid-column: 1 / -1; border-color: #28a745;">
+                    <h3 style="margin-top:0;">Elements → Fragments</h3>
+                    <?php
+                    $top_element_candidates = array_slice(array_filter($element_data, function($e) {
+                        return $e['ready_for_fragment'];
+                    }), 0, 10);
+                    if (count($top_element_candidates) > 0): ?>
+                        <ul>
+                            <?php foreach ($top_element_candidates as $e): ?>
+                                <li><strong><?php echo esc_html($e['title']); ?></strong> (<?php echo $e['cpt_count']; ?> CPTs)</li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <p>No elements have reached the <?php echo $element_to_fragment_threshold; ?>‑CPT threshold yet.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
 
-.badge {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 4px;
-    background: #efefef;
-    font-size: 12px;
-}
-
-.insight-box {
-    padding: 6px 10px;
-    border-radius: 4px;
-    background: #f8f8f8;
-}
-
-</style>
-
-<h1>Hierarchical CPT Density Analyzer</h1>
-
-<p>
-Analyzes structural pressure across Chapters, Fragments, and Elements.
-Detects when content is too dense or too thin for its current layer.
-</p>
-
-<table class="semantic-table">
-
-<thead>
-<tr>
-    <th>Rank</th>
-    <th>Type</th>
-    <th>Name</th>
-    <th>Density Score</th>
-    <th>Signal</th>
-</tr>
-</thead>
-
-<tbody>
-
-<?php foreach ($insights as $i => $row):
-
-    $class = 'density-low';
-
-    if ($row['score'] >= 25) {
-        $class = 'density-high';
-    }
-    elseif ($row['score'] >= 15) {
-        $class = 'density-medium';
-    }
-
-?>
-
-<tr>
-
-<td><?php echo $i + 1; ?></td>
-
-<td>
-    <span class="badge"><?php echo esc_html($row['type']); ?></span>
-</td>
-
-<td>
-    <?php echo esc_html($row['name']); ?>
-</td>
-
-<td>
-    <?php echo (int) $row['score']; ?>
-</td>
-
-<td class="<?php echo $class; ?>">
-    <?php echo esc_html($row['message']); ?>
-</td>
-
-</tr>
-
-<?php endforeach; ?>
-
-</tbody>
-
-</table>
-
+            <hr style="margin: 1.5rem 0;">
+            <p>
+                <strong>Summary:</strong> 
+                <?php
+                $actions = [];
+                if (count($top_chapter_candidates) > 0) $actions[] = 'promote ' . count($top_chapter_candidates) . ' fragments to chapters';
+                if (count($top_demotion_candidates) > 0) $actions[] = 'demote ' . count($top_demotion_candidates) . ' fragments to elements';
+                if (count($top_element_candidates) > 0) $actions[] = 'promote ' . count($top_element_candidates) . ' elements to fragments';
+                if (empty($actions)) {
+                    echo 'No immediate actions required – keep building content.';
+                } else {
+                    echo 'Consider: ' . implode('; ', $actions) . '.';
+                }
+                ?>
+            </p>
+        </div>
+    </div>
 </section>
