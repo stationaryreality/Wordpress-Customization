@@ -1,197 +1,95 @@
 <?php
 /*
 |--------------------------------------------------------------------------
-| Hierarchical CPT Density & Structural Pressure Analyzer
+| Topic ↔ Theme Relationship Density Analyzer
 |--------------------------------------------------------------------------
 |
-| Analyzes structural density across:
-| Chapters → Fragments → Elements
-|
-| Outputs:
-| - Fragment demotion candidates (too small / underused)
-| - Fragment promotion candidates (too dense / overloaded)
-| - Element promotion candidates (too dense, should become fragment)
+| Analyzes co-occurrence density between topic and theme taxonomies.
+| Reveals semantic clusters and recurring conceptual relationships.
 |
 */
 
 $all_posts = get_posts([
-    'post_type'      => ['chapter', 'fragment', 'element'],
+    'post_type'      => 'any',
     'posts_per_page' => -1,
     'post_status'    => 'publish'
 ]);
 
-/*
-|--------------------------------------------------------------------------
-| CONFIG (tweak freely)
-|--------------------------------------------------------------------------
-*/
-$CONFIG = [
-    'element_promotion_threshold'  => 8,   // element → fragment
-    'fragment_demotion_threshold'  => 15,  // fragment → element
-    'fragment_promotion_threshold' => 25,  // fragment → chapter (optional future rule)
-];
+$relationship_map = [];
+$topic_totals = [];
+$theme_totals = [];
 
-/*
-|--------------------------------------------------------------------------
-| STORAGE
-|--------------------------------------------------------------------------
-*/
-$cf_map = []; // chapter → fragment
-$fe_map = []; // fragment → element
-
-$chapter_stats  = [];
-$fragment_stats = [];
-$element_stats  = [];
-
-/*
-|--------------------------------------------------------------------------
-| BUILD STRUCTURE MAPS
-|--------------------------------------------------------------------------
-*/
 foreach ($all_posts as $post) {
 
-    $type = get_post_type($post->ID);
+    $topics = wp_get_post_terms($post->ID, 'topic');
+    $themes = wp_get_post_terms($post->ID, 'theme');
 
-    /*
-    |--------------------------------------------------------------------------
-    | ELEMENT LOGIC
-    |--------------------------------------------------------------------------
-    */
-    if ($type === 'element') {
+    if (empty($topics) || empty($themes)) {
+        continue;
+    }
 
-        $element_stats[$post->ID]['title'] = get_the_title($post->ID);
-        $element_stats[$post->ID]['count'] = ($element_stats[$post->ID]['count'] ?? 0) + 1;
+    // Count total appearances
+    foreach ($topics as $topic) {
+        if (!isset($topic_totals[$topic->term_id])) {
+            $topic_totals[$topic->term_id] = [
+                'name'  => $topic->name,
+                'count' => 0
+            ];
+        }
 
-        // find parent fragments (ACF or relationship field assumed)
-        $parent_fragments = get_field('parent_fragments', $post->ID) ?: [];
+        $topic_totals[$topic->term_id]['count']++;
+    }
 
-        foreach ($parent_fragments as $fragment_id) {
+    foreach ($themes as $theme) {
+        if (!isset($theme_totals[$theme->term_id])) {
+            $theme_totals[$theme->term_id] = [
+                'name'  => $theme->name,
+                'count' => 0
+            ];
+        }
 
-            $fe_map[$fragment_id][$post->ID] = ($fe_map[$fragment_id][$post->ID] ?? 0) + 1;
+        $theme_totals[$theme->term_id]['count']++;
+    }
+
+    // Build topic ↔ theme relationships
+    foreach ($topics as $topic) {
+
+        foreach ($themes as $theme) {
+
+            $key = $topic->term_id . '_' . $theme->term_id;
+
+            if (!isset($relationship_map[$key])) {
+
+                $relationship_map[$key] = [
+                    'topic' => $topic->name,
+                    'theme' => $theme->name,
+                    'count' => 0,
+                    'posts' => []
+                ];
+            }
+
+            $relationship_map[$key]['count']++;
+
+            $relationship_map[$key]['posts'][] = [
+                'id'    => $post->ID,
+                'title' => get_the_title($post->ID)
+            ];
         }
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | FRAGMENT LOGIC
-    |--------------------------------------------------------------------------
-    */
-    if ($type === 'fragment') {
-
-        $fragment_stats[$post->ID]['title'] = get_the_title($post->ID);
-        $fragment_stats[$post->ID]['element_count'] = 0;
-
-        $parent_chapters = get_field('parent_chapters', $post->ID) ?: [];
-
-        foreach ($parent_chapters as $chapter_id) {
-
-            $cf_map[$chapter_id][$post->ID] = ($cf_map[$chapter_id][$post->ID] ?? 0) + 1;
-        }
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | CHAPTER LOGIC
-    |--------------------------------------------------------------------------
-    */
-    if ($type === 'chapter') {
-
-        $chapter_stats[$post->ID]['title'] = get_the_title($post->ID);
-        $chapter_stats[$post->ID]['fragment_count'] = 0;
-    }
 }
 
-/*
-|--------------------------------------------------------------------------
-| ANALYSIS PASS
-|--------------------------------------------------------------------------
-*/
-$insights = [];
-
-/*
-|--------------------------------------------------------------------------
-| ELEMENT → FRAGMENT PROMOTION CHECK
-|--------------------------------------------------------------------------
-*/
-foreach ($fe_map as $fragment_id => $elements) {
-
-    $element_count = array_sum($elements);
-
-    $fragment_title = $fragment_stats[$fragment_id]['title'] ?? 'Unknown Fragment';
-
-    if ($element_count >= $CONFIG['element_promotion_threshold']) {
-
-        $insights[] = [
-            'type'    => 'ELEMENT_PROMOTE',
-            'parent'  => 'Fragment',
-            'name'    => $fragment_title,
-            'score'   => $element_count,
-            'message' => 'Element density is high — candidate for promotion into Fragment'
-        ];
-    }
-}
-
-/*
-|--------------------------------------------------------------------------
-| FRAGMENT → ELEMENT DEMOTION CHECK
-|--------------------------------------------------------------------------
-*/
-foreach ($fe_map as $fragment_id => $elements) {
-
-    $element_count = array_sum($elements);
-
-    $fragment_title = $fragment_stats[$fragment_id]['title'] ?? 'Unknown Fragment';
-
-    if ($element_count <= $CONFIG['fragment_demotion_threshold']) {
-
-        $insights[] = [
-            'type'    => 'FRAGMENT_DEMOTE',
-            'parent'  => 'Fragment',
-            'name'    => $fragment_title,
-            'score'   => $element_count,
-            'message' => 'Fragment is underutilized — candidate for collapse into Elements'
-        ];
-    }
-}
-
-/*
-|--------------------------------------------------------------------------
-| CHAPTER → FRAGMENT OVERLOAD CHECK
-|--------------------------------------------------------------------------
-*/
-foreach ($cf_map as $chapter_id => $fragments) {
-
-    $fragment_count = array_sum($fragments);
-
-    $chapter_title = $chapter_stats[$chapter_id]['title'] ?? 'Unknown Chapter';
-
-    if ($fragment_count > 30) {
-
-        $insights[] = [
-            'type'    => 'CHAPTER_OVERLOAD',
-            'parent'  => 'Chapter',
-            'name'    => $chapter_title,
-            'score'   => $fragment_count,
-            'message' => 'Chapter is highly fragmented — consider breaking into multiple Chapters'
-        ];
-    }
-}
-
-/*
-|--------------------------------------------------------------------------
-| SORT INSIGHTS BY SEVERITY
-|--------------------------------------------------------------------------
-*/
-usort($insights, function($a, $b) {
-    return $b['score'] <=> $a['score'];
+// Sort strongest relationships first
+usort($relationship_map, function($a, $b) {
+    return $b['count'] - $a['count'];
 });
+
 ?>
 
-<section class="hierarchical-density-tool">
+<section class="semantic-density-tool">
 
 <style>
 
-.hierarchical-density-tool {
+.semantic-density-tool {
     font-family: sans-serif;
     max-width: 1400px;
     margin: 0 auto;
@@ -226,7 +124,7 @@ usort($insights, function($a, $b) {
     color: #721c24;
 }
 
-.badge {
+.semantic-badge {
     display: inline-block;
     padding: 4px 8px;
     border-radius: 4px;
@@ -234,19 +132,13 @@ usort($insights, function($a, $b) {
     font-size: 12px;
 }
 
-.insight-box {
-    padding: 6px 10px;
-    border-radius: 4px;
-    background: #f8f8f8;
-}
-
 </style>
 
-<h1>Hierarchical CPT Density Analyzer</h1>
+<h1>Semantic Relationship Density Analyzer</h1>
 
 <p>
-Analyzes structural pressure across Chapters, Fragments, and Elements.
-Detects when content is too dense or too thin for its current layer.
+This analyzer reveals recurring relationships between Topics and Themes
+across the site.
 </p>
 
 <table class="semantic-table">
@@ -254,46 +146,55 @@ Detects when content is too dense or too thin for its current layer.
 <thead>
 <tr>
     <th>Rank</th>
-    <th>Type</th>
-    <th>Name</th>
-    <th>Density Score</th>
-    <th>Signal</th>
+    <th>Topic</th>
+    <th>Theme</th>
+    <th>Relationship Density</th>
+    <th>Strength</th>
 </tr>
 </thead>
 
 <tbody>
 
-<?php foreach ($insights as $i => $row):
+<?php foreach ($relationship_map as $index => $relation):
 
-    $class = 'density-low';
+    $strength = 'Low';
 
-    if ($row['score'] >= 25) {
+    if ($relation['count'] >= 15) {
+        $strength = 'High';
         $class = 'density-high';
     }
-    elseif ($row['score'] >= 15) {
+    elseif ($relation['count'] >= 7) {
+        $strength = 'Medium';
         $class = 'density-medium';
+    }
+    else {
+        $class = 'density-low';
     }
 
 ?>
 
 <tr>
 
-<td><?php echo $i + 1; ?></td>
+<td><?php echo $index + 1; ?></td>
 
 <td>
-    <span class="badge"><?php echo esc_html($row['type']); ?></span>
+    <span class="semantic-badge">
+        <?php echo esc_html($relation['topic']); ?>
+    </span>
 </td>
 
 <td>
-    <?php echo esc_html($row['name']); ?>
+    <span class="semantic-badge">
+        <?php echo esc_html($relation['theme']); ?>
+    </span>
 </td>
 
 <td>
-    <?php echo (int) $row['score']; ?>
+    <?php echo $relation['count']; ?> shared posts
 </td>
 
 <td class="<?php echo $class; ?>">
-    <?php echo esc_html($row['message']); ?>
+    <?php echo $strength; ?>
 </td>
 
 </tr>
