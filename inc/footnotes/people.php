@@ -7,8 +7,11 @@
 function fn_people($chapter_id, $group_titles) {
     ob_start();
 
-    $people = get_field('people_referenced', $chapter_id) ?: [];
-    if (!empty($people)) {
+$context = kp_build_reference_context($chapter_id);
+
+$items = $context['profile'] ?? [];
+
+if (!empty($people)) {
         $meta = $group_titles['profile'];
         echo '<div class="referenced-group" style="margin-top:2em;">';
         echo "<h4><a href=\"{$meta['link']}\" style=\"text-decoration:none;\"><span style=\"font-size:1.1em;\">{$meta['emoji']}</span> <span style=\"text-decoration:underline;\">{$meta['title']}</span></a></h4><ul>";
