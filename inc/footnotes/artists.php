@@ -11,12 +11,15 @@
 function fn_collect_chapter_artists($chapter_id) {
 
     $song_rows = get_field('chapter_songs', $chapter_id) ?: [];
+    $context = kp_build_reference_context($chapter_id);
+    $referenced_songs = $context['song'] ?? [];
 
     $artists = [
         'featured' => [],
         'other'    => [],
     ];
 
+    // --- EXISTING LOOP (leave this as is) ---
     foreach ($song_rows as $row) {
 
         if (empty($row['song']) || !$row['song'] instanceof WP_Post) {
@@ -53,6 +56,45 @@ function fn_collect_chapter_artists($chapter_id) {
 
         $artists[$group][$artist_key]['songs'][] = $song_title;
     }
+    // --- END OF EXISTING LOOP ---
+
+    // <<< ========== THIS IS WHERE THE NEW CODE GOES ========== >>>
+    // Add inherited songs from attached Elements.
+    foreach ($referenced_songs as $song_post) {
+
+        if (!$song_post instanceof WP_Post) {
+            continue;
+        }
+
+        $song_title = get_the_title($song_post);
+
+        $artist_id   = get_field('song_artist', $song_post->ID);
+        $artist_post = $artist_id ? get_post($artist_id) : null;
+
+        $artist_key = $artist_post instanceof WP_Post
+            ? $artist_post->ID
+            : 'unknown';
+
+        $artist_obj = $artist_post instanceof WP_Post
+            ? $artist_post
+            : (object)[
+                'ID' => 'unknown',
+                'post_title' => 'Unknown Artist',
+            ];
+
+        if (!isset($artists['other'][$artist_key])) {
+            $artists['other'][$artist_key] = [
+                'post'  => $artist_obj,
+                'songs' => [],
+            ];
+        }
+
+        // Avoid duplicate song titles under the same artist.
+        if (!in_array($song_title, $artists['other'][$artist_key]['songs'], true)) {
+            $artists['other'][$artist_key]['songs'][] = $song_title;
+        }
+    }
+    // <<< ========== END OF NEW CODE ========== >>>
 
     return $artists;
 }
