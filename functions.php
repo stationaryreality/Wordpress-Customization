@@ -482,7 +482,25 @@ add_action('after_setup_theme', function() {
     }
 });
 
-//temp test
-function ct_author_get_content_template() {
-    die('Child theme override works');
+if (!function_exists('ct_author_get_content_template')) {
+
+    function ct_author_get_content_template()
+    {
+        // Get bbPress template for all bbPress pages
+        if (function_exists('is_bbpress') && is_bbpress()) {
+            get_template_part('template-parts/content/bbpress');
+            return;
+        }
+
+        if (is_home() || is_archive()) {
+            get_template_part(
+                'template-parts/content/archive',
+                get_post_type()
+            );
+        } else {
+            get_template_part(
+                'template-parts/content/' . get_post_type()
+            );
+        }
+    }
 }
