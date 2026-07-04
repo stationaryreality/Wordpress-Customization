@@ -119,7 +119,7 @@ if ($view === 'atlas') {
 <?php
 
 include locate_template(
-    "template-parts/inc/presentation//views/{$view}.php"
+    "template-parts/inc/presentation/views/{$view}.php"
 );
 
 get_footer();
