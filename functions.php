@@ -482,6 +482,13 @@ add_action('after_setup_theme', function() {
     }
 });
 
+
+/**
+ * Child theme override.
+ *
+ * Redirects Author theme content template loading
+ * to the organized template-parts/content/ directory.
+ */
 if (!function_exists('ct_author_get_content_template')) {
 
     function ct_author_get_content_template()
