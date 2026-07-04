@@ -1,3 +1,7 @@
+/* ============================================================
+   WORDPRESS OVERRIDES
+   Fixes for core WP blocks and styles
+   ============================================================ */
 
 /* Keep cover blocks narrow and centered */
 .wp-block-cover {
@@ -21,19 +25,19 @@
     min-height: 300px !important;
 }
 
-/* This is to fix the shortcode injected links on cover blocks */
-
+/* Fix shortcode injected links on cover blocks */
 .has-white-color.has-link-color a {
-  color: white !important;
+    color: white !important;
 }
 
+/* Rounded image style */
 .is-style-rounded img {
-  width: 96px !important;
-  height: 96px !important;
-  border-radius: 50% !important;
-  object-fit: cover !important;
-  display: inline-block !important;
-  vertical-align: middle !important;
+    width: 96px !important;
+    height: 96px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
 }
 
 /* Prevent parent container and alignment issues */
