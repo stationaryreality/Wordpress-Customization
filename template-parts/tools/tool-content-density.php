@@ -12,8 +12,8 @@
 */
 
 // ===== CONFIGURABLE THRESHOLDS =====
-$element_to_fragment_threshold = 10;   // Elements with ≥ this many CPTs → promote to Fragment
-$fragment_to_element_threshold = 15;   // Fragments with ≤ this many CPTs → demote to Element
+$element_to_fragment_threshold = 15;   // Elements with ≥ this many CPTs → promote to Fragment
+$fragment_to_element_threshold = 10;   // Fragments with ≤ this many CPTs → demote to Element
 $fragment_to_chapter_threshold = 20;   // Fragments with ≥ this many CPTs → promote to Chapter
 
 // Get all chapters, fragments, and elements
