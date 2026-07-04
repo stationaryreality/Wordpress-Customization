@@ -481,3 +481,8 @@ add_action('after_setup_theme', function() {
         require_once $file;
     }
 });
+
+//temp test
+function ct_author_get_content_template() {
+    die('Child theme override works');
+}
