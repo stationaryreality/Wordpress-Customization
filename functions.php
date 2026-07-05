@@ -514,33 +514,18 @@ if (!function_exists('ct_author_get_content_template')) {
 
 
 /**
- * Register Page Templates inside the /templates/ subfolder
+ * Manually register Page Templates inside the /templates/ folder
  */
-add_filter( 'theme_page_templates', 'child_theme_register_templates_in_subfolder' );
+add_filter( 'theme_page_templates', 'child_theme_manual_templates' );
 
-function child_theme_register_templates_in_subfolder( $templates ) {
-    // Point to your /templates/ folder inside the child theme
-    $template_dir = get_stylesheet_directory() . '/templates/';
-    
-    // Stop early if the folder doesn't exist
-    if ( ! is_dir( $template_dir ) ) {
-        return $templates;
-    }
+function child_theme_manual_templates( $templates ) {
+    // Map the file path (relative to child theme root) => Dropdown Label
+    $custom_templates = array(
+        'templates/pages/tv-shows-referenced.php'  => 'Shows Directory',
+        // Add more templates below in the same format:
 
-    // Loop through every .php file in that folder
-    foreach ( glob( $template_dir . '*.php' ) as $file ) {
-        // Get the relative path (e.g., "templates/page-shows.php")
-        $relative_path = str_replace( get_stylesheet_directory() . '/', '', $file );
-        
-        // Safely read the "Template Name:" header using WordPress core
-        $file_headers = get_file_data( $file, array( 'Template Name' ) );
-        $template_name = $file_headers[0] ?? '';
+    );
 
-        if ( ! empty( $template_name ) ) {
-            // Add it to the dropdown list
-            $templates[ $relative_path ] = $template_name;
-        }
-    }
-
-    return $templates;
+    // Merge them with the default templates so you don't lose anything
+    return array_merge( $templates, $custom_templates );
 }
