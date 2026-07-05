@@ -6,8 +6,9 @@ $related = get_field('related_concepts'); // ACF relationship field
 
   <div class="concept-definition">
 
-        <?php get_template_part('content/concept-nav'); ?>
-        <BR>
+  <?php get_template_part('template-parts/navigation/concept'); ?>
+
+  <BR>
 
     <?php the_content(); ?>
   </div>

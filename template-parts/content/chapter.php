@@ -73,6 +73,6 @@
 
     </article>
 
-    <?php get_template_part( 'content/post-nav' ); ?>
+  <?php get_template_part('template-parts/navigation/post'); ?>
 
 </div>

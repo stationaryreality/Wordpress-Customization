@@ -119,6 +119,6 @@ endif;
 
     <?php do_action('post_after'); ?>
 
-    <?php get_template_part('content/element-nav'); ?>
+  <?php get_template_part('template-parts/navigation/element'); ?>
 
 </div>

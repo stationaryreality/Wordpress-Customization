@@ -109,6 +109,6 @@ if ($author_profile) {
   show_featured_in_threads('books_cited');
   ?>
 
-  <?php get_template_part('content/book-nav'); ?>
+  <?php get_template_part('template-parts/navigation/book'); ?>
 
 </div>   <!-- end person-content -->

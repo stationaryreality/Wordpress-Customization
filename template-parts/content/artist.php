@@ -177,5 +177,5 @@ get_template_part(
 );
 ?>
 
-  <?php get_template_part('content/artist-nav'); ?>
+  <?php get_template_part('template-parts/navigation/artist'); ?>
 </div>
