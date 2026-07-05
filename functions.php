@@ -514,26 +514,33 @@ if (!function_exists('ct_author_get_content_template')) {
 
 
 /**
- * Allow WordPress to detect Page Templates inside the /templates/ subfolder
+ * Register Page Templates inside the /templates/ subfolder
  */
-function child_theme_register_subfolder_templates( $templates ) {
-    // Scan your child theme's /templates/ folder for any .php files
-    $files = glob( get_stylesheet_directory() . '/templates/*.php' );
+add_filter( 'theme_page_templates', 'child_theme_register_templates_in_subfolder' );
 
-    if ( is_array( $files ) ) {
-        foreach ( $files as $file ) {
-            // Get the relative path (e.g. "templates/page-about.php")
-            $relative_path = str_replace( get_stylesheet_directory() . '/', '', $file );
-            
-            // Read the file to check for the "Template Name:" header
-            $file_content = file_get_contents( $file );
-            if ( preg_match( '/Template Name:\s*(.+)$/m', $file_content, $matches ) ) {
-                // Add it to the dropdown with the relative path as the key
-                $templates[ $relative_path ] = _cleanup_header_comment( $matches[1] );
-            }
+function child_theme_register_templates_in_subfolder( $templates ) {
+    // Point to your /templates/ folder inside the child theme
+    $template_dir = get_stylesheet_directory() . '/templates/';
+    
+    // Stop early if the folder doesn't exist
+    if ( ! is_dir( $template_dir ) ) {
+        return $templates;
+    }
+
+    // Loop through every .php file in that folder
+    foreach ( glob( $template_dir . '*.php' ) as $file ) {
+        // Get the relative path (e.g., "templates/page-shows.php")
+        $relative_path = str_replace( get_stylesheet_directory() . '/', '', $file );
+        
+        // Safely read the "Template Name:" header using WordPress core
+        $file_headers = get_file_data( $file, array( 'Template Name' ) );
+        $template_name = $file_headers[0] ?? '';
+
+        if ( ! empty( $template_name ) ) {
+            // Add it to the dropdown list
+            $templates[ $relative_path ] = $template_name;
         }
     }
 
     return $templates;
 }
-add_filter( 'theme_page_templates', 'child_theme_register_subfolder_templates' );
