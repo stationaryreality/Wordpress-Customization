@@ -238,11 +238,12 @@ $unique_excerpts = array_filter($excerpts, function($e) use (&$seen_excerpts) {
     <?php endif;
   endif;
 
-  // === Featured in threads ===
-  show_featured_in_threads('people_referenced');
+// === Featured in threads ===
+show_featured_in_threads('people_referenced');
 
-  // === Profile navigation ===
-  get_template_part('content/profile-nav');
-  ?>
+// === Profile navigation ===
+get_template_part('template-parts/navigation/profile');
 
-</div>   <!-- end person-content -->
+?>
+
+</div> <!-- end person-content -->

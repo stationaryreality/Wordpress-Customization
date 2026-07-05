@@ -246,4 +246,4 @@ show_featured_in_threads('videos_linked');
     <?php echo fn_taxonomy_bubbles(get_the_ID()); ?>
 </div>
 
-<?php get_template_part('content/video-nav'); ?>
+<?php get_template_part('template-parts/navigation/video'); ?>

@@ -119,6 +119,6 @@ $artist_profile = get_field('song_artist');
     </div>
   <?php endif; ?>
 
-  <?php get_template_part('content/song-nav'); ?>
+  <?php get_template_part('template-parts/navigation/song'); ?>
 
 </div>   <!-- 👈 close the wrapper -->
