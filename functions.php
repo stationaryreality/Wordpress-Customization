@@ -530,36 +530,53 @@ function child_theme_manual_templates( $templates ) {
     return array_merge( $templates, $custom_templates );
 }
 
-// TEMPORARY DEBUG - DELETE AFTER YOU COPY THE ARRAY
+// TEMPORARY SCANNER - FIND OUT WHAT'S ACTUALLY IN YOUR CHILD THEME
 add_action('admin_notices', function() {
-    // CHANGE THIS PATH to match your actual folder name
-    $dir = get_stylesheet_directory() . '/pages/';
+    $child_root = get_stylesheet_directory();
     
-    if ( ! is_dir( $dir ) ) {
-        echo '<div class="notice notice-error"><p><strong>Error:</strong> The folder <code>/pages/</code> does not exist. Check the folder name!</p></div>';
-        return;
-    }
-
-    $php_files = glob( $dir . '*.php' );
-
-    if ( empty( $php_files ) ) {
-        echo '<div class="notice notice-warning"><p><strong>No PHP files found in /pages/.</strong> Are the files in there?</p></div>';
-        return;
-    }
-
-    echo '<div class="notice notice-success"><p><strong>✅ Copy this array into your manual mapping function:</strong></p>';
-    echo '<pre style="background:#f1f1f1;padding:15px;border-left:4px solid #46b450;overflow:auto;">';
-    echo "array(\n";
-    foreach ( $php_files as $file ) {
-        $filename = basename( $file );
-        $label = str_replace( '.php', '', $filename );
-        $label = str_replace( 'page-', '', $label );
-        $label = str_replace( '-', ' ', $label );
-        $label = ucwords( $label );
+    // Get all items in the root
+    $items = scandir($child_root);
+    
+    echo '<div class="notice notice-info"><p><strong>🔍 Here is exactly what is in your child theme root:</strong></p>';
+    echo '<ul style="margin-left:20px;list-style:disc;">';
+    
+    $found_pages = false;
+    
+    foreach ($items as $item) {
+        if ($item === '.' || $item === '..') continue;
         
-        // IMPORTANT: Use 'pages/' instead of 'templates/' here
-        echo "    'pages/{$filename}' => '{$label}',\n";
+        $full_path = $child_root . '/' . $item;
+        if (is_dir($full_path)) {
+            // Check if this folder contains PHP files (looking for your templates)
+            $php_files = glob($full_path . '/*.php');
+            $php_count = count($php_files);
+            
+            echo "<li><strong>📁 {$item}/</strong> (contains {$php_count} PHP files)";
+            
+            // If it has PHP files, list the first few so you know it's the right one
+            if ($php_count > 0) {
+                $names = array_map('basename', array_slice($php_files, 0, 5));
+                echo ' - e.g. ' . implode(', ', $names) . (($php_count > 5) ? ', ...' : '');
+            }
+            echo '</li>';
+            
+            if (stripos($item, 'page') !== false || stripos($item, 'templates') !== false) {
+                $found_pages = true;
+                echo "   <span style='color:green;'>✅ <strong>This is probably your folder!</strong> Use exact name: <code>'{$item}'</code></span><br>";
+            }
+        } else {
+            // Show root PHP files
+            if (pathinfo($item, PATHINFO_EXTENSION) === 'php') {
+                echo "<li>📄 {$item}</li>";
+            }
+        }
     }
-    echo ");";
-    echo '</pre></div>';
+    
+    if (!$found_pages) {
+        echo '<li style="color:red;">❌ No folder with "page" or "templates" in the name found in the root. Are your 25 files maybe still in the root? Or inside a subfolder like <code>/template-parts/</code>?</li>';
+    }
+    
+    echo '</ul>';
+    echo '<p><strong>Copy the exact folder name from above</strong> and replace <code>pages</code> with it in the debug script.</p>';
+    echo '</div>';
 });
