@@ -529,3 +529,23 @@ function child_theme_manual_templates( $templates ) {
     // Merge them with the default templates so you don't lose anything
     return array_merge( $templates, $custom_templates );
 }
+
+// TEMPORARY - DELETE AFTER USE
+add_action( 'admin_notices', function() {
+    $template_dir = get_stylesheet_directory() . '/templates/';
+    if ( ! is_dir( $template_dir ) ) return;
+    
+    echo '<div class="notice notice-info"><p><strong>Copy this array into your manual mapping function:</strong><br>';
+    echo 'array(<br>';
+    foreach ( glob( $template_dir . '*.php' ) as $file ) {
+        $filename = basename( $file );
+        // Remove "page-" and ".php" to create a readable label
+        $label = str_replace( '.php', '', $filename );
+        $label = str_replace( 'page-', '', $label );
+        $label = str_replace( '-', ' ', $label );
+        $label = ucwords( $label );
+        
+        echo "    'templates/{$filename}' => '{$label}',<br>";
+    }
+    echo ');</p></div>';
+} );
