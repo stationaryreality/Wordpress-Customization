@@ -27,6 +27,6 @@ if ( ! $query || ! ( $query instanceof WP_Query ) || ! $query->have_posts() ) {
   <?php 
     // artist-grid expects $artist_query
     set_query_var( 'artist_query', $query );
-    get_template_part( 'template-parts/artist-grid' );
+    get_template_part( 'template-parts/grids/artist' );
   ?>
 </section>
