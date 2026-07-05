@@ -514,23 +514,6 @@ if (!function_exists('ct_author_get_content_template')) {
 
 
 /**
- * Manually register Page Templates inside the /templates/ folder
- */
-add_filter( 'theme_page_templates', 'child_theme_manual_templates' );
-
-function child_theme_manual_templates( $templates ) {
-    // Map the file path (relative to child theme root) => Dropdown Label
-    $custom_templates = array(
-        'templates/pages/tv-shows-referenced.php'  => 'Shows Directory',
-        // Add more templates below in the same format:
-
-    );
-
-    // Merge them with the default templates so you don't lose anything
-    return array_merge( $templates, $custom_templates );
-}
-
-/**
  * Dynamically register Page Templates from the /templates/pages/ folder
  */
 add_filter( 'theme_page_templates', function( $templates ) {
