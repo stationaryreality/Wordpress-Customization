@@ -61,6 +61,6 @@ $wiki_slug = get_field('wikipedia_slug');
   show_featured_in_threads('movies_referenced');
   ?>
 
-  <?php get_template_part('content/movie-nav'); ?>
+  <?php get_template_part('template-parts/navigation/movie'); ?>
 
 </div>   <!-- end person-content -->

@@ -72,6 +72,6 @@
     </article>
     <?php do_action( 'post_after' ); ?>
 
-  <?php get_template_part('template-parts/navigation/artist'); ?>
+  <?php get_template_part('template-parts/navigation/fragment'); ?>
 
 </div>

@@ -21,5 +21,6 @@ $source = get_field('song'); // Book, Reference, etc.
 
   <?php echo fn_taxonomy_bubbles(get_the_ID()); ?>
 
-  <?php get_template_part('content/lyric-nav'); ?>
+  <?php get_template_part('template-parts/navigation/lyric'); ?>
+
 </div>

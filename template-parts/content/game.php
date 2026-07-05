@@ -61,6 +61,6 @@ $wiki_slug = get_field('wikipedia_slug');
   show_featured_in_threads('games_referenced');
   ?>
 
-  <?php get_template_part('content/game-nav'); ?>
+  <?php get_template_part('template-parts/navigation/game'); ?>
 
 </div>   <!-- end person-content -->

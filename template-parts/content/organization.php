@@ -42,4 +42,4 @@ $people    = get_field('related_people', $org_id); // ACF relationship or repeat
 
 <?php show_featured_in_threads('organizations_referenced'); ?>
 
-<?php get_template_part('content/organization-nav'); ?>
+  <?php get_template_part('template-parts/navigation/organization'); ?>

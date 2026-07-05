@@ -33,7 +33,7 @@ $img_full_url   = $image ? $image['url'] : '';
   <?php echo fn_taxonomy_bubbles(get_the_ID()); ?>
 </div>
 
-<?php get_template_part('content/image-nav'); ?>
+  <?php get_template_part('template-parts/navigation/image'); ?>
 
 <!-- Simple built-in lightbox -->
 <style>
