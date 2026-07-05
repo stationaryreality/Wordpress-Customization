@@ -5,7 +5,7 @@ $search_term = $args['search_term'] ?? '';
 
 if (!$query || !$query->have_posts()) return;
 
-get_template_part('template-parts/excerpt', 'list', [
+get_template_part('template-parts/lists/excerpt', null, [
   'query'       => $query,
   'title'       => $info['title'] ?? 'Excerpts',
   'emoji'       => $info['emoji'] ?? '',

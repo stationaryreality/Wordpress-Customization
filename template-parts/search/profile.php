@@ -5,7 +5,7 @@ $search_term = $args['search_term'];
 
 if (!$query->have_posts()) return;
 
-get_template_part('template-parts/profile', 'list', [
+get_template_part('template-parts/lists/profile', null, [
   'query'       => $query,
   'title'       => $info['title'],
   'emoji'       => $info['emoji'],
