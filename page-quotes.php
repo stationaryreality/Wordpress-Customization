@@ -9,7 +9,7 @@ $quotes = new WP_Query([
   'order'          => 'ASC',
 ]);
 
-get_template_part('template-parts/quote', 'list', [
+get_template_part('template-parts/lists/quote', null, [
   'query' => $quotes,
   'title' => 'Quotes',
   'emoji' => '💬',

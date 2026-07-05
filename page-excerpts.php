@@ -9,7 +9,7 @@ $excerpts_query = new WP_Query([
   'order' => 'ASC'
 ]);
 
-get_template_part('template-parts/excerpt', 'list', [
+get_template_part('template-parts/lists/excerpt', null, [
   'query' => $excerpts_query,
   'title' => 'Excerpts'
 ]);

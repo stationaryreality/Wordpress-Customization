@@ -12,7 +12,7 @@ $concepts = new WP_Query([
   'order'          => 'ASC'
 ]);
 
-get_template_part('template-parts/concept', 'list', [
+get_template_part('template-parts/lists/concept', null, [
   'query' => $concepts,
   'title' => 'Lexicon',
   'emoji' => '🔎',
