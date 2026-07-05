@@ -532,38 +532,33 @@ function child_theme_manual_templates( $templates ) {
 
 // TEMPORARY DEBUG - DELETE AFTER YOU COPY THE ARRAY
 add_action('admin_notices', function() {
-    $dir = get_stylesheet_directory() . '/templates/';
+    // CHANGE THIS PATH to match your actual folder name
+    $dir = get_stylesheet_directory() . '/pages/';
     
-    // Check if the folder exists
     if ( ! is_dir( $dir ) ) {
-        echo '<div class="notice notice-error"><p><strong>Error:</strong> The folder <code>/templates/</code> does not exist in your child theme. Create it first!</p></div>';
+        echo '<div class="notice notice-error"><p><strong>Error:</strong> The folder <code>/pages/</code> does not exist. Check the folder name!</p></div>';
         return;
     }
 
-    // Scan the folder for PHP files
-    $files = scandir( $dir );
-    $php_files = array_filter( $files, function($f) {
-        return $f !== '.' && $f !== '..' && pathinfo($f, PATHINFO_EXTENSION) === 'php';
-    });
+    $php_files = glob( $dir . '*.php' );
 
-    // If no PHP files are found
     if ( empty( $php_files ) ) {
-        echo '<div class="notice notice-warning"><p><strong>No PHP files found in /templates/.</strong> Have you moved your template files there yet?</p></div>';
+        echo '<div class="notice notice-warning"><p><strong>No PHP files found in /pages/.</strong> Are the files in there?</p></div>';
         return;
     }
 
-    // Build the array and display it
-    echo '<div class="notice notice-success"><p><strong>✅ Copy this exact array into your manual mapping function:</strong></p>';
+    echo '<div class="notice notice-success"><p><strong>✅ Copy this array into your manual mapping function:</strong></p>';
     echo '<pre style="background:#f1f1f1;padding:15px;border-left:4px solid #46b450;overflow:auto;">';
     echo "array(\n";
-    foreach ( $php_files as $filename ) {
-        // Create a clean label from the filename
+    foreach ( $php_files as $file ) {
+        $filename = basename( $file );
         $label = str_replace( '.php', '', $filename );
         $label = str_replace( 'page-', '', $label );
         $label = str_replace( '-', ' ', $label );
         $label = ucwords( $label );
         
-        echo "    'templates/{$filename}' => '{$label}',\n";
+        // IMPORTANT: Use 'pages/' instead of 'templates/' here
+        echo "    'pages/{$filename}' => '{$label}',\n";
     }
     echo ");";
     echo '</pre></div>';
