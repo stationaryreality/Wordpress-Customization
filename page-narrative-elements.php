@@ -7,7 +7,7 @@ get_header(); ?>
   <a id="elements"></a>
   <section>
     <?php
-      get_template_part('template-parts/element', 'grid', [
+get_template_part('template-parts/grids/element', null, [
         'title' => 'Elements',
       ]);
     ?>

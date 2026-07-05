@@ -10,7 +10,7 @@ $videos_query = new WP_Query([
     'order'          => 'ASC',
 ]);
 
-get_template_part('template-parts/video', 'grid', [
+get_template_part('template-parts/grids/video', null, [
     'query' => $videos_query,
     'title' => 'Video Room',
     'emoji' => '📼',

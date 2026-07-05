@@ -9,7 +9,7 @@ $shows_query = new WP_Query([
   'order'          => 'ASC',
 ]);
 
-get_template_part('template-parts/show', 'grid', [
+get_template_part('template-parts/grids/show', null, [
   'query' => $shows_query,
   'title' => 'TV Shows',
   'emoji' => '📺', // TV emoji suits best

@@ -9,7 +9,7 @@ $orgs = new WP_Query([
   'order'          => 'ASC',
 ]);
 
-get_template_part('template-parts/organization', 'grid', [
+get_template_part('template-parts/grids/organization', null, [
   'query' => $orgs,
   'title' => 'Organizations Referenced',
   'emoji' => '🏢',

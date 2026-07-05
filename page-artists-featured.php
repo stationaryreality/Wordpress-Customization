@@ -41,7 +41,7 @@ foreach ($artist_tiers as $feature_slug => $feature_label):
 
     if ($non_rappers->have_posts()) :
       set_query_var('artist_query', $non_rappers);
-      get_template_part('template-parts/artist-grid');
+      get_template_part('template-parts/grids/artist');
     endif;
 
     wp_reset_postdata();

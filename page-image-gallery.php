@@ -9,7 +9,7 @@ $images_query = new WP_Query([
   'order'          => 'ASC',
 ]);
 
-get_template_part('template-parts/image', 'grid', [
+get_template_part('template-parts/grids/image', null, [
   'query' => $images_query,
   'title' => 'Image Gallery',
   'emoji' => '🖼',

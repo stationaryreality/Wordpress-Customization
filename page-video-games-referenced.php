@@ -9,7 +9,7 @@ $games_query = new WP_Query([
   'order'          => 'ASC',
 ]);
 
-get_template_part('template-parts/game', 'grid', [
+get_template_part('template-parts/grids/game', null, [
   'query' => $games_query,
   'title' => 'Video Games',
   'emoji' => '🎮',

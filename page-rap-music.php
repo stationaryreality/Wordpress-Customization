@@ -50,7 +50,7 @@ get_header();
 
           <?php
           set_query_var('artist_query', $rapper_query);
-          get_template_part('template-parts/artist-grid');
+          get_template_part('template-parts/grids/artist');
           ?>
         </div>
     <?php
@@ -155,7 +155,7 @@ get_header();
       ],
     ]);
 
-    get_template_part('template-parts/lyric', 'grid', [
+get_template_part('template-parts/grids/lyric', null, [
       'query' => $rap_lyrics_query,
       'title' => '',
       'emoji' => '',

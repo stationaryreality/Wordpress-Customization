@@ -11,7 +11,7 @@ $homepage_sections = site_get_navigation_sections();
 <?php foreach ($homepage_sections as $section_title => $pages) : ?>
 
     <?php
-    get_template_part('template-parts/page', 'grid', [
+get_template_part('template-parts/grids/page', null, [
         'title' => $section_title,
         'pages' => $pages,
     ]);

@@ -10,7 +10,7 @@ $portals = new WP_Query([
   'order'          => 'ASC',
 ]);
 
-get_template_part('template-parts/portal', 'grid', [
+get_template_part('template-parts/grids/portal', null, [
   'query' => $portals,
 ]);
 

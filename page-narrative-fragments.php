@@ -8,7 +8,7 @@ get_header(); ?>
 <a id="narrative-fragments"></a>
 <section>
   <?php
-    get_template_part('template-parts/fragment', 'grid', [
+get_template_part('template-parts/grids/fragment', null, [
       'title' => 'Narrative Episodes',
     ]);
   ?>

@@ -8,7 +8,7 @@ get_header(); ?>
 <a id="narrative-threads"></a>
 <section>
   <?php
-    get_template_part('template-parts/chapter', 'grid', [
+get_template_part('template-parts/grids/chapter', null, [
       'title' => 'Narrative Threads',
     ]);
   ?>

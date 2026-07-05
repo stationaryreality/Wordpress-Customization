@@ -9,7 +9,7 @@ $movies_query = new WP_Query([
   'order'          => 'ASC',
 ]);
 
-get_template_part('template-parts/movie', 'grid', [
+get_template_part('template-parts/grids/movie', null, [
   'query' => $movies_query,
   'title' => 'Movies',
   'emoji' => '🎬', // centralized lookup if you’ve got it
