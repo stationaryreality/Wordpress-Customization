@@ -475,6 +475,8 @@ require_once get_stylesheet_directory() . '/inc/presentation/knowledge-sections.
 
 require_once get_stylesheet_directory() . '/inc/presentation/knowledge-resolver.php';
 
+require_once get_stylesheet_directory() . '/inc/presentation/knowledge-renderer.php';
+
 //disabled - require_once get_stylesheet_directory() . '/inc/concept_relations.php';
 
 // Load shared taxonomy bubbles function
