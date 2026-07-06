@@ -30,7 +30,6 @@ $related = get_field('related_concepts'); // ACF relationship field
 
     <?php show_featured_in_threads('concepts_referenced'); ?>
 
-
 <?php
 
 $topic = kp_find_topic(get_the_title());
@@ -42,3 +41,5 @@ if ($topic) {
 }
 
 ?>
+
+</div>
