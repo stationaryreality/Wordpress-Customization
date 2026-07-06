@@ -53,9 +53,15 @@ foreach ($term_posts_by_type as $ptype => $ids) {
 }
 
 /**
- * Helper: Render CPT results (now merges taxonomy-matched posts in a non-destructive way)
+ * NEW: Build search section data (replaces render_cpt_results).
+ * Returns an array with type, query, info, search_term.
  */
-function render_cpt_results($type, $info, $search_term, $term_posts_by_type = []) {
+function kp_build_search_section(
+    $type,
+    $info,
+    $search_term,
+    $term_posts_by_type = []
+) {
     $query_args = [
         'post_type'      => $type,
         's'              => $search_term,
@@ -69,15 +75,17 @@ function render_cpt_results($type, $info, $search_term, $term_posts_by_type = []
         relevanssi_do_query($query);
     }
 
-    // If we have taxonomy-matched IDs for this post_type, append them if they're not already present
     if (!empty($term_posts_by_type[$type])) {
         $existing_ids = [];
-        if (!empty($query->posts)) {
-            foreach ($query->posts as $p) {
-                $existing_ids[] = is_object($p) ? $p->ID : intval($p);
-            }
+
+        foreach ((array) $query->posts as $p) {
+            $existing_ids[] = is_object($p) ? $p->ID : intval($p);
         }
-        $new_ids = array_diff($term_posts_by_type[$type], $existing_ids);
+
+        $new_ids = array_diff(
+            $term_posts_by_type[$type],
+            $existing_ids
+        );
 
         if (!empty($new_ids)) {
             $new_posts = get_posts([
@@ -87,27 +95,25 @@ function render_cpt_results($type, $info, $search_term, $term_posts_by_type = []
                 'orderby'        => 'post__in',
             ]);
 
-            // Append to the existing posts array (keeps Relevanssi order first)
-            $query->posts = array_merge((array) $query->posts, $new_posts);
+            $query->posts = array_merge(
+                (array) $query->posts,
+                $new_posts
+            );
+
             $query->post_count = count($query->posts);
-            $query->found_posts = isset($query->found_posts) ? max($query->found_posts, $query->post_count) : $query->post_count;
+            $query->found_posts = max(
+                $query->found_posts,
+                $query->post_count
+            );
         }
     }
 
-    $template_path = locate_template("template-parts/search/{$type}.php");
-    if ($template_path) {
-        get_template_part("template-parts/search/{$type}", null, [
-            'query'       => $query,
-            'info'        => $info,
-            'search_term' => $search_term,
-        ]);
-    } else {
-        get_template_part("template-parts/search/default", null, [
-            'query'       => $query,
-            'info'        => $info,
-            'search_term' => $search_term,
-        ]);
-    }
+    return [
+        'type'        => $type,
+        'query'       => $query,
+        'info'        => $info,
+        'search_term' => $search_term,
+    ];
 }
 
 /**
@@ -150,22 +156,36 @@ function render_taxonomy_results($taxonomy, $title, $emoji, $search_term) {
 // PRIORITY ORDER
 // -------------------
 
-// 1. Portal CPT
-if (isset($cpt_sections['portal'])) {
-    render_cpt_results('portal', $cpt_sections['portal'], $search_term, $term_posts_by_type);
-}
+// 1. Portal CPT – build section
+$sections = [];
+$sections[] = kp_build_search_section(
+    'portal',
+    $cpt_sections['portal'],
+    $search_term,
+    $term_posts_by_type
+);
 
-// 2. Topics
+// 2. Topics – render directly (unchanged)
 render_taxonomy_results('topic', 'Topics', '🧩', $search_term);
 
-// 3. Themes
+// 3. Themes – render directly (unchanged)
 render_taxonomy_results('theme', 'Themes', '🎨', $search_term);
 
-// 4. Remaining CPTs (excluding portal since it was handled already)
+// 4. Remaining CPTs (excluding portal) – build sections
 foreach ($cpt_sections as $type => $info) {
-    if ($type === 'portal') continue;
-    render_cpt_results($type, $info, $search_term, $term_posts_by_type);
+    if ($type === 'portal') {
+        continue;
+    }
+    $sections[] = kp_build_search_section(
+        $type,
+        $info,
+        $search_term,
+        $term_posts_by_type
+    );
 }
+
+// Render all collected knowledge sections
+kp_render_knowledge_sections($sections);
 
 echo '</main>';
 

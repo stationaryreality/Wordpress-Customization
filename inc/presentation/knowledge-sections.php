@@ -14,8 +14,12 @@ function kp_render_knowledge_sections(array $sections) {
 
     foreach ($sections as $section) {
 
-        $type = $section['type'];
+        $type = $section['type'] ?? '';
 
+        if (!$type) {
+        continue;
+        }
+        
         $template = locate_template(
             "template-parts/search/{$type}.php"
         );
