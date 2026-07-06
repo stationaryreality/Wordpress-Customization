@@ -22,37 +22,31 @@ $cpt_sections = get_cpt_metadata(); // central CPT metadata helper
     <?php endif; ?>
 
     <?php
-    foreach ($cpt_sections as $type => $info) {
-        $query_args = [
-            'post_type'      => $type,
-            'posts_per_page' => -1,
-            'tax_query'      => [
-                [
-                    'taxonomy' => $term->taxonomy, // dynamic
-                    'field'    => 'slug',
-                    'terms'    => $term->slug,
-                ],
-            ],
-        ];
+$sections = [];
 
-        $query = new WP_Query($query_args);
+foreach ($cpt_sections as $type => $info) {
 
-        $template_args = [
-            'query'       => $query,
-            'info'        => $info,
-            'search_term' => $term->name,
-            'term'        => $term, // generic (works for both themes + topics)
-        ];
+    $query = new WP_Query([
+        'post_type'      => $type,
+        'posts_per_page' => -1,
+        'tax_query'      => [[
+            'taxonomy' => $term->taxonomy,
+            'field'    => 'slug',
+            'terms'    => $term->slug,
+        ]],
+    ]);
 
-        $template_path = locate_template("template-parts/search/{$type}.php");
-        if ($template_path) {
-            get_template_part("template-parts/search/{$type}", null, $template_args);
-        } else {
-            get_template_part("template-parts/search/default", null, $template_args);
-        }
+    $sections[] = [
+        'type'        => $type,
+        'query'       => $query,
+        'info'        => $info,
+        'search_term' => $term->name,
+        'term'        => $term,
+    ];
 
-        wp_reset_postdata();
-    }
+}
+
+kp_render_knowledge_sections($sections);
     ?>
 </main>
 
