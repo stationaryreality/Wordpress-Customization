@@ -9,7 +9,6 @@
  *  - search_term
  *  - term (optional)
  */
-
 function kp_render_knowledge_sections(array $sections) {
 
     foreach ($sections as $section) {
@@ -19,7 +18,7 @@ function kp_render_knowledge_sections(array $sections) {
 
         if (!$type) {
             continue;
-        }       
+        }
 
         if (!$query instanceof WP_Query) {
             continue;
@@ -33,24 +32,18 @@ function kp_render_knowledge_sections(array $sections) {
             "template-parts/search/{$type}.php"
         );
 
-        if ($template) {
-
-            get_template_part(
-                "template-parts/search/{$type}",
-                null,
-                $section
+        if (!$template) {
+            trigger_error(
+                "Missing knowledge template for {$type}",
+                E_USER_WARNING
             );
-
-        } else {
-
-            get_template_part(
-                "template-parts/search/default",
-                null,
-                $section
-            );
-
+            continue;
         }
 
+        get_template_part(
+            "template-parts/search/{$type}",
+            null,
+            $section
+        );
     }
-
 }

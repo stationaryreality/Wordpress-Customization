@@ -1,13 +1,14 @@
 <?php
-$query       = $args['query'];
-$info        = $args['info'];
-$search_term = $args['search_term'];
+$query = $args['query'];
+$info  = $args['info'];
 
-if (!$query->have_posts()) return;
-
-get_template_part('template-parts/lists/quote', null, [
-  'query'       => $query,
-  'title'       => $info['title'],
-  'emoji'       => $info['emoji'],
-  'search_term' => $search_term,
-]);
+get_template_part(
+    'template-parts/lists/quote',
+    null,
+    [
+        'query'       => $query,
+        'title'       => $info['title'],
+        'emoji'       => $info['emoji'],
+        'search_term' => $args['search_term'],
+    ]
+);
