@@ -473,6 +473,8 @@ require_once get_stylesheet_directory() . '/inc/references.php';
 
 require_once get_stylesheet_directory() . '/inc/presentation/knowledge-sections.php';
 
+require_once get_stylesheet_directory() . '/inc/presentation/knowledge-resolver.php';
+
 //disabled - require_once get_stylesheet_directory() . '/inc/concept_relations.php';
 
 // Load shared taxonomy bubbles function
