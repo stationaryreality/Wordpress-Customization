@@ -145,7 +145,7 @@ function render_taxonomy_results($taxonomy, $title, $emoji, $search_term) {
         ];
     }
 
-    get_template_part('template-parts/theme-grid', null, [
+    get_template_part('template-parts/grids/theme', null, [
         'items' => $grid_items,
         'title' => $title,
         'emoji' => $emoji,
