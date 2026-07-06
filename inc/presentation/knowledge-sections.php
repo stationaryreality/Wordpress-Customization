@@ -14,12 +14,21 @@ function kp_render_knowledge_sections(array $sections) {
 
     foreach ($sections as $section) {
 
-        $type = $section['type'] ?? '';
+        $type  = $section['type'] ?? '';
+        $query = $section['query'] ?? null;
 
         if (!$type) {
-        continue;
+            continue;
+        }       
+
+        if (!$query instanceof WP_Query) {
+            continue;
         }
-        
+
+        if (!$query->have_posts()) {
+            continue;
+        }
+
         $template = locate_template(
             "template-parts/search/{$type}.php"
         );
