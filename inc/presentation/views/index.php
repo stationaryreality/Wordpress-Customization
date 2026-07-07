@@ -1,5 +1,7 @@
 <?php
 
+$portal_data = $args['portal_data'] ?? [];
+
 $sections = $portal_data['sections'] ?? [];
 $map      = $portal_data['map'] ?? [];
 
