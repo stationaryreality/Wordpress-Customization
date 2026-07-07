@@ -471,7 +471,7 @@ require_once get_stylesheet_directory() . '/inc/collectors/featured-context.php'
 
 require_once get_stylesheet_directory() . '/inc/references.php';
 
-//require_once get_stylesheet_directory() . '/inc/presentation/knowledge-sections.php';
+require_once get_stylesheet_directory() . '/inc/presentation/knowledge-sections.php';
 
 require_once get_stylesheet_directory() . '/inc/presentation/knowledge-resolver.php';
 
