@@ -79,47 +79,19 @@ if ($view === 'atlas') {
 
 ?>
 
-<div class="portal-view-switcher">
+<?php
+get_template_part(
+    'template-parts/presentation/view-switcher',
+    null,
+    [
+        'view' => $view,
+    ]
+);
 
-    <label>
-
-        View:
-
-        <select
-            onchange="window.location=this.value"
-        >
-
-            <option
-                value="?view=index"
-                <?php selected($view, 'index'); ?>
-            >
-                Index
-            </option>
-
-            <option
-                value="?view=list"
-                <?php selected($view, 'list'); ?>
-            >
-                 List
-            </option>
-
-            <option
-                value="?view=atlas"
-                <?php selected($view, 'atlas'); ?>
-            >
-                Atlas
-            </option>
-
-        </select>
-
-    </label>
-
-</div>
+?>
 
 <?php
 
-include locate_template(
-    "inc/presentation/views/{$view}.php"
-);
+kp_load_knowledge_view($view);
 
 get_footer();
