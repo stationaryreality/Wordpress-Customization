@@ -24,9 +24,9 @@ function kp_render_knowledge_view($view, array $data = [])
         $view = 'index';
     }
 
-    get_template_part(
-        'template-parts/presentation/views/' . $view,
-        null,
-        $data
+    extract($data);
+
+    include locate_template(
+        "inc/presentation/views/{$view}.php"
     );
 }
