@@ -4,6 +4,21 @@ $portal_data = $args['portal_data'] ?? [];
 
 $sections = $portal_data['sections'] ?? [];
 
+echo '<pre>';
+
+echo "SECTION DEBUG\n\n";
+
+foreach ($sections as $type => $items) {
+
+    echo $type . ': ' . count($items) . "\n";
+
+}
+
+echo "\nTOTAL:\n";
+
+print_r($portal_data['total_entries'] ?? 'missing');
+
+echo '</pre>';
 
 $map      = $portal_data['map'] ?? [];
 
