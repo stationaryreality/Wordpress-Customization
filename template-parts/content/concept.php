@@ -31,7 +31,6 @@ $related = get_field('related_concepts'); // ACF relationship field
     <?php show_featured_in_threads('concepts_referenced'); ?>
 
 
-// 2026-07-07
 <?php
 
 $topic = get_term_by(
