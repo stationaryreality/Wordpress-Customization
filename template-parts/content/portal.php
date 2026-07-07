@@ -14,6 +14,10 @@ require locate_template(
     'template-parts/portal/data.php'
 );
 
+echo '<pre>';
+print_r(array_keys($portal_data));
+echo '</pre>';
+
 /*
 |--------------------------------------------------------------------------
 | VIEW
