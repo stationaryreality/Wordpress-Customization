@@ -479,8 +479,6 @@ require_once get_stylesheet_directory() . '/inc/presentation/knowledge-builder.p
 
 require_once get_stylesheet_directory() . '/inc/presentation/views.php';
 
-require_once get_stylesheet_directory() . '/inc/presentation/view-switcher.php';
-
 
 //disabled - require_once get_stylesheet_directory() . '/inc/concept_relations.php';
 
