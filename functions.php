@@ -473,7 +473,7 @@ require_once get_stylesheet_directory() . '/inc/references.php';
 
 require_once get_stylesheet_directory() . '/inc/presentation/knowledge-sections.php';
 
-require_once get_stylesheet_directory() . '/inc/presentation/knowledge-resolver.php';
+require_once get_stylesheet_directory() . '/inc/collectors/knowledge-resolver.php';
 
 //disabled - require_once get_stylesheet_directory() . '/inc/concept_relations.php';
 
