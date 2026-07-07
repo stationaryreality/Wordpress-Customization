@@ -3,6 +3,17 @@
 $portal_data = $args['portal_data'] ?? [];
 
 $sections = $portal_data['sections'] ?? [];
+
+echo '<pre>';
+echo 'Section counts:' . PHP_EOL;
+
+foreach ($sections as $type => $items) {
+    echo $type . ': ' . count($items) . PHP_EOL;
+}
+
+echo '</pre>';
+
+
 $map      = $portal_data['map'] ?? [];
 
 /*
