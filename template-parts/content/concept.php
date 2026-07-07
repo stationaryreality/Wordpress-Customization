@@ -30,6 +30,21 @@ $related = get_field('related_concepts'); // ACF relationship field
 
     <?php show_featured_in_threads('concepts_referenced'); ?>
 
+    <?php
+
+//Knowled Resolver 2026-07-07
+$resolved = kp_resolve_knowledge(get_the_title());
+
+if ($resolved) {
+
+    $sections = kp_build_knowledge_sections($resolved);
+
+    kp_render_knowledge_sections($sections);
+
+}
+
+?>
+
   <?php
 $concept_title = get_the_title();
 $portal = get_page_by_title($concept_title, OBJECT, 'portal');
