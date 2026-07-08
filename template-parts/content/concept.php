@@ -46,14 +46,13 @@ $related = get_field('related_concepts'); // ACF relationship field
 
   <?php
 $concept_title = get_the_title();
-$portal = get_page_by_title($concept_title, OBJECT, 'portal');
-$topic  = get_term_by('name', $concept_title, 'topic');
 
-$concept_title = get_the_title();
 $portal = get_page_by_title($concept_title, OBJECT, 'portal');
 
-// Only get topic if no portal exists
-$topic = $portal ? null : get_term_by('name', $concept_title, 'topic');
+// Only check for a topic if no portal exists.
+$topic = $portal
+    ? null
+    : get_term_by('name', $concept_title, 'topic');
 
 if ($portal || $topic): ?>
   <section class="cpt-section concept-portal-topic" style="margin-bottom:4rem; text-align:center;">
