@@ -184,8 +184,17 @@ foreach ($cpt_sections as $type => $info) {
     );
 }
 
-// Render all collected knowledge sections
-kp_render_knowledge_sections($sections);
+// Render all collected knowledge sections - UPDATED
+$view_data = [
+
+    'sections' => $sections,
+
+];
+
+kp_load_knowledge_view(
+    'knowledge',
+    $view_data
+);
 
 echo '</main>';
 
