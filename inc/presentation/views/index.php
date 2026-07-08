@@ -1,9 +1,5 @@
 <?php
 
-echo '<pre>';
-var_dump(isset($portal_data));
-echo '</pre>';
-
 $sections = $portal_data['sections'] ?? [];
 
 $map      = $portal_data['map'] ?? [];
