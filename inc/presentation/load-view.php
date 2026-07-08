@@ -3,6 +3,7 @@
 function kp_load_knowledge_view($view, array $data = [])
 {
     $allowed = [
+        'knowledge',
         'index',
         'list',
         'atlas',
