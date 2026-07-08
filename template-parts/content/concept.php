@@ -33,22 +33,14 @@ $related = get_field('related_concepts'); // ACF relationship field
 
 <?php
 
-$topic = get_term_by(
-    'name',
-    get_the_title(),
-    'topic'
-);
-
-if ($topic && !is_wp_error($topic)) {
-
-    $sections = kp_build_knowledge_sections([
-        'type' => 'topic',
-        'term' => $topic,
-    ]);
-
-    kp_render_knowledge_sections($sections);
-
-}
+/*
+|--------------------------------------------------------------------------
+| Knowledge View
+|--------------------------------------------------------------------------
+|
+| Temporarily disabled during Knowledge Builder refactor.
+|
+*/
 
 ?>
 
