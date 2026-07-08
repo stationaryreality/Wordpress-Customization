@@ -479,21 +479,26 @@ foreach ($sections as $type => $entries) {
 }
 
 
+$portal_data = kp_build_knowledge(
 
+    $sections,
 
+    [
 
-$portal_data = [
+        'section_order'  => $section_order,
 
-    'sections' => $sections,
+        'section_labels' => $section_labels,
 
-    'active_sections' => $active_sections,
+        'map'            => $map,
 
-    'total_entries' => $total_entries,
+        'context' => [
 
-    'section_order' => $section_order,
+            'type' => 'portal',
 
-    'section_labels' => $section_labels,
+            'post_id' => get_the_ID(),
 
-    'map' => $map,
+        ],
 
-];
+    ]
+
+);
