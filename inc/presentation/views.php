@@ -12,7 +12,7 @@
  *   Whatever the selected view expects.
  */
 
-function kp_render_knowledge_view($view, array $data = [])
+function kp_load_knowledge_view($view, array $data = [])
 {
     $allowed = [
         'index',
@@ -24,7 +24,12 @@ function kp_render_knowledge_view($view, array $data = [])
         $view = 'index';
     }
 
-    extract($data);
+    /*
+     * Make every data variable available
+     * exactly like the old portal include.
+     */
+
+    extract($data, EXTR_SKIP);
 
     include locate_template(
         "inc/presentation/views/{$view}.php"
