@@ -3,6 +3,7 @@
 $view = $args['view'] ?? 'index';
 
 $allowed_views = [
+    'knowledge',
     'index',
     'list',
     'atlas',
