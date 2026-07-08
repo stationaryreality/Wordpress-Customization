@@ -46,8 +46,18 @@ foreach ($cpt_sections as $type => $info) {
 
 }
 
-kp_render_knowledge_sections($sections);
-    ?>
+$view_data = [
+
+    'sections' => $sections,
+
+];
+
+kp_load_knowledge_view(
+    'knowledge',
+    $view_data
+);
+
+?>
 </main>
 
 <?php get_footer(); ?>
