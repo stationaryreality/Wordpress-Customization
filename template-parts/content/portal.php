@@ -98,6 +98,7 @@ kp_load_knowledge_view(
     $view,
     [
         'portal_data' => $portal_data,
+        'sections'    => $sections,
     ]
 );
 
