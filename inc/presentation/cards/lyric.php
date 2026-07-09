@@ -5,7 +5,7 @@
 |--------------------------------------------------------------------------
 */
 
-elseif ($type === 'lyric') {
+if ($type === 'lyric') {
 
     $excerpt = get_field('lyric_plain_text');
 
