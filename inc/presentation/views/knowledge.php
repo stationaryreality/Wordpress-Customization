@@ -1,15 +1,6 @@
 <?php
 
-/**
- * Shared Knowledge View
- *
- * Receives:
- *
- * $sections
- */
+$knowledge_sections =
+    kp_build_portal_knowledge_sections($portal_data);
 
-if (empty($sections)) {
-    return;
-}
-
-kp_render_knowledge_sections($sections);
+kp_render_knowledge_sections($knowledge_sections);
