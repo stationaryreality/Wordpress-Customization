@@ -93,7 +93,19 @@ get_template_part(
 
 <?php
 
-$sections = kp_build_portal_sections($portal_data);
+echo '<pre>';
+print_r(array_keys($portal_data['sections']));
+echo '</pre>';
+
+foreach ($portal_data['sections'] as $type => $items) {
+
+    echo '<h3>' . esc_html($type) . '</h3>';
+
+    echo '<pre>';
+    print_r(array_slice($items, 0, 1));
+    echo '</pre>';
+
+}
 
 kp_load_knowledge_view(
     $view,
