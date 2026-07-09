@@ -23,9 +23,10 @@ require locate_template(
 $view = $_GET['view'] ?? 'index';
 
 $allowed_views = [
+    'knowledge',
     'index',
-    'atlas',
     'list',
+    'atlas',
 ];
 
 if (!in_array($view, $allowed_views, true)) {
