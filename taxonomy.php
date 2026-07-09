@@ -46,16 +46,7 @@ foreach ($cpt_sections as $type => $info) {
 
 }
 
-$view_data = [
-
-    'sections' => $sections,
-
-];
-
-kp_load_knowledge_view(
-    'knowledge',
-    $view_data
-);
+kp_render_knowledge_sections($sections);
 
 ?>
 </main>
