@@ -140,29 +140,8 @@ $portal_data = kp_build_portal_sections(
     $section_labels,
 
     [
-
         'type'    => 'portal',
-
         'post_id' => get_the_ID(),
-
-    ]
-
-);
-
-return kp_build_knowledge(
-
-    $sections,
-
-    [
-
-        'section_order'  => $section_order,
-
-        'section_labels' => $section_labels,
-
-        'map'            => $map,
-
-        'context'        => $context,
-
     ]
 
 );

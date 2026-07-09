@@ -6,8 +6,7 @@ function kp_build_portal_sections(
     array $section_order,
     array $section_labels,
     array $context = []
-)
-    {
+) {
 
     $sections = [];
 
@@ -353,6 +352,22 @@ foreach ($sections as $type => $entries) {
 
     }
 
-    wp_reset_postdata();
+   wp_reset_postdata();
 
-    return $sections;
+return kp_build_knowledge(
+
+    $sections,
+
+    [
+
+        'section_order'  => $section_order,
+
+        'section_labels' => $section_labels,
+
+        'map'            => $map,
+
+        'context'        => $context,
+
+    ]
+
+);
