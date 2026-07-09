@@ -1,6 +1,19 @@
 <?php
 
-$knowledge_sections =
-    kp_build_portal_knowledge_sections($portal_data);
+$knowledge_data = kp_build_portal_sections(
+    $query,
+    $map,
+    $section_order,
+    $section_labels,
+    [
+        'type'    => 'portal',
+        'post_id' => get_the_ID(),
+    ]
+);
 
-kp_render_knowledge_sections($knowledge_sections);
+kp_load_knowledge_view(
+    'knowledge',
+    [
+        'portal_data' => $knowledge_data,
+    ]
+);
