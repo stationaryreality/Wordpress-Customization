@@ -90,6 +90,8 @@ get_template_part(
 
 ?>
 
+$sections = kp_build_portal_sections($portal_data);
+
 <?php
 
 kp_load_knowledge_view(
