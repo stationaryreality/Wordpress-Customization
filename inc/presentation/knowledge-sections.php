@@ -9,38 +9,21 @@
  *  - search_term
  *  - term (optional)
  */
-function kp_render_knowledge_sections(array $sections) {
+function kp_render_knowledge_sections(array $knowledge)
+{
+    foreach ($knowledge['sections'] as $type => $cards) {
 
-    foreach ($sections as $section) {
-
-        $type  = $section['type'] ?? '';
-        $query = $section['query'] ?? null;
-
-        if (!$type) {
-            continue;
-        }
-
-        if (!$query instanceof WP_Query) {
-            continue;
-        }
-
-        if (!$query->have_posts()) {
-            continue;
-        }
-
-        $template = locate_template(
-            "template-parts/search/{$type}.php"
-        );
-
-        if (!$template) {
-
+        if (empty($cards)) {
             continue;
         }
 
         get_template_part(
             "template-parts/search/{$type}",
             null,
-            $section
+            [
+                'items' => $cards,
+                'type'  => $type,
+            ]
         );
     }
 }
