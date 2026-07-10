@@ -2,22 +2,25 @@
 /**
  * Artist Grid Template
  *
- * Supports two modes:
- *
- * 1. Query Mode – uses $artist_query (WP_Query)
- * 2. Normalized Cards Mode – uses $items
+ * Standardized contract:
+ * - items       => array
+ * - query       => WP_Query|null
+ * - info        => [ 'title' => '', 'emoji' => '', 'type' => '' ]
+ * - search_term => string
  */
 $query        = $args['query'] ?? null;
 $items        = $args['items'] ?? [];
-$section_title = $args['title'] ?? '';
-$emoji        = $args['emoji'] ?? '';
+$info         = $args['info'] ?? [];
 $search_term  = $args['search_term'] ?? '';
 
-// Preserve backward-compatible variable for the original loop
-// (the original code uses $artist_query)
+// Backward compatibility: allow direct title/emoji from older callers (though not used here)
+$title = $info['title'] ?? $args['title'] ?? '';
+$emoji = $info['emoji'] ?? $args['emoji'] ?? '';
+
+// Preserve the original $artist_query variable (some callers may pass it specifically)
 $artist_query = $args['artist_query'] ?? $query ?? null;
 
-// Early bailout if no data source has content
+// Early bailout
 if (
     empty($items)
     && (!$artist_query instanceof WP_Query || !$artist_query->have_posts())
