@@ -2,19 +2,20 @@
 /**
  * Unified Excerpt Display (passive)
  *
- * Expects:
- * - query => WP_Query or array of posts
- * - title => Section title (optional)
- * - emoji => Optional
- * - items => Normalized card array (optional)
+ * Standardized contract:
+ * - items       => array
+ * - query       => WP_Query|null
+ * - info        => [ 'title' => '', 'emoji' => '', 'type' => '' ]
+ * - search_term => string
  */
 $query        = $args['query'] ?? null;
 $items        = $args['items'] ?? [];
-$section_title = $args['title'] ?? '';
-$emoji        = $args['emoji'] ?? '📖';
+$info         = $args['info'] ?? [];
+$search_term  = $args['search_term'] ?? '';
 
-// Backward-compatible title variable
-$title = $section_title ?: 'Excerpts';
+// Backward compatibility: allow direct title/emoji from older callers
+$title = $info['title'] ?? $args['title'] ?? 'Excerpts';
+$emoji = $info['emoji'] ?? $args['emoji'] ?? '📖';
 
 // Normalize posts from query for backward compatibility
 $posts = $query instanceof WP_Query ? $query->posts : $query;
