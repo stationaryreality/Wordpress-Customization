@@ -10,20 +10,7 @@ $map = $portal_data['map'] ?? [];
 |--------------------------------------------------------------------------
 */
 
-foreach ($sections as $type => $items) {
-
-    if (empty($items)) {
-        continue;
-    }
-
-get_template_part(
-    'template-parts/grids/' . $type,
-        null,
-        [
-            'items' => $items,
-            'type'  => $type,
-            'info'  => $map[$type] ?? [],
-        ]
-    );
-
-}
+echo '<pre>';
+print_r($sections);
+echo '</pre>';
+exit;
