@@ -21,8 +21,8 @@ foreach ($sections as $type => $items) {
         continue;
     }
 
-    get_template_part(
-        'template-parts/search/' . $type,
+get_template_part(
+    'template-parts/grids/' . $type,
         null,
         [
             'items' => $items,
