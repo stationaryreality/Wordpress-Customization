@@ -2,11 +2,6 @@
 
 $sections = $portal_data['sections'] ?? [];
 
-echo '<pre>';
-print_r(array_keys($sections));
-echo '</pre>';
-return;
-
 $map = $portal_data['map'] ?? [];
 
 /*
