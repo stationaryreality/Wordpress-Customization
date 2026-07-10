@@ -6,17 +6,27 @@
  * - query => WP_Query or array of posts
  * - title => Section title (optional)
  * - emoji => Optional
+ * - items => Normalized card array (optional)
  */
+$query        = $args['query'] ?? null;
+$items        = $args['items'] ?? [];
+$section_title = $args['title'] ?? '';
+$emoji        = $args['emoji'] ?? '📖';
 
-$query = $args['query'] ?? null;
-$title = $args['title'] ?? 'Excerpts';
-$emoji = $args['emoji'] ?? '📖';
+// Backward-compatible title variable
+$title = $section_title ?: 'Excerpts';
 
-if (!$query) return;
-
-// Normalize
+// Normalize posts from query for backward compatibility
 $posts = $query instanceof WP_Query ? $query->posts : $query;
-if (empty($posts)) return;
+
+// Early bailout if no data source has content
+if (
+    (!$query instanceof WP_Query || !$query->have_posts())
+    && empty($items)
+    && empty($posts)
+) {
+    return;
+}
 ?>
 
 <section class="portal-section excerpt-list-section">
@@ -28,113 +38,157 @@ if (empty($posts)) return;
   <?php endif; ?>
 
   <div class="portal-excerpt-list">
-    <?php foreach ($posts as $post_obj):
-      $post_id = is_object($post_obj) ? $post_obj->ID : intval($post_obj);
+    <?php if (!empty($items)): ?>
+      <?php foreach ($items as $item): ?>
+        <?php
+          // Extract normalized card data
+          $image = !empty($item['image']) ? $item['image'] : '';
+          $text  = !empty($item['excerpt']) ? $item['excerpt'] : '';
+          $meta  = !empty($item['meta']) && is_array($item['meta']) ? $item['meta'] : [];
+          $source_title = $meta['source_title'] ?? '';
+          $source_url   = $meta['source_url'] ?? '';
+          $author_name  = $meta['author_name'] ?? '';
+          $author_url   = $meta['author_url'] ?? '';
+        ?>
+        <article class="portal-excerpt-item">
+          <?php if ($image): ?>
+            <div class="excerpt-thumb">
+              <a href="<?php echo esc_url($item['url']); ?>">
+                <img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($item['title']); ?>">
+              </a>
+            </div>
+          <?php endif; ?>
 
-      $text   = get_field('excerpt_plain_text', $post_id);
-      $source = get_field('excerpt_source', $post_id);
-      $source_link  = $source ? get_permalink($source->ID) : '';
-      $source_title = $source ? get_the_title($source->ID) : '';
+          <div class="excerpt-content">
+            <h3 class="excerpt-title">
+              <a href="<?php echo esc_url($item['url']); ?>"><?php echo esc_html($item['title']); ?></a>
+            </h3>
 
-      // Author info (only if source is a book)
-      $author_name = '';
-      $author_link = '';
-      if ($source && get_post_type($source->ID) === 'book') {
-        $author = get_field('author_profile', $source->ID);
-        if ($author) {
-          if (is_array($author)) {
-            $author = reset($author);
-          }
-          $author_name = get_the_title($author->ID);
-          $author_link = get_permalink($author->ID);
-        }
-      }
+            <?php if ($text): ?>
+              <p class="excerpt-text"><?php echo esc_html(wp_trim_words($text, 40, '...')); ?></p>
+            <?php endif; ?>
 
-// --------------------------------------------------
-// IMAGE LOGIC
-// Source CPT → Excerpt Thumbnail → Reference Thumbnail → Default
-// --------------------------------------------------
-
-$image = '';
-
-// 1. Source CPT image
-if ($source) {
-
-    $cover = get_field('cover_image', $source->ID);
-
-    if ($cover && is_array($cover)) {
-        $image = $cover['sizes']['medium']
-            ?? $cover['sizes']['thumbnail']
-            ?? $cover['url']
-            ?? '';
-    }
-
-    elseif (has_post_thumbnail($source->ID)) {
-        $image = get_the_post_thumbnail_url($source->ID, 'medium');
-    }
-}
-
-// 3. First reference thumbnail
-if (!$image && have_rows('references', $post_id)) {
-
-    $refs = get_field('references', $post_id);
-    $first_ref = $refs[0] ?? null;
-
-    if ($first_ref && !empty($first_ref['reference_thumbnail'])) {
-
-        $img = $first_ref['reference_thumbnail'];
-
-        if (is_array($img)) {
-            $image = $img['url'];
-        }
-
-        elseif (is_numeric($img)) {
-            $image = wp_get_attachment_image_url($img, 'medium');
-        }
-    }
-}
-
-// 2. Excerpt featured image
-if (!$image && has_post_thumbnail($post_id)) {
-    $image = get_the_post_thumbnail_url($post_id, 'medium');
-}
-
-// 4. Final fallback image
-if (!$image) {
-    $image = wp_get_attachment_image_url(22614, 'medium');
-}
-
-    ?>
-      <article class="portal-excerpt-item">
-        <?php if ($image): ?>
-          <div class="excerpt-thumb">
-            <a href="<?php echo esc_url($source_link ?: get_permalink($post_id)); ?>">
-              <img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($source_title ?: get_the_title($post_id)); ?>">
-            </a>
+            <?php if ($source_title && $source_url): ?>
+              <p class="excerpt-source">
+                Source: <a href="<?php echo esc_url($source_url); ?>"><?php echo esc_html($source_title); ?></a>
+                <?php if ($author_name && $author_url): ?>
+                  &nbsp;by <a href="<?php echo esc_url($author_url); ?>"><?php echo esc_html($author_name); ?></a>
+                <?php endif; ?>
+              </p>
+            <?php endif; ?>
           </div>
-        <?php endif; ?>
+        </article>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <?php
+        // Original WP_Query / array-of-posts loop
+        $posts = $query instanceof WP_Query ? $query->posts : $query;
+        foreach ($posts as $post_obj):
+          $post_id = is_object($post_obj) ? $post_obj->ID : intval($post_obj);
 
-        <div class="excerpt-content">
-          <h3 class="excerpt-title">
-            <a href="<?php echo esc_url(get_permalink($post_id)); ?>"><?php echo esc_html(get_the_title($post_id)); ?></a>
-          </h3>
+          $text   = get_field('excerpt_plain_text', $post_id);
+          $source = get_field('excerpt_source', $post_id);
+          $source_link  = $source ? get_permalink($source->ID) : '';
+          $source_title = $source ? get_the_title($source->ID) : '';
 
-          <?php if ($text): ?>
-            <p class="excerpt-text"><?php echo esc_html(wp_trim_words($text, 40, '...')); ?></p>
+          // Author info (only if source is a book)
+          $author_name = '';
+          $author_link = '';
+          if ($source && get_post_type($source->ID) === 'book') {
+            $author = get_field('author_profile', $source->ID);
+            if ($author) {
+              if (is_array($author)) {
+                $author = reset($author);
+              }
+              $author_name = get_the_title($author->ID);
+              $author_link = get_permalink($author->ID);
+            }
+          }
+
+          // --------------------------------------------------
+          // IMAGE LOGIC
+          // Source CPT → Excerpt Thumbnail → Reference Thumbnail → Default
+          // --------------------------------------------------
+
+          $image = '';
+
+          // 1. Source CPT image
+          if ($source) {
+
+              $cover = get_field('cover_image', $source->ID);
+
+              if ($cover && is_array($cover)) {
+                  $image = $cover['sizes']['medium']
+                      ?? $cover['sizes']['thumbnail']
+                      ?? $cover['url']
+                      ?? '';
+              }
+
+              elseif (has_post_thumbnail($source->ID)) {
+                  $image = get_the_post_thumbnail_url($source->ID, 'medium');
+              }
+          }
+
+          // 3. First reference thumbnail
+          if (!$image && have_rows('references', $post_id)) {
+
+              $refs = get_field('references', $post_id);
+              $first_ref = $refs[0] ?? null;
+
+              if ($first_ref && !empty($first_ref['reference_thumbnail'])) {
+
+                  $img = $first_ref['reference_thumbnail'];
+
+                  if (is_array($img)) {
+                      $image = $img['url'];
+                  }
+
+                  elseif (is_numeric($img)) {
+                      $image = wp_get_attachment_image_url($img, 'medium');
+                  }
+              }
+          }
+
+          // 2. Excerpt featured image
+          if (!$image && has_post_thumbnail($post_id)) {
+              $image = get_the_post_thumbnail_url($post_id, 'medium');
+          }
+
+          // 4. Final fallback image
+          if (!$image) {
+              $image = wp_get_attachment_image_url(22614, 'medium');
+          }
+      ?>
+        <article class="portal-excerpt-item">
+          <?php if ($image): ?>
+            <div class="excerpt-thumb">
+              <a href="<?php echo esc_url($source_link ?: get_permalink($post_id)); ?>">
+                <img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($source_title ?: get_the_title($post_id)); ?>">
+              </a>
+            </div>
           <?php endif; ?>
 
-          <?php if ($source): ?>
-            <p class="excerpt-source">
-              Source: <a href="<?php echo esc_url($source_link); ?>"><?php echo esc_html($source_title); ?></a>
-              <?php if ($author_name): ?>
-                &nbsp;by <a href="<?php echo esc_url($author_link); ?>"><?php echo esc_html($author_name); ?></a>
-              <?php endif; ?>
-            </p>
-          <?php endif; ?>
-        </div>
-      </article>
-    <?php endforeach; ?>
+          <div class="excerpt-content">
+            <h3 class="excerpt-title">
+              <a href="<?php echo esc_url(get_permalink($post_id)); ?>"><?php echo esc_html(get_the_title($post_id)); ?></a>
+            </h3>
+
+            <?php if ($text): ?>
+              <p class="excerpt-text"><?php echo esc_html(wp_trim_words($text, 40, '...')); ?></p>
+            <?php endif; ?>
+
+            <?php if ($source): ?>
+              <p class="excerpt-source">
+                Source: <a href="<?php echo esc_url($source_link); ?>"><?php echo esc_html($source_title); ?></a>
+                <?php if ($author_name): ?>
+                  &nbsp;by <a href="<?php echo esc_url($author_link); ?>"><?php echo esc_html($author_name); ?></a>
+                <?php endif; ?>
+              </p>
+            <?php endif; ?>
+          </div>
+        </article>
+      <?php endforeach; ?>
+      <?php if ($query instanceof WP_Query) wp_reset_postdata(); ?>
+    <?php endif; ?>
   </div>
 </section>
-
-<?php if ($query instanceof WP_Query) wp_reset_postdata(); ?>
