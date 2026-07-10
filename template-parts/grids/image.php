@@ -6,15 +6,21 @@
  *
  * 1. Query Mode (WP_Query)
  * 2. Normalized Cards Mode ($items)
+ *
+ * Standardized contract:
+ * - items       => array
+ * - query       => WP_Query|null
+ * - info        => [ 'title' => '', 'emoji' => '', 'type' => '' ]
+ * - search_term => string
  */
 $query        = $args['query'] ?? null;
 $items        = $args['items'] ?? [];
-$section_title = $args['title'] ?? '';
-$emoji        = $args['emoji'] ?? '';
+$info         = $args['info'] ?? [];
 $search_term  = $args['search_term'] ?? '';
 
-// Backward-compatible title variable
-$title = $section_title ?: 'Images';
+// Backward compatibility: allow direct title/emoji from older callers
+$title = $info['title'] ?? $args['title'] ?? 'Images';
+$emoji = $info['emoji'] ?? $args['emoji'] ?? '';
 
 // Early bailout if no data source has content
 if (
