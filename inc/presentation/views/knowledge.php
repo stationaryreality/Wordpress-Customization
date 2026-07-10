@@ -1,28 +1,16 @@
 <?php
-
+/**
+ * Knowledge Portal Template
+ * Renders sections using normalized card data.
+ */
 $sections = $portal_data['sections'] ?? [];
 $map      = $portal_data['map'] ?? [];
 
 /*
 |--------------------------------------------------------------------------
-| DEBUG
-|--------------------------------------------------------------------------
-*/
-
-echo '<pre style="background:#f8f8f8;padding:1rem;">';
-echo "Sections:\n";
-print_r(array_keys($sections));
-echo "</pre>";
-
-/*
-|--------------------------------------------------------------------------
 | TEMPLATE MAP
 |--------------------------------------------------------------------------
-|
-| Temporary until we build the presentation resolver.
-|
 */
-
 $list_types = [
     'concept',
     'excerpt',
@@ -32,40 +20,32 @@ $list_types = [
 ];
 
 foreach ($sections as $type => $items) {
-
     if (empty($items)) {
         continue;
     }
 
-    $folder = in_array($type, $list_types, true)
-        ? 'lists'
-        : 'grids';
+    $info = $map[$type] ?? [
+        'title' => ucfirst($type),
+        'emoji' => '',
+    ];
 
-    $template = locate_template(
-        "template-parts/{$folder}/{$type}.php"
-    );
+    $folder = in_array($type, $list_types, true) ? 'lists' : 'grids';
 
-    echo "<pre>";
-    echo "Rendering {$type}\n";
-    echo "Folder: {$folder}\n";
-    echo "Template: " . ($template ? 'FOUND' : 'MISSING');
-    echo "</pre>";
-
+    $template = locate_template("template-parts/{$folder}/{$type}.php");
     if (!$template) {
         continue;
     }
 
+    // Standardized contract – all templates now receive the same shape
     get_template_part(
         "template-parts/{$folder}/{$type}",
         null,
         [
-            'items'        => $items,
-            'query'        => null,
-            'title'        => $map[$type]['title'] ?? ucfirst($type),
-            'emoji'        => $map[$type]['emoji'] ?? '',
-            'search_term'  => '',
-            'type'         => $type,
-            'info'         => $map[$type] ?? [],
+            'items'       => $items,
+            'query'       => null,
+            'info'        => $info,
+            'search_term' => '',
+            'type'        => $type,
         ]
     );
 }
