@@ -1,19 +1,100 @@
 <?php
-/**
- * Book Grid Template
- * Reusable grid for displaying book CPTs
- *
- * Expected args:
- * - query: WP_Query object (optional, if not passed it will run its own)
- * - title: Section title (optional)
- * - emoji: Emoji for section title (optional)
- * - search_term: Current search term (optional, for search context)
- */
 
-$query       = $args['query'] ?? null;
+$items         = $args['items'] ?? [];
+$query         = $args['query'] ?? null;
+
 $section_title = $args['title'] ?? '';
-$emoji       = $args['emoji'] ?? '';
-$search_term = $args['search_term'] ?? '';
+$emoji         = $args['emoji'] ?? '';
+$search_term   = $args['search_term'] ?? '';
+
+/*
+|--------------------------------------------------------------------------
+| CARD MODE
+|--------------------------------------------------------------------------
+|
+| If normalized cards were supplied, render those.
+|
+*/
+
+if (!empty($items)) :
+?>
+
+<section class="cpt-section book-grid" style="margin-bottom:4rem;">
+
+<?php if ($section_title): ?>
+
+<h2>
+
+<?php echo esc_html(trim($emoji . ' ' . $section_title)); ?>
+
+<?php if ($search_term): ?>
+
+containing “<?php echo esc_html($search_term); ?>”
+
+<?php endif; ?>
+
+</h2>
+
+<?php endif; ?>
+
+<div class="cited-grid">
+
+<?php foreach ($items as $item): ?>
+
+<div class="cited-item">
+
+<a href="<?php echo esc_url($item['url']); ?>">
+
+<?php if (!empty($item['image'])): ?>
+
+<img
+    src="<?php echo esc_url($item['image']); ?>"
+    alt="<?php echo esc_attr($item['title']); ?>"
+>
+
+<?php endif; ?>
+
+<h3>
+
+<?php echo esc_html($item['title']); ?>
+
+</h3>
+
+</a>
+
+<?php if (!empty($item['meta'])): ?>
+
+<p>
+
+<strong>
+
+<?php echo esc_html($item['meta']); ?>
+
+</strong>
+
+</p>
+
+<?php endif; ?>
+
+</div>
+
+<?php endforeach; ?>
+
+</div>
+
+</section>
+
+<?php
+
+return;
+
+endif;
+
+/*
+|--------------------------------------------------------------------------
+| QUERY MODE
+|--------------------------------------------------------------------------
+*/
 
 // If no query is passed, build one for all books
 if (!$query) {
