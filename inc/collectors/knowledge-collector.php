@@ -82,6 +82,14 @@ function kp_collect_knowledge(array $args = [])
         'image',
         'element',
         'artist',
+        'chapter',
+        'fragment',
+        'gamne',
+        'organization',
+        'portal',
+        'profile',
+        'show',
+    
     ];
 
     /*
