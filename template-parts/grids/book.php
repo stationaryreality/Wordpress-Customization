@@ -4,26 +4,25 @@
  *
  * Supports two modes:
  *
- * 1. Search Mode
- *    - receives a WP_Query
+ * 1. Search Mode – receives a WP_Query
+ * 2. Knowledge Mode – receives normalized card arrays
  *
- * 2. Knowledge Mode
- *    - receives normalized card arrays
+ * Standardized contract:
+ * - items       => array
+ * - query       => WP_Query|null
+ * - info        => [ 'title' => '', 'emoji' => '', 'type' => '' ]
+ * - search_term => string
  */
+$query        = $args['query'] ?? null;
+$items        = $args['items'] ?? [];
+$info         = $args['info'] ?? [];
+$search_term  = $args['search_term'] ?? '';
 
-$query = $args['query'] ?? null;
-$items = $args['items'] ?? [];
+// Backward compatibility: allow direct title/emoji from older callers
+$title        = $info['title'] ?? $args['title'] ?? '';
+$emoji        = $info['emoji'] ?? $args['emoji'] ?? '';
 
-$section_title = $args['title'] ?? '';
-$emoji         = $args['emoji'] ?? '';
-$search_term   = $args['search_term'] ?? '';
-
-/*
-|--------------------------------------------------------------------------
-| Nothing to render
-|--------------------------------------------------------------------------
-*/
-
+// Early bailout
 if (
     (!$query instanceof WP_Query || !$query->have_posts())
     && empty($items)
@@ -34,11 +33,11 @@ if (
 
 <section class="cpt-section book-grid" style="margin-bottom:4rem;">
 
-<?php if ($section_title): ?>
+<?php if ($title): ?>
 
 <h2>
 
-<?php echo esc_html(trim($emoji . ' ' . $section_title)); ?>
+<?php echo esc_html(trim($emoji . ' ' . $title)); ?>
 
 <?php if ($search_term): ?>
 
@@ -87,13 +86,8 @@ containing “<?php echo esc_html($search_term); ?>”
     <?php while ($query->have_posts()): $query->the_post();
 
         $author = get_field('author');
-
-        $cover = get_field('cover_image');
-
-        $img_url = $cover
-            ? $cover['sizes']['medium']
-            : '';
-
+        $cover  = get_field('cover_image');
+        $img_url = $cover ? $cover['sizes']['medium'] : '';
     ?>
 
         <div class="cited-item">
