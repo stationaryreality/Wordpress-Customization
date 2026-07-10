@@ -43,7 +43,7 @@ if (
       <?php foreach ($items as $item): ?>
         <?php
           $thumb_url = !empty($item['image']) ? $item['image'] : '';
-          $definition = $item['meta']['definition'] ?? '';
+          $definition = $item['meta'] ?? ''; // Now a direct string, like the book template
         ?>
         <div class="concept-entry" style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:2rem;border-bottom:1px solid #ddd;padding-bottom:1rem;">
           <?php if ($thumb_url): ?>
