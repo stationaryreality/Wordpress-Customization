@@ -81,6 +81,7 @@ function kp_collect_knowledge(array $args = [])
         'lyric',
         'image',
         'element',
+        'artist',
     ];
 
     /*
