@@ -3,21 +3,20 @@
  * Template Part: Concept List
  * Unified list style (matches lyrics, quotes, references, profiles).
  *
- * Expects:
- * - query       => WP_Query object
- * - title       => Section/page title
- * - emoji       => Emoji (optional)
- * - search_term => Optional search keyword
- * - items       => Normalized card array (optional)
+ * Standardized contract:
+ * - items       => array
+ * - query       => WP_Query|null
+ * - info        => [ 'title' => '', 'emoji' => '', 'type' => '' ]
+ * - search_term => string
  */
 $query        = $args['query'] ?? null;
 $items        = $args['items'] ?? [];
-$section_title = $args['title'] ?? '';
-$emoji        = $args['emoji'] ?? '';
+$info         = $args['info'] ?? [];
 $search_term  = $args['search_term'] ?? '';
 
-// Backward-compatible title variable (HTML uses $title)
-$title = $section_title ?: 'Concepts';
+// Backward compatibility: allow direct title/emoji from older callers
+$title = $info['title'] ?? $args['title'] ?? 'Concepts';
+$emoji = $info['emoji'] ?? $args['emoji'] ?? '';
 
 // Early bailout if no data source has content
 if (
@@ -43,7 +42,7 @@ if (
       <?php foreach ($items as $item): ?>
         <?php
           $thumb_url = !empty($item['image']) ? $item['image'] : '';
-          $definition = $item['meta'] ?? ''; // Now a direct string, like the book template
+          $definition = $item['meta'] ?? '';
         ?>
         <div class="concept-entry" style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:2rem;border-bottom:1px solid #ddd;padding-bottom:1rem;">
           <?php if ($thumb_url): ?>
