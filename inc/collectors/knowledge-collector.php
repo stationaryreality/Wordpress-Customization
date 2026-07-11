@@ -39,7 +39,7 @@ function kp_get_object_terms(int $post_id): array
 
 function kp_collect_knowledge(array $args = [])
 {
-    $post_id = $args['portal'] ?? 0;
+$post_id = $args['post_id'] ?? $args['portal'] ?? 0;
 
     if (!$post_id) {
         return [
