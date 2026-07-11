@@ -23,8 +23,8 @@ if (!$query && empty($items)) {
     $query = new WP_Query([
         'post_type'      => 'element',
         'posts_per_page' => -1,
-        'orderby'        => 'date',
-        'order'          => 'DESC',
+        'orderby'        => 'title',
+        'order'          => 'ASC',
     ]);
 }
 
