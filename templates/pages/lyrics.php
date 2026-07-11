@@ -19,7 +19,7 @@ $lyrics_query = new WP_Query([
   ],
 ]);
 
-get_template_part('template-parts/grids/lyric', null, [
+get_template_part('template-parts/lists/lyric', null, [
   'query' => $lyrics_query,
   'title' => 'Lyrics',
   'emoji' => '🎼',
