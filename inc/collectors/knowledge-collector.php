@@ -84,7 +84,7 @@ function kp_collect_knowledge(array $args = [])
         'artist',
         'chapter',
         'fragment',
-        'gamne',
+        'game',
         'organization',
         'portal',
         'profile',
