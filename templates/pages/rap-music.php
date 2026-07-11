@@ -155,7 +155,7 @@ get_header();
       ],
     ]);
 
-get_template_part('template-parts/grids/lyric', null, [
+get_template_part('template-parts/lists/lyric', null, [
       'query' => $rap_lyrics_query,
       'title' => '',
       'emoji' => '',
