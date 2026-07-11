@@ -31,8 +31,8 @@ if (
 }
 ?>
 
-<section style="margin-bottom:4rem;">
-  <h2>
+<section class="image-grid-section" style="margin-bottom:4rem;">
+    <h2>
     <?php if ($emoji) echo $emoji . ' '; ?>
     <?php echo esc_html($title); ?>
     <?php if ($search_term): ?>
