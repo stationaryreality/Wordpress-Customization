@@ -19,14 +19,32 @@ $info         = $args['info'] ?? [];
 $search_term  = $args['search_term'] ?? '';
 
 // Backward compatibility: allow direct title/emoji from older callers
-$title        = $info['title'] ?? $args['title'] ?? '';
-$emoji        = $info['emoji'] ?? $args['emoji'] ?? '';
+$title = $info['title'] ?? $args['title'] ?? '';
+$emoji = $info['emoji'] ?? $args['emoji'] ?? '';
 
-// Early bailout
-if (
-    (!$query instanceof WP_Query || !$query->have_posts())
-    && empty($items)
-) {
+// --- Restore default query fallback (legacy behavior) ---
+if (!$query && empty($items)) {
+    $query = new WP_Query([
+        'post_type'      => 'book',
+        'posts_per_page' => -1,
+        'orderby'        => 'title',
+        'order'          => 'ASC',
+    ]);
+}
+// ---------------------------------------------------------
+
+// If a WP_Query was passed, convert it to cards (legacy support)
+if ($query instanceof WP_Query && $query->have_posts()) {
+    $items = [];
+    while ($query->have_posts()) {
+        $query->the_post();
+        $items[] = kp_build_card('book', get_the_ID(), get_cpt_metadata());
+    }
+    wp_reset_postdata();
+}
+
+// No data to render
+if (empty($items)) {
     return;
 }
 ?>
@@ -50,8 +68,6 @@ containing “<?php echo esc_html($search_term); ?>”
 <?php endif; ?>
 
 <div class="cited-grid">
-
-<?php if (!empty($items)): ?>
 
     <?php foreach ($items as $item): ?>
 
@@ -80,45 +96,6 @@ containing “<?php echo esc_html($search_term); ?>”
         </div>
 
     <?php endforeach; ?>
-
-<?php else: ?>
-
-    <?php while ($query->have_posts()): $query->the_post();
-
-        $author = get_field('author');
-        $cover  = get_field('cover_image');
-        $img_url = $cover ? $cover['sizes']['medium'] : '';
-    ?>
-
-        <div class="cited-item">
-
-            <a href="<?php the_permalink(); ?>">
-
-                <?php if ($img_url): ?>
-
-                    <img
-                        src="<?php echo esc_url($img_url); ?>"
-                        alt="<?php the_title_attribute(); ?>">
-
-                <?php endif; ?>
-
-                <h3><?php the_title(); ?></h3>
-
-            </a>
-
-            <?php if ($author): ?>
-
-                <p><strong><?php echo esc_html($author); ?></strong></p>
-
-            <?php endif; ?>
-
-        </div>
-
-    <?php endwhile; ?>
-
-    <?php wp_reset_postdata(); ?>
-
-<?php endif; ?>
 
 </div>
 
