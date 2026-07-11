@@ -13,6 +13,11 @@ $items        = $args['items'] ?? [];
 $info         = $args['info'] ?? [];
 $search_term  = $args['search_term'] ?? '';
 
+$artist_query = $args['artist_query']
+    ?? get_query_var('artist_query')
+    ?? $query
+    ?? null;
+
 // Backward compatibility: allow direct title/emoji from older callers (though not used here)
 $title = $info['title'] ?? $args['title'] ?? '';
 $emoji = $info['emoji'] ?? $args['emoji'] ?? '';
