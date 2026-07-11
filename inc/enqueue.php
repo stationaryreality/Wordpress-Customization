@@ -40,7 +40,8 @@ $css_files = [
     'videos',
     'references',
     'tools',
-    'misc'
+    'misc',
+    'elements'
 ];
 
 foreach ($css_files as $file) {
