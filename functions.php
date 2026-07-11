@@ -471,13 +471,13 @@ require_once get_stylesheet_directory() . '/inc/collectors/featured-context.php'
 
 require_once get_stylesheet_directory() . '/inc/references.php';
 
-require_once get_stylesheet_directory() . '/inc/presentation/knowledge-sections.php';
+//require_once get_stylesheet_directory() . '/inc/presentation/knowledge-sections.php';
 
-require_once get_stylesheet_directory() . '/inc/collectors/knowledge-resolver.php';
+//require_once get_stylesheet_directory() . '/inc/collectors/knowledge-resolver.php';
 
-require_once get_stylesheet_directory() . '/inc/presentation/knowledge-builder.php';
+//require_once get_stylesheet_directory() . '/inc/presentation/knowledge-builder.php';
 
-require_once get_stylesheet_directory() . '/inc/presentation/load-view.php';
+//require_once get_stylesheet_directory() . '/inc/presentation/load-view.php';
 
 //require_once get_stylesheet_directory() . '/inc/presentation/cards/build-card.php';
 
