@@ -1,0 +1,117 @@
+/* =========================================================
+   ELEMENTS GRID – 100% scoped, no warnings
+   ========================================================= */
+
+.element-grid .tag-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.element-grid .tag-post-item {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.element-grid .tag-post-thumbnail {
+    display: block;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #f5f5f5;
+}
+
+/* Square via pseudo-element (bulletproof) */
+.element-grid .tag-post-thumbnail::before {
+    content: '';
+    display: block;
+    padding-bottom: 100%; /* 1:1 */
+}
+
+/* Image fills the square */
+.element-grid .tag-post-thumbnail img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.25s ease;
+}
+
+.element-grid .tag-post-item:hover .tag-post-thumbnail img {
+    transform: scale(1.06);
+}
+
+/* Title */
+.element-grid .tag-post-title {
+    display: block;
+    margin-top: 0.6rem;
+    padding: 0 0.2rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: center;
+    color: #1e1e1e;
+    text-decoration: none;
+    word-break: break-word;
+}
+.element-grid .tag-post-title:hover {
+    color: #0073aa;
+}
+
+/* Excerpt – clean, no vendor prefixes (single line) */
+.element-grid .tag-post-excerpt {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;        /* or remove if you want multi-line, but then we need -webkit-box */
+    margin: 0.2rem 0 0;
+    padding: 0 0.2rem;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    color: #666;
+    text-align: center;
+}
+
+/* If you prefer TWO lines with ellipsis, use this (will trigger a warning but works): */
+/*
+.element-grid .tag-post-excerpt {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    ...
+}
+*/
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .element-grid .tag-posts-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.2rem;
+    }
+}
+@media (max-width: 768px) {
+    .element-grid .tag-posts-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+}
+@media (max-width: 480px) {
+    .element-grid .tag-posts-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+    }
+    .element-grid .tag-post-title {
+        font-size: 0.8rem;
+        margin-top: 0.3rem;
+    }
+    .element-grid .tag-post-excerpt {
+        display: none;
+    }
+}
