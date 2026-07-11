@@ -1,53 +1,91 @@
 <?php
-$query       = $args['query'];
-$title       = $args['title'] ?? 'Games';
-$emoji       = $args['emoji'] ?? '';
-$search_term = $args['search_term'] ?? '';
 
-if (!$query->have_posts()) return;
+$items = $args['items'] ?? [];
+$query = $args['query'] ?? null;
+
+$title = $args['title'] ?? 'Video Games';
+$emoji = $args['emoji'] ?? '';
+
+if ($query) {
+
+    $items = [];
+
+    while ($query->have_posts()) {
+
+        $query->the_post();
+
+        $items[] = kp_build_card(
+            'game',
+            get_the_ID(),
+            get_cpt_metadata()
+        );
+
+    }
+
+    wp_reset_postdata();
+
+}
+
+if (empty($items)) {
+    return;
+}
+
 ?>
 
-<section class="cited-grid-wrapper cited-grid-wrapper--games">
-  <h1 class="cited-grid__heading">
-    <?php if ($emoji) echo $emoji . ' '; ?>
-    <?php echo esc_html($title); ?>
-    <?php if ($search_term): ?>
-      containing “<?php echo esc_html($search_term); ?>”
-    <?php endif; ?>
-  </h1>
+<section class="cpt-section game-grid">
 
-  <div class="cited-grid cited-grid--games">
-    <?php while ($query->have_posts()): $query->the_post(); ?>
-      <?php
-        $developer = get_field('developer'); // changed from creator
-        $summary   = get_field('summary');
-        $cover     = get_field('cover_image');
-        $img_url   = $cover ? $cover['sizes']['medium'] : '';
-      ?>
-      <article id="post-<?php the_ID(); ?>" <?php post_class('cited-item'); ?>>
-        <a class="cited-item__link" href="<?php the_permalink(); ?>">
-          <?php if ($img_url): ?>
-            <div class="cited-item__thumb" aria-hidden="true">
-              <img src="<?php echo esc_url($img_url); ?>"
-                   alt="<?php echo esc_attr(get_the_title()); ?>"
-                   loading="lazy"
-                   decoding="async" />
-            </div>
-          <?php endif; ?>
+<h2>
 
-          <h3 class="cited-item__title"><?php the_title(); ?></h3>
-        </a>
+<?php if ($emoji): ?>
 
-        <?php if ($developer): ?>
-          <p class="cited-item__meta"><strong><?php echo esc_html($developer); ?></strong></p>
-        <?php endif; ?>
+<?= esc_html($emoji) ?>
 
-        <?php if ($summary): ?>
-          <p class="cited-item__excerpt"><?php echo esc_html(wp_trim_words($summary, 25)); ?></p>
-        <?php endif; ?>
-      </article>
-    <?php endwhile; ?>
-  </div>
+<?php endif; ?>
+
+<?= esc_html($title) ?>
+
+</h2>
+
+<div class="tag-posts-grid">
+
+<?php foreach ($items as $item): ?>
+
+<div class="tag-post-item">
+
+<?php if (!empty($item['image'])): ?>
+
+<a href="<?= esc_url($item['url']) ?>">
+
+<img
+src="<?= esc_url($item['image']) ?>"
+alt="<?= esc_attr($item['title']) ?>">
+
+</a>
+
+<?php endif; ?>
+
+<a
+class="tag-post-title"
+href="<?= esc_url($item['url']) ?>">
+
+<?= esc_html($item['title']) ?>
+
+</a>
+
+<?php if (!empty($item['excerpt'])): ?>
+
+<p>
+
+<?= esc_html($item['excerpt']) ?>
+
+</p>
+
+<?php endif; ?>
+
+</div>
+
+<?php endforeach; ?>
+
+</div>
+
 </section>
-
-<?php wp_reset_postdata(); ?>
