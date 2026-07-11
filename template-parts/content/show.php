@@ -1,72 +1,76 @@
 <?php
-$show_id   = get_the_ID();
-$summary   = get_field('summary');
-$cover     = get_field('cover_image');
-$img_url   = $cover ? $cover['sizes']['medium'] : '';
-$wiki_slug = get_field('wikipedia_slug');
+/**
+ * Show Grid Template
+ *
+ * Standardized contract:
+ * - items       => array (normalized cards)
+ * - query       => WP_Query|null (optional, for legacy callers)
+ * - info        => [ 'title' => '', 'emoji' => '', 'type' => '' ]
+ * - search_term => string (optional)
+ */
+$query        = $args['query'] ?? null;
+$items        = $args['items'] ?? [];
+$info         = $args['info'] ?? [];
+$search_term  = $args['search_term'] ?? '';
+
+// Backward compatibility: allow direct title/emoji from older callers
+$title = $info['title'] ?? $args['title'] ?? 'Shows';
+$emoji = $info['emoji'] ?? $args['emoji'] ?? '';
+
+// If a WP_Query was passed, convert it to cards (legacy support)
+if ($query instanceof WP_Query && $query->have_posts()) {
+    $items = [];
+    while ($query->have_posts()) {
+        $query->the_post();
+        $items[] = kp_build_card('show', get_the_ID(), get_cpt_metadata());
+    }
+    wp_reset_postdata();
+}
+
+// No data to render
+if (empty($items)) {
+    return;
+}
 ?>
 
-<div class="person-content">
+<section class="cited-grid-wrapper cited-grid-wrapper--shows">
+  <h1 class="cited-grid__heading">
+    <?php if ($emoji) echo $emoji . ' '; ?>
+    <?php echo esc_html($title); ?>
+    <?php if ($search_term): ?>
+      containing “<?php echo esc_html($search_term); ?>”
+    <?php endif; ?>
+  </h1>
 
-  <?php if ($img_url): ?>
-    <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" class="show-cover" style="display:block;margin:0 auto;max-width:300px;">
-  <?php endif; ?>
+  <div class="cited-grid cited-grid--shows">
+    <?php foreach ($items as $item): ?>
+      <?php
+        $creator = $item['meta'] ?? '';
+        $summary = $item['excerpt'] ?? '';
+        $img_url = !empty($item['image']) ? $item['image'] : '';
+      ?>
+      <article class="cited-item">
+        <a class="cited-item__link" href="<?php echo esc_url($item['url']); ?>">
+          <?php if ($img_url): ?>
+            <div class="cited-item__thumb" aria-hidden="true">
+              <img src="<?php echo esc_url($img_url); ?>"
+                   alt="<?php echo esc_attr($item['title']); ?>"
+                   loading="lazy"
+                   decoding="async" />
+            </div>
+          <?php endif; ?>
 
-  <h1><?php the_title(); ?></h1>
+          <h3 class="cited-item__title"><?php echo esc_html($item['title']); ?></h3>
+        </a>
 
-  <div class="person-bio">
-    <?php
-    $wiki_intro = $wiki_slug ? kp_get_wikipedia_intro($wiki_slug) : '';
-    echo $wiki_intro ? wp_kses_post($wiki_intro) : wp_kses_post(get_the_content());
-    ?>
+        <?php if ($creator): ?>
+          <p class="cited-item__meta"><strong><?php echo esc_html($creator); ?></strong></p>
+        <?php endif; ?>
+
+        <?php if ($summary): ?>
+          <p class="cited-item__excerpt"><?php echo esc_html(wp_trim_words($summary, 25)); ?></p>
+        <?php endif; ?>
+      </article>
+    <?php endforeach; ?>
   </div>
-
-  <?php
-  // === Related Quotes ===
-  $quotes = get_posts([
-    'post_type'      => 'quote',
-    'posts_per_page' => -1,
-    'meta_query'     => [
-      [
-        'key'     => 'quote_source',
-        'value'   => $show_id,
-        'compare' => '='
-      ]
-    ]
-  ]);
-
-  if (!empty($quotes)) {
-    get_template_part('template-parts/render/content-objects', null, [
-      'posts' => $quotes,
-      'title' => 'Quotes'
-    ]);
-  }
-
-  // === Related Excerpts ===
-  $excerpts = get_posts([
-    'post_type'      => 'excerpt',
-    'posts_per_page' => -1,
-    'meta_query'     => [
-      [
-        'key'     => 'excerpt_source',
-        'value'   => $show_id,
-        'compare' => '='
-      ]
-    ]
-  ]);
-
-  if (!empty($excerpts)) {
-    get_template_part('template-parts/render/content-objects', null, [
-      'posts' => $excerpts,
-      'title' => 'Excerpts'
-    ]);
-  }
-
-  // === Featured in threads ===
-  show_featured_in_threads('shows_referenced');
-
-  // === Show navigation ===
-  get_template_part('template-parts/navigation/show');
-  ?>
-
-</div> <!-- end person-content -->
+</section>
