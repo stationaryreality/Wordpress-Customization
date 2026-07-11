@@ -479,11 +479,13 @@ require_once get_stylesheet_directory() . '/inc/presentation/knowledge-builder.p
 
 require_once get_stylesheet_directory() . '/inc/presentation/load-view.php';
 
-require_once get_stylesheet_directory() . '/inc/presentation/cards/build-card.php';
+//require_once get_stylesheet_directory() . '/inc/presentation/cards/build-card.php';
 
-require_once get_stylesheet_directory() . '/inc/collectors/knowledge-collector.php';
+//require_once get_stylesheet_directory() . '/inc/collectors/knowledge-collector.php';
 
-require_once get_stylesheet_directory() . '/inc/presentation/knowledge-registry.php';
+//require_once get_stylesheet_directory() . '/inc/presentation/knowledge-registry.php';
+
+// above is temp disable for updraft error
 
 //require_once get_stylesheet_directory() . '/inc/presentation/build-portal-sections.php';
 
