@@ -1,8 +1,8 @@
 /* =========================================================
-   IMAGE GRID – Clean squares, scoped to .image-grid-section
+   IMAGE GRID – 100% match to Elements grid
    ========================================================= */
 
-/* 1. Grid container – 4 columns, same as Elements */
+/* 1. Grid – same columns as Elements */
 .image-grid-section .cited-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -10,33 +10,40 @@
     margin: 1.5rem 0;
 }
 
-/* 2. Each item – clean card */
+/* 2. Each item – clean, no background, no extra spacing */
 .image-grid-section .cited-item {
-    background: transparent;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
     display: flex;
     flex-direction: column;
     text-align: center;
 }
 
-/* 3. Image link – makes the image square */
+/* 3. The link – becomes the square container */
 .image-grid-section .cited-item a {
     display: block;
     width: 100%;
     position: relative;
     overflow: hidden;
     border-radius: 8px;
-    background: #f5f5f5;
+    background: #f5f5f5;       /* subtle loading bg, can be removed */
     text-decoration: none;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
 }
 
-/* Square via pseudo-element (bulletproof) */
+/* 4. Square via pseudo-element (bulletproof) */
 .image-grid-section .cited-item a::before {
     content: '';
     display: block;
     padding-bottom: 100%; /* 1:1 */
 }
 
-/* 4. Image fills the square */
+/* 5. Image fills the square */
 .image-grid-section .cited-item img {
     position: absolute;
     top: 0;
@@ -44,43 +51,55 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
     transition: transform 0.25s ease;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
 }
 
+/* 6. Hover zoom */
 .image-grid-section .cited-item:hover img {
     transform: scale(1.06);
 }
 
-/* 5. Title under the square */
+/* 7. Title – exactly like Elements */
 .image-grid-section .cited-item h3 {
-    margin: 0.6rem 0 0;
-    font-size: 0.95rem;
-    font-weight: 600;
-    line-height: 1.3;
-    color: #1e1e1e;
+    margin: 0.6rem 0 0 !important;
+    padding: 0 0.2rem !important;
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
+    line-height: 1.3 !important;
+    text-align: center !important;
+    color: #1e1e1e !important;
+    background: transparent !important;
+    border: none !important;
 }
-
 .image-grid-section .cited-item h3 a {
     color: inherit;
     text-decoration: none;
 }
-
 .image-grid-section .cited-item h3 a:hover {
     color: #0073aa;
 }
 
-/* 6. Caption – subtle, truncated */
+/* 8. Caption – subtle, hidden on small screens */
 .image-grid-section .cited-item p {
-    margin: 0.2rem 0 0;
-    font-size: 0.78rem;
-    line-height: 1.4;
-    color: #666;
+    margin: 0.2rem 0 0 !important;
+    padding: 0 0.2rem !important;
+    font-size: 0.78rem !important;
+    line-height: 1.4 !important;
+    color: #666 !important;
+    background: transparent !important;
+    border: none !important;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;  /* single line – or use -webkit-line-clamp if you prefer */
+    white-space: nowrap;
+    text-align: center;
 }
 
-/* 7. Responsive – match Elements breakpoints */
+/* 9. Responsive – identical to Elements */
 @media (max-width: 1024px) {
     .image-grid-section .cited-grid {
         grid-template-columns: repeat(3, 1fr);
@@ -99,10 +118,10 @@
         gap: 0.8rem;
     }
     .image-grid-section .cited-item h3 {
-        font-size: 0.8rem;
-        margin-top: 0.3rem;
+        font-size: 0.8rem !important;
+        margin-top: 0.3rem !important;
     }
     .image-grid-section .cited-item p {
-        display: none;  /* hide captions on tiny screens */
+        display: none !important;
     }
 }
