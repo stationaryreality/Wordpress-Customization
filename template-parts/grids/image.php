@@ -1,86 +1,96 @@
 <?php
 /**
- * Image Grid Template
- *
- * Supports two modes:
- *
- * 1. Query Mode (WP_Query)
- * 2. Normalized Cards Mode ($items)
- *
- * Standardized contract:
- * - items       => array
- * - query       => WP_Query|null
- * - info        => [ 'title' => '', 'emoji' => '', 'type' => '' ]
- * - search_term => string
+ * Template Part: Image Gallery (Standalone)
+ * 
+ * Uses completely unique class names to avoid global CSS conflicts.
+ * 
+ * Parameters:
+ * - $query      => WP_Query|null
+ * - $items      => array (normalized cards)
+ * - $title      => string (section title)
+ * - $emoji      => string (optional emoji)
+ * - $search_term => string (optional)
  */
+
 $query        = $args['query'] ?? null;
 $items        = $args['items'] ?? [];
-$info         = $args['info'] ?? [];
+$title        = $args['title'] ?? 'Images';
+$emoji        = $args['emoji'] ?? '';
 $search_term  = $args['search_term'] ?? '';
 
-// Backward compatibility: allow direct title/emoji from older callers
-$title = $info['title'] ?? $args['title'] ?? 'Images';
-$emoji = $info['emoji'] ?? $args['emoji'] ?? '';
+// Fallback query if no items or query provided
+if (!$query && empty($items)) {
+    $query = new WP_Query([
+        'post_type'      => 'image',
+        'posts_per_page' => -1,
+        'orderby'        => 'title',
+        'order'          => 'ASC',
+    ]);
+}
 
-// Early bailout if no data source has content
-if (
-    (!$query instanceof WP_Query || !$query->have_posts())
-    && empty($items)
-) {
+// Convert WP_Query to items array
+if ($query instanceof WP_Query && $query->have_posts()) {
+    $items = [];
+    while ($query->have_posts()) {
+        $query->the_post();
+        $image_field = get_field('image_file');
+        $img_url = $image_field 
+            ? $image_field['sizes']['medium'] 
+            : get_the_post_thumbnail_url(get_the_ID(), 'medium');
+        
+        $items[] = [
+            'title'   => get_the_title(),
+            'url'     => get_permalink(),
+            'image'   => $img_url,
+            'caption' => get_field('image_caption'),
+        ];
+    }
+    wp_reset_postdata();
+}
+
+// No data = bail
+if (empty($items)) {
     return;
 }
 ?>
 
-<section class="image-grid-section" style="margin-bottom:4rem;">
-  <h2>
-    <?php if ($emoji) echo $emoji . ' '; ?>
+<!-- ===== NEW IMAGE GALLERY – 100% fresh classes ===== -->
+<section class="fresh-gallery-section" style="margin-bottom:4rem;">
+  
+  <h2 class="fresh-gallery-title">
+    <?php if ($emoji) echo esc_html($emoji) . ' '; ?>
     <?php echo esc_html($title); ?>
     <?php if ($search_term): ?>
-      <span style="font-weight:normal;font-size:0.9em;color:#666;">
+      <span class="fresh-gallery-search-term">
         containing “<?php echo esc_html($search_term); ?>”
       </span>
     <?php endif; ?>
   </h2>
 
-  <div class="cited-grid">
-    <?php if (!empty($items)): ?>
-      <?php foreach ($items as $item): ?>
-        <?php
-          $caption = $item['meta'] ?? '';
-          $img_url = !empty($item['image']) ? $item['image'] : '';
-        ?>
-        <div class="cited-item">
+  <div class="fresh-gallery-grid">
+    <?php foreach ($items as $item): ?>
+      <div class="fresh-gallery-card">
+        <a href="<?php echo esc_url($item['url']); ?>" class="fresh-gallery-link">
+          <?php if (!empty($item['image'])): ?>
+            <img 
+              src="<?php echo esc_url($item['image']); ?>" 
+              alt="<?php echo esc_attr($item['title']); ?>"
+              class="fresh-gallery-image"
+            >
+          <?php endif; ?>
+        </a>
+        <h3 class="fresh-gallery-card-title">
           <a href="<?php echo esc_url($item['url']); ?>">
-            <?php if ($img_url): ?>
-              <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($item['title']); ?>">
-            <?php endif; ?>
-            <h3><?php echo esc_html($item['title']); ?></h3>
+            <?php echo esc_html($item['title']); ?>
           </a>
-          <?php if ($caption): ?>
-            <p><?php echo esc_html(wp_trim_words($caption, 20)); ?></p>
-          <?php endif; ?>
-        </div>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <?php while ($query->have_posts()): $query->the_post(); ?>
-        <?php
-          $caption = get_field('image_caption');
-          $image   = get_field('image_file');
-          $img_url = $image ? $image['sizes']['medium'] : get_the_post_thumbnail_url(get_the_ID(), 'medium');
-        ?>
-        <div class="cited-item">
-          <a href="<?php the_permalink(); ?>">
-            <?php if ($img_url): ?>
-              <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title_attribute(); ?>">
-            <?php endif; ?>
-            <h3><?php the_title(); ?></h3>
-          </a>
-          <?php if ($caption): ?>
-            <p><?php echo esc_html(wp_trim_words($caption, 20)); ?></p>
-          <?php endif; ?>
-        </div>
-      <?php endwhile; ?>
-      <?php wp_reset_postdata(); ?>
-    <?php endif; ?>
+        </h3>
+        <?php if (!empty($item['caption'])): ?>
+          <p class="fresh-gallery-caption">
+            <?php echo esc_html(wp_trim_words($item['caption'], 20)); ?>
+          </p>
+        <?php endif; ?>
+      </div>
+    <?php endforeach; ?>
   </div>
+
 </section>

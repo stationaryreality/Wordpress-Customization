@@ -1,32 +1,29 @@
 /* ============================================================
-   IMAGE GRID – Match Elements grid 1:1
+   FRESH IMAGE GALLERY – 100% unique classes, no conflicts
    ============================================================ */
 
-/* ---- Grid container ---- */
-.image-grid-section .cited-grid {
+/* ---- Grid Container ---- */
+.fresh-gallery-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1.5rem;
     margin: 1.5rem 0;
-    padding: 0;
-    justify-items: center;
 }
 
-/* ---- Each card ---- */
-.image-grid-section .cited-item {
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    padding: 0;
-    margin: 0;
-    max-width: none;
-    text-align: center;
+/* ---- Each Card ---- */
+.fresh-gallery-card {
     display: flex;
     flex-direction: column;
+    text-align: center;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
 }
 
-/* ---- The link (image container) ---- */
-.image-grid-section .cited-item a {
+/* ---- Image Link (square container) ---- */
+.fresh-gallery-link {
     display: block;
     width: 100%;
     position: relative;
@@ -38,15 +35,15 @@
     margin: 0;
 }
 
-/* ---- Square via pseudo-element ---- */
-.image-grid-section .cited-item a::before {
+/* Square via pseudo-element */
+.fresh-gallery-link::before {
     content: '';
     display: block;
     padding-bottom: 100%; /* 1:1 */
 }
 
-/* ---- Image fills the square ---- */
-.image-grid-section .cited-item img {
+/* ---- Image (fills the square) ---- */
+.fresh-gallery-image {
     position: absolute;
     top: 0;
     left: 0;
@@ -57,33 +54,31 @@
     transition: transform 0.25s ease;
 }
 
-.image-grid-section .cited-item:hover img {
+.fresh-gallery-link:hover .fresh-gallery-image {
     transform: scale(1.06);
 }
 
-/* ---- Title (h3) ---- */
-.image-grid-section .cited-item h3 {
+/* ---- Card Title ---- */
+.fresh-gallery-card-title {
     margin: 0.6rem 0 0;
     padding: 0 0.2rem;
     font-size: 0.95rem;
     font-weight: 600;
     line-height: 1.3;
-    text-align: center;
     color: #1e1e1e;
-    background: transparent;
-    border: none;
 }
 
-.image-grid-section .cited-item h3 a {
+.fresh-gallery-card-title a {
     color: inherit;
     text-decoration: none;
 }
-.image-grid-section .cited-item h3 a:hover {
+
+.fresh-gallery-card-title a:hover {
     color: #0073aa;
 }
 
-/* ---- Caption (p) ---- */
-.image-grid-section .cited-item p {
+/* ---- Caption ---- */
+.fresh-gallery-caption {
     margin: 0.2rem 0 0;
     padding: 0 0.2rem;
     font-size: 0.78rem;
@@ -93,33 +88,42 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    background: transparent;
-    border: none;
 }
 
-/* ---- Responsive (same as Elements) ---- */
+/* ---- Section Title ---- */
+.fresh-gallery-title {
+    margin-bottom: 0.5rem;
+}
+
+.fresh-gallery-search-term {
+    font-weight: normal;
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* ---- Responsive (matches Elements) ---- */
 @media (max-width: 1024px) {
-    .image-grid-section .cited-grid {
+    .fresh-gallery-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 1.2rem;
     }
 }
 @media (max-width: 768px) {
-    .image-grid-section .cited-grid {
+    .fresh-gallery-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
     }
 }
 @media (max-width: 480px) {
-    .image-grid-section .cited-grid {
+    .fresh-gallery-grid {
         grid-template-columns: 1fr 1fr;
         gap: 0.8rem;
     }
-    .image-grid-section .cited-item h3 {
+    .fresh-gallery-card-title {
         font-size: 0.8rem;
         margin-top: 0.3rem;
     }
-    .image-grid-section .cited-item p {
+    .fresh-gallery-caption {
         display: none;
     }
 }
