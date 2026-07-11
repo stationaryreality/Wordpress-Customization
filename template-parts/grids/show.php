@@ -1,10 +1,36 @@
 <?php
-$query       = $args['query'];
-$title       = $args['title'] ?? 'Shows';
-$emoji       = $args['emoji'] ?? '';
-$search_term = $args['search_term'] ?? '';
+/**
+ * Show Grid Template
+ *
+ * Standardized contract:
+ * - items       => array (normalized cards)
+ * - query       => WP_Query|null (optional, for legacy callers)
+ * - info        => [ 'title' => '', 'emoji' => '', 'type' => '' ]
+ * - search_term => string (optional)
+ */
+$query        = $args['query'] ?? null;
+$items        = $args['items'] ?? [];
+$info         = $args['info'] ?? [];
+$search_term  = $args['search_term'] ?? '';
 
-if (!$query->have_posts()) return;
+// Backward compatibility: allow direct title/emoji from older callers
+$title = $info['title'] ?? $args['title'] ?? 'Shows';
+$emoji = $info['emoji'] ?? $args['emoji'] ?? '';
+
+// If a WP_Query was passed, convert it to cards (legacy support)
+if ($query instanceof WP_Query && $query->have_posts()) {
+    $items = [];
+    while ($query->have_posts()) {
+        $query->the_post();
+        $items[] = kp_build_card('show', get_the_ID(), get_cpt_metadata());
+    }
+    wp_reset_postdata();
+}
+
+// No data to render
+if (empty($items)) {
+    return;
+}
 ?>
 
 <section class="cited-grid-wrapper cited-grid-wrapper--shows">
@@ -17,25 +43,24 @@ if (!$query->have_posts()) return;
   </h1>
 
   <div class="cited-grid cited-grid--shows">
-    <?php while ($query->have_posts()): $query->the_post(); ?>
+    <?php foreach ($items as $item): ?>
       <?php
-        $creator = get_field('creator');
-        $summary = get_field('summary');
-        $cover   = get_field('cover_image');
-        $img_url = $cover ? $cover['sizes']['medium'] : '';
+        $creator = $item['meta'] ?? '';
+        $summary = $item['excerpt'] ?? '';
+        $img_url = !empty($item['image']) ? $item['image'] : '';
       ?>
-      <article id="post-<?php the_ID(); ?>" <?php post_class('cited-item'); ?>>
-        <a class="cited-item__link" href="<?php the_permalink(); ?>">
+      <article class="cited-item">
+        <a class="cited-item__link" href="<?php echo esc_url($item['url']); ?>">
           <?php if ($img_url): ?>
             <div class="cited-item__thumb" aria-hidden="true">
               <img src="<?php echo esc_url($img_url); ?>"
-                   alt="<?php echo esc_attr(get_the_title()); ?>"
+                   alt="<?php echo esc_attr($item['title']); ?>"
                    loading="lazy"
                    decoding="async" />
             </div>
           <?php endif; ?>
 
-          <h3 class="cited-item__title"><?php the_title(); ?></h3>
+          <h3 class="cited-item__title"><?php echo esc_html($item['title']); ?></h3>
         </a>
 
         <?php if ($creator): ?>
@@ -46,8 +71,6 @@ if (!$query->have_posts()) return;
           <p class="cited-item__excerpt"><?php echo esc_html(wp_trim_words($summary, 25)); ?></p>
         <?php endif; ?>
       </article>
-    <?php endwhile; ?>
+    <?php endforeach; ?>
   </div>
 </section>
-
-<?php wp_reset_postdata(); ?>
