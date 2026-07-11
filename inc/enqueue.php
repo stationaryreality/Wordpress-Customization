@@ -41,7 +41,8 @@ $css_files = [
     'references',
     'tools',
     'misc',
-    'elements'
+    'elements',
+    'image-grid'
 ];
 
 foreach ($css_files as $file) {
