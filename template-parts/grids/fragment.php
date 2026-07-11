@@ -2,42 +2,51 @@
 /**
  * Template Part: Fragment Grid
  *
- * Expected args:
- * - query: WP_Query object (optional, defaults to all fragments)
- * - title: Section title (optional)
+ * Standardized contract:
+ * - items       => array (normalized cards)
+ * - query       => WP_Query|null (optional, for legacy callers)
+ * - info        => [ 'title' => '', 'emoji' => '', 'type' => '' ]
+ * - search_term => string (optional)
  */
+$query        = $args['query'] ?? null;
+$items        = $args['items'] ?? [];
+$info         = $args['info'] ?? [];
+$search_term  = $args['search_term'] ?? '';
 
-$query = $args['query'] ?? null;
-$title = $args['title'] ?? 'Narrative Fragments';
+// Backward compatibility: allow direct title from older callers
+$title = $info['title'] ?? $args['title'] ?? 'Narrative Fragments';
 
-// If no query is passed, default to all fragments (e.g., homepage)
-if ( ! $query ) {
-  $query = new WP_Query([
-    'post_type'      => 'fragment',
-    'posts_per_page' => -1,
-    'orderby'        => 'date',
-    'order'          => 'DESC',
-  ]);
+// If a WP_Query was passed, convert it to cards (legacy support)
+if ($query instanceof WP_Query && $query->have_posts()) {
+    $items = [];
+    while ($query->have_posts()) {
+        $query->the_post();
+        $items[] = kp_build_card('fragment', get_the_ID(), get_cpt_metadata());
+    }
+    wp_reset_postdata();
 }
 
-if ( ! $query->have_posts() ) return;
+// No data to render
+if (empty($items)) {
+    return;
+}
 ?>
 
 <section style="margin-bottom:4rem;">
   <h2><?php echo esc_html($title); ?></h2>
   <div class="tag-posts-grid">
-    <?php while ( $query->have_posts() ) : $query->the_post(); ?>
+    <?php foreach ($items as $item): ?>
       <div class="tag-post-item">
-        <a href="<?php the_permalink(); ?>" class="tag-post-thumbnail">
-          <?php if ( has_post_thumbnail() ) : ?>
-            <img src="<?php echo esc_url(get_the_post_thumbnail_url(get_the_ID(), 'medium')); ?>" alt="<?php the_title_attribute(); ?>">
+        <a href="<?php echo esc_url($item['url']); ?>" class="tag-post-thumbnail">
+          <?php if (!empty($item['image'])): ?>
+            <img src="<?php echo esc_url($item['image']); ?>" alt="<?php echo esc_attr($item['title']); ?>">
           <?php endif; ?>
         </a>
-        <a href="<?php the_permalink(); ?>" class="tag-post-title"><?php the_title(); ?></a>
-        <p class="tag-post-excerpt"><?php the_excerpt(); ?></p>
+        <a href="<?php echo esc_url($item['url']); ?>" class="tag-post-title"><?php echo esc_html($item['title']); ?></a>
+        <?php if (!empty($item['excerpt'])): ?>
+          <p class="tag-post-excerpt"><?php echo esc_html($item['excerpt']); ?></p>
+        <?php endif; ?>
       </div>
-    <?php endwhile; ?>
+    <?php endforeach; ?>
   </div>
 </section>
-
-<?php wp_reset_postdata(); ?>
