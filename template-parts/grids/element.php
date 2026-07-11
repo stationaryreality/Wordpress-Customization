@@ -18,6 +18,16 @@ $search_term  = $args['search_term'] ?? '';
 $title = $info['title'] ?? $args['title'] ?? 'Elements';
 $emoji = $info['emoji'] ?? $args['emoji'] ?? '';
 
+// RESTORED: Default query fallback (legacy behavior)
+if (!$query && empty($items)) {
+    $query = new WP_Query([
+        'post_type'      => 'element',
+        'posts_per_page' => -1,
+        'orderby'        => 'date',
+        'order'          => 'DESC',
+    ]);
+}
+
 // If a WP_Query was passed, convert it to cards (legacy support)
 if ($query instanceof WP_Query && $query->have_posts()) {
     $items = [];
@@ -51,7 +61,6 @@ if (empty($items)) {
 
     <?php foreach ($items as $item): ?>
       <?php
-        // Use the normalized image URL (already large/medium as built by card builder)
         $img_url = !empty($item['image']) ? $item['image'] : '';
       ?>
       <div class="tag-post-item">
