@@ -65,54 +65,11 @@ function kp_collect_knowledge(array $args = [])
 
     $map = get_cpt_metadata();
 
-    /*
-    |--------------------------------------------------------------------------
-    | INCLUDED CPTS
-    |--------------------------------------------------------------------------
-    */
+    $post_types = kp_get_supported_post_types();
 
-    $post_types = [
-        'concept',
-        'quote',
-        'song',
-        'book',
-        'movie',
-        'excerpt',
-        'lyric',
-        'image',
-        'element',
-        'artist',
-        'chapter',
-        'fragment',
-        'game',
-        'organization',
-        'portal',
-        'profile',
-        'show',
-    
-    ];
+    $section_order = kp_get_section_order();
 
-    /*
-    |--------------------------------------------------------------------------
-    | SECTION LABELS
-    |--------------------------------------------------------------------------
-    */
-
-    $section_labels = [
-
-        'concept' => 'Concepts',
-        'quote'   => 'Quotes',
-        'song'    => 'Songs',
-        'book'    => 'Books',
-        'movie'   => 'Movies',
-        'excerpt' => 'Excerpts',
-        'lyric'   => 'Lyrics',
-        'image'   => 'Images',
-        'element' => 'Elements',
-
-    ];
-
-    $section_order = $post_types;
+    $section_labels = kp_get_section_labels();
 
     /*
     |--------------------------------------------------------------------------
