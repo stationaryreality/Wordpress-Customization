@@ -94,3 +94,5 @@ if (empty($items)) {
   </div>
 
 </section>
+
+<?php get_template_part('template-parts/single-image-content'); ?>

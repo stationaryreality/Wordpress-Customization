@@ -53,3 +53,15 @@ foreach ($css_files as $file) {
         filemtime(get_stylesheet_directory() . "/assets/css/{$file}.css")
     );
 }
+
+//load single image only when on page
+add_action('wp_enqueue_scripts', function() {
+    if (is_singular('image')) {
+        wp_enqueue_style(
+            'single-image',
+            get_stylesheet_directory_uri() . '/assets/css/single-image.css',
+            [],
+            filemtime(get_stylesheet_directory() . '/assets/css/single-image.css')
+        );
+    }
+});
