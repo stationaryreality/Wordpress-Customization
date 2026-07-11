@@ -36,13 +36,13 @@ $css_files = [
     'wordpress-overrides',
     'navigation',
     'profiles',
-    'grids',
+    'grids',        // ← global grid rules
     'videos',
     'references',
     'tools',
     'misc',
-    'elements',
-    'image-grid'
+    'elements',     // ← Elements overrides (loaded after grids)
+    'image-grid'    // ← Image overrides (loaded last)
 ];
 
 foreach ($css_files as $file) {
