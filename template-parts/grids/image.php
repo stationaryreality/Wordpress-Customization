@@ -32,7 +32,7 @@ if (
 ?>
 
 <section class="image-grid-section" style="margin-bottom:4rem;">
-    <h2>
+  <h2>
     <?php if ($emoji) echo $emoji . ' '; ?>
     <?php echo esc_html($title); ?>
     <?php if ($search_term): ?>
@@ -52,16 +52,12 @@ if (
         <div class="cited-item">
           <a href="<?php echo esc_url($item['url']); ?>">
             <?php if ($img_url): ?>
-              <img src="<?php echo esc_url($img_url); ?>"
-                   alt="<?php echo esc_attr($item['title']); ?>"
-                   style="width:150px; height:150px; object-fit:cover;">
+              <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($item['title']); ?>">
             <?php endif; ?>
             <h3><?php echo esc_html($item['title']); ?></h3>
           </a>
           <?php if ($caption): ?>
-            <p style="margin:0.5rem 0 0;font-size:0.9em;color:#555;">
-              <?php echo esc_html(wp_trim_words($caption, 20)); ?>
-            </p>
+            <p><?php echo esc_html(wp_trim_words($caption, 20)); ?></p>
           <?php endif; ?>
         </div>
       <?php endforeach; ?>
@@ -70,22 +66,17 @@ if (
         <?php
           $caption = get_field('image_caption');
           $image   = get_field('image_file');
-          // Use ACF size for uniform dimensions; fallback to featured
           $img_url = $image ? $image['sizes']['medium'] : get_the_post_thumbnail_url(get_the_ID(), 'medium');
         ?>
         <div class="cited-item">
           <a href="<?php the_permalink(); ?>">
             <?php if ($img_url): ?>
-              <img src="<?php echo esc_url($img_url); ?>"
-                   alt="<?php the_title(); ?>"
-                   style="width:150px; height:150px; object-fit:cover;">
+              <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title_attribute(); ?>">
             <?php endif; ?>
             <h3><?php the_title(); ?></h3>
           </a>
           <?php if ($caption): ?>
-            <p style="margin:0.5rem 0 0;font-size:0.9em;color:#555;">
-              <?php echo esc_html(wp_trim_words($caption, 20)); ?>
-            </p>
+            <p><?php echo esc_html(wp_trim_words($caption, 20)); ?></p>
           <?php endif; ?>
         </div>
       <?php endwhile; ?>
