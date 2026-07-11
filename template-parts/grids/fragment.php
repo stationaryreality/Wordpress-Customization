@@ -13,6 +13,20 @@ $items        = $args['items'] ?? [];
 $info         = $args['info'] ?? [];
 $search_term  = $args['search_term'] ?? '';
 
+// Legacy compatibility.
+// If no query or items were supplied, behave like the old template.
+
+if (!$query && empty($items)) {
+
+    $query = new WP_Query([
+        'post_type'      => 'fragment',
+        'posts_per_page' => -1,
+        'orderby'        => 'date',
+        'order'          => 'DESC',
+    ]);
+
+}
+
 // Backward compatibility: allow direct title from older callers
 $title = $info['title'] ?? $args['title'] ?? 'Narrative Fragments';
 
