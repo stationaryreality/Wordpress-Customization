@@ -1,0 +1,135 @@
+/* ============================================================
+   SINGLE IMAGE PAGE – Clean, constrained, conflict‑free
+   ============================================================ */
+
+/* ---- Main Wrapper ---- */
+.single-image-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem 3rem;
+    text-align: center;
+}
+
+/* ---- Image Container (constrains the image) ---- */
+.single-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 1.5rem;
+    max-width: 100%;
+}
+
+/* ---- The Image ---- */
+.single-image-display {
+    max-width: 600px;        /* fits nicely in most layouts */
+    max-height: 70vh;        /* prevents very tall images from dominating */
+    width: auto;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;         /* indicates clickable */
+}
+
+.single-image-display:hover {
+    transform: scale(1.01);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+/* ---- Title ---- */
+.single-image-title {
+    font-size: 1.8rem;
+    margin: 1rem 0 0.5rem;
+    font-weight: 600;
+    color: #1e1e1e;
+}
+
+/* ---- Caption ---- */
+.single-image-caption {
+    max-width: 700px;
+    margin: 0.5rem auto 1.5rem;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #444;
+    text-align: center;
+}
+
+/* ---- References, Taxonomies, etc. ---- */
+.single-image-references,
+.single-image-taxonomies {
+    margin: 1.5rem 0;
+}
+
+/* ---- Lightbox Overlay (full‑screen) ---- */
+.single-image-lightbox-overlay {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.single-image-lightbox-overlay.active {
+    display: flex;
+}
+
+.single-image-lightbox-overlay img {
+    max-width: 95%;
+    max-height: 95%;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    object-fit: contain;
+}
+
+/* Close button (X) using pseudo‑element */
+.single-image-lightbox-overlay::after {
+    content: "✕";
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: white;
+    font-size: 32px;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.single-image-lightbox-overlay::after:hover {
+    opacity: 1;
+}
+
+/* ---- Responsive Tweaks ---- */
+@media (max-width: 768px) {
+    .single-image-wrapper {
+        padding: 1rem 1rem 2rem;
+    }
+    .single-image-display {
+        max-width: 100%;
+        max-height: 60vh;
+    }
+    .single-image-title {
+        font-size: 1.4rem;
+    }
+    .single-image-caption {
+        font-size: 0.9rem;
+    }
+    .single-image-lightbox-overlay::after {
+        font-size: 28px;
+        top: 15px;
+        right: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .single-image-display {
+        max-height: 50vh;
+    }
+    .single-image-title {
+        font-size: 1.2rem;
+    }
+}
