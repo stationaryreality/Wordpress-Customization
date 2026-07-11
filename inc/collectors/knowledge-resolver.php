@@ -1,4 +1,4 @@
- <?php
+<?php
 /**
  * Resolve a knowledge object from a name.
  *
