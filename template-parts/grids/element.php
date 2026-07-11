@@ -1,24 +1,24 @@
 <?php
 /**
- * Template Part: Element Grid
- * Styled to visually align with Chapter / Fragment grids
- *
- * Standardized contract:
- * - items       => array (normalized cards)
- * - query       => WP_Query|null (optional, for legacy callers)
- * - info        => [ 'title' => '', 'emoji' => '', 'type' => '' ]
- * - search_term => string (optional)
+ * Template Part: Fresh Element Grid (Conflict‑Free)
+ * 
+ * Uses completely unique class names to avoid global CSS conflicts.
+ * 
+ * Parameters:
+ * - $query       => WP_Query|null
+ * - $items       => array (normalized cards)
+ * - $title       => string
+ * - $emoji       => string (optional)
+ * - $search_term => string (optional)
  */
+
 $query        = $args['query'] ?? null;
 $items        = $args['items'] ?? [];
-$info         = $args['info'] ?? [];
+$title        = $args['title'] ?? 'Elements';
+$emoji        = $args['emoji'] ?? '';
 $search_term  = $args['search_term'] ?? '';
 
-// Backward compatibility: allow direct title/emoji from older callers
-$title = $info['title'] ?? $args['title'] ?? 'Elements';
-$emoji = $info['emoji'] ?? $args['emoji'] ?? '';
-
-// RESTORED: Default query fallback (legacy behavior)
+// Fallback query if no items or query provided
 if (!$query && empty($items)) {
     $query = new WP_Query([
         'post_type'      => 'element',
@@ -28,65 +28,64 @@ if (!$query && empty($items)) {
     ]);
 }
 
-// If a WP_Query was passed, convert it to cards (legacy support)
+// Convert WP_Query to items array
 if ($query instanceof WP_Query && $query->have_posts()) {
     $items = [];
     while ($query->have_posts()) {
         $query->the_post();
-        $items[] = kp_build_card('element', get_the_ID(), get_cpt_metadata());
+        $items[] = [
+            'title'   => get_the_title(),
+            'url'     => get_permalink(),
+            'image'   => get_the_post_thumbnail_url(get_the_ID(), 'medium'),
+            'excerpt' => get_the_excerpt(),
+        ];
     }
     wp_reset_postdata();
 }
 
-// No data to render
+// No data = bail
 if (empty($items)) {
     return;
 }
 ?>
 
-<section class="cpt-section element-grid" style="margin-bottom:4rem;">
-
-  <h2>
+<!-- ===== FRESH ELEMENT GRID – Unique classes ===== -->
+<section class="fresh-elements-section" style="margin-bottom:4rem;">
+  
+  <h2 class="fresh-elements-title">
     <?php if ($emoji) echo esc_html($emoji) . ' '; ?>
     <?php echo esc_html($title); ?>
-
     <?php if ($search_term): ?>
-      <span style="font-weight:normal;font-size:0.9em;color:#666;">
+      <span class="fresh-elements-search-term">
         containing “<?php echo esc_html($search_term); ?>”
       </span>
     <?php endif; ?>
   </h2>
 
-  <div class="tag-posts-grid">
-
+  <div class="fresh-elements-grid">
     <?php foreach ($items as $item): ?>
-      <?php
-        $img_url = !empty($item['image']) ? $item['image'] : '';
-      ?>
-      <div class="tag-post-item">
-
-        <a href="<?php echo esc_url($item['url']); ?>" class="tag-post-thumbnail">
-          <?php if ($img_url): ?>
-            <img
-              src="<?php echo esc_url($img_url); ?>"
+      <div class="fresh-element-card">
+        <a href="<?php echo esc_url($item['url']); ?>" class="fresh-element-link">
+          <?php if (!empty($item['image'])): ?>
+            <img 
+              src="<?php echo esc_url($item['image']); ?>" 
               alt="<?php echo esc_attr($item['title']); ?>"
+              class="fresh-element-image"
             >
           <?php endif; ?>
         </a>
-
-        <a href="<?php echo esc_url($item['url']); ?>" class="tag-post-title">
-          <?php echo esc_html($item['title']); ?>
-        </a>
-
+        <h3 class="fresh-element-card-title">
+          <a href="<?php echo esc_url($item['url']); ?>">
+            <?php echo esc_html($item['title']); ?>
+          </a>
+        </h3>
         <?php if (!empty($item['excerpt'])): ?>
-          <p class="tag-post-excerpt">
+          <p class="fresh-element-excerpt">
             <?php echo esc_html(wp_trim_words($item['excerpt'], 20)); ?>
           </p>
         <?php endif; ?>
-
       </div>
     <?php endforeach; ?>
-
   </div>
 
 </section>
