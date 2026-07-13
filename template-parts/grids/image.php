@@ -1,98 +1,47 @@
 <?php
-/**
- * Template Part: Image Gallery (Standalone)
- * 
- * Uses completely unique class names to avoid global CSS conflicts.
- * 
- * Parameters:
- * - $query      => WP_Query|null
- * - $items      => array (normalized cards)
- * - $title      => string (section title)
- * - $emoji      => string (optional emoji)
- * - $search_term => string (optional)
- */
-
-$query        = $args['query'] ?? null;
-$items        = $args['items'] ?? [];
-$title        = $args['title'] ?? 'Images';
-$emoji        = $args['emoji'] ?? '';
-$search_term  = $args['search_term'] ?? '';
-
-// Fallback query if no items or query provided
-if (!$query && empty($items)) {
-    $query = new WP_Query([
-        'post_type'      => 'image',
-        'posts_per_page' => -1,
-        'orderby'        => 'title',
-        'order'          => 'ASC',
-    ]);
-}
-
-// Convert WP_Query to items array
-if ($query instanceof WP_Query && $query->have_posts()) {
-    $items = [];
-    while ($query->have_posts()) {
-        $query->the_post();
-        $image_field = get_field('image_file');
-        $img_url = $image_field 
-            ? $image_field['sizes']['medium'] 
-            : get_the_post_thumbnail_url(get_the_ID(), 'medium');
-        
-        $items[] = [
-            'title'   => get_the_title(),
-            'url'     => get_permalink(),
-            'image'   => $img_url,
-            'caption' => get_field('image_caption'),
-        ];
-    }
-    wp_reset_postdata();
-}
-
-// No data = bail
-if (empty($items)) {
-    return;
-}
+$query       = $args['query'];
+$title       = $args['title'] ?? 'Images';
+$emoji       = $args['emoji'] ?? '';
+$search_term = $args['search_term'] ?? '';
+if (!$query->have_posts()) return;
 ?>
 
-<!-- ===== NEW IMAGE GALLERY – 100% fresh classes ===== -->
-<section class="fresh-gallery-section" style="margin-bottom:4rem;">
-  
-  <h2 class="fresh-gallery-title">
-    <?php if ($emoji) echo esc_html($emoji) . ' '; ?>
+<section style="margin-bottom:4rem;">
+  <h2>
+    <?php if ($emoji) echo $emoji . ' '; ?>
     <?php echo esc_html($title); ?>
     <?php if ($search_term): ?>
-      <span class="fresh-gallery-search-term">
+      <span style="font-weight:normal;font-size:0.9em;color:#666;">
         containing “<?php echo esc_html($search_term); ?>”
       </span>
     <?php endif; ?>
   </h2>
 
-  <div class="fresh-gallery-grid">
-    <?php foreach ($items as $item): ?>
-      <div class="fresh-gallery-card">
-        <a href="<?php echo esc_url($item['url']); ?>" class="fresh-gallery-link">
-          <?php if (!empty($item['image'])): ?>
-            <img 
-              src="<?php echo esc_url($item['image']); ?>" 
-              alt="<?php echo esc_attr($item['title']); ?>"
-              class="fresh-gallery-image"
-            >
+  <div class="cited-grid">
+    <?php while ($query->have_posts()): $query->the_post(); ?>
+      <?php
+        $caption = get_field('image_caption');
+        $image   = get_field('image_file');
+        // Use ACF size for uniform dimensions; fallback to featured
+        $img_url = $image ? $image['sizes']['medium'] : get_the_post_thumbnail_url(get_the_ID(), 'medium');
+      ?>
+      <div class="cited-item">
+        <a href="<?php the_permalink(); ?>">
+          <?php if ($img_url): ?>
+            <img src="<?php echo esc_url($img_url); ?>"
+                 alt="<?php the_title(); ?>"
+                 style="width:150px; height:150px; object-fit:cover;">
           <?php endif; ?>
+          <h3><?php the_title(); ?></h3>
         </a>
-        <h3 class="fresh-gallery-card-title">
-          <a href="<?php echo esc_url($item['url']); ?>">
-            <?php echo esc_html($item['title']); ?>
-          </a>
-        </h3>
-        <?php if (!empty($item['caption'])): ?>
-          <p class="fresh-gallery-caption">
-            <?php echo esc_html(wp_trim_words($item['caption'], 20)); ?>
+        <?php if ($caption): ?>
+          <p style="margin:0.5rem 0 0;font-size:0.9em;color:#555;">
+            <?php echo esc_html(wp_trim_words($caption, 20)); ?>
           </p>
         <?php endif; ?>
       </div>
-    <?php endforeach; ?>
+    <?php endwhile; ?>
   </div>
-
 </section>
 
-<?php get_template_part('template-parts/single-image-content'); ?>
+<?php wp_reset_postdata(); ?>
