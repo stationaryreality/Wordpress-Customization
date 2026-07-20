@@ -179,6 +179,11 @@ function site_get_navigation_sections() {
         ],
 
                 'Site Resources' => [
+                      [
+                'title'       => 'Engineering Site',
+                'slug'        => 'developer-notes',
+                'description' => 'Development notes and site construction insights',
+            ],
                                                                                         [
                 'title'       => 'Top Content',
                 'slug'        => 'top-content',
@@ -201,12 +206,6 @@ function site_get_navigation_sections() {
                 'slug'        => 'site-tools',
                 'description' => 'Public utility tools and navigation helpers',
             ],
-  [
-                'title'       => 'Engineering Site',
-                'slug'        => 'developer-notes',
-                'description' => 'Development notes and site construction insights',
-            ],
-
                                     [
                 'title'       => 'Get Updates',
                 'slug'        => 'get-updates',
