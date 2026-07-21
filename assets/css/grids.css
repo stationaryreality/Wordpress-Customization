@@ -60,10 +60,12 @@
 .tag-post-excerpt {
     color: #555;
     font-size: 0.875em;
-    margin-top: auto; /* NEW: Pushes excerpt to the bottom of the card */
+    margin-top: auto;
     padding-top: 8px;
     line-height: 1.5;
-    height: 3em; /* NEW: Locks to exactly 2 lines (1.5 × 2) */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
 }
 

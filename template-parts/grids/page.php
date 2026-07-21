@@ -28,18 +28,20 @@ if (empty($pages)) {
             }
 
             setup_postdata($page);
+            
+            // Get the excerpt from the database, fallback to the PHP array description
+            $excerpt = get_the_excerpt($page->ID);
+            if ( empty($excerpt) ) {
+                $excerpt = $item['description'];
+            }
         ?>
 
             <div class="tag-post-item">
 
                 <a href="<?php echo get_permalink($page->ID); ?>" class="tag-post-thumbnail">
-
                     <?php if (has_post_thumbnail($page->ID)) : ?>
-
                         <?php echo get_the_post_thumbnail($page->ID, 'medium'); ?>
-
                     <?php endif; ?>
-
                 </a>
 
                 <a href="<?php echo get_permalink($page->ID); ?>" class="tag-post-title">
@@ -47,7 +49,7 @@ if (empty($pages)) {
                 </a>
 
                 <p class="tag-post-excerpt">
-                    <?php echo esc_html($item['description']); ?>
+                    <?php echo esc_html($excerpt); ?>
                 </p>
 
             </div>
