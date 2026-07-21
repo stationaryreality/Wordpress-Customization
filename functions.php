@@ -180,7 +180,7 @@ function site_get_navigation_sections() {
 
                 'Site Resources' => [
                       [
-                'title'       => 'Engineering Site',
+                'title'       => 'Site Engineering',
                 'slug'        => 'developer-notes',
                 'description' => 'Development notes and site construction insights',
             ],
