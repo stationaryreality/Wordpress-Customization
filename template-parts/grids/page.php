@@ -48,9 +48,16 @@ if (empty($pages)) {
                     <?php echo esc_html($item['title']); ?>
                 </a>
 
-                <p class="tag-post-excerpt">
-                    <?php echo esc_html($excerpt); ?>
-                </p>
+<p class="tag-post-excerpt">
+    <?php 
+    $raw_excerpt = get_the_excerpt($page->ID);
+    if ( empty($raw_excerpt) ) {
+        $raw_excerpt = $item['description'];
+    }
+    // Strip any rogue HTML tags injected by other plugins
+    echo esc_html( wp_strip_all_tags($raw_excerpt) ); 
+    ?>
+</p>
 
             </div>
 
