@@ -24,7 +24,7 @@
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 16px;
     margin-top: 10px;
-    align-items: start;
+    align-items: stretch; /* Changed from 'start' to 'stretch' */
 }
 
 .tag-post-item {
@@ -32,6 +32,8 @@
     border-radius: 8px;
     padding: 10px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+    display: flex; /* NEW: Makes the card a flex container */
+    flex-direction: column; /* NEW: Stacks content vertically */
 }
 
 .tag-post-thumbnail img {
@@ -58,9 +60,10 @@
 .tag-post-excerpt {
     color: #555;
     font-size: 0.875em;
-    margin-top: 8px;
+    margin-top: auto; /* NEW: Pushes excerpt to the bottom of the card */
+    padding-top: 8px;
     line-height: 1.5;
-    max-height: 4.5em; /* Limits to roughly 3 lines */
+    height: 3em; /* NEW: Locks to exactly 2 lines (1.5 × 2) */
     overflow: hidden;
 }
 
