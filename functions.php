@@ -89,17 +89,33 @@ function disable_feeds_properly() {
     );
 }
 
-// Remove the default "Continue reading" junk from excerpts
+// 1. Force empty "more" text (High priority to override others)
 function my_clean_excerpt_more($more) {
-    return '…'; // just ellipsis, or replace with '' for nothing
+    return ''; 
 }
-add_filter('excerpt_more', 'my_clean_excerpt_more');
+add_filter('excerpt_more', 'my_clean_excerpt_more', 999);
 
-// Optional: limit excerpt length consistently
+// 2. Force consistent excerpt length (20 words fits perfectly in 2 lines)
 function my_custom_excerpt_length($length) {
-    return 30; // number of words
+    return 20; 
 }
-add_filter('excerpt_length', 'my_custom_excerpt_length');
+add_filter('excerpt_length', 'my_custom_excerpt_length', 999);
+
+// 3. NUCLEAR OPTION: Surgically remove "Continue reading" and trailing junk
+function my_force_clean_excerpt($excerpt) {
+    if ( ! $excerpt ) {
+        return $excerpt;
+    }
+    // Removes "Continue reading" and any text after it at the end of the string
+    $clean_excerpt = preg_replace('/\s*Continue reading.*$/i', '', $excerpt);
+    
+    // Also clean up any stray ellipsis if the length filter already handled it
+    $clean_excerpt = rtrim($clean_excerpt, ' …'); 
+    
+    return trim($clean_excerpt);
+}
+add_filter('get_the_excerpt', 'my_force_clean_excerpt', 999);
+add_filter('the_excerpt', 'my_force_clean_excerpt', 999);
 
 
 // 2025-08-25 - Redirect to remove old tag disallow in robots.txt
