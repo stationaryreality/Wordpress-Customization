@@ -56,10 +56,12 @@
 }
 
 .tag-post-excerpt {
-    display: none;
-    color: #666;
-    font-size: 0.9em;
+    color: #555;
+    font-size: 0.875em;
     margin-top: 8px;
+    line-height: 1.5;
+    max-height: 4.5em; /* Limits to roughly 3 lines */
+    overflow: hidden;
 }
 
 .tag-post-item:hover {
