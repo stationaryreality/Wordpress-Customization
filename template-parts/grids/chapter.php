@@ -54,7 +54,6 @@ if (
           </a>
           <a href="<?php echo esc_url($item['url']); ?>" class="tag-post-title"><?php echo esc_html($item['title']); ?></a>
           <?php if (!empty($item['excerpt'])): ?>
-            <p class="tag-post-excerpt"><?php echo esc_html($item['excerpt']); ?></p>
           <?php endif; ?>
         </div>
       <?php endforeach; ?>
