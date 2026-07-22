@@ -52,9 +52,10 @@ if (
               <img src="<?php echo esc_url($item['image']); ?>" alt="<?php echo esc_attr($item['title']); ?>">
             <?php endif; ?>
           </a>
-          <a href="<?php echo esc_url($item['url']); ?>" class="tag-post-title"><?php echo esc_html($item['title']); ?></a>
-          <?php if (!empty($item['excerpt'])): ?>
-          <?php endif; ?>
+          <a href="<?php echo esc_url($item['url']); ?>" class="tag-post-title">
+            <?php echo esc_html($item['title']); ?>
+          </a>
+          <!-- Excerpt removed for cleaner chapter grid presentation -->
         </div>
       <?php endforeach; ?>
     <?php else: ?>
@@ -65,8 +66,10 @@ if (
               <img src="<?php echo esc_url(get_the_post_thumbnail_url(get_the_ID(), 'medium')); ?>" alt="<?php the_title_attribute(); ?>">
             <?php endif; ?>
           </a>
-          <a href="<?php the_permalink(); ?>" class="tag-post-title"><?php the_title(); ?></a>
-          <p class="tag-post-excerpt"><?php the_excerpt(); ?></p>
+          <a href="<?php the_permalink(); ?>" class="tag-post-title">
+            <?php the_title(); ?>
+          </a>
+          <!-- Excerpt removed for cleaner chapter grid presentation -->
         </div>
       <?php endwhile; ?>
       <?php wp_reset_postdata(); ?>
