@@ -89,33 +89,26 @@ function disable_feeds_properly() {
     );
 }
 
-// 1. Force empty "more" text (High priority to override others)
-function my_clean_excerpt_more($more) {
-    return ''; 
-}
-add_filter('excerpt_more', 'my_clean_excerpt_more', 999);
-
-// 2. Force consistent excerpt length (20 words fits perfectly in 2 lines)
-function my_custom_excerpt_length($length) {
-    return 20; 
-}
-add_filter('excerpt_length', 'my_custom_excerpt_length', 999);
-
-// 3. NUCLEAR OPTION: Surgically remove "Continue reading" and trailing junk
-function my_force_clean_excerpt($excerpt) {
-    if ( ! $excerpt ) {
+/**
+ * Global Excerpt Cleaner
+ * Strips rogue HTML and "Continue reading" links from all excerpts globally.
+ */
+function global_clean_excerpt($excerpt) {
+    if (empty($excerpt)) {
         return $excerpt;
     }
-    // Removes "Continue reading" and any text after it at the end of the string
-    $clean_excerpt = preg_replace('/\s*Continue reading.*$/i', '', $excerpt);
     
-    // Also clean up any stray ellipsis if the length filter already handled it
-    $clean_excerpt = rtrim($clean_excerpt, ' …'); 
+    // 1. Strip all HTML tags (removes <div>, <a>, <span>, etc.)
+    $clean = wp_strip_all_tags($excerpt);
     
-    return trim($clean_excerpt);
+    // 2. Remove "Continue reading" and any trailing text/links
+    $clean = preg_replace('/\s*Continue reading.*$/i', '', $clean);
+    
+    // 3. Clean up stray ellipsis or trailing spaces
+    return trim(rtrim($clean, ' …'));
 }
-add_filter('get_the_excerpt', 'my_force_clean_excerpt', 999);
-add_filter('the_excerpt', 'my_force_clean_excerpt', 999);
+add_filter('get_the_excerpt', 'global_clean_excerpt', 999);
+add_filter('the_excerpt', 'global_clean_excerpt', 999);
 
 
 // 2025-08-25 - Redirect to remove old tag disallow in robots.txt

@@ -60,14 +60,9 @@
 .tag-post-excerpt {
     color: #555;
     font-size: 0.875em;
-    margin-top: auto;
+    margin-top: auto; /* This pushes the excerpt to the bottom, aligning all cards perfectly */
     padding-top: 8px;
     line-height: 1.5;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    -webkit-line-clamp: 2;
-    line-clamp: 2; /* Modern standard */
 }
 
 .tag-post-item:hover {
