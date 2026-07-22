@@ -15,16 +15,13 @@ $search_term  = $args['search_term'] ?? '';
 
 // Legacy compatibility.
 // If no query or items were supplied, behave like the old template.
-
 if (!$query && empty($items)) {
-
     $query = new WP_Query([
         'post_type'      => 'fragment',
         'posts_per_page' => -1,
         'orderby'        => 'date',
         'order'          => 'DESC',
     ]);
-
 }
 
 // Backward compatibility: allow direct title from older callers
@@ -56,10 +53,10 @@ if (empty($items)) {
             <img src="<?php echo esc_url($item['image']); ?>" alt="<?php echo esc_attr($item['title']); ?>">
           <?php endif; ?>
         </a>
-        <a href="<?php echo esc_url($item['url']); ?>" class="tag-post-title"><?php echo esc_html($item['title']); ?></a>
-        <?php if (!empty($item['excerpt'])): ?>
-          <p class="tag-post-excerpt"><?php echo esc_html($item['excerpt']); ?></p>
-        <?php endif; ?>
+        <a href="<?php echo esc_url($item['url']); ?>" class="tag-post-title">
+          <?php echo esc_html($item['title']); ?>
+        </a>
+        <!-- Excerpt removed for cleaner fragment grid presentation -->
       </div>
     <?php endforeach; ?>
   </div>
