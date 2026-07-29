@@ -1,0 +1,55 @@
+/* ============================================================
+   COMPONENT: FOOTNOTES - PEOPLE
+   Isolated styles for people/profile footnote rendering.
+   Used by: inc/footnotes/people.php
+   ============================================================ */
+
+.cpt-people-footnote-group {
+    margin-top: 2em;
+}
+
+.cpt-people-footnote-title {
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+}
+
+.cpt-people-footnote-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.cpt-people-footnote-title a span:last-child {
+    text-decoration: underline;
+}
+
+.cpt-people-footnote-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cpt-people-footnote-item {
+    display: flex;
+    align-items: center; /* Centered vertically for circular portraits */
+    gap: 10px;
+    margin-bottom: 0.6em;
+}
+
+.cpt-people-footnote-thumb img {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 8px;
+    display: block;
+}
+
+.cpt-people-footnote-item > a {
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+}
+
+.cpt-people-footnote-item > a:hover {
+    color: #0073aa;
+}

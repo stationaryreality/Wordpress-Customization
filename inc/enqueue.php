@@ -84,3 +84,8 @@ wp_enqueue_style('component-footnotes-movies', get_stylesheet_directory_uri() . 
 
 wp_enqueue_style('component-footnotes-organizations', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/organizations.css', [], filemtime(get_stylesheet_directory_uri() . '/assets/css/components/footnotes/organizations.css'));
 
+wp_enqueue_style('component-footnotes-people', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/people.css', [], filemtime(get_stylesheet_directory_uri() . '/assets/css/components/footnotes/people.css'));
+
+
+
+
