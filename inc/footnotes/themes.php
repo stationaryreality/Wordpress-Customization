@@ -1,32 +1,42 @@
 <?php
 // inc/footnotes/themes.php
+// ===============================
+// Themes Referenced
+// ===============================
 
 function fn_themes($chapter_id, $group_titles) {
     $themes = get_the_terms($chapter_id, 'theme');
-    if (!$themes || is_wp_error($themes)) return '';
+    if (!$themes || is_wp_error($themes)) {
+        return '';
+    }
 
     usort($themes, fn($a, $b) => strcmp($a->name, $b->name));
 
     ob_start();
     $meta = $group_titles['theme'];
 
-    echo '<div class="referenced-group" style="margin-top:2em;">';
-    echo '<h4><a href="'.esc_url($meta['link']).'" style="text-decoration:none;">
-            <span style="font-size:1.1em;">'.esc_html($meta['emoji']).'</span>
-            <span style="text-decoration:underline;">'.esc_html($meta['title']).'</span>
-          </a></h4>';
-
-    echo '<div class="tag-bubbles">';
-
-    $count = count($themes);
-    $i = 0;
-foreach ($themes as $theme) {
-    $link  = esc_url(get_term_link($theme));
-    $title = esc_html($theme->name);
+    echo '<div class="cpt-theme-footnote-group">';
     
-    echo "<span class=\"bubble-wrapper\"><a class=\"tag-bubble\" href=\"{$link}\">{$title}</a></span>\n";
-}
+    echo '<h4 class="cpt-theme-footnote-title">';
+    echo '<a href="' . esc_url($meta['link']) . '">';
+    echo '<span>' . esc_html($meta['emoji']) . '</span> ';
+    echo '<span>' . esc_html($meta['title']) . '</span>';
+    echo '</a>';
+    echo '</h4>';
 
-    echo '</div></div>';
+    echo '<div class="cpt-theme-footnote-bubbles">';
+
+    foreach ($themes as $theme) {
+        $link  = esc_url(get_term_link($theme));
+        $title = esc_html($theme->name);
+        
+        echo '<span class="bubble-wrapper">';
+        echo '<a class="cpt-theme-footnote-bubble" href="' . $link . '">' . $title . '</a>';
+        echo "</span>\n";
+    }
+
+    echo '</div>';
+    echo '</div>';
+    
     return ob_get_clean();
 }

@@ -88,4 +88,9 @@ wp_enqueue_style('component-footnotes-people', get_stylesheet_directory_uri() . 
 
 
 wp_enqueue_style('component-footnotes-quotes', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/quotes.css', [], filemtime(get_stylesheet_directory_uri() . '/assets/css/components/footnotes/quotes.css'));
+wp_enqueue_style('component-footnotes-shows', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/shows.css', [], filemtime(get_stylesheet_directory_uri() . '/assets/css/components/footnotes/shows.css'));
+
+wp_enqueue_style('component-footnotes-themes', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/themes.css', [], filemtime(get_stylesheet_directory_uri() . '/assets/css/components/footnotes/themes.css'));
+
+wp_enqueue_style('component-footnotes-topics', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/topics.css', [], filemtime(get_stylesheet_directory_uri() . '/assets/css/components/footnotes/topics.css'));
 

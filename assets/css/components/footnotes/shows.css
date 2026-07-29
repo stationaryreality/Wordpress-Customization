@@ -1,0 +1,54 @@
+/* ============================================================
+   COMPONENT: FOOTNOTES - SHOWS
+   Isolated styles for show footnote rendering.
+   Used by: inc/footnotes/shows.php
+   ============================================================ */
+
+.cpt-show-footnote-group {
+    margin-top: 2em;
+}
+
+.cpt-show-footnote-title {
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+}
+
+.cpt-show-footnote-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.cpt-show-footnote-title a span:last-child {
+    text-decoration: underline;
+}
+
+.cpt-show-footnote-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cpt-show-footnote-item {
+    display: flex;
+    align-items: center; /* Centered vertically for square show covers */
+    gap: 10px;
+    margin-bottom: 0.6em;
+}
+
+.cpt-show-footnote-thumb img {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    margin-right: 8px;
+    display: block;
+}
+
+.cpt-show-footnote-item > a {
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+}
+
+.cpt-show-footnote-item > a:hover {
+    color: #0073aa;
+}

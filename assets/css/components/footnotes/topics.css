@@ -1,0 +1,53 @@
+/* ============================================================
+   COMPONENT: FOOTNOTES - TOPICS
+   Isolated styles for topic taxonomy footnote rendering.
+   Used by: inc/footnotes/topics.php
+   ============================================================ */
+
+.cpt-topic-footnote-group {
+    margin-top: 2em;
+}
+
+.cpt-topic-footnote-title {
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+}
+
+.cpt-topic-footnote-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.cpt-topic-footnote-title a span:last-child {
+    text-decoration: underline;
+}
+
+/* Replicates the original .tag-bubbles, but isolated */
+.cpt-topic-footnote-bubbles {
+    display: inline-flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    max-width: 90%;
+    margin: 0 auto;
+}
+
+.cpt-topic-footnote-bubble {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    border: 1px solid #000;
+    border-radius: 20px;
+    background: #fff;
+    color: #000;
+    text-decoration: none;
+    font-size: 0.9em;
+    line-height: 1.4;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.cpt-topic-footnote-bubble:hover {
+    background: #000;
+    color: #fff;
+}
