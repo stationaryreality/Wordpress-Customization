@@ -1,5 +1,8 @@
 <?php
 // inc/footnotes/elements.php
+// ===============================
+// Elements Cited
+// ===============================
 
 function fn_elements($chapter_id, $group_titles) {
 
@@ -13,24 +16,17 @@ function fn_elements($chapter_id, $group_titles) {
     // --- Header ---
     $meta = $group_titles['element'];
 
-    echo '<div class="referenced-group" style="margin-top:2em;">';
+    echo '<div class="cpt-element-footnote-group">';
 
-    echo "<h4>
-            <a href=\"{$meta['link']}\" style=\"text-decoration:none;\">
-                <span style=\"font-size:1.1em;\">{$meta['emoji']}</span>
-                <span style=\"text-decoration:underline;\">{$meta['title']}</span>
-            </a>
-          </h4>";
+    echo "<h4 class=\"cpt-element-footnote-title\">";
+    echo "<a href=\"{$meta['link']}\">";
+    echo "<span>{$meta['emoji']}</span> ";
+    echo "<span>{$meta['title']}</span>";
+    echo "</a>";
+    echo "</h4>";
 
     // --- Grid ---
-    echo '<div class="mini-image-grid" style="
-        display:grid;
-        grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
-        gap:12px;
-        margin:0.8em auto 0;
-        max-width:900px;
-        justify-content:center;
-    ">';
+    echo '<div class="cpt-element-footnote-grid">';
 
     $elements_with_sources = [];
 
@@ -56,34 +52,12 @@ function fn_elements($chapter_id, $group_titles) {
             continue;
         }
 
-        echo "
-        <div class='mini-image-item' style='text-align:center;'>
-
-            <a href='{$link}'
-               title='{$title}'
-               style='display:block;'>
-
-                <img src='{$img_url}'
-                     alt='{$title}'
-                     style='width:100%;
-                            aspect-ratio:1/1;
-                            object-fit:cover;
-                            border-radius:6px;
-                            box-shadow:0 0 4px rgba(0,0,0,0.2);'>
-
-            </a>
-
-            <p style='
-                margin:0.3em 0 0;
-                font-size:0.75em;
-                color:#555;
-                line-height:1.2;'>
-
-                {$title}
-
-            </p>
-
-        </div>";
+        echo '<div class="cpt-element-footnote-item">';
+        echo "<a href=\"{$link}\" title=\"{$title}\">";
+        echo "<img src=\"{$img_url}\" alt=\"{$title}\" class=\"cpt-element-footnote-thumb\">";
+        echo "</a>";
+        echo "<p class=\"cpt-element-footnote-caption\">{$title}</p>";
+        echo '</div>';
         
         // Store Elements that contain Sources
         if (have_rows('references', $element->ID)) {
