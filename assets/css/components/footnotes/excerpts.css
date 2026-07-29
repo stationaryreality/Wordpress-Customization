@@ -1,0 +1,91 @@
+/* ============================================================
+   COMPONENT: FOOTNOTES - EXCERPTS
+   Isolated styles for excerpt footnote rendering.
+   Used by: inc/footnotes/excerpts.php
+   ============================================================ */
+
+.cpt-excerpt-footnote-group {
+    margin-top: 2em;
+}
+
+.cpt-excerpt-footnote-title {
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+}
+
+.cpt-excerpt-footnote-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.cpt-excerpt-footnote-title a span:last-child {
+    text-decoration: underline;
+}
+
+.cpt-excerpt-footnote-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cpt-excerpt-footnote-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 0.6em;
+}
+
+.cpt-excerpt-footnote-thumb {
+    flex-shrink: 0;
+}
+
+.cpt-excerpt-footnote-thumb img {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 10px;
+    display: block;
+}
+
+.cpt-excerpt-footnote-details {
+    flex: 1;
+}
+
+.cpt-excerpt-footnote-details > a {
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+}
+
+.cpt-excerpt-footnote-details > a:hover {
+    color: #0073aa;
+}
+
+.cpt-excerpt-footnote-text {
+    margin-top: 0.25rem;
+    line-height: 1.4;
+}
+
+.cpt-excerpt-footnote-references {
+    margin-top: 0.6rem;
+    margin-left: 1rem;
+    padding-left: 1rem;
+    border-left: 2px solid #ddd;
+    font-size: 0.9rem;
+}
+
+.cpt-excerpt-footnote-source {
+    margin-top: 0.4rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.cpt-excerpt-footnote-source a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.cpt-excerpt-footnote-source a:hover {
+    color: #0073aa;
+}

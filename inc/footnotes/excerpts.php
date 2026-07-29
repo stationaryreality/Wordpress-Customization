@@ -1,15 +1,17 @@
 <?php
 // inc/footnotes/excerpts.php
+// ===============================
+// Excerpts Cited
+// ===============================
 
 function fn_excerpts($chapter_id, $group_titles) {
 
-$context = kp_build_reference_context($chapter_id);
+    $context = kp_build_reference_context($chapter_id);
+    $items = $context['excerpt'] ?? [];
 
-$items = $context['excerpt'] ?? [];
-
-if (empty($items)) {
-    return '';
-}
+    if (empty($items)) {
+        return '';
+    }
 
     uasort($items, fn($a, $b) => strcmp(get_the_title($a), get_the_title($b)));
 
@@ -17,12 +19,16 @@ if (empty($items)) {
 
     $meta = $group_titles['excerpt'];
 
-    echo '<div class="referenced-group" style="margin-top:2em;">';
+    echo '<div class="cpt-excerpt-footnote-group">';
 
-    echo "<h4><a href=\"{$meta['link']}\" style=\"text-decoration:none;\">
-            <span style=\"font-size:1.1em;\">{$meta['emoji']}</span>
-            <span style=\"text-decoration:underline;\">{$meta['title']}</span>
-          </a></h4><ul>";
+    echo "<h4 class=\"cpt-excerpt-footnote-title\">";
+    echo "<a href=\"{$meta['link']}\">";
+    echo "<span>{$meta['emoji']}</span> ";
+    echo "<span>{$meta['title']}</span>";
+    echo "</a>";
+    echo "</h4>";
+    
+    echo '<ul class="cpt-excerpt-footnote-list">';
 
     foreach ($items as $item) {
 
@@ -49,16 +55,10 @@ if (empty($items)) {
             }
 
             if (!empty($src)) {
-                $thumb = "<a href=\"{$link}\">
-                            <img src=\"{$src}\"
-                                 style=\"width:48px;height:48px;
-                                        object-fit:cover;
-                                        border-radius:50%;
-                                        margin-right:10px;\">
-                          </a>";
+                $src_title = esc_html(get_the_title($source));
+                $thumb = "<div class=\"cpt-excerpt-footnote-thumb\"><a href=\"{$link}\"><img src=\"{$src}\" alt=\"{$src_title}\"></a></div>";
             }
 
-            $src_title = esc_html(get_the_title($source));
             $author = get_field('author_profile', $source->ID);
 
             if (is_array($author)) {
@@ -71,7 +71,7 @@ if (empty($items)) {
 
             $src_link = get_permalink($source);
 
-            $source_text = 'Source: <a href="' . esc_url($src_link) . '">' . $src_title . '</a>';
+            $source_text = 'Source: <a href="' . esc_url($src_link) . '">' . esc_html(get_the_title($source)) . '</a>';
 
             if ($author_name) {
                 $author_link = get_permalink($author);
@@ -79,82 +79,61 @@ if (empty($items)) {
             }
         }
 
-// --------------------------------------------------
-// FALLBACK FOR MIGRATED REFERENCES (non‑CPT)
-// --------------------------------------------------
-else {
+        // --------------------------------------------------
+        // FALLBACK FOR MIGRATED REFERENCES (non‑CPT)
+        // --------------------------------------------------
+        else {
 
-    if (have_rows('references', $item->ID)) {
-        $has_migrated_refs = true;
+            if (have_rows('references', $item->ID)) {
+                $has_migrated_refs = true;
 
-        // Get first reference
-        $refs = get_field('references', $item->ID);
-        $first_ref = $refs[0] ?? null;
+                // Get first reference
+                $refs = get_field('references', $item->ID);
+                $first_ref = $refs[0] ?? null;
 
-        $thumb_src = '';
+                $thumb_src = '';
 
-        // 1. Try custom image
-        if ($first_ref && !empty($first_ref['reference_thumbnail'])) {
-            $img = $first_ref['reference_thumbnail'];
-            // Just use the URL – no thumbnail size required
-            if (is_array($img)) {
-                $thumb_src = $img['url']; // full image
-            } elseif (is_numeric($img)) {
-                $thumb_src = wp_get_attachment_image_url($img, 'full'); // full size
+                // 1. Try custom image
+                if ($first_ref && !empty($first_ref['reference_thumbnail'])) {
+                    $img = $first_ref['reference_thumbnail'];
+                    if (is_array($img)) {
+                        $thumb_src = $img['url'];
+                    } elseif (is_numeric($img)) {
+                        $thumb_src = wp_get_attachment_image_url($img, 'full');
+                    }
+                }
+
+                // 2. If still empty, use your fallback image (full URL)
+                if (empty($thumb_src)) {
+                    $thumb_src = wp_get_attachment_image_url(22614, 'full');
+                    if (empty($thumb_src)) {
+                        $thumb_src = 'https://yourdomain.com/wp-content/uploads/your-default-image.jpg';
+                    }
+                }
+
+                // 3. Build thumbnail HTML
+                if ($thumb_src) {
+                    $thumb = "<div class=\"cpt-excerpt-footnote-thumb\"><a href=\"{$link}\"><img src=\"{$thumb_src}\" alt=\"Reference\"></a></div>";
+                }
             }
         }
-
-        // 2. If still empty, use your fallback image (full URL)
-        if (empty($thumb_src)) {
-            // Option A: Use ID with 'full' size
-            $thumb_src = wp_get_attachment_image_url(22614, 'full');
-            
-            // Option B: If that fails, hardcode the URL (most reliable)
-            if (empty($thumb_src)) {
-                $thumb_src = 'https://yourdomain.com/wp-content/uploads/your-default-image.jpg';
-            }
-        }
-
-        // 3. Build thumbnail HTML
-        if ($thumb_src) {
-            $thumb = "<a href=\"{$link}\">
-                        <img src=\"{$thumb_src}\"
-                             style=\"width:48px;height:48px;
-                                    object-fit:cover;
-                                    border-radius:50%;
-                                    margin-right:10px;\">
-                      </a>";
-        }
-
-        // Do NOT call the_row() or reset_rows() here
-    }
-}
         
-
         // --- Output list item ---
-        echo "<li style=\"display:flex;align-items:flex-start;gap:10px;
-                          margin-bottom:0.6em;\">
-                {$thumb}
-                <div>";
-
-        echo "<a href=\"{$link}\"><strong>{$title}</strong></a>";
+        echo '<li class="cpt-excerpt-footnote-item">';
+        echo $thumb;
+        
+        echo '<div class="cpt-excerpt-footnote-details">';
+        echo "<a href=\"{$link}\">{$title}</a>";
 
         $excerpt = get_field('excerpt_plain_text', $item->ID);
 
         if ($excerpt) {
             $excerpt = wp_trim_words($excerpt, 40, '...');
-            echo "<div>{$excerpt}</div>";
+            echo "<div class=\"cpt-excerpt-footnote-text\">{$excerpt}</div>";
 
             // --- For migrated references, output the universal references block ---
             if ($has_migrated_refs) {
-                echo '<div style="
-                        margin-top:0.6rem;
-                        margin-left:1rem;
-                        padding-left:1rem;
-                        border-left:2px solid #ddd;
-                        font-size:0.9rem;
-                    ">';
-                // Use the universal renderer – it handles the details toggle and all fields
+                echo '<div class="cpt-excerpt-footnote-references">';
                 echo kp_render_references($item->ID);
                 echo '</div>';
             }
@@ -162,15 +141,15 @@ else {
 
         // --- CPT source line (only when $source exists) ---
         if (!empty($source_text)) {
-            echo "<p style=\"margin-top:0.4rem;
-                           font-size:0.9rem;
-                           color:#666;\">{$source_text}</p>";
+            echo "<p class=\"cpt-excerpt-footnote-source\">{$source_text}</p>";
         }
 
-        echo "</div></li>";
+        echo '</div>'; // end cpt-excerpt-footnote-details
+        echo '</li>';
     }
 
-    echo '</ul></div>';
+    echo '</ul>';
+    echo '</div>';
 
     return ob_get_clean();
 }
