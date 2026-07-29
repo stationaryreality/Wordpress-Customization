@@ -1,13 +1,17 @@
 <?php
 // inc/footnotes/images.php
+// ===============================
+// Images Cited
+// ===============================
 
 function fn_images($chapter_id, $group_titles) {
     
-$context = kp_build_reference_context($chapter_id);
+    $context = kp_build_reference_context($chapter_id);
+    $items = $context['image'] ?? [];
 
-$items = $context['image'] ?? [];
-
-if (empty($items)) return '';
+    if (empty($items)) {
+        return '';
+    }
 
     uasort($items, fn($a, $b) => strcmp(get_the_title($a), get_the_title($b)));
 
@@ -15,21 +19,16 @@ if (empty($items)) return '';
 
     // --- Header ---
     $meta = $group_titles['image'];
-    echo '<div class="referenced-group" style="margin-top:2em;">';
-    echo "<h4><a href=\"{$meta['link']}\" style=\"text-decoration:none;\">
-            <span style=\"font-size:1.1em;\">{$meta['emoji']}</span> 
-            <span style=\"text-decoration:underline;\">{$meta['title']}</span>
-          </a></h4>";
+    echo '<div class="cpt-image-footnote-group">';
+    echo "<h4 class=\"cpt-image-footnote-title\">";
+    echo "<a href=\"{$meta['link']}\">";
+    echo "<span>{$meta['emoji']}</span> ";
+    echo "<span>{$meta['title']}</span>";
+    echo "</a>";
+    echo "</h4>";
 
     // --- Grid container (centered) ---
-    echo '<div class="mini-image-grid" style="
-        display:grid;
-        grid-template-columns:repeat(auto-fill, minmax(90px, 1fr));
-        gap:10px;
-        margin:0.8em auto 0;          /* ← center the block */
-        max-width:800px;              /* ← optional, adjust as needed */
-        justify-content:center;
-    ">';
+    echo '<div class="cpt-image-footnote-grid">';
 
     // We'll collect images that have references here
     $images_with_sources = [];
@@ -42,19 +41,19 @@ if (empty($items)) return '';
         $img_url = $image ? $image['sizes']['medium'] : get_the_post_thumbnail_url($img_post->ID, 'medium');
         $caption = get_field('image_caption', $img_post->ID);
 
-        if (!$img_url) continue;
+        if (!$img_url) {
+            continue;
+        }
 
         // Output grid item
-        echo "<div class='mini-image-item' style='text-align:center;'>
-                <a href='{$link}' title='{$title}' style='display:block;'>
-                  <img src='{$img_url}' alt='{$title}'
-                       style='width:100%;aspect-ratio:1/1;object-fit:cover;
-                              border-radius:6px;box-shadow:0 0 4px rgba(0,0,0,0.2);'>
-                </a>
-                <p style='margin:0.3em 0 0;font-size:0.75em;color:#555;line-height:1.2;'>"
-              . esc_html(wp_trim_words($caption ?: $title, 6)) .
-              "</p>
-              </div>";
+        echo '<div class="cpt-image-footnote-item">';
+        echo "<a href=\"{$link}\" title=\"{$title}\">";
+        echo "<img src=\"{$img_url}\" alt=\"{$title}\" class=\"cpt-image-footnote-thumb\">";
+        echo "</a>";
+        
+        $display_caption = esc_html(wp_trim_words($caption ?: $title, 6));
+        echo "<p class=\"cpt-image-footnote-caption\">{$display_caption}</p>";
+        echo '</div>';
 
         // --- Check for references and store if any ---
         if (have_rows('references', $img_post->ID)) {
@@ -67,6 +66,6 @@ if (empty($items)) return '';
 
     echo kp_render_grouped_references($images_with_sources);
 
-    echo '</div>'; // end referenced-group
+    echo '</div>'; // end cpt-image-footnote-group
     return ob_get_clean();
 }

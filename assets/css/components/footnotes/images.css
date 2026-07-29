@@ -1,0 +1,58 @@
+/* ============================================================
+   COMPONENT: FOOTNOTES - IMAGES
+   Isolated styles for image footnote rendering.
+   Used by: inc/footnotes/images.php
+   ============================================================ */
+
+.cpt-image-footnote-group {
+    margin-top: 2em;
+}
+
+.cpt-image-footnote-title {
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+}
+
+.cpt-image-footnote-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.cpt-image-footnote-title a span:last-child {
+    text-decoration: underline;
+}
+
+/* The specific grid layout for images */
+.cpt-image-footnote-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 10px;
+    margin: 0.8em auto 0;
+    max-width: 800px;
+    justify-content: center;
+}
+
+.cpt-image-footnote-item {
+    text-align: center;
+}
+
+.cpt-image-footnote-item a {
+    display: block;
+    text-decoration: none;
+}
+
+.cpt-image-footnote-thumb {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 0 4px rgba(0,0,0,0.2);
+    display: block;
+}
+
+.cpt-image-footnote-caption {
+    margin: 0.3em 0 0;
+    font-size: 0.75em;
+    color: #555;
+    line-height: 1.2;
+}

@@ -77,5 +77,5 @@ wp_enqueue_style('component-footnotes-elements', get_stylesheet_directory_uri() 
 wp_enqueue_style('component-footnotes-excerpts', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/excerpts.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/excerpts.css'));
 wp_enqueue_style('component-footnotes-games', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/games.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/games.css'));
 
-
+wp_enqueue_style('component-footnotes-images', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/images.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/images.css'));
 
