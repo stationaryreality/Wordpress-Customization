@@ -1,0 +1,69 @@
+/* ============================================================
+   COMPONENT: FOOTNOTES - ORGANIZATIONS
+   Isolated styles for organization footnote rendering.
+   Used by: inc/footnotes/organizations.php
+   ============================================================ */
+
+.cpt-organization-footnote-group {
+    margin-top: 2em;
+}
+
+.cpt-organization-footnote-title {
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+}
+
+.cpt-organization-footnote-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.cpt-organization-footnote-title a span:last-child {
+    text-decoration: underline;
+}
+
+.cpt-organization-footnote-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cpt-organization-footnote-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 0.8em;
+}
+
+.cpt-organization-footnote-thumb {
+    flex-shrink: 0;
+}
+
+.cpt-organization-footnote-thumb img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    margin-right: 10px;
+    display: block;
+}
+
+.cpt-organization-footnote-details {
+    flex: 1;
+}
+
+.cpt-organization-footnote-details > a {
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+}
+
+.cpt-organization-footnote-details > a:hover {
+    color: #0073aa;
+}
+
+.cpt-organization-footnote-bio {
+    margin-top: 0.3em;
+    font-size: 0.95em;
+    color: #555;
+    line-height: 1.4;
+}
