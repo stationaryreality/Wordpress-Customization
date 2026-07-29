@@ -1,0 +1,54 @@
+/* ============================================================
+   CPT: BOOK
+   Styles for Book single pages, grids, and footnotes.
+   ============================================================ */
+
+/* ========== BOOK FOOTNOTES ========== */
+
+.cpt-book-footnote-group {
+    margin-top: 2em;
+}
+
+.cpt-book-footnote-title {
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+}
+
+.cpt-book-footnote-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.cpt-book-footnote-title a span:last-child {
+    text-decoration: underline;
+}
+
+.cpt-book-footnote-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cpt-book-footnote-item {
+    display: flex;
+    align-items: center; /* Centered vertically for rectangular books */
+    gap: 10px;
+    margin-bottom: 0.6em;
+}
+
+.cpt-book-footnote-thumb img {
+    width: 48px;
+    height: 64px;
+    object-fit: cover;
+    display: block;
+}
+
+.cpt-book-footnote-item a {
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+}
+
+.cpt-book-footnote-item a:hover {
+    color: #0073aa;
+}
