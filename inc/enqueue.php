@@ -87,5 +87,5 @@ wp_enqueue_style('component-footnotes-organizations', get_stylesheet_directory_u
 wp_enqueue_style('component-footnotes-people', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/people.css', [], filemtime(get_stylesheet_directory_uri() . '/assets/css/components/footnotes/people.css'));
 
 
-
+wp_enqueue_style('component-footnotes-quotes', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/quotes.css', [], filemtime(get_stylesheet_directory_uri() . '/assets/css/components/footnotes/quotes.css'));
 

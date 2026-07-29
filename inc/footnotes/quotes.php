@@ -1,23 +1,28 @@
 <?php
 // inc/footnotes/quotes.php
 // ===============================
-// Quotes
+// Quotes Referenced
 // ===============================
 
 function fn_quotes($chapter_id, $group_titles) {
 
     $quotes = get_field('quotes_referenced', $chapter_id) ?: [];
-    if (empty($quotes)) return '';
+    if (empty($quotes)) {
+        return '';
+    }
 
     ob_start();
 
     $meta = $group_titles['quote'];
 
-    echo '<div class="referenced-group" style="margin-top:2em;">';
-    echo "<h4><a href=\"{$meta['link']}\" style=\"text-decoration:none;\">
-            <span style=\"font-size:1.1em;\">{$meta['emoji']}</span>
-            <span style=\"text-decoration:underline;\">{$meta['title']}</span>
-          </a></h4><ul>";
+    echo '<div class="cpt-quote-footnote-group">';
+    echo "<h4 class=\"cpt-quote-footnote-title\">";
+    echo "<a href=\"{$meta['link']}\">";
+    echo "<span>{$meta['emoji']}</span> ";
+    echo "<span>{$meta['title']}</span>";
+    echo "</a>";
+    echo "</h4>";
+    echo '<ul class="cpt-quote-footnote-list">';
 
     foreach ($quotes as $quote) {
 
@@ -32,7 +37,6 @@ function fn_quotes($chapter_id, $group_titles) {
         // --------------------------------------------------
         // ORIGINAL SOURCE CPT LOGIC (unchanged)
         // --------------------------------------------------
-
         $source = get_field('quote_source', $quote->ID);
 
         if ($source) {
@@ -46,16 +50,9 @@ function fn_quotes($chapter_id, $group_titles) {
             }
 
             if (!empty($src)) {
-                $thumb = "<a href=\"{$link}\">
-                            <img src=\"{$src}\"
-                                 style=\"width:48px;height:48px;
-                                        object-fit:cover;
-                                        border-radius:50%;
-                                        margin-right:10px;\">
-                          </a>";
+                $src_title = esc_html(get_the_title($source));
+                $thumb = "<div class=\"cpt-quote-footnote-thumb\"><a href=\"{$link}\"><img src=\"{$src}\" alt=\"{$src_title}\"></a></div>";
             }
-
-            $src_title = esc_html(get_the_title($source));
 
             $author = get_field('author_profile', $source->ID);
 
@@ -69,7 +66,7 @@ function fn_quotes($chapter_id, $group_titles) {
 
             $src_link = get_permalink($source);
 
-            $source_text = 'Source: <a href="' . esc_url($src_link) . '">' . $src_title . '</a>';
+            $source_text = 'Source: <a href="' . esc_url($src_link) . '">' . esc_html(get_the_title($source)) . '</a>';
 
             if ($author_name) {
                 $author_link = get_permalink($author);
@@ -77,10 +74,9 @@ function fn_quotes($chapter_id, $group_titles) {
             }
         }
 
-                // --------------------------------------------------
+        // --------------------------------------------------
         // FALLBACK FOR MIGRATED REFERENCES (non‑CPT)
         // --------------------------------------------------
-
         else {
 
             // Check if there are any references (without advancing the row pointer)
@@ -116,13 +112,7 @@ function fn_quotes($chapter_id, $group_titles) {
 
                 // 3. Build the thumbnail HTML
                 if ($thumb_src) {
-                    $thumb = "<a href=\"{$link}\">
-                                <img src=\"{$thumb_src}\"
-                                     style=\"width:48px;height:48px;
-                                            object-fit:cover;
-                                            border-radius:50%;
-                                            margin-right:10px;\">
-                              </a>";
+                    $thumb = "<div class=\"cpt-quote-footnote-thumb\"><a href=\"{$link}\"><img src=\"{$thumb_src}\" alt=\"Reference\"></a></div>";
                 }
 
                 // Do NOT call the_row() or reset_rows() here
@@ -130,29 +120,20 @@ function fn_quotes($chapter_id, $group_titles) {
         }
 
         // --- Output list item ---
-        echo "<li style=\"display:flex;align-items:flex-start;gap:10px;
-                          margin-bottom:0.6em;\">
-                {$thumb}
-                <div>";
-
-        echo "<a href=\"{$link}\"><strong>{$title}</strong></a>";
+        echo '<li class="cpt-quote-footnote-item">';
+        echo $thumb;
+        
+        echo '<div class="cpt-quote-footnote-details">';
+        echo "<a href=\"{$link}\">{$title}</a>";
 
         // --- Quote content ---
         if ($content) {
-            echo "<div style=\"font-size:0.9em;color:#444;margin-top:2px;\">"
-                 . esc_html($content) .
-                 "</div>";
+            echo "<div class=\"cpt-quote-footnote-text\">" . esc_html($content) . "</div>";
         }
 
         // --- For migrated references, output the universal references block ---
         if ($has_migrated_refs) {
-            echo '<div style="
-                    margin-top:0.6rem;
-                    margin-left:1rem;
-                    padding-left:1rem;
-                    border-left:2px solid #ddd;
-                    font-size:0.9rem;
-                ">';
+            echo '<div class="cpt-quote-footnote-references">';
             // Use the universal renderer – it handles the details toggle and all fields
             echo kp_render_references($quote->ID);
             echo '</div>';
@@ -160,15 +141,15 @@ function fn_quotes($chapter_id, $group_titles) {
 
         // --- CPT source line (only when $source exists) ---
         if (!empty($source_text)) {
-            echo "<p style=\"margin-top:0.4rem;
-                           font-size:0.9rem;
-                           color:#666;\">{$source_text}</p>";
+            echo "<p class=\"cpt-quote-footnote-source\">{$source_text}</p>";
         }
 
-        echo "</div></li>";
+        echo '</div>'; // end cpt-quote-footnote-details
+        echo '</li>';
     }
 
-    echo '</ul></div>';
+    echo '</ul>';
+    echo '</div>';
 
     return ob_get_clean();
 }
