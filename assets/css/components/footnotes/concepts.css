@@ -1,0 +1,66 @@
+/* ============================================================
+   COMPONENT: FOOTNOTES - CONCEPTS
+   Isolated styles for concept/lexicon footnote rendering.
+   Used by: inc/footnotes/concepts.php
+   ============================================================ */
+
+.cpt-concept-footnote-group {
+    margin-top: 2em;
+}
+
+.cpt-concept-footnote-title {
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+}
+
+.cpt-concept-footnote-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.cpt-concept-footnote-title a span:last-child {
+    text-decoration: underline;
+}
+
+.cpt-concept-footnote-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cpt-concept-footnote-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 0.6em;
+}
+
+.cpt-concept-footnote-thumb img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.cpt-concept-footnote-details {
+    flex: 1;
+}
+
+.cpt-concept-footnote-name {
+    font-weight: bold;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.cpt-concept-footnote-name:hover {
+    color: #0073aa;
+}
+
+.cpt-concept-footnote-definition {
+    margin-top: 0.25rem;
+    font-size: 0.95em;
+    line-height: 1.4;
+    color: #444;
+}
