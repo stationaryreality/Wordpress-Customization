@@ -63,3 +63,4 @@ foreach ($css_files as $file) {
 
 wp_enqueue_style('component-footnotes-artists', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/artists.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/artists.css'));
 wp_enqueue_style('component-footnotes-books', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/books.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/books.css'));
+wp_enqueue_style('component-footnotes-concepts', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/concepts.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/concepts.css'));
