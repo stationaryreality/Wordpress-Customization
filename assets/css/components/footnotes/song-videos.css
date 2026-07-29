@@ -1,0 +1,13 @@
+/* ============================================================
+   COMPONENT: FOOTNOTES - SONG VIDEOS
+   Isolated styles for video screenshots linked to songs in footnotes.
+   Used by: inc/footnotes/videos.php
+   ============================================================ */
+.footnote-song-video-group { margin-top: 2em; }
+.footnote-song-video-title { font-size: 1.1em; margin: 0; }
+.footnote-song-video-wrapper { margin-top: 10px; text-align: center; }
+.footnote-song-video-thumb { max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 0 auto; }
+
+/* Shortcode specific styles */
+.shortcode-secondary-song-image { margin: 2em 0; text-align: center; }
+.shortcode-secondary-song-image img { max-width: 100%; height: auto; border-radius: 8px; }
