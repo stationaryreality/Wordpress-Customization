@@ -1,0 +1,54 @@
+/* ============================================================
+   COMPONENT: FOOTNOTES - MOVIES
+   Isolated styles for movie footnote rendering.
+   Used by: inc/footnotes/movies.php
+   ============================================================ */
+
+.cpt-movie-footnote-group {
+    margin-top: 2em;
+}
+
+.cpt-movie-footnote-title {
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+}
+
+.cpt-movie-footnote-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.cpt-movie-footnote-title a span:last-child {
+    text-decoration: underline;
+}
+
+.cpt-movie-footnote-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cpt-movie-footnote-item {
+    display: flex;
+    align-items: center; /* Centered vertically for portrait movie posters */
+    gap: 10px;
+    margin-bottom: 0.6em;
+}
+
+.cpt-movie-footnote-thumb img {
+    width: 48px;
+    height: 64px;
+    object-fit: cover;
+    margin-right: 8px;
+    display: block;
+}
+
+.cpt-movie-footnote-item > a {
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+}
+
+.cpt-movie-footnote-item > a:hover {
+    color: #0073aa;
+}
