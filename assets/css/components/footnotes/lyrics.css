@@ -1,0 +1,83 @@
+/* ============================================================
+   COMPONENT: FOOTNOTES - LYRICS
+   Isolated styles for lyric footnote rendering.
+   Used by: inc/footnotes/lyrics.php
+   ============================================================ */
+
+.cpt-lyric-footnote-group {
+    margin-top: 2em;
+}
+
+.cpt-lyric-footnote-title {
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+}
+
+.cpt-lyric-footnote-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.cpt-lyric-footnote-title a span:last-child {
+    text-decoration: underline;
+}
+
+.cpt-lyric-footnote-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cpt-lyric-footnote-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 0.6em;
+}
+
+.cpt-lyric-footnote-thumb {
+    flex-shrink: 0;
+}
+
+.cpt-lyric-footnote-thumb img {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 10px;
+    display: block;
+}
+
+.cpt-lyric-footnote-details {
+    flex: 1;
+}
+
+.cpt-lyric-footnote-details > a {
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+}
+
+.cpt-lyric-footnote-details > a:hover {
+    color: #0073aa;
+}
+
+.cpt-lyric-footnote-text {
+    margin-top: 0.25rem;
+    line-height: 1.4;
+}
+
+.cpt-lyric-footnote-source {
+    margin-top: 0.4rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.cpt-lyric-footnote-source a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.cpt-lyric-footnote-source a:hover {
+    color: #0073aa;
+}

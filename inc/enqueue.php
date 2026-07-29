@@ -78,4 +78,6 @@ wp_enqueue_style('component-footnotes-excerpts', get_stylesheet_directory_uri() 
 wp_enqueue_style('component-footnotes-games', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/games.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/games.css'));
 
 wp_enqueue_style('component-footnotes-images', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/images.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/images.css'));
+wp_enqueue_style('component-footnotes-lyrics', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/lyrics.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/lyrics.css'));
+
 
