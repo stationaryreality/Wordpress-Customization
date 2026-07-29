@@ -55,42 +55,39 @@ foreach ($css_files as $file) {
 }
 
 
-
-
-
-
-
-
-wp_enqueue_style('component-footnotes-artists', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/artists.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/artists.css'));
-wp_enqueue_style('component-footnotes-books', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/books.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/books.css'));
-wp_enqueue_style('component-footnotes-concepts', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/concepts.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/concepts.css'));
-
-// For the Video CPT footnotes
-wp_enqueue_style('component-footnotes-cpt-videos', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/cpt-videos.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/cpt-videos.css'));
-
-// For the Song-attached video footnotes
-wp_enqueue_style('component-footnotes-song-videos', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/song-videos.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/song-videos.css'));
-
-wp_enqueue_style('component-footnotes-elements', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/elements.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/elements.css'));
-
-
-wp_enqueue_style('component-footnotes-excerpts', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/excerpts.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/excerpts.css'));
-wp_enqueue_style('component-footnotes-games', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/games.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/games.css'));
-
-wp_enqueue_style('component-footnotes-images', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/images.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/images.css'));
-wp_enqueue_style('component-footnotes-lyrics', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/lyrics.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/lyrics.css'));
-
-wp_enqueue_style('component-footnotes-movies', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/movies.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/movies.css'));
-
-wp_enqueue_style('component-footnotes-organizations', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/organizations.css', [], filemtime(get_stylesheet_directory_uri() . '/assets/css/components/footnotes/organizations.css'));
-
-wp_enqueue_style('component-footnotes-people', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/people.css', [], filemtime(get_stylesheet_directory_uri() . '/assets/css/components/footnotes/people.css'));
-
-
-wp_enqueue_style('component-footnotes-quotes', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/quotes.css', [], filemtime(get_stylesheet_directory_uri() . '/assets/css/components/footnotes/quotes.css'));
-wp_enqueue_style('component-footnotes-shows', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/shows.css', [], filemtime(get_stylesheet_directory_uri() . '/assets/css/components/footnotes/shows.css'));
-
-wp_enqueue_style('component-footnotes-themes', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/themes.css', [], filemtime(get_stylesheet_directory_uri() . '/assets/css/components/footnotes/themes.css'));
-
-wp_enqueue_style('component-footnotes-topics', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/topics.css', [], filemtime(get_stylesheet_directory_uri() . '/assets/css/components/footnotes/topics.css'));
-
+// === NEW STYLE LOADER (Loads all refactored CSS) ===
+function enqueue_new_style_files() {
+    $base_path = get_stylesheet_directory() . '/assets/css';
+    $base_uri = get_stylesheet_directory_uri() . '/assets/css';
+    
+    // Define folder structure to load
+    $folders = [
+        'global' => ['base.css', 'wp-overrides.css'],
+        'cpt' => glob("{$base_path}/cpt/*.css"),
+        'pages' => glob("{$base_path}/pages/*.css"),
+        'components' => glob("{$base_path}/components/*.css"),
+        'components/footnotes' => glob("{$base_path}/components/footnotes/*.css"),
+        'admin' => glob("{$base_path}/admin/*.css"),
+    ];
+    
+    foreach ($folders as $folder_name => $files) {
+        if ($folder_name === 'global') {
+            // Load specific global files in order
+            foreach ($files as $file) {
+                $handle = 'new-' . basename($file, '.css');
+                wp_enqueue_style($handle, "{$base_uri}/global/{$file}", [], filemtime("{$base_path}/global/{$file}"));
+            }
+        } else {
+            // Load all CSS files in this folder
+            if (is_array($files)) {
+                foreach ($files as $file_path) {
+                    $file_name = basename($file_path);
+                    $handle = 'new-' . $folder_name . '-' . basename($file_name, '.css');
+                    $relative_path = str_replace($base_path . '/', '', $file_path);
+                    wp_enqueue_style($handle, "{$base_uri}/{$relative_path}", [], filemtime($file_path));
+                }
+            }
+        }
+    }
+}
+add_action('wp_enqueue_scripts', 'enqueue_new_style_files');
