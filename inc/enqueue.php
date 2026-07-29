@@ -53,3 +53,12 @@ foreach ($css_files as $file) {
         filemtime(get_stylesheet_directory() . "/assets/css/{$file}.css")
     );
 }
+
+
+
+
+
+
+
+
+wp_enqueue_style('component-footnotes-artists', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/artists.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/artists.css'));

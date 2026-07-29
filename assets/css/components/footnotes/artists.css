@@ -1,0 +1,67 @@
+/* ============================================================
+   COMPONENT: FOOTNOTES - ARTISTS
+   Isolated styles for artist-specific footnote rendering.
+   Used by: inc/footnotes/artists.php
+   ============================================================ */
+
+.cpt-artist-footnote-group {
+    margin-top: 2em;
+}
+
+.cpt-artist-footnote-title {
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+}
+
+.cpt-artist-footnote-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.cpt-artist-footnote-title a span:last-child {
+    text-decoration: underline;
+}
+
+.cpt-artist-footnote-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cpt-artist-footnote-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 0.6em;
+}
+
+.cpt-artist-footnote-thumb img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.cpt-artist-footnote-details {
+    flex: 1;
+}
+
+.cpt-artist-footnote-name {
+    font-weight: bold;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.cpt-artist-footnote-name:hover {
+    color: #0073aa;
+}
+
+.cpt-artist-footnote-song {
+    display: block;
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 0.2em;
+    line-height: 1.3;
+}
