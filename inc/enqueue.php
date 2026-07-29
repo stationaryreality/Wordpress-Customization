@@ -72,3 +72,6 @@ wp_enqueue_style('component-footnotes-cpt-videos', get_stylesheet_directory_uri(
 wp_enqueue_style('component-footnotes-song-videos', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/song-videos.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/song-videos.css'));
 
 wp_enqueue_style('component-footnotes-elements', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/elements.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/elements.css'));
+
+
+wp_enqueue_style('component-footnotes-excerpts', get_stylesheet_directory_uri() . '/assets/css/components/footnotes/excerpts.css', [], filemtime(get_stylesheet_directory() . '/assets/css/components/footnotes/excerpts.css'));
