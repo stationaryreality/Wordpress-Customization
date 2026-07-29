@@ -1,0 +1,54 @@
+/* ============================================================
+   COMPONENT: FOOTNOTES - GAMES
+   Isolated styles for game footnote rendering.
+   Used by: inc/footnotes/games.php
+   ============================================================ */
+
+.cpt-game-footnote-group {
+    margin-top: 2em;
+}
+
+.cpt-game-footnote-title {
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+}
+
+.cpt-game-footnote-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.cpt-game-footnote-title a span:last-child {
+    text-decoration: underline;
+}
+
+.cpt-game-footnote-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cpt-game-footnote-item {
+    display: flex;
+    align-items: center; /* Centered vertically for square/rectangular game covers */
+    gap: 10px;
+    margin-bottom: 0.6em;
+}
+
+.cpt-game-footnote-thumb img {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    margin-right: 8px;
+    display: block;
+}
+
+.cpt-game-footnote-item > a {
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+}
+
+.cpt-game-footnote-item > a:hover {
+    color: #0073aa;
+}
