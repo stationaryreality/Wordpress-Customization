@@ -3,7 +3,7 @@
 get_header();
 ?>
 
-<main id="primary" class="site-main artist-archive">
+<main id="primary" class="site-main page-artists-featured">
 
 <?php
 $artist_tiers = [
@@ -12,28 +12,18 @@ $artist_tiers = [
   'referenced' => '🎤 Referenced Artists',
 ];
 
-// ----- Non-Rappers Only -----
 foreach ($artist_tiers as $feature_slug => $feature_label):
 ?>
-  <div class="feature-group">
-    <h3 class="feature-level"><?php echo esc_html($feature_label); ?></h3>
+  <div class="cpt-artist-feature-group">
+    <h3 class="cpt-artist-feature-level"><?php echo esc_html($feature_label); ?></h3>
 
     <?php
     $non_rappers = new WP_Query([
       'post_type'      => 'artist',
       'posts_per_page' => -1,
       'tax_query'      => [
-        [
-          'taxonomy' => 'feature_level',
-          'field'    => 'slug',
-          'terms'    => $feature_slug,
-        ],
-        [
-          'taxonomy' => 'artist_type',
-          'field'    => 'slug',
-          'terms'    => ['rapper'],
-          'operator' => 'NOT IN',
-        ],
+        [ 'taxonomy' => 'feature_level', 'field' => 'slug', 'terms' => $feature_slug ],
+        [ 'taxonomy' => 'artist_type', 'field' => 'slug', 'terms' => ['rapper'], 'operator' => 'NOT IN' ],
       ],
       'orderby' => 'title',
       'order'   => 'ASC',
