@@ -151,9 +151,7 @@
 .cpt-element-nav-prev a::before { content: "← "; font-size: 1.1em; }
 .cpt-element-nav-next a::after { content: " →"; font-size: 1.1em; }
 
-/* Re-use the shared .square-grid styles from image.css by just referencing them, 
-   or we can duplicate the .square-grid block here for strict CPT isolation. 
-   For simplicity, let's duplicate the 20 lines to keep files truly independent. */
+/* Re-use the shared .square-grid styles but override text hover */
 .square-grid-section { margin-bottom: 4rem; }
 .square-grid-section h2 { text-align: center; margin-bottom: 2rem; }
 .square-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
@@ -161,6 +159,7 @@
 .square-card-link { display: block; text-decoration: none; color: inherit; overflow: hidden; border-radius: 8px; }
 .square-image { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; transition: transform 0.3s ease; }
 .square-card:hover .square-image { transform: scale(1.04); }
-.square-card-title { margin-top: 0.75rem; font-size: 0.95rem; font-weight: 600; line-height: 1.3; }
-.square-card-title a { color: #111; text-decoration: none; transition: color 0.2s ease, text-decoration 0.2s ease; }
-.square-card-title a:hover { color: #0073aa; text-decoration: underline; }
+
+/* REMOVED: No blue underline on text hover (image is the button) */
+.square-card-title { margin-top: 0.75rem; font-size: 0.95rem; font-weight: normal; line-height: 1.3; }
+.square-card-title a { color: #111; text-decoration: none; }
