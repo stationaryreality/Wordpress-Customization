@@ -2,21 +2,31 @@
 $image_id = get_the_ID();
 $caption  = get_field('image_caption', $image_id);
 $image    = get_field('image_file', $image_id);
-// Changed to medium size as requested
-$img_url  = $image ? $image['sizes']['medium'] : get_the_post_thumbnail_url($image_id, 'medium');
+
+if ($image && !empty($image['sizes']['medium'])) {
+    $img_url = $image['sizes']['medium'];
+} elseif ($image && !empty($image['url'])) {
+    $img_url = $image['url'];
+} else {
+    $img_url = get_the_post_thumbnail_url($image_id, 'medium');
+}
+
 $img_full = $image ? $image['url'] : '';
 ?>
 
 <div class="cpt-image-content">
 
-  <!-- Navigation moved to TOP to encourage scrolling -->
   <?php get_template_part('template-parts/navigation/image'); ?>
 
   <div class="cpt-image-main">
     <?php if ($img_url): ?>
-      <a href="<?php echo esc_url($img_full); ?>">
+      <?php if ($img_full): ?>
+        <a href="<?php echo esc_url($img_full); ?>" class="lightbox-link">
+          <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>">
+        </a>
+      <?php else: ?>
         <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>">
-      </a>
+      <?php endif; ?>
     <?php endif; ?>
   </div>
 

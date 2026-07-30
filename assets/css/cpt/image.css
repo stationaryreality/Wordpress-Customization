@@ -23,7 +23,7 @@
     border-bottom: 1px solid #eee;
 }
 
-/* Previous link - left justified */
+/* Previous link - left justified, image on LEFT */
 .cpt-image-nav-prev {
     display: flex;
     align-items: center;
@@ -35,11 +35,9 @@
     transition: color 0.2s ease;
     flex: 1;
     max-width: 40%;
-    /* Image on LEFT, text on RIGHT */
-    flex-direction: row;
 }
 
-/* Next link - right justified */
+/* Next link - right justified, image on RIGHT */
 .cpt-image-nav-next {
     display: flex;
     align-items: center;
@@ -51,9 +49,7 @@
     transition: color 0.2s ease;
     flex: 1;
     max-width: 40%;
-    /* Text on LEFT, image on RIGHT */
-    flex-direction: row-reverse;
-    text-align: right;
+    justify-content: flex-end;
 }
 
 .cpt-image-nav-prev:hover,
@@ -104,6 +100,13 @@
 
 .cpt-image-main {
     margin-bottom: 1.5rem;
+}
+
+/* Fix: Constrain lightbox link to image size only */
+.cpt-image-main .lightbox-link {
+    display: inline-block;
+    max-width: 100%;
+    line-height: 0;
 }
 
 .cpt-image-main img {
@@ -168,7 +171,6 @@
     transform: scale(1.04);
 }
 
-/* No blue underline on text hover (image is the button) */
 .square-card-title {
     margin-top: 0.75rem;
     font-size: 0.95rem;
