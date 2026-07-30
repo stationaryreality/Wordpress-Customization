@@ -36,6 +36,8 @@ if ($author_profile) {
 
 <div class="cpt-book-content">
 
+  <?php get_template_part('template-parts/navigation/book'); ?>
+
   <?php if ($img_url): ?>
     <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" class="cpt-book-cover">
   <?php endif; ?>
@@ -100,7 +102,5 @@ if ($author_profile) {
   // === Featured Threads ===
   show_featured_in_threads('books_cited');
   ?>
-
-  <?php get_template_part('template-parts/navigation/book'); ?>
 
 </div>

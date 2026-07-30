@@ -13,34 +13,40 @@ $next_id = $book_ids[$current_index + 1] ?? null;
 $prev_id = $book_ids[$current_index - 1] ?? null;
 ?>
 
-<div class="cpt-book-nav">
-  <?php if ($next_id): ?>
-    <div class="cpt-book-nav-next">
-      <h2>Next Book</h2>
-      <a href="<?php echo get_permalink($next_id); ?>">
-        <?php
-        $cover = get_field('cover_image', $next_id);
-        if ($cover) {
-          echo '<img src="' . esc_url($cover['sizes']['medium']) . '" alt="' . esc_attr(get_the_title($next_id)) . '" class="cpt-book-nav-img">';
-        }
-        ?>
-        <h3><?php echo get_the_title($next_id); ?></h3>
+<div class="cpt-book-nav-top">
+  <div class="cpt-book-nav-row">
+    <?php if ($prev_id): ?>
+      <?php
+      $cover = get_field('cover_image', $prev_id);
+      $thumb_url = $cover ? $cover['sizes']['thumbnail'] : '';
+      ?>
+      <a href="<?php echo get_permalink($prev_id); ?>" class="cpt-book-nav-prev cpt-keyboard-nav-prev">
+        <span class="cpt-book-nav-label">← Previous Book</span>
+        <?php if ($thumb_url): ?>
+          <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr(get_the_title($prev_id)); ?>" class="cpt-book-nav-thumb">
+        <?php endif; ?>
+        <span class="cpt-book-nav-title"><?php echo get_the_title($prev_id); ?></span>
       </a>
-    </div>
-  <?php endif; ?>
+    <?php endif; ?>
 
-  <?php if ($prev_id): ?>
-    <div class="cpt-book-nav-prev">
-      <h2>Previous Book</h2>
-      <a href="<?php echo get_permalink($prev_id); ?>">
-        <?php
-        $cover = get_field('cover_image', $prev_id);
-        if ($cover) {
-          echo '<img src="' . esc_url($cover['sizes']['medium']) . '" alt="' . esc_attr(get_the_title($prev_id)) . '" class="cpt-book-nav-img">';
-        }
-        ?>
-        <h3><?php echo get_the_title($prev_id); ?></h3>
+    <?php if ($prev_id || $next_id): ?>
+      <span class="cpt-keyboard-hint-inline" title="Use arrow keys to navigate">
+        Use ← ⌨️ → keys
+      </span>
+    <?php endif; ?>
+
+    <?php if ($next_id): ?>
+      <?php
+      $cover = get_field('cover_image', $next_id);
+      $thumb_url = $cover ? $cover['sizes']['thumbnail'] : '';
+      ?>
+      <a href="<?php echo get_permalink($next_id); ?>" class="cpt-book-nav-next cpt-keyboard-nav-next">
+        <span class="cpt-book-nav-label">Next Book →</span>
+        <?php if ($thumb_url): ?>
+          <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr(get_the_title($next_id)); ?>" class="cpt-book-nav-thumb">
+        <?php endif; ?>
+        <span class="cpt-book-nav-title"><?php echo get_the_title($next_id); ?></span>
       </a>
-    </div>
-  <?php endif; ?>
+    <?php endif; ?>
+  </div>
 </div>
