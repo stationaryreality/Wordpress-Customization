@@ -2,9 +2,12 @@
 /**
  * Template Name: Lexicon Directory
  */
-
 get_header();
+?>
 
+<main id="primary" class="site-main page-lexicon">
+
+<?php
 $concepts = new WP_Query([
   'post_type'      => 'concept',
   'posts_per_page' => -1,
@@ -17,5 +20,8 @@ get_template_part('template-parts/lists/concept', null, [
   'title' => 'Lexicon',
   'emoji' => '🔎',
 ]);
+?>
 
-get_footer();
+</main>
+
+<?php get_footer(); ?>
