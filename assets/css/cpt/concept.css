@@ -41,17 +41,12 @@
     text-decoration: none;
     font-size: 0.9em;
     line-height: 1.4;
-    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
 .cpt-concept-bubble:hover {
     background: #000;
     color: #fff;
-    transform: translateY(-2px);
-}
-
-.cpt-concept-bubble:active {
-    transform: translateY(0);
 }
 
 /* Portal / Topic Section on Single Page */
@@ -71,16 +66,6 @@
 .cpt-concept-portal-item {
     max-width: 300px;
     text-align: center;
-    background: #ffffff;
-    border: 1px solid #eaeaea;
-    border-radius: 8px;
-    padding: 1rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.cpt-concept-portal-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
 }
 
 .cpt-concept-portal-thumb img {
@@ -111,6 +96,7 @@
 }
 
 /* ========== CONCEPT LIST VIEW (Lexicon) ========== */
+/* STRICTLY STATIC LAYOUT: No background or padding shifts on hover */
 
 .cpt-concept-list-section {
     max-width: 800px;
@@ -141,17 +127,7 @@
     margin-bottom: 2rem;
     border-bottom: 1px solid #ddd;
     padding-bottom: 1rem;
-    transition: background 0.2s ease;
-}
-
-.cpt-concept-entry:hover {
-    background: #fafafa;
-    border-radius: 8px;
-    padding: 1rem;
-    margin-left: -1rem;
-    margin-right: -1rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    /* NO transition, NO hover background, NO margin/padding shifts */
 }
 
 .cpt-concept-thumb img {
@@ -175,6 +151,7 @@
 .cpt-concept-text h2 a {
     color: #111;
     text-decoration: none;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
 }
 
 .cpt-concept-text h2 a:hover {
@@ -189,6 +166,7 @@
 }
 
 /* ========== CONCEPT NAVIGATION ========== */
+/* Restored to original transparent, simple layout (no white card backgrounds) */
 
 .cpt-concept-nav {
     display: flex;
@@ -203,27 +181,14 @@
     flex: 1 1 45%;
     max-width: 45%;
     text-align: center;
-    background: #ffffff;
-    border: 1px solid #eaeaea;
-    border-radius: 8px;
-    padding: 1rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.cpt-concept-nav-next:hover,
-.cpt-concept-nav-prev:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+    /* REMOVED: white background, border, padding, and card hover effects */
 }
 
 .cpt-concept-nav-next h2,
 .cpt-concept-nav-prev h2 {
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #666;
-    margin-bottom: 1rem;
-    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    font-weight: normal;
 }
 
 .cpt-concept-nav-next a,
@@ -246,6 +211,13 @@
 .cpt-concept-nav-prev h3 {
     font-size: 1.1rem;
     margin: 0;
+}
+
+.cpt-concept-nav-next h3 a,
+.cpt-concept-nav-prev h3 a {
+    color: #111;
+    text-decoration: none;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
 }
 
 .cpt-concept-nav-next h3 a:hover,
