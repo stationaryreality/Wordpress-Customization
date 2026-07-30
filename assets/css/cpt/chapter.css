@@ -1,6 +1,5 @@
 /* ============================================================
    CPT: CHAPTER (Narrative Threads)
-   Styles for Chapter single pages, grids, and navigation.
    ============================================================ */
 
 /* ========== CHAPTER GRID ========== */
@@ -10,7 +9,8 @@
     margin-bottom: 2rem;
 }
 
-.chapter-grid {
+/* More specific selector to override old .tag-posts-grid */
+.chapter-grid-section .chapter-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1.5rem;
@@ -19,16 +19,46 @@
     padding: 0 1rem;
 }
 
-/* The .core-card class (defined in global/ui-rules.css) handles the 
-   white background, border-radius, and subtle hover lift! */
-
-.chapter-grid .core-card-image {
-    aspect-ratio: 16 / 9; /* Widescreen look for chapters */
+/* Override any old .tag-post-item styles */
+.chapter-grid-section .chapter-grid-item {
+    background: #ffffff;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    text-align: center;
 }
 
-.chapter-grid .core-card-title {
+.chapter-grid-section .chapter-grid-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+    border-color: #d0d0d0;
+}
+
+.chapter-grid-section .chapter-grid-item .core-card-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+}
+
+.chapter-grid-section .chapter-grid-item .core-card-title {
+    padding: 1rem;
     font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.3;
     text-align: center;
+}
+
+.chapter-grid-section .chapter-grid-item .core-card-title a {
+    color: #111;
+    text-decoration: none;
+}
+
+.chapter-grid-section .chapter-grid-item .core-card-title a:hover {
+    color: #0073aa;
+    text-decoration: underline;
 }
 
 /* ========== CHAPTER NAVIGATION ========== */
@@ -43,10 +73,20 @@
 
 .cpt-chapter-nav-next,
 .cpt-chapter-nav-prev {
-    flex: 1 1 300px; /* Responsive flex basis */
+    flex: 1 1 300px;
     max-width: 45%;
     text-align: center;
-    padding: 1rem; /* Give the card some breathing room */
+    background: #ffffff;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    padding: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cpt-chapter-nav-next:hover,
+.cpt-chapter-nav-prev:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
 }
 
 .cpt-chapter-nav-next h2,
@@ -67,12 +107,16 @@
 }
 
 .cpt-chapter-nav .core-card-image {
+    width: 100%;
     aspect-ratio: 16 / 9;
+    object-fit: cover;
     border-radius: 6px;
     margin-bottom: 1rem;
+    display: block;
 }
 
 .cpt-chapter-nav .core-card-title {
     font-size: 1.1rem;
     margin: 0;
+    text-align: center;
 }

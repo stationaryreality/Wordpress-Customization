@@ -62,7 +62,7 @@ function enqueue_new_style_files() {
     
     // Define folder structure to load
     $folders = [
-        'global' => ['base.css', 'wp-overrides.css'],
+        'global' => glob("{$base_path}/global/*.css"), // ← Changed to glob()
         'cpt' => glob("{$base_path}/cpt/*.css"),
         'pages' => glob("{$base_path}/pages/*.css"),
         'components' => glob("{$base_path}/components/*.css"),
@@ -71,21 +71,12 @@ function enqueue_new_style_files() {
     ];
     
     foreach ($folders as $folder_name => $files) {
-        if ($folder_name === 'global') {
-            // Load specific global files in order
-            foreach ($files as $file) {
-                $handle = 'new-' . basename($file, '.css');
-                wp_enqueue_style($handle, "{$base_uri}/global/{$file}", [], filemtime("{$base_path}/global/{$file}"));
-            }
-        } else {
-            // Load all CSS files in this folder
-            if (is_array($files)) {
-                foreach ($files as $file_path) {
-                    $file_name = basename($file_path);
-                    $handle = 'new-' . $folder_name . '-' . basename($file_name, '.css');
-                    $relative_path = str_replace($base_path . '/', '', $file_path);
-                    wp_enqueue_style($handle, "{$base_uri}/{$relative_path}", [], filemtime($file_path));
-                }
+        if (is_array($files)) {
+            foreach ($files as $file_path) {
+                $file_name = basename($file_path);
+                $handle = 'new-' . $folder_name . '-' . basename($file_name, '.css');
+                $relative_path = str_replace($base_path . '/', '', $file_path);
+                wp_enqueue_style($handle, "{$base_uri}/{$relative_path}", [], filemtime($file_path));
             }
         }
     }
