@@ -379,31 +379,23 @@ function site_sidebar_navigation_shortcode() {
                 continue;
             }
 
-            $image = get_the_post_thumbnail_url($page->ID, 'medium');
-
             ?>
 
-            <div style="text-align:center; margin-bottom:1.5rem;">
+            <div class="sidebar-nav-item" style="margin-bottom:1.25rem;">
 
-                <a href="<?php echo get_permalink($page->ID); ?>">
-
-                    <h3 style="margin-bottom:0.5em;">
+                <h3 style="margin:0 0 .35rem 0; font-size:1rem;">
+                    <a href="<?php echo esc_url(get_permalink($page->ID)); ?>">
                         <?php echo esc_html($item['title']); ?>
-                    </h3>
+                    </a>
+                </h3>
 
-                    <?php if ($image) : ?>
+                <?php if (!empty($item['description'])) : ?>
 
-                        <img
-                            src="<?php echo esc_url($image); ?>"
-                            alt="<?php echo esc_attr($item['title']); ?>"
-                            width="300"
-                            class="nav-image"
-                        >
+                    <div style="font-size:.9em; line-height:1.45; color:#666;">
+                        <?php echo esc_html($item['description']); ?>
+                    </div>
 
-                    <?php endif; ?>
-
-                </a>
-
+                <?php endif; ?>
 
             </div>
 
@@ -415,6 +407,7 @@ function site_sidebar_navigation_shortcode() {
 
     return ob_get_clean();
 }
+
 add_shortcode('site_sidebar_navigation', 'site_sidebar_navigation_shortcode');
 
 
