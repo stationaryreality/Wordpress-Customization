@@ -26,6 +26,12 @@ $prev_id = $image_ids[$current_index - 1] ?? null;
     </a>
   <?php endif; ?>
 
+  <?php if ($prev_id || $next_id): ?>
+    <span class="cpt-keyboard-hint-inline" title="Use ← → arrow keys to navigate">
+      ⌨️
+    </span>
+  <?php endif; ?>
+
   <?php if ($next_id): ?>
     <a href="<?php echo get_permalink($next_id); ?>" class="cpt-image-nav-next cpt-keyboard-nav-next">
       <?php
@@ -36,11 +42,5 @@ $prev_id = $image_ids[$current_index - 1] ?? null;
       <?php endif; ?>
       <span class="cpt-image-nav-label">Next →</span>
     </a>
-  <?php endif; ?>
-  
-  <?php if ($prev_id || $next_id): ?>
-    <span class="cpt-keyboard-hint" title="Use ← → arrow keys to navigate">
-      ️
-    </span>
   <?php endif; ?>
 </div>

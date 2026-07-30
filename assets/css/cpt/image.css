@@ -11,7 +11,7 @@
     margin: 0 auto;
 }
 
-/* Top Navigation (Like Lexicon) */
+/* Top Navigation */
 .cpt-image-nav-top {
     display: flex;
     justify-content: space-between;
@@ -52,6 +52,24 @@
 
 .cpt-image-nav-label {
     display: inline-block;
+}
+
+/* ========== KEYBOARD NAVIGATION HINT (Inline) ========== */
+
+.cpt-keyboard-hint-inline {
+    background: rgba(0, 0, 0, 0.05);
+    color: #666;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: help;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+
+.cpt-keyboard-hint-inline:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.1);
 }
 
 /* Main Image Display */

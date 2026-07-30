@@ -26,7 +26,7 @@
             if (!empty($groups)) :
         ?>
         <div class="cpt-element-related">
-            <details>
+            <details open>
                 <summary>Related Content</summary>
                 <?php
                 ksort($groups);
