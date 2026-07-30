@@ -49,8 +49,8 @@ if ($artist_type === 'rapper') {
 
 $artist_ids = get_posts($args);
 $current_index = array_search($current_id, $artist_ids);
-$next_id = $artist_ids[$current_index + 1] ?? null;
-$prev_id = $artist_ids[$current_index - 1] ?? null;
+$prev_id = $artist_ids[$current_index + 1] ?? null;
+$next_id = $artist_ids[$current_index - 1] ?? null;
 ?>
 
 <div class="cpt-artist-nav-top">
