@@ -14,42 +14,30 @@
 /* ========== TOP NAVIGATION ========== */
 
 .cpt-image-nav-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
     margin-bottom: 2rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid #eee;
 }
 
-/* Previous link - left justified, image on LEFT */
-.cpt-image-nav-prev {
+.cpt-image-nav-row {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: #555;
-    font-size: 0.95rem;
-    font-weight: 500;
-    transition: color 0.2s ease;
-    flex: 1;
-    max-width: 40%;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
 }
 
-/* Next link - right justified, image on RIGHT */
+.cpt-image-nav-prev,
 .cpt-image-nav-next {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 10px;
     text-decoration: none;
     color: #555;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 500;
     transition: color 0.2s ease;
     flex: 1;
-    max-width: 40%;
-    justify-content: flex-end;
+    max-width: 200px;
 }
 
 .cpt-image-nav-prev:hover,
@@ -57,12 +45,19 @@
     color: #0073aa;
 }
 
+.cpt-image-nav-label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+    text-align: center;
+}
+
 .cpt-image-nav-thumb {
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     object-fit: cover;
     border-radius: 4px;
-    flex-shrink: 0;
+    margin-bottom: 0.5rem;
     transition: transform 0.2s ease;
 }
 
@@ -71,10 +66,14 @@
     transform: scale(1.05);
 }
 
-.cpt-image-nav-label {
-    display: inline-block;
+.cpt-image-nav-title {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
     line-height: 1.3;
+    text-align: center;
     word-break: break-word;
+    color: #111;
 }
 
 /* Keyboard hint - centered in middle */
@@ -89,6 +88,7 @@
     transition: opacity 0.2s ease;
     white-space: nowrap;
     flex-shrink: 0;
+    align-self: center;
 }
 
 .cpt-keyboard-hint-inline:hover {
