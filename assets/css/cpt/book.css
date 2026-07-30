@@ -1,0 +1,180 @@
+/* ============================================================
+   CPT: BOOK
+   Styles for Book single pages, grids, navigation, and archive pages.
+   ============================================================ */
+
+/* ========== SINGLE BOOK PAGE ========== */
+
+.cpt-book-content {
+    text-align: center;
+}
+
+.cpt-book-cover {
+    width: 150px;
+    height: auto;
+    display: block;
+    margin: 0 auto 1em;
+}
+
+.cpt-book-title {
+    margin-bottom: 0.5em;
+}
+
+.cpt-book-subtitle {
+    font-size: 1.25rem;
+    font-style: italic;
+    color: #555;
+    margin-top: -0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.cpt-book-bio {
+    margin: 2em auto;
+    max-width: 800px;
+    text-align: left;
+}
+
+.cpt-book-author {
+    margin-bottom: 2em;
+    text-align: center;
+}
+
+.cpt-book-author-link {
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+}
+
+.cpt-book-author-link:hover {
+    color: #0073aa;
+}
+
+.cpt-book-author-thumbnail {
+    display: block;
+    margin: 0 auto 0.5em;
+    border-radius: 999px;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.cpt-book-author-bio {
+    margin-top: 1em;
+    text-align: left;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ========== BOOK GRID VIEW ========== */
+
+.cpt-book-section {
+    margin-bottom: 4rem;
+    text-align: center;
+}
+
+.cpt-book-section h2 {
+    margin-bottom: 2rem;
+}
+
+.cpt-book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.cpt-book-grid-item {
+    text-align: center;
+}
+
+.cpt-book-grid-item a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.cpt-book-grid-item a:hover h3 {
+    color: #0073aa;
+}
+
+.cpt-book-grid-image {
+    width: 100%;
+    aspect-ratio: 2 / 3; /* Standard book cover ratio */
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 0.75rem;
+}
+
+.cpt-book-grid-title {
+    font-size: 1rem;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.3;
+}
+
+.cpt-book-grid-meta {
+    font-size: 0.9rem;
+    color: #555;
+    margin: 0;
+}
+
+/* ========== BOOK NAVIGATION ========== */
+/* Includes the permanent centering fix */
+
+.cpt-book-nav {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-top: 60px;
+    flex-wrap: wrap;
+}
+
+.cpt-book-nav-next,
+.cpt-book-nav-prev {
+    flex: 0 1 auto;
+    text-align: center; /* Ensures the image and title are centered */
+}
+
+.cpt-book-nav-next h2,
+.cpt-book-nav-prev h2 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    font-weight: normal;
+}
+
+.cpt-book-nav-next a,
+.cpt-book-nav-prev a {
+    text-decoration: none;
+    color: inherit;
+    display: inline-block;
+}
+
+.cpt-book-nav-next a:hover h3,
+.cpt-book-nav-prev a:hover h3 {
+    color: #0073aa;
+}
+
+.cpt-book-nav-img {
+    width: 150px;
+    height: auto;
+    display: block;
+    margin: 0 auto 10px; /* Forces the block image to center horizontally */
+    border-radius: 4px;
+}
+
+.cpt-book-nav-next h3,
+.cpt-book-nav-prev h3 {
+    font-size: 1.1rem;
+    margin: 0;
+    line-height: 1.3;
+}
+
+/* ========== BOOK ARCHIVE PAGE ========== */
+
+.page-books-cited main {
+    padding-top: 2rem;
+}

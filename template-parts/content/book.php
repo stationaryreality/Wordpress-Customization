@@ -34,32 +34,32 @@ if ($author_profile) {
 }
 ?>
 
-<div class="person-content">
+<div class="cpt-book-content">
 
   <?php if ($img_url): ?>
-    <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" class="book-cover">
+    <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" class="cpt-book-cover">
   <?php endif; ?>
 
-  <h1 class="book-title"><?php the_title(); ?></h1>
+  <h1 class="cpt-book-title"><?php the_title(); ?></h1>
 
   <?php if ($subtitle): ?>
-    <h2 class="book-subtitle"><?php echo esc_html($subtitle); ?></h2>
+    <h2 class="cpt-book-subtitle"><?php echo esc_html($subtitle); ?></h2>
   <?php endif; ?>
 
-  <div class="person-bio">
+  <div class="cpt-book-bio">
     <?php echo $description; ?>
   </div>
 
   <?php if ($author_profile): ?>
-    <div class="book-author">
-      <a href="<?php echo get_permalink($author_profile->ID); ?>" class="author-link">
+    <div class="cpt-book-author">
+      <a href="<?php echo get_permalink($author_profile->ID); ?>" class="cpt-book-author-link">
         <?php if ($thumb): ?>
-          <img src="<?php echo esc_url($thumb); ?>" class="author-thumbnail rounded" alt="">
+          <img src="<?php echo esc_url($thumb); ?>" class="cpt-book-author-thumbnail" alt="">
         <?php endif; ?>
         <h3>By <?php echo esc_html(get_the_title($author_profile->ID)); ?></h3>
       </a>
       <?php if ($author_bio): ?>
-        <div class="author-bio">
+        <div class="cpt-book-author-bio">
           <?php echo $author_bio; ?>
         </div>
       <?php endif; ?>
@@ -74,11 +74,7 @@ if ($author_profile) {
     'orderby'        => 'title',
     'order'          => 'ASC',
     'meta_query'     => [
-      [
-        'key'     => 'quote_source',
-        'value'   => $book_id,
-        'compare' => '='
-      ]
+      [ 'key' => 'quote_source', 'value' => $book_id, 'compare' => '=' ]
     ]
   ]);
 
@@ -93,11 +89,7 @@ if ($author_profile) {
     'orderby'        => 'title',
     'order'          => 'ASC',
     'meta_query'     => [
-      [
-        'key'     => 'excerpt_source',
-        'value'   => $book_id,
-        'compare' => '='
-      ]
+      [ 'key' => 'excerpt_source', 'value' => $book_id, 'compare' => '=' ]
     ]
   ]);
 
@@ -111,4 +103,4 @@ if ($author_profile) {
 
   <?php get_template_part('template-parts/navigation/book'); ?>
 
-</div>   <!-- end person-content -->
+</div>
