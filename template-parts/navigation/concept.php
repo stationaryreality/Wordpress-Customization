@@ -15,22 +15,32 @@ $prev_id = $concept_ids[$current_index - 1] ?? null;
 
 <div class="cpt-concept-nav-top">
   <?php if ($prev_id): ?>
+    <?php
+    $thumb_url = get_the_post_thumbnail_url($prev_id, 'thumbnail');
+    ?>
     <a href="<?php echo get_permalink($prev_id); ?>" class="cpt-concept-nav-prev cpt-keyboard-nav-prev">
-      <?php echo get_the_post_thumbnail($prev_id, 'medium', ['class' => 'cpt-concept-nav-thumb']); ?>
-      <span class="cpt-concept-nav-label">← Previous</span>
+      <?php if ($thumb_url): ?>
+        <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr(get_the_title($prev_id)); ?>" class="cpt-concept-nav-thumb">
+      <?php endif; ?>
+      <span class="cpt-concept-nav-label">← <?php echo esc_html(get_the_title($prev_id)); ?></span>
     </a>
   <?php endif; ?>
 
   <?php if ($prev_id || $next_id): ?>
-    <span class="cpt-keyboard-hint-inline" title="Use ← → arrow keys to navigate">
-      ⌨️
+    <span class="cpt-keyboard-hint-inline" title="Use arrow keys to navigate">
+      Use ← ️ → keys
     </span>
   <?php endif; ?>
 
   <?php if ($next_id): ?>
+    <?php
+    $thumb_url = get_the_post_thumbnail_url($next_id, 'thumbnail');
+    ?>
     <a href="<?php echo get_permalink($next_id); ?>" class="cpt-concept-nav-next cpt-keyboard-nav-next">
-      <?php echo get_the_post_thumbnail($next_id, 'medium', ['class' => 'cpt-concept-nav-thumb']); ?>
-      <span class="cpt-concept-nav-label">Next →</span>
+      <span class="cpt-concept-nav-label"><?php echo esc_html(get_the_title($next_id)); ?> →</span>
+      <?php if ($thumb_url): ?>
+        <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr(get_the_title($next_id)); ?>" class="cpt-concept-nav-thumb">
+      <?php endif; ?>
     </a>
   <?php endif; ?>
 </div>
