@@ -3,8 +3,8 @@
 
 get_header(); ?>
 
-<main class="homepage-posts">
-
+<main class="site-main page-narrative-threads">
+  
 <a id="narrative-threads"></a>
 <section>
   <?php
