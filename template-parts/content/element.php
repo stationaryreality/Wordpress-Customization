@@ -1,7 +1,11 @@
 <div <?php post_class('cpt-element-content'); ?>>
+
+    <?php get_template_part('template-parts/navigation/element'); ?>
+
     <?php do_action('post_before'); ?>
 
     <article>
+        
         <header class="post-header">
             <h1 class="post-title"><?php the_title(); ?></h1>
         </header>
@@ -68,5 +72,4 @@
 
     <?php do_action('post_after'); ?>
 
-    <?php get_template_part('template-parts/navigation/element'); ?>
 </div>
