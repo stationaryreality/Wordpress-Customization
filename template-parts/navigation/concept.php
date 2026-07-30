@@ -28,7 +28,7 @@ $prev_id = $concept_ids[$current_index - 1] ?? null;
 
   <?php if ($prev_id || $next_id): ?>
     <span class="cpt-keyboard-hint-inline" title="Use arrow keys to navigate">
-      Use ← ️ → keys
+      Use ← ⌨️ → keys
     </span>
   <?php endif; ?>
 

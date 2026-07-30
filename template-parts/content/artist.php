@@ -17,6 +17,9 @@ $songs = get_posts([
 ?>
 
 <div class="cpt-artist-content">
+
+  <?php get_template_part('template-parts/navigation/artist'); ?>
+
   <?php if ($img_url): ?>
     <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" class="cpt-artist-thumbnail">
   <?php endif; ?>
@@ -109,5 +112,4 @@ $songs = get_posts([
   get_template_part('template-parts/views/featured-in-grid', null, [ 'title' => 'Referenced In', 'items' => $referenced_in ]);
   ?>
 
-  <?php get_template_part('template-parts/navigation/artist'); ?>
 </div>

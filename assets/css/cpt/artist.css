@@ -110,56 +110,103 @@
     color: #0073aa;
 }
 
-/* ========== ARTIST NAVIGATION ========== */
+/* ========== ARTIST NAVIGATION (Top) ========== */
 
-.cpt-artist-nav {
+.cpt-artist-nav-top {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.cpt-artist-nav-row {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
     gap: 20px;
-    margin-top: 40px;
-    flex-wrap: wrap;
 }
 
-.cpt-artist-nav-next,
+/* Previous link - left justified */
 .cpt-artist-nav-prev {
-    flex: 1 1 45%;
-    max-width: 45%;
-    text-align: center; /* Ensures the image and title are centered */
-}
-
-.cpt-artist-nav-next h2,
-.cpt-artist-nav-prev h2 {
-    font-size: 1rem;
-    margin-bottom: 10px;
-    font-weight: normal;
-}
-
-.cpt-artist-nav-next a,
-.cpt-artist-nav-prev a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-decoration: none;
-    color: inherit;
-    display: block;
+    color: #555;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    flex: 1;
+    max-width: 200px;
 }
 
-.cpt-artist-nav-next a:hover h3,
-.cpt-artist-nav-prev a:hover h3 {
+/* Next link - right justified */
+.cpt-artist-nav-next {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #555;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    flex: 1;
+    max-width: 200px;
+}
+
+.cpt-artist-nav-prev:hover,
+.cpt-artist-nav-next:hover {
     color: #0073aa;
 }
 
-.cpt-artist-nav-img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin: 0 auto 10px; /* Forces the block image to center horizontally */
-    display: block;
+.cpt-artist-nav-label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+    text-align: center;
 }
 
-.cpt-artist-nav-next h3,
-.cpt-artist-nav-prev h3 {
-    font-size: 1.1rem;
-    margin: 0;
+.cpt-artist-nav-thumb {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 0.5rem;
+    transition: transform 0.2s ease;
+}
+
+.cpt-artist-nav-prev:hover .cpt-artist-nav-thumb,
+.cpt-artist-nav-next:hover .cpt-artist-nav-thumb {
+    transform: scale(1.05);
+}
+
+.cpt-artist-nav-title {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
     line-height: 1.3;
+    text-align: center;
+    word-break: break-word;
+    color: #111;
+}
+
+/* Keyboard hint - centered in middle */
+.cpt-keyboard-hint-inline {
+    background: rgba(0, 0, 0, 0.05);
+    color: #666;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    cursor: help;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    align-self: center;
+}
+
+.cpt-keyboard-hint-inline:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.1);
 }
 
 /* ========== ARTIST ARCHIVE PAGE (artists-featured.php) ========== */
