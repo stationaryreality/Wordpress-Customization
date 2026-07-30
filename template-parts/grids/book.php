@@ -41,6 +41,7 @@ if (empty($items)) {
     </h2>
 <?php endif; ?>
 
+<!-- THIS IS THE CRITICAL GRID CONTAINER -->
 <div class="cpt-book-grid">
     <?php foreach ($items as $item): ?>
         <div class="cpt-book-grid-item">
