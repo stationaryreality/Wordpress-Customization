@@ -411,34 +411,6 @@ function site_sidebar_navigation_shortcode() {
 add_shortcode('site_sidebar_navigation', 'site_sidebar_navigation_shortcode');
 
 
-// Portal Pages Shortcode for Nav - Not sure if even using anymore
-function portal_pages_list() {
-    $output = '<ul>';
-
-    $portals = new WP_Query(array(
-        'post_type'      => 'portal',
-        'posts_per_page' => -1,
-        'orderby'        => 'title',
-        'order'          => 'ASC'
-    ));
-
-    if ($portals->have_posts()) {
-        while ($portals->have_posts()) {
-            $portals->the_post();
-            $output .= '<li class="post-item stable">';
-            $output .= '<a href="' . get_permalink() . '" class="nav-post-title">' . get_the_title() . '</a>';
-            $output .= '</li>';
-        }
-        wp_reset_postdata();
-    }
-
-    $output .= '</ul>';
-    return $output;
-}
-add_shortcode('portal_pages', 'portal_pages_list');
-
-
-
 // 2026-06-23 - limit page-links-to to only pages, can add cpts if needed
 
 add_filter('page-links-to-post-types', function() {
