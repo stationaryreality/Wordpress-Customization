@@ -13,24 +13,24 @@ $next_id = $concept_ids[$current_index + 1] ?? null;
 $prev_id = $concept_ids[$current_index - 1] ?? null;
 ?>
 
-<div class="cpt-concept-nav">
-  <?php if ($next_id): ?>
-    <div class="cpt-concept-nav-next">
-      <h2>Next Concept</h2>
-      <a href="<?php echo get_permalink($next_id); ?>">
-        <?php echo get_the_post_thumbnail($next_id, 'medium', ['class' => 'cpt-concept-nav-img']); ?>
-        <h3><?php echo get_the_title($next_id); ?></h3>
-      </a>
-    </div>
+<div class="cpt-concept-nav-top">
+  <?php if ($prev_id): ?>
+    <a href="<?php echo get_permalink($prev_id); ?>" class="cpt-concept-nav-prev cpt-keyboard-nav-prev">
+      <?php echo get_the_post_thumbnail($prev_id, 'medium', ['class' => 'cpt-concept-nav-img']); ?>
+      <span class="cpt-concept-nav-label">← Previous</span>
+    </a>
   <?php endif; ?>
 
-  <?php if ($prev_id): ?>
-    <div class="cpt-concept-nav-prev">
-      <h2>Previous Concept</h2>
-      <a href="<?php echo get_permalink($prev_id); ?>">
-        <?php echo get_the_post_thumbnail($prev_id, 'medium', ['class' => 'cpt-concept-nav-img']); ?>
-        <h3><?php echo get_the_title($prev_id); ?></h3>
-      </a>
-    </div>
+  <?php if ($next_id): ?>
+    <a href="<?php echo get_permalink($next_id); ?>" class="cpt-concept-nav-next cpt-keyboard-nav-next">
+      <?php echo get_the_post_thumbnail($next_id, 'medium', ['class' => 'cpt-concept-nav-img']); ?>
+      <span class="cpt-concept-nav-label">Next →</span>
+    </a>
+  <?php endif; ?>
+  
+  <?php if ($prev_id || $next_id): ?>
+    <span class="cpt-keyboard-hint" title="Use ← → arrow keys to navigate">
+      ⌨️
+    </span>
   <?php endif; ?>
 </div>
