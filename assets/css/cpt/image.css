@@ -11,7 +11,8 @@
     margin: 0 auto;
 }
 
-/* Top Navigation */
+/* ========== TOP NAVIGATION ========== */
+
 .cpt-image-nav-top {
     display: flex;
     justify-content: space-between;
@@ -22,7 +23,8 @@
     border-bottom: 1px solid #eee;
 }
 
-.cpt-image-nav-top a {
+/* Previous link - left justified */
+.cpt-image-nav-prev {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -31,41 +33,13 @@
     font-size: 0.95rem;
     font-weight: 500;
     transition: color 0.2s ease;
+    flex: 1;
+    max-width: 40%;
+    /* Image on LEFT, text on RIGHT */
+    flex-direction: row;
 }
 
-.cpt-image-nav-top a:hover {
-    color: #0073aa;
-}
-
-.cpt-image-nav-thumb {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 4px;
-    display: block;
-    transition: transform 0.2s ease;
-}
-
-.cpt-image-nav-top a:hover .cpt-image-nav-thumb {
-    transform: scale(1.05);
-}
-
-.cpt-image-nav-label {
-    display: inline-block;
-}
-
-/* Top Navigation */
-.cpt-image-nav-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #eee;
-}
-
-.cpt-image-nav-prev,
+/* Next link - right justified */
 .cpt-image-nav-next {
     display: flex;
     align-items: center;
@@ -76,18 +50,15 @@
     font-weight: 500;
     transition: color 0.2s ease;
     flex: 1;
-    max-width: 45%;
-}
-
-/* PREVIOUS: Image on LEFT (outside), arrow + title on INSIDE */
-.cpt-image-nav-prev {
-    flex-direction: row;
-}
-
-/* NEXT: Image on RIGHT (outside), title + arrow on INSIDE */
-.cpt-image-nav-next {
+    max-width: 40%;
+    /* Text on LEFT, image on RIGHT */
     flex-direction: row-reverse;
     text-align: right;
+}
+
+.cpt-image-nav-prev:hover,
+.cpt-image-nav-next:hover {
+    color: #0073aa;
 }
 
 .cpt-image-nav-thumb {
@@ -110,7 +81,7 @@
     word-break: break-word;
 }
 
-/* Keyboard hint - perfectly centered */
+/* Keyboard hint - centered in middle */
 .cpt-keyboard-hint-inline {
     background: rgba(0, 0, 0, 0.05);
     color: #666;
@@ -129,8 +100,28 @@
     background: rgba(0, 0, 0, 0.1);
 }
 
-.cpt-image-nav-top a:hover {
-    color: #0073aa;
+/* ========== MAIN IMAGE DISPLAY ========== */
+
+.cpt-image-main {
+    margin-bottom: 1.5rem;
+}
+
+.cpt-image-main img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+    margin: 0 auto;
+}
+
+/* ========== CAPTION ========== */
+
+.cpt-image-caption {
+    text-align: center;
+    color: #555;
+    font-style: italic;
+    margin-bottom: 2rem;
+    line-height: 1.5;
 }
 
 /* ========== IMAGE GRID (Shared Square Style) ========== */
