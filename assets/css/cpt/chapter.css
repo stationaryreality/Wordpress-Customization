@@ -1,0 +1,78 @@
+/* ============================================================
+   CPT: CHAPTER (Narrative Threads)
+   Styles for Chapter single pages, grids, and navigation.
+   ============================================================ */
+
+/* ========== CHAPTER GRID ========== */
+
+.chapter-grid-section .section-title {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.chapter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* The .core-card class (defined in global/ui-rules.css) handles the 
+   white background, border-radius, and subtle hover lift! */
+
+.chapter-grid .core-card-image {
+    aspect-ratio: 16 / 9; /* Widescreen look for chapters */
+}
+
+.chapter-grid .core-card-title {
+    font-size: 1rem;
+    text-align: center;
+}
+
+/* ========== CHAPTER NAVIGATION ========== */
+
+.cpt-chapter-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-top: 4rem;
+    flex-wrap: wrap;
+}
+
+.cpt-chapter-nav-next,
+.cpt-chapter-nav-prev {
+    flex: 1 1 300px; /* Responsive flex basis */
+    max-width: 45%;
+    text-align: center;
+    padding: 1rem; /* Give the card some breathing room */
+}
+
+.cpt-chapter-nav-next h2,
+.cpt-chapter-nav-prev h2 {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #666;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.cpt-chapter-nav-next a,
+.cpt-chapter-nav-prev a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.cpt-chapter-nav .core-card-image {
+    aspect-ratio: 16 / 9;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+.cpt-chapter-nav .core-card-title {
+    font-size: 1.1rem;
+    margin: 0;
+}

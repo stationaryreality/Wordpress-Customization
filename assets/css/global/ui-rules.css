@@ -1,0 +1,83 @@
+/* ============================================================
+   GLOBAL: UI RULES
+   Unified interactive states for the entire site.
+   ============================================================ */
+
+/* --- 1. Link Interactions --- */
+/* No underline by default, but clear blue underline on hover */
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+a:hover {
+    color: #0073aa;
+    text-decoration: underline;
+}
+
+/* Mobile tap feedback */
+a:active {
+    color: #005a87; /* Slightly darker blue on tap */
+}
+
+/* --- 2. Core Content Cards (Chapters, Fragments, Elements) --- */
+/* Gives them a distinct, readable "card" feel with subtle interaction */
+.core-card {
+    background: #ffffff;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.core-card:hover {
+    transform: translateY(-3px); /* Subtle lift */
+    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+    border-color: #d0d0d0;
+}
+
+/* Mobile tap feedback for cards */
+.core-card:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.core-card-image {
+    width: 100%;
+    aspect-ratio: 16 / 9; /* Default, can be overridden per CPT */
+    object-fit: cover;
+    display: block;
+}
+
+.core-card-title {
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.core-card-title a {
+    color: #111; /* Ensure title is dark by default */
+}
+
+.core-card-title a:hover {
+    color: #0073aa;
+    text-decoration: underline;
+}
+
+/* --- 3. Secondary Grids (Books, Artists, etc. - Transparent) --- */
+/* These blend into the background but still get the interactive hover */
+.secondary-grid-item {
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.secondary-grid-item:hover {
+    transform: translateY(-2px);
+}
+
+.secondary-grid-item:active {
+    transform: translateY(0);
+}
