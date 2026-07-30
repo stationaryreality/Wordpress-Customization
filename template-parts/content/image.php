@@ -2,89 +2,42 @@
 $image_id = get_the_ID();
 $caption  = get_field('image_caption', $image_id);
 $image    = get_field('image_file', $image_id);
-$img_large_url  = $image ? $image['sizes']['large'] : '';
-$img_full_url   = $image ? $image['url'] : '';
+// Changed to medium size as requested
+$img_url  = $image ? $image['sizes']['medium'] : get_the_post_thumbnail_url($image_id, 'medium');
+$img_full = $image ? $image['url'] : '';
 ?>
 
-<div class="image-header" style="text-align:center;">
-  <?php if ($img_large_url): ?>
-    <a href="<?php echo esc_url($img_full_url); ?>" class="lightbox-link">
-      <img src="<?php echo esc_url($img_large_url); ?>" alt="<?php the_title(); ?>" style="max-width:600px; width:100%; height:auto; display:block; margin:0 auto 1em;">
-    </a>
-  <?php endif; ?>
-  <h1><?php the_title(); ?></h1>
-</div>
+<div class="cpt-image-content">
 
-<div class="image-caption" style="text-align:center;">
-  <?php if ($caption): ?>
-    <?php echo wp_kses_post($caption); ?>
-  <?php else: ?>
-    <?php the_content(); ?>
-  <?php endif; ?>
-</div>
-
-<div style="text-align:center;">
-    <?php echo kp_render_references(get_the_ID()); ?>
-</div>
-
-<?php show_featured_in_threads('images_linked'); ?>
-
-<div style="text-align:center;">
-  <?php echo fn_taxonomy_bubbles(get_the_ID()); ?>
-</div>
-
+  <!-- Navigation moved to TOP to encourage scrolling -->
   <?php get_template_part('template-parts/navigation/image'); ?>
 
-<!-- Simple built-in lightbox -->
-<style>
-  .lightbox-overlay {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    inset: 0;
-    background: rgba(0,0,0,0.9);
-    justify-content: center;
-    align-items: center;
-  }
-  .lightbox-overlay img {
-    max-width: 95%;
-    max-height: 95%;
-    border-radius: 8px;
-  }
-  .lightbox-overlay.active {
-    display: flex;
-  }
-  .lightbox-overlay::after {
-    content: "✕";
-    position: absolute;
-    top: 20px;
-    right: 30px;
-    color: white;
-    font-size: 28px;
-    cursor: pointer;
-  }
-</style>
+  <div class="cpt-image-main">
+    <?php if ($img_url): ?>
+      <a href="<?php echo esc_url($img_full); ?>">
+        <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>">
+      </a>
+    <?php endif; ?>
+  </div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const overlay = document.createElement('div');
-    overlay.className = 'lightbox-overlay';
-    document.body.appendChild(overlay);
+  <h1><?php the_title(); ?></h1>
 
-    const img = document.createElement('img');
-    overlay.appendChild(img);
+  <div class="cpt-image-caption">
+    <?php if ($caption): ?>
+      <?php echo wp_kses_post($caption); ?>
+    <?php else: ?>
+      <?php the_content(); ?>
+    <?php endif; ?>
+  </div>
 
-    overlay.addEventListener('click', () => {
-      overlay.classList.remove('active');
-      img.src = '';
-    });
+  <div style="text-align:center;">
+    <?php echo kp_render_references($image_id); ?>
+  </div>
 
-    document.querySelectorAll('.lightbox-link').forEach(link => {
-      link.addEventListener('click', e => {
-        e.preventDefault();
-        img.src = link.href;
-        overlay.classList.add('active');
-      });
-    });
-  });
-</script>
+  <?php show_featured_in_threads('images_linked'); ?>
+
+  <div style="text-align:center;">
+    <?php echo fn_taxonomy_bubbles($image_id); ?>
+  </div>
+
+</div>

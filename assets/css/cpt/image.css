@@ -1,0 +1,131 @@
+/* ============================================================
+   CPT: IMAGE
+   Styles for Image single pages, grids, and navigation.
+   ============================================================ */
+
+/* ========== SINGLE IMAGE PAGE ========== */
+
+.cpt-image-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Top Navigation (Like Lexicon) */
+.cpt-image-nav-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.cpt-image-nav-top a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #555;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.cpt-image-nav-top a:hover {
+    color: #0073aa;
+}
+
+/* Arrows using pure CSS */
+.cpt-image-nav-prev::before { content: "←"; font-size: 1.2em; }
+.cpt-image-nav-next::after { content: "→"; font-size: 1.2em; }
+
+.cpt-image-main {
+    margin-bottom: 1.5rem;
+}
+
+.cpt-image-main img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+    margin: 0 auto;
+}
+
+.cpt-image-caption {
+    text-align: center;
+    color: #555;
+    font-style: italic;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+/* ========== IMAGE GRID (Shared Square Style) ========== */
+
+.square-grid-section {
+    margin-bottom: 4rem;
+}
+
+.square-grid-section h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.square-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.square-card {
+    text-align: center;
+}
+
+.square-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.square-image {
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Forces perfect squares */
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.square-card:hover .square-image {
+    transform: scale(1.04); /* Subtle, premium zoom effect */
+}
+
+.square-card-title {
+    margin-top: 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.square-card-title a {
+    color: #111;
+    text-decoration: none;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.square-card-title a:hover {
+    color: #0073aa;
+    text-decoration: underline;
+}
+
+.square-card-caption {
+    margin-top: 0.25rem;
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.3;
+}

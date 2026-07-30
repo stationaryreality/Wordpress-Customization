@@ -78,9 +78,10 @@
     margin-bottom: 2rem;
 }
 
+/* CHANGED: minmax(140px, 1fr) allows 5-6 columns on desktop instead of 4 */
 .cpt-book-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 1.5rem;
     max-width: 1200px;
     margin: 0 auto;
@@ -91,14 +92,16 @@
     text-align: center;
 }
 
-.cpt-book-grid-item a {
+/* ADDED: Wrapper hover effect for the subtle lift */
+.cpt-book-grid-item > a {
     text-decoration: none;
     color: inherit;
     display: block;
+    transition: transform 0.2s ease;
 }
 
-.cpt-book-grid-item a:hover h3 {
-    color: #0073aa;
+.cpt-book-grid-item > a:hover {
+    transform: translateY(-4px); /* Subtle premium lift */
 }
 
 .cpt-book-grid-image {
@@ -108,16 +111,34 @@
     border-radius: 4px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     margin-bottom: 0.75rem;
+    display: block;
+    transition: box-shadow 0.2s ease;
+}
+
+/* ADDED: Enhanced shadow on hover */
+.cpt-book-grid-item > a:hover .cpt-book-grid-image {
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
 }
 
 .cpt-book-grid-title {
-    font-size: 1rem;
+    font-size: 0.95rem;
     margin: 0 0 0.5rem 0;
     line-height: 1.3;
 }
 
+.cpt-book-grid-title a {
+    color: #111;
+    text-decoration: none;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.cpt-book-grid-title a:hover {
+    color: #0073aa;
+    text-decoration: underline; /* Ensures the global UI rule applies */
+}
+
 .cpt-book-grid-meta {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: #555;
     margin: 0;
 }

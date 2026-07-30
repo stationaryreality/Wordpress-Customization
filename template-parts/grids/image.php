@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Part: Image Grid (Dual Mode)
+ * Template Part: Image Grid
  *
  * Supports:
  * 1. $query (WP_Query) – legacy
@@ -44,36 +44,34 @@ if (empty($items)) {
 }
 ?>
 
-<section class="fresh-gallery-section" style="margin-bottom:4rem;">
-  <h2 class="fresh-gallery-title">
+<section class="square-grid-section">
+  <h2>
     <?php if ($emoji) echo esc_html($emoji) . ' '; ?>
     <?php echo esc_html($title); ?>
     <?php if ($search_term): ?>
-      <span class="fresh-gallery-search-term">
-        containing “<?php echo esc_html($search_term); ?>”
-      </span>
+      <span>containing “<?php echo esc_html($search_term); ?>”</span>
     <?php endif; ?>
   </h2>
 
-  <div class="fresh-gallery-grid">
+  <div class="square-grid">
     <?php foreach ($items as $item): ?>
-      <div class="fresh-gallery-card">
-        <a href="<?php echo esc_url($item['url']); ?>" class="fresh-gallery-link">
+      <div class="square-card">
+        <a href="<?php echo esc_url($item['url']); ?>" class="square-card-link">
           <?php if (!empty($item['image'])): ?>
             <img 
               src="<?php echo esc_url($item['image']); ?>" 
               alt="<?php echo esc_attr($item['title']); ?>"
-              class="fresh-gallery-image"
+              class="square-image"
             >
           <?php endif; ?>
         </a>
-        <h3 class="fresh-gallery-card-title">
+        <h3 class="square-card-title">
           <a href="<?php echo esc_url($item['url']); ?>">
             <?php echo esc_html($item['title']); ?>
           </a>
         </h3>
         <?php if (!empty($item['caption'])): ?>
-          <p class="fresh-gallery-caption">
+          <p class="square-card-caption">
             <?php echo esc_html(wp_trim_words($item['caption'], 20)); ?>
           </p>
         <?php endif; ?>

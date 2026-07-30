@@ -1,0 +1,166 @@
+/* ============================================================
+   CPT: ELEMENT
+   Styles for Element single pages, grids, and navigation.
+   ============================================================ */
+
+/* ========== SINGLE ELEMENT PAGE ========== */
+
+.cpt-element-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cpt-element-related {
+    margin-top: 2rem;
+}
+
+/* Modern Accordion Styling for <details> */
+.cpt-element-related details {
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    background: #fafafa;
+    overflow: hidden;
+}
+
+.cpt-element-related summary {
+    padding: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none; /* Hides default triangle */
+    transition: background 0.2s ease;
+}
+
+.cpt-element-related summary:hover {
+    background: #f0f0f0;
+}
+
+.cpt-element-related summary::-webkit-details-marker {
+    display: none;
+}
+
+.cpt-element-related summary::after {
+    content: "+";
+    float: right;
+    font-weight: bold;
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+.cpt-element-related details[open] summary::after {
+    content: "−";
+}
+
+.cpt-element-related-group {
+    padding: 0 1rem 1rem 1rem;
+    border-top: 1px solid #eaeaea;
+}
+
+.cpt-element-related-group h4 {
+    margin: 1rem 0 0.5rem 0;
+    font-size: 1rem;
+    color: #333;
+}
+
+.cpt-element-related-group ul {
+    list-style: none;
+    padding-left: 1rem;
+    margin: 0;
+}
+
+.cpt-element-related-group li {
+    margin-bottom: 0.35rem;
+}
+
+.cpt-element-related-group a {
+    color: #111;
+    text-decoration: none;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.cpt-element-related-group a:hover {
+    color: #0073aa;
+    text-decoration: underline;
+}
+
+/* ========== ELEMENT NAVIGATION (Bottom) ========== */
+
+.cpt-element-nav {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-top: 60px;
+    flex-wrap: wrap;
+}
+
+.cpt-element-nav-next,
+.cpt-element-nav-prev {
+    text-align: center;
+    flex: 0 1 auto;
+}
+
+.cpt-element-nav-next h2,
+.cpt-element-nav-prev h2 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    font-weight: normal;
+    color: #555;
+}
+
+.cpt-element-nav-next a,
+.cpt-element-nav-prev a {
+    display: inline-block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.cpt-element-nav-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 0; /* Strict squares */
+    margin: 0 auto 10px;
+    display: block;
+    transition: transform 0.2s ease;
+}
+
+.cpt-element-nav-next a:hover .cpt-element-nav-img,
+.cpt-element-nav-prev a:hover .cpt-element-nav-img {
+    transform: scale(1.05);
+}
+
+.cpt-element-nav-next h3,
+.cpt-element-nav-prev h3 {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.cpt-element-nav-next h3 a,
+.cpt-element-nav-prev h3 a {
+    color: #111;
+    text-decoration: none;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.cpt-element-nav-next h3 a:hover,
+.cpt-element-nav-prev h3 a:hover {
+    color: #0073aa;
+    text-decoration: underline;
+}
+
+/* Arrows */
+.cpt-element-nav-prev a::before { content: "← "; font-size: 1.1em; }
+.cpt-element-nav-next a::after { content: " →"; font-size: 1.1em; }
+
+/* Re-use the shared .square-grid styles from image.css by just referencing them, 
+   or we can duplicate the .square-grid block here for strict CPT isolation. 
+   For simplicity, let's duplicate the 20 lines to keep files truly independent. */
+.square-grid-section { margin-bottom: 4rem; }
+.square-grid-section h2 { text-align: center; margin-bottom: 2rem; }
+.square-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+.square-card { text-align: center; }
+.square-card-link { display: block; text-decoration: none; color: inherit; overflow: hidden; border-radius: 8px; }
+.square-image { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; transition: transform 0.3s ease; }
+.square-card:hover .square-image { transform: scale(1.04); }
+.square-card-title { margin-top: 0.75rem; font-size: 0.95rem; font-weight: 600; line-height: 1.3; }
+.square-card-title a { color: #111; text-decoration: none; transition: color 0.2s ease, text-decoration 0.2s ease; }
+.square-card-title a:hover { color: #0073aa; text-decoration: underline; }
