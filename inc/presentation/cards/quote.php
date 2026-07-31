@@ -3,7 +3,7 @@
 // $title, $url, $icon, $post_id, $type, $excerpt, $image, $meta
 
 $excerpt = get_field('quote_plain_text', $post_id);
-$source  = get_field('source', $post_id);
+$source  = get_field('quote_source', $post_id);
 
 if ($source) {
     if (is_array($source)) {

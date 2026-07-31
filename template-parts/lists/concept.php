@@ -27,7 +27,7 @@ if ( (!$query instanceof WP_Query || !$query->have_posts()) && empty($items) ) {
       <?php foreach ($items as $item): ?>
         <?php
           $thumb_url = !empty($item['image']) ? $item['image'] : '';
-          $definition = $item['meta'] ?? '';
+          $definition = !empty($item['excerpt']) ? $item['excerpt'] : '';
         ?>
         <div class="cpt-concept-entry">
           <?php if ($thumb_url): ?>
