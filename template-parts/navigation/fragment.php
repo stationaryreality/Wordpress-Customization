@@ -1,54 +1,43 @@
-<?php get_header(); ?>
+<?php
+$current_id = get_the_ID();
 
-<div id="loop-container" class="loop-container">
-  <div class="tag-posts-grid">
-    <!-- your tag post items go here -->
-  </div>
+// Get fragments in the custom Post Types Order
+$fragment_ids = get_posts([
+  'post_type'        => 'fragment',
+  'posts_per_page'   => -1,
+  'orderby'          => 'menu_order',
+  'order'            => 'ASC',
+  'suppress_filters' => false, // Allows Post Types Order plugin to work
+  'fields'           => 'ids',
+]);
 
-  <!-- Move this OUTSIDE of the grid -->
-  <div class="post-navigation-container">
-    <?php
-    // Get all chapters in the plugin-defined order
-    $chapters = get_posts( array(
-      'post_type'           => 'fragment',
-      'posts_per_page'      => -1,
-      'orderby'             => 'menu_order',
-      'order'               => 'ASC',
-      'suppress_filters'    => false, // lets Post Types Order work
-      'fields'              => 'ids',
-    ) );
+$current_index = array_search($current_id, $fragment_ids);
 
-    $current_id = get_the_ID();
-    $current_index = array_search( $current_id, $chapters );
+// "Next" is forward in the order (appears on the LEFT)
+$next_id = $fragment_ids[$current_index + 1] ?? null;
 
-    // "Next Chapter" = the one AFTER current (forward in order)
-    if ( $current_index !== false && isset( $chapters[ $current_index + 1 ] ) ) {
-      $next_id = $chapters[ $current_index + 1 ]; ?>
-      <div class="previous-post">
-        <h2>Next Fragment</h2>
-        <div class="post-thumbnail">
-          <a href="<?php echo get_permalink( $next_id ); ?>">
-            <?php echo get_the_post_thumbnail( $next_id, 'medium' ); ?>
-          </a>
-        </div>
-        <h3><a href="<?php echo get_permalink( $next_id ); ?>"><?php echo get_the_title( $next_id ); ?></a></h3>
-      </div>
-    <?php }
+// "Previous" is backward in the order (appears on the RIGHT)
+$prev_id = $fragment_ids[$current_index - 1] ?? null;
+?>
 
-    // "Previous Chapter" = the one BEFORE current (backward in order)
-    if ( $current_index !== false && isset( $chapters[ $current_index - 1 ] ) ) {
-      $prev_id = $chapters[ $current_index - 1 ]; ?>
-      <div class="next-post">
-        <h2>Previous Fragment</h2>
-        <div class="post-thumbnail">
-          <a href="<?php echo get_permalink( $prev_id ); ?>">
-            <?php echo get_the_post_thumbnail( $prev_id, 'medium' ); ?>
-          </a>
-        </div>
-        <h3><a href="<?php echo get_permalink( $prev_id ); ?>"><?php echo get_the_title( $prev_id ); ?></a></h3>
-      </div>
-    <?php } ?>
-  </div>
+<div class="cpt-fragment-nav-bottom">
+  <?php if ($next_id): ?>
+    <div class="cpt-fragment-nav-next">
+      <h2>Next Fragment</h2>
+      <a href="<?php echo get_permalink($next_id); ?>">
+        <?php echo get_the_post_thumbnail($next_id, 'medium'); ?>
+        <h3><?php echo get_the_title($next_id); ?></h3>
+      </a>
+    </div>
+  <?php endif; ?>
+
+  <?php if ($prev_id): ?>
+    <div class="cpt-fragment-nav-prev">
+      <h2>Previous Fragment</h2>
+      <a href="<?php echo get_permalink($prev_id); ?>">
+        <?php echo get_the_post_thumbnail($prev_id, 'medium'); ?>
+        <h3><?php echo get_the_title($prev_id); ?></h3>
+      </a>
+    </div>
+  <?php endif; ?>
 </div>
-
-<?php get_footer(); ?>

@@ -1,0 +1,183 @@
+/* ============================================================
+   CPT: FRAGMENT
+   Styles for Fragment single pages, grids, and navigation.
+   ============================================================ */
+
+/* ========== SINGLE FRAGMENT PAGE ========== */
+
+.cpt-fragment-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.fragment-artist-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+.fragment-artist-thumbnail {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+}
+
+.fragment-artist-name,
+.fragment-song-title {
+    margin: 0.25rem 0;
+    font-size: 1.1rem;
+}
+
+.fragment-artist-name a,
+.fragment-song-title a {
+    color: #0073aa;
+    text-decoration: underline;
+}
+
+/* ========== FRAGMENT NAVIGATION (Bottom, Next Left, Prev Right) ========== */
+
+.cpt-fragment-nav-bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid #eee;
+    flex-wrap: wrap;
+}
+
+.cpt-fragment-nav-next,
+.cpt-fragment-nav-prev {
+    text-align: center;
+    flex: 1;
+    min-width: 200px;
+}
+
+.cpt-fragment-nav-next h2,
+.cpt-fragment-nav-prev h2 {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #888;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.cpt-fragment-nav-next a,
+.cpt-fragment-nav-prev a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease;
+}
+
+.cpt-fragment-nav-next a:hover,
+.cpt-fragment-nav-prev a:hover {
+    transform: translateY(-4px);
+}
+
+.cpt-fragment-nav-next img,
+.cpt-fragment-nav-prev img {
+    width: 100%;
+    max-width: 250px;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 0 auto 15px auto;
+    display: block;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.cpt-fragment-nav-next h3,
+.cpt-fragment-nav-prev h3 {
+    font-size: 1.1rem;
+    margin: 0;
+    color: #111;
+    line-height: 1.3;
+}
+
+.cpt-fragment-nav-next a:hover h3,
+.cpt-fragment-nav-prev a:hover h3 {
+    color: #0073aa;
+}
+
+/* ========== FRAGMENT GRID (4-Column Test) ========== */
+
+.cpt-fragment-grid-section {
+    margin-bottom: 4rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 1rem;
+}
+
+.cpt-fragment-grid-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.75rem;
+}
+
+.cpt-fragment-grid {
+    display: grid;
+    /* 4-column layout test: fits more items, matches Elements/Images width */
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+.cpt-fragment-grid-item {
+    text-align: center;
+}
+
+.cpt-fragment-grid-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    overflow: hidden;
+    border-radius: 8px;
+    transition: transform 0.2s ease;
+}
+
+.cpt-fragment-grid-link:hover {
+    transform: translateY(-4px);
+}
+
+.cpt-fragment-grid-image {
+    width: 100%;
+    aspect-ratio: 16 / 9; /* Slightly rectangular, distinct from square images */
+    object-fit: cover;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.cpt-fragment-grid-card-title {
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #111;
+}
+
+.cpt-fragment-grid-link:hover .cpt-fragment-grid-card-title {
+    color: #0073aa;
+}
+
+/* Mobile adjustment for grid */
+@media (max-width: 768px) {
+    .cpt-fragment-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+    
+    .cpt-fragment-nav-bottom {
+        flex-direction: column;
+        gap: 30px;
+    }
+}
