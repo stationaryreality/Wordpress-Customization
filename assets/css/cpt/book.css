@@ -80,6 +80,7 @@
 
 /* Higher specificity: main .cpt-book-section .cpt-book-grid 
    This will beat almost any generic old theme CSS */
+.main .cpt-book-section .cpt-book-grid,
 main .cpt-book-section .cpt-book-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
