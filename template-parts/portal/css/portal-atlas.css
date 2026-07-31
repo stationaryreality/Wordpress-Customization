@@ -1,386 +1,256 @@
 /* =========================================================
-   BASE
+   ATLAS VIEW: CLEAN & MODERN
+   Fixes horizontal scroll and replaces heavy gradients.
 ========================================================= */
 
 .portal-atlas {
-    padding: 50px 24px 120px;
-}
-
-.portal-shell {
-    width: min(1600px, 100%);
+    max-width: 1400px;
     margin: 0 auto;
+    padding: 40px 20px 80px;
+    overflow-x: hidden; /* Hard clamp to prevent scroll bugs */
 }
 
-/* =========================================================
-   HERO
-========================================================= */
-
-.portal-hero {
-    margin-bottom: 50px;
+/* --- HERO --- */
+.atlas-hero {
+    text-align: center;
+    margin-bottom: 40px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.portal-hero-inner {
-
-    padding: 48px;
-
-    border-radius: 32px;
-
-    border: 1px solid rgba(255,255,255,.08);
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(255,255,255,.04),
-            rgba(255,255,255,.015)
-        );
-}
-
-.portal-kicker {
-
-    margin: 0 0 12px;
-
+.atlas-kicker {
+    display: block;
+    font-size: 0.85rem;
     text-transform: uppercase;
-
-    letter-spacing: .16em;
-
-    font-size: 11px;
-
-    opacity: .55;
+    letter-spacing: 1.5px;
+    color: #0073aa;
+    font-weight: 600;
+    margin-bottom: 10px;
 }
 
-.portal-title {
-
-    margin: 0;
-
-    font-size: clamp(48px, 10vw, 100px);
-
-    line-height: .95;
+.atlas-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.1;
+    margin: 0 0 20px 0;
+    color: #111;
 }
 
-.portal-description {
-
-    margin-top: 22px;
-
-    max-width: 850px;
-
-    font-size: 18px;
-
-    line-height: 1.8;
-
-    opacity: .82;
+.atlas-description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 30px;
 }
 
-.portal-meta-grid {
-
+.atlas-stats {
     display: flex;
-
-    gap: 18px;
-
-    flex-wrap: wrap;
-
-    margin-top: 40px;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 20px;
 }
 
-.portal-meta-card {
-
-    min-width: 180px;
-
-    padding: 20px;
-
-    border-radius: 18px;
-
-    background: rgba(255,255,255,.03);
-
-    border: 1px solid rgba(255,255,255,.06);
+.atlas-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.portal-meta-number {
-
-    display: block;
-
-    font-size: 34px;
-
+.atlas-stat strong {
+    font-size: 2rem;
     font-weight: 700;
+    color: #111;
+    line-height: 1;
 }
 
-.portal-meta-label {
-
-    display: block;
-
-    margin-top: 6px;
-
-    opacity: .65;
+.atlas-stat span {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-/* =========================================================
-   NAV
-========================================================= */
-
-.portal-section-nav {
-
+/* --- NAVIGATION PILLS --- */
+.atlas-nav {
     display: flex;
-
-    gap: 12px;
-
     flex-wrap: wrap;
-
-    margin-bottom: 70px;
-}
-
-.portal-nav-pill {
-
-    display: inline-flex;
-
-    align-items: center;
-
+    justify-content: center;
     gap: 10px;
-
-    padding: 12px 18px;
-
-    border-radius: 999px;
-
-    text-decoration: none;
-
-    background: rgba(255,255,255,.03);
-
-    border: 1px solid rgba(255,255,255,.08);
-
-    transition:
-        transform .15s ease,
-        background .15s ease;
+    margin-bottom: 50px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
 }
 
-.portal-nav-pill:hover {
-
-    transform: translateY(-2px);
-
-    background: rgba(255,255,255,.06);
-}
-
-/* =========================================================
-   SECTION
-========================================================= */
-
-.portal-section {
-    margin-bottom: 48px;
-}
-
-.portal-section-header {
-
-    display: flex;
-
+.atlas-pill {
+    display: inline-flex;
     align-items: center;
-
-    justify-content: space-between;
-
-    margin-bottom: 28px;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: #f5f5f5;
+    color: #333;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
 }
 
-.portal-section-header h2 {
+.atlas-pill:hover {
+    background: #0073aa;
+    color: #fff;
+    transform: translateY(-2px);
+}
 
+.atlas-pill-count {
+    background: rgba(0,0,0,0.08);
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.atlas-pill:hover .atlas-pill-count {
+    background: rgba(255,255,255,0.2);
+}
+
+/* --- SECTIONS --- */
+.atlas-section {
+    margin-bottom: 60px;
+}
+
+.atlas-section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 15px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #111;
+    padding-bottom: 10px;
+}
+
+.atlas-section-header h2 {
     margin: 0;
-
-    font-size: 38px;
+    font-size: 1.75rem;
+    color: #111;
 }
 
-.portal-section-count {
-    opacity: .5;
+.atlas-section-count {
+    font-size: 0.9rem;
+    color: #888;
+    font-weight: 500;
 }
 
-/* =========================================================
-   GRID
-========================================================= */
-
-.portal-card-grid {
-
+/* --- GRID & CARDS --- */
+.atlas-grid {
     display: grid;
-
-    grid-template-columns:
-        repeat(auto-fill, minmax(200px, 1fr));
-
+    /* Safe grid that will never overflow the viewport */
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 20px;
 }
 
-/* =========================================================
-   CARD
-========================================================= */
-
-.portal-card {
-    height: 100%;
-}
-
-.portal-card-inner {
-
-    display: flex;
-
-    flex-direction: column;
-
+.atlas-card {
+    background: #fff;
+    border: 1px solid #eaeaea;
+    border-radius: 12px;
     overflow: hidden;
-
-    border-radius: 26px;
-
-    text-decoration: none;
-
-    border: 1px solid rgba(255,255,255,.08);
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(255,255,255,.04),
-            rgba(255,255,255,.015)
-        );
-
-    transition:
-        transform .18s ease,
-        border-color .18s ease,
-        background .18s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.portal-card-inner:hover {
-
+.atlas-card:hover {
     transform: translateY(-4px);
-
-    border-color: rgba(255,255,255,.16);
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(255,255,255,.06),
-            rgba(255,255,255,.025)
-        );
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    border-color: #0073aa;
 }
 
-/* =========================================================
-   IMAGE
-========================================================= */
-
-.portal-card-image {
-
-    width: 100%;
-
-    max-height: 140px;
-
-    overflow: hidden;
-
-    background: rgba(255,255,255,.03);
-
-    border-bottom: 1px solid rgba(255,255,255,.06);
-}
-
-.portal-card-image img {
-
-    width: 100%;
-    height: 140px;
-
-    object-fit: cover;
-
-    display: block;
-}
-
-/* =========================================================
-   CONTENT
-========================================================= */
-
-.portal-card-content {
-
+.atlas-card-link {
     display: flex;
-
     flex-direction: column;
-
-    gap: 12px;
-
-    padding: 18px;
-
     height: 100%;
+    text-decoration: none;
+    color: inherit;
 }
 
-.portal-card-top {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 10px;
-}
-
-.portal-card-icon {
-    font-size: 24px;
-}
-
-.portal-card-type {
-
-    font-size: 11px;
-
-    letter-spacing: .16em;
-
-    text-transform: uppercase;
-
-    opacity: .5;
-}
-
-.portal-card-title {
-
-    margin: 0;
-
-    font-size: 20px;
-
-    line-height: 1.25;
-}
-
-.portal-card-meta {
-
-    font-size: 14px;
-
-    font-weight: 600;
-
-    opacity: .72;
-}
-
-
-.portal-card-excerpt {
-
-    font-size: 14px;
-
-    line-height: 1.6;
-
-    opacity: .78;
-
+/* Media Area */
+.atlas-card-media {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #f9f9f9;
     overflow: hidden;
-
-    display: -webkit-box;
-
-    display: box;
-
-    -webkit-box-orient: vertical;
-
-    -webkit-line-clamp: 4;
-
-    line-clamp: 4;
+    position: relative;
 }
 
-/* =========================================================
-   MOBILE
-========================================================= */
+.atlas-card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
 
-@media (max-width: 800px) {
+.atlas-card:hover .atlas-card-media img {
+    transform: scale(1.05);
+}
 
+.atlas-card-icon-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #ccc;
+    background: #f0f0f0;
+}
+
+/* Card Body */
+.atlas-card-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.atlas-card-type {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #0073aa;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.atlas-card-title {
+    margin: 0 0 10px 0;
+    font-size: 1.15rem;
+    line-height: 1.3;
+    color: #111;
+    font-weight: 700;
+}
+
+.atlas-card-excerpt {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #666;
+    
+    /* Clamp to 3 lines */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* --- MOBILE --- */
+@media (max-width: 768px) {
     .portal-atlas {
-        padding: 30px 18px 90px;
+        padding: 20px 15px 60px;
     }
-
-    .portal-hero-inner {
-        padding: 28px;
+    
+    .atlas-stats {
+        gap: 20px;
     }
-
-    .portal-section-header h2 {
-        font-size: 28px;
+    
+    .atlas-grid {
+        grid-template-columns: 1fr; /* Single column on mobile */
     }
-
-    .portal-card-grid {
-
-        grid-template-columns: 1fr;
-    }
-
 }

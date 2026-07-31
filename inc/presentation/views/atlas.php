@@ -1,4 +1,8 @@
 <?php
+/**
+ * Atlas Portal View (Redesigned)
+ * A clean, visual map of all CPTs.
+ */
 
 $sections        = $portal_data['sections'] ?? [];
 $active_sections = $portal_data['active_sections'] ?? [];
@@ -9,219 +13,92 @@ $map             = $portal_data['map'] ?? [];
 
 ?>
 
-<main class="portal-atlas">
+<div class="portal-atlas">
 
-    <div class="portal-shell">
-
-        <!-- HERO -->
-
-        <header class="portal-hero">
-
-            <div class="portal-hero-inner">
-
-                <p class="portal-kicker">
-                    Knowledge Atlas
-                </p>
-
-                <h1 class="portal-title">
-                    <?php the_title(); ?>
-                </h1>
-
-                <?php if (has_excerpt()) : ?>
-
-                    <div class="portal-description">
-                        <?php the_excerpt(); ?>
-                    </div>
-
-                <?php endif; ?>
-
-                <div class="portal-meta-grid">
-
-                    <div class="portal-meta-card">
-
-                        <span class="portal-meta-number">
-                            <?php echo esc_html($total_entries); ?>
-                        </span>
-
-                        <span class="portal-meta-label">
-                            Related Entries
-                        </span>
-
-                    </div>
-
-                    <div class="portal-meta-card">
-
-                        <span class="portal-meta-number">
-                            <?php echo esc_html(count($active_sections)); ?>
-                        </span>
-
-                        <span class="portal-meta-label">
-                            Active Sections
-                        </span>
-
-                    </div>
-
-                </div>
-
+    <!-- HERO -->
+    <header class="atlas-hero">
+        <span class="atlas-kicker">Knowledge Atlas</span>
+        <h1 class="atlas-title"><?php the_title(); ?></h1>
+        
+        <?php if (has_excerpt()) : ?>
+            <div class="atlas-description">
+                <?php the_excerpt(); ?>
             </div>
-
-        </header>
-
-        <!-- NAV -->
-
-        <?php if (!empty($active_sections)) : ?>
-
-            <nav class="portal-section-nav">
-
-                <?php foreach ($active_sections as $type => $count) : ?>
-
-                    <a
-                        href="#section-<?php echo esc_attr($type); ?>"
-                        class="portal-nav-pill"
-                    >
-
-                        <span>
-                            <?php
-                            echo esc_html(
-                                $section_labels[$type]
-                                ?? ucfirst($type)
-                            );
-                            ?>
-                        </span>
-
-                        <strong>
-                            <?php echo esc_html($count); ?>
-                        </strong>
-
-                    </a>
-
-                <?php endforeach; ?>
-
-            </nav>
-
         <?php endif; ?>
 
-        <!-- SECTIONS -->
-
-        <div class="portal-sections">
-
-            <?php foreach ($section_order as $type) :
-
-                $entries = $sections[$type];
-
-                if (empty($entries)) {
-                    continue;
-                }
-
-                $label = $section_labels[$type] ?? ucfirst($type);
-
-            ?>
-
-                <section
-                    class="portal-section"
-                    id="section-<?php echo esc_attr($type); ?>"
-                >
-
-                    <header class="portal-section-header">
-
-                        <h2><?php echo esc_html($label); ?></h2>
-
-                        <span class="portal-section-count">
-                            <?php echo count($entries); ?>
-                        </span>
-
-                    </header>
-
-                    <div class="portal-card-grid">
-
-                        <?php foreach ($entries as $entry) : ?>
-
-                            <article class="portal-card">
-
-                                <a
-                                    href="<?php echo esc_url($entry['url']); ?>"
-                                    class="portal-card-inner"
-                                >
-
-                                    <?php if (!empty($entry['image'])) : ?>
-
-                                        <div class="portal-card-image">
-
-                                            <img
-                                                src="<?php echo esc_url($entry['image']); ?>"
-                                                alt="<?php echo esc_attr($entry['title']); ?>"
-                                            >
-
-                                        </div>
-
-                                    <?php endif; ?>
-
-                                    <div class="portal-card-content">
-
-                                        <div class="portal-card-top">
-
-                                            <span class="portal-card-icon">
-                                                <?php echo esc_html($entry['icon']); ?>
-                                            </span>
-
-                                            <span class="portal-card-type">
-
-                                                <?php
-                                                echo esc_html(
-                                                    $map[$entry['type']]['title']
-                                                    ?? ucfirst($entry['type'])
-                                                );
-                                                ?>
-
-                                            </span>
-
-                                        </div>
-
-                                        <h3 class="portal-card-title">
-                                            <?php echo esc_html($entry['title']); ?>
-                                        </h3>
-
-                                        <?php if (!empty($entry['meta'])) : ?>
-
-                                            <div class="portal-card-meta">
-                                                <?php echo esc_html($entry['meta']); ?>
-                                            </div>
-
-                                        <?php endif; ?>
-
-                                        <?php if (!empty($entry['excerpt'])) : ?>
-
-                                            <div class="portal-card-excerpt">
-
-                                                <?php
-                                                echo wp_trim_words(
-                                                    wp_strip_all_tags($entry['excerpt']),
-                                                    40
-                                                );
-                                                ?>
-
-                                            </div>
-
-                                        <?php endif; ?>
-
-                                    </div>
-
-                                </a>
-
-                            </article>
-
-                        <?php endforeach; ?>
-
-                    </div>
-
-                </section>
-
-</main>
-
-            <?php endforeach; ?>
-
+        <div class="atlas-stats">
+            <div class="atlas-stat">
+                <strong><?php echo esc_html($total_entries); ?></strong>
+                <span>Total Entries</span>
+            </div>
+            <div class="atlas-stat">
+                <strong><?php echo esc_html(count($active_sections)); ?></strong>
+                <span>Active Sections</span>
+            </div>
         </div>
+    </header>
 
+    <!-- NAVIGATION PILLS -->
+    <?php if (!empty($active_sections)) : ?>
+        <nav class="atlas-nav">
+            <?php foreach ($active_sections as $type => $count) : ?>
+                <a href="#section-<?php echo esc_attr($type); ?>" class="atlas-pill">
+                    <?php echo esc_html($section_labels[$type] ?? ucfirst($type)); ?>
+                    <span class="atlas-pill-count"><?php echo esc_html($count); ?></span>
+                </a>
+            <?php endforeach; ?>
+        </nav>
+    <?php endif; ?>
+
+    <!-- SECTIONS -->
+    <div class="atlas-sections">
+        <?php foreach ($section_order as $type) : 
+            $entries = $sections[$type] ?? [];
+            if (empty($entries)) continue;
+            $label = $section_labels[$type] ?? ucfirst($type);
+        ?>
+            <section class="atlas-section" id="section-<?php echo esc_attr($type); ?>">
+                <header class="atlas-section-header">
+                    <h2><?php echo esc_html($label); ?></h2>
+                    <span class="atlas-section-count"><?php echo count($entries); ?></span>
+                </header>
+
+                <div class="atlas-grid">
+                    <?php foreach ($entries as $entry) : ?>
+                        <article class="atlas-card">
+                            <a href="<?php echo esc_url($entry['url']); ?>" class="atlas-card-link">
+                                
+                                <!-- Image / Icon Fallback -->
+                                <div class="atlas-card-media">
+                                    <?php if (!empty($entry['image'])) : ?>
+                                        <img src="<?php echo esc_url($entry['image']); ?>" alt="<?php echo esc_attr($entry['title']); ?>" loading="lazy">
+                                    <?php else : ?>
+                                        <div class="atlas-card-icon-fallback">
+                                            <?php echo esc_html($entry['icon'] ?? '•'); ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+
+                                <!-- Content -->
+                                <div class="atlas-card-body">
+                                    <span class="atlas-card-type">
+                                        <?php echo esc_html($map[$entry['type']]['title'] ?? ucfirst($entry['type'])); ?>
+                                    </span>
+                                    <h3 class="atlas-card-title"><?php echo esc_html($entry['title']); ?></h3>
+                                    
+                                    <?php if (!empty($entry['excerpt'])) : ?>
+                                        <p class="atlas-card-excerpt">
+                                            <?php echo wp_trim_words(wp_strip_all_tags($entry['excerpt']), 20); ?>
+                                        </p>
+                                    <?php endif; ?>
+                                </div>
+
+                            </a>
+                        </article>
+                    <?php endforeach; ?>
+                </div>
+            </section>
+        <?php endforeach; ?>
     </div>
 
-</main>
+</div>
