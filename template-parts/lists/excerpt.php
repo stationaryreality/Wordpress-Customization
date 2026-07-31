@@ -29,13 +29,10 @@ if ( (!$query instanceof WP_Query || !$query->have_posts()) && empty($items) && 
     <?php if (!empty($items)): ?>
       <?php foreach ($items as $item): ?>
         <?php
-          $image = !empty($item['image']) ? $item['image'] : '';
-          $text  = !empty($item['excerpt']) ? $item['excerpt'] : '';
-          $meta  = !empty($item['meta']) && is_array($item['meta']) ? $item['meta'] : [];
-          $source_title = $meta['source_title'] ?? '';
-          $source_url   = $meta['source_url'] ?? '';
-          $author_name  = $meta['author_name'] ?? '';
-          $author_url   = $meta['author_url'] ?? '';
+          // Match the exact pattern used in show.php
+          $meta_text = !empty($item['meta']) ? $item['meta'] : '';
+          $text      = !empty($item['excerpt']) ? $item['excerpt'] : '';
+          $image     = !empty($item['image']) ? $item['image'] : '';
         ?>
         <article class="cpt-excerpt-item">
           <?php if ($image): ?>
@@ -55,13 +52,9 @@ if ( (!$query instanceof WP_Query || !$query->have_posts()) && empty($items) && 
               <p class="cpt-excerpt-card-text"><?php echo esc_html(wp_trim_words($text, 40, '...')); ?></p>
             <?php endif; ?>
 
-            <?php if ($source_title && $source_url): ?>
-              <p class="cpt-excerpt-card-source">
-                Source: <a href="<?php echo esc_url($source_url); ?>"><?php echo esc_html($source_title); ?></a>
-                <?php if ($author_name && $author_url): ?>
-                  &nbsp;by <a href="<?php echo esc_url($author_url); ?>"><?php echo esc_html($author_name); ?></a>
-                <?php endif; ?>
-              </p>
+            <?php if ($meta_text): ?>
+              <!-- Echo the pre-built string from the card builder safely -->
+              <p class="cpt-excerpt-card-source"><?php echo wp_kses_post($meta_text); ?></p>
             <?php endif; ?>
           </div>
         </article>
