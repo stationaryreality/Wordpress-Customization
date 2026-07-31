@@ -2,15 +2,18 @@
 $source = get_field('excerpt_source'); // Book, Movie, Show, etc.
 ?>
 
-<div class="person-content" style="text-align:center;">
-  <h1><?php the_title(); ?></h1>
+<div class="cpt-excerpt-content">
 
-  <div class="excerpt-content" style="margin-top:1em;">
+  <?php get_template_part('template-parts/navigation/excerpt'); ?>
+
+  <h1 class="cpt-excerpt-title"><?php the_title(); ?></h1>
+
+  <div class="cpt-excerpt-text">
     <?php the_content(); ?>
   </div>
 
   <?php if ($source): ?>
-    <p class="excerpt-source" style="margin-top:1em;">
+    <p class="cpt-excerpt-source">
       Source:
       <a href="<?php echo esc_url(get_permalink($source->ID)); ?>">
         <?php echo esc_html(get_the_title($source->ID)); ?>
@@ -18,17 +21,16 @@ $source = get_field('excerpt_source'); // Book, Movie, Show, etc.
     </p>
   <?php endif; ?>
 
-  <?php
-  // New References System
-  if (function_exists('kp_render_references')) {
-      echo kp_render_references(get_the_ID());
-  }
-  ?>
+  <?php if (function_exists('kp_render_references')): ?>
+    <div class="cpt-excerpt-references">
+      <?php echo kp_render_references(get_the_ID()); ?>
+    </div>
+  <?php endif; ?>
 
   <?php show_featured_in_threads('excerpts_referenced'); ?>
 
-  <?php echo fn_taxonomy_bubbles(get_the_ID()); ?>
-
-  <?php get_template_part('template-parts/navigation/excerpt'); ?>
+  <div class="cpt-excerpt-bubbles">
+    <?php echo fn_taxonomy_bubbles(get_the_ID()); ?>
+  </div>
 
 </div>
