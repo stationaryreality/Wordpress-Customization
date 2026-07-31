@@ -1,4 +1,13 @@
 <?php
+/**
+ * Unified Excerpt Display (passive)
+ *
+ * Standardized contract:
+ * - items       => array
+ * - query       => WP_Query|null
+ * - info        => [ 'title' => '', 'emoji' => '', 'type' => '' ]
+ * - search_term => string
+ */
 $query        = $args['query'] ?? null;
 $items        = $args['items'] ?? [];
 $info         = $args['info'] ?? [];
@@ -26,13 +35,17 @@ if ( (!$query instanceof WP_Query || !$query->have_posts()) && empty($items) && 
   <?php endif; ?>
 
   <div class="cpt-excerpt-list">
+    
+    <!-- === NEW ARCHITECTURE: $items LOOP === -->
     <?php if (!empty($items)): ?>
       <?php foreach ($items as $item): ?>
         <?php
-          // Match the exact pattern used in show.php
-          $meta_text = !empty($item['meta']) ? $item['meta'] : '';
-          $text      = !empty($item['excerpt']) ? $item['excerpt'] : '';
-          $image     = !empty($item['image']) ? $item['image'] : '';
+          // Extract normalized card data
+          $image = !empty($item['image']) ? $item['image'] : '';
+          $text  = !empty($item['excerpt']) ? $item['excerpt'] : '';
+          
+          // FIX: Treat meta strictly as a pre-formatted HTML string
+          $meta_html = !empty($item['meta']) ? $item['meta'] : '';
         ?>
         <article class="cpt-excerpt-item">
           <?php if ($image): ?>
@@ -52,13 +65,17 @@ if ( (!$query instanceof WP_Query || !$query->have_posts()) && empty($items) && 
               <p class="cpt-excerpt-card-text"><?php echo esc_html(wp_trim_words($text, 40, '...')); ?></p>
             <?php endif; ?>
 
-            <?php if ($meta_text): ?>
-              <!-- Echo the pre-built string from the card builder safely -->
-              <p class="cpt-excerpt-card-source"><?php echo wp_kses_post($meta_text); ?></p>
+            <!-- FIX: Safely output the pre-formatted meta string -->
+            <?php if ($meta_html): ?>
+              <p class="cpt-excerpt-card-source">
+                <?php echo wp_kses_post($meta_html); ?>
+              </p>
             <?php endif; ?>
           </div>
         </article>
       <?php endforeach; ?>
+
+    <!-- === LEGACY FALLBACK: WP_Query LOOP (Untouched) === -->
     <?php else: ?>
       <?php foreach ($posts as $post_obj): ?>
         <?php
@@ -138,5 +155,6 @@ if ( (!$query instanceof WP_Query || !$query->have_posts()) && empty($items) && 
       <?php endforeach; ?>
       <?php if ($query instanceof WP_Query) wp_reset_postdata(); ?>
     <?php endif; ?>
+    
   </div>
 </section>
