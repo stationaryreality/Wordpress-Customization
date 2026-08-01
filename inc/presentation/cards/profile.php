@@ -1,19 +1,19 @@
 <?php
+$post_id = $post_id ?? get_the_ID();
+$title   = get_the_title($post_id);
+$url     = get_permalink($post_id);
 
-$portrait = get_field('portrait_image');
-$image = '';
+$bio     = get_field('bio', $post_id) ?: get_the_excerpt($post_id);
+$excerpt = wp_trim_words($bio, 20);
+
+$portrait = get_field('portrait_image', $post_id);
+$image    = '';
+
 if (is_array($portrait)) {
-    $image = $portrait['sizes']['thumbnail'] ?? $portrait['url'];
+    $image = $portrait['sizes']['thumbnail'] ?? $portrait['url'] ?? '';
 } elseif (is_numeric($portrait)) {
     $image = wp_get_attachment_image_url($portrait, 'thumbnail');
 }
-
-$bio = get_field('bio') ?: get_the_excerpt();
-$excerpt = wp_trim_words($bio, 20);
-
-// Optionally, if there's a role or title you want in meta, add it here.
-// For now, leave meta empty (or set to a field like 'title').
-$meta = '';
 
 return compact(
     'title',
