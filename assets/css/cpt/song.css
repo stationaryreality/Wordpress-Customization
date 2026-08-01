@@ -1,0 +1,279 @@
+/* ============================================================
+   CPT: SONG
+   1:1 Structural Match with Book CPT (1:1 Album Cover Variant)
+   ============================================================ */
+
+.cpt-song-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cpt-song-cover {
+    width: 150px;
+    height: auto;
+    display: block;
+    margin: 0 auto 1em;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.cpt-song-title {
+    margin-bottom: 0.5em;
+    font-size: 2rem;
+    color: #111;
+}
+
+.cpt-song-bio {
+    margin: 2em auto;
+    max-width: 800px;
+    text-align: left;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #333;
+}
+
+.cpt-song-artist {
+    margin-top: 2em;
+    text-align: center;
+}
+
+.cpt-song-artist-link {
+    text-decoration: none;
+    color: inherit;
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.cpt-song-artist-link:hover {
+    transform: translateY(-3px);
+}
+
+.cpt-song-artist-thumb {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+    margin: 0 auto 0.5em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cpt-song-artist-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #111;
+    margin: 0;
+}
+
+.cpt-song-artist-link:hover .cpt-song-artist-name {
+    color: #0073aa;
+}
+
+.cpt-song-video {
+    margin: 2em auto;
+    text-align: center;
+}
+
+.cpt-song-video-wrapper {
+    display: inline-block;
+    max-width: 100%;
+}
+
+.cpt-song-referenced {
+    margin-top: 4em;
+    text-align: center;
+}
+
+.cpt-song-referenced-title {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    color: #111;
+}
+
+.cpt-song-referenced-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.cpt-song-referenced-item {
+    width: 120px;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.cpt-song-referenced-item:hover {
+    transform: translateY(-4px);
+}
+
+.cpt-song-referenced-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+    display: block;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cpt-song-referenced-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #111;
+    line-height: 1.3;
+    margin: 0;
+}
+
+.cpt-song-referenced-item:hover .cpt-song-referenced-name {
+    color: #0073aa;
+}
+
+/* Navigation */
+.cpt-song-nav-top {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.cpt-song-nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.cpt-song-nav-prev,
+.cpt-song-nav-next {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #555;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    flex: 1;
+    max-width: 200px;
+}
+
+.cpt-song-nav-prev:hover,
+.cpt-song-nav-next:hover {
+    color: #0073aa;
+}
+
+.cpt-song-nav-label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+    text-align: center;
+}
+
+.cpt-song-nav-thumb {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    transition: transform 0.2s ease;
+}
+
+.cpt-song-nav-prev:hover .cpt-song-nav-thumb,
+.cpt-song-nav-next:hover .cpt-song-nav-thumb {
+    transform: scale(1.05);
+}
+
+.cpt-song-nav-title {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: center;
+    word-break: break-word;
+    color: #111;
+}
+
+/* Grid */
+.cpt-song-section {
+    margin-bottom: 4rem;
+    text-align: center;
+}
+
+.cpt-song-tier-group {
+    margin-bottom: 3rem;
+}
+
+.cpt-song-tier-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #111;
+}
+
+.main .cpt-song-section .cpt-song-grid,
+main .cpt-song-section .cpt-song-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.cpt-song-grid-item {
+    text-align: center;
+    width: 100%;
+    max-width: 100%;
+}
+
+.cpt-song-grid-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.2s ease;
+}
+
+.cpt-song-grid-link:hover {
+    transform: translateY(-4px);
+}
+
+.cpt-song-grid-image {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 0.75rem;
+    display: block;
+    transition: box-shadow 0.2s ease;
+}
+
+.cpt-song-grid-link:hover .cpt-song-grid-image {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.cpt-song-grid-title {
+    font-size: 0.95rem;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.3;
+}
+
+.cpt-song-grid-title a {
+    color: #111;
+    text-decoration: none;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.cpt-song-grid-title a:hover {
+    color: #0073aa;
+    text-decoration: underline;
+}

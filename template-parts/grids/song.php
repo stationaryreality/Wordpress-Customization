@@ -1,23 +1,12 @@
 <?php
-/**
- * Grid partial for displaying songs in search or related queries.
- *
- * Standardized contract:
- * - items       => array (normalized cards)
- * - query       => WP_Query|null (optional, for legacy callers)
- * - info        => [ 'title' => '', 'emoji' => '', 'type' => '' ]
- * - search_term => string (optional)
- */
 $query        = $args['query'] ?? null;
 $items        = $args['items'] ?? [];
 $info         = $args['info'] ?? [];
 $search_term  = $args['search_term'] ?? '';
 
-// Backward compatibility: allow direct title/emoji from older callers
 $title = $info['title'] ?? $args['title'] ?? 'Songs';
 $emoji = $info['emoji'] ?? $args['emoji'] ?? '🎵';
 
-// If a WP_Query was passed, convert it to cards (legacy support)
 if ($query instanceof WP_Query && $query->have_posts()) {
     $items = [];
     while ($query->have_posts()) {
@@ -27,31 +16,31 @@ if ($query instanceof WP_Query && $query->have_posts()) {
     wp_reset_postdata();
 }
 
-// No data to render
 if (empty($items)) {
     return;
 }
 ?>
 
-<section style="margin-bottom:4rem;">
-  <h2>
-    <?php echo esc_html($emoji); ?>
-    <?php echo esc_html($title); ?>
-    <?php if ($search_term): ?>
-      containing “<?php echo esc_html($search_term); ?>”
-    <?php endif; ?>
-  </h2>
+<section class="cpt-song-section">
+    <h2 class="cpt-song-section-title">
+        <?php if ($emoji) echo '<span class="emoji">' . esc_html($emoji) . '</span> '; ?>
+        <?php echo esc_html($title); ?>
+        <?php if ($search_term): ?>
+            <span>containing “<?php echo esc_html($search_term); ?>”</span>
+        <?php endif; ?>
+    </h2>
 
-  <div class="cited-grid">
-    <?php foreach ($items as $item): ?>
-      <div class="cited-item">
-        <a href="<?php echo esc_url($item['url']); ?>">
-          <?php if (!empty($item['image'])): ?>
-            <img src="<?php echo esc_url($item['image']); ?>" alt="<?php echo esc_attr($item['title']); ?>">
-          <?php endif; ?>
-          <h3><?php echo esc_html($item['title']); ?></h3>
-        </a>
-      </div>
-    <?php endforeach; ?>
-  </div>
+    <div class="cpt-song-grid">
+        <?php foreach ($items as $item): ?>
+            <?php $img_url = !empty($item['image']) ? $item['image'] : ''; ?>
+            <article class="cpt-song-grid-item">
+                <a href="<?php echo esc_url($item['url']); ?>" class="cpt-song-grid-link">
+                    <?php if ($img_url): ?>
+                        <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($item['title']); ?>" class="cpt-song-grid-image">
+                    <?php endif; ?>
+                    <h3 class="cpt-song-grid-title"><?php echo esc_html($item['title']); ?></h3>
+                </a>
+            </article>
+        <?php endforeach; ?>
+    </div>
 </section>
