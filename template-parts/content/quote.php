@@ -1,33 +1,30 @@
 <?php
-$source = get_field('quote_source'); // Can be a Book or Reference CPT
+$source = get_field('quote_source');
 ?>
 
-<div class="person-content" style="text-align:center;">
-  <h1><?php the_title(); ?></h1>
+<div class="person-content cpt-quote-content">
 
-  <div class="quote-content" style="margin-top:1em;">
-    <?php the_content(); ?>
-  </div>
+    <?php get_template_part('template-parts/navigation/quote'); ?>
 
-  <?php if ($source): ?>
-    <p class="quote-source" style="margin-top:1em;">
-      Source: <a href="<?php echo esc_url(get_permalink($source->ID)); ?>">
-        <?php echo esc_html(get_the_title($source->ID)); ?>
-      </a>
-    </p>
-  <?php endif; ?>
+    <h1 class="cpt-quote-title"><?php the_title(); ?></h1>
 
-    <?php
-  // New References System
-  if (function_exists('kp_render_references')) {
-      echo kp_render_references(get_the_ID());
-  }
-  ?>
+    <div class="cpt-quote-text">
+        <?php the_content(); ?>
+    </div>
 
-  <?php show_featured_in_threads('quotes_referenced'); ?>
+    <?php if ($source): ?>
+        <p class="cpt-quote-source">
+            Source: <a href="<?php echo esc_url(get_permalink($source->ID)); ?>">
+                <?php echo esc_html(get_the_title($source->ID)); ?>
+            </a>
+        </p>
+    <?php endif; ?>
 
+    <?php if (function_exists('kp_render_references')): ?>
+        <?php echo kp_render_references(get_the_ID()); ?>
+    <?php endif; ?>
+
+    <?php show_featured_in_threads('quotes_referenced'); ?>
     <?php echo fn_taxonomy_bubbles(get_the_ID()); ?>
-
-  <?php get_template_part('template-parts/navigation/quote'); ?>
 
 </div>

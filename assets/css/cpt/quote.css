@@ -1,0 +1,214 @@
+/* ============================================================
+   CPT: QUOTE
+   Styles for Quote single pages, lists, and navigation.
+   ============================================================ */
+
+/* ========== SINGLE QUOTE PAGE ========== */
+
+.cpt-quote-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cpt-quote-title {
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    color: #111;
+}
+
+.cpt-quote-text {
+    margin: 2em auto;
+    max-width: 800px;
+    text-align: left;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #333;
+    font-style: italic;
+}
+
+.cpt-quote-source {
+    margin-top: 2rem;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.cpt-quote-source a {
+    color: #0073aa;
+    text-decoration: none;
+}
+
+.cpt-quote-source a:hover {
+    text-decoration: underline;
+}
+
+/* ========== QUOTE NAVIGATION (Top) ========== */
+
+.cpt-quote-nav-top {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.cpt-quote-nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.cpt-quote-nav-prev,
+.cpt-quote-nav-next {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #555;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    flex: 1;
+    max-width: 200px;
+}
+
+.cpt-quote-nav-prev:hover,
+.cpt-quote-nav-next:hover {
+    color: #0073aa;
+}
+
+.cpt-quote-nav-label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+    text-align: center;
+}
+
+.cpt-quote-nav-title {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: center;
+    word-break: break-word;
+    color: #111;
+}
+
+/* ========== QUOTE LIST ========== */
+
+.cpt-quote-section {
+    margin-bottom: 4rem;
+    text-align: center;
+}
+
+.cpt-quote-section-title {
+    margin-bottom: 2rem;
+    font-size: 1.75rem;
+}
+
+.cpt-quote-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cpt-quote-list-item {
+    display: flex;
+    gap: 1.5rem;
+    text-align: left;
+    background: #fff;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cpt-quote-list-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+}
+
+.cpt-quote-thumb {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+}
+
+.cpt-quote-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+    display: block;
+}
+
+.cpt-quote-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.cpt-quote-card-title {
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.3;
+}
+
+.cpt-quote-card-title a {
+    color: #111;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.cpt-quote-card-title a:hover {
+    color: #0073aa;
+}
+
+.cpt-quote-snippet {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.5;
+    margin: 0 0 0.5rem 0;
+    font-style: italic;
+    border-left: 3px solid #eee;
+    padding-left: 1rem;
+}
+
+.cpt-quote-meta {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 0;
+}
+
+.cpt-quote-meta a {
+    color: #0073aa;
+    text-decoration: none;
+}
+
+.cpt-quote-meta a:hover {
+    text-decoration: underline;
+}
+
+/* Mobile adjustment for quote list */
+@media (max-width: 600px) {
+    .cpt-quote-list-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .cpt-quote-thumb {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 1rem;
+    }
+
+    .cpt-quote-snippet {
+        border-left: none;
+        border-top: 3px solid #eee;
+        padding-left: 0;
+        padding-top: 1rem;
+    }
+}
