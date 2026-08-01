@@ -1,20 +1,22 @@
 <?php
 $show_id   = get_the_ID();
-$summary   = get_field('summary');
 $cover     = get_field('cover_image');
 $img_url   = $cover ? $cover['sizes']['medium'] : '';
 $wiki_slug = get_field('wikipedia_slug');
 ?>
 
-<div class="person-content">
+<!-- CRITICAL: Keep .person-content to prevent the theme footer from snapping up -->
+<div class="person-content cpt-show-content">
+
+  <?php get_template_part('template-parts/navigation/show'); ?>
 
   <?php if ($img_url): ?>
-    <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" class="show-cover" style="display:block;margin:0 auto;max-width:300px;">
+    <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" class="cpt-show-cover">
   <?php endif; ?>
 
-  <h1><?php the_title(); ?></h1>
+  <h1 class="cpt-show-title"><?php the_title(); ?></h1>
 
-  <div class="person-bio">
+  <div class="person-bio cpt-show-bio">
     <?php
     $wiki_intro = $wiki_slug ? kp_get_wikipedia_intro($wiki_slug) : '';
     echo $wiki_intro ? wp_kses_post($wiki_intro) : wp_kses_post(get_the_content());
@@ -34,12 +36,8 @@ $wiki_slug = get_field('wikipedia_slug');
       ]
     ]
   ]);
-
   if (!empty($quotes)) {
-    get_template_part('template-parts/render/content-objects', null, [
-      'posts' => $quotes,
-      'title' => 'Quotes'
-    ]);
+    get_template_part('template-parts/render/content-objects', null, ['posts' => $quotes, 'title' => 'Quotes']);
   }
 
   // === Related Excerpts ===
@@ -54,19 +52,11 @@ $wiki_slug = get_field('wikipedia_slug');
       ]
     ]
   ]);
-
   if (!empty($excerpts)) {
-    get_template_part('template-parts/render/content-objects', null, [
-      'posts' => $excerpts,
-      'title' => 'Excerpts'
-    ]);
+    get_template_part('template-parts/render/content-objects', null, ['posts' => $excerpts, 'title' => 'Excerpts']);
   }
 
-  // === Featured in threads ===
   show_featured_in_threads('shows_referenced');
-
-  // === Show navigation ===
-  get_template_part('template-parts/navigation/show');
   ?>
 
-</div> <!-- end person-content -->
+</div>
