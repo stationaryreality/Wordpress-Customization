@@ -30,30 +30,24 @@ if (empty($items)) {
     <?php endif; ?>
   </h2>
 
+<section class="cpt-game-section">
+  <h2><?php echo esc_html($title); ?></h2>
+
   <div class="cpt-game-grid">
     <?php foreach ($items as $item): ?>
       <?php
-        // FIX: Treat meta strictly as a pre-formatted HTML string
         $meta_html = !empty($item['meta']) ? $item['meta'] : '';
-        $summary   = !empty($item['excerpt']) ? $item['excerpt'] : '';
         $img_url   = !empty($item['image']) ? $item['image'] : '';
       ?>
       <article class="cpt-game-grid-item">
-        <a href="<?php echo esc_url($item['url']); ?>" class="cpt-game-grid-link">
+        <a href="<?php echo esc_url($item['url']); ?>">
           <?php if ($img_url): ?>
             <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($item['title']); ?>" class="cpt-game-grid-image">
           <?php endif; ?>
-          <h3 class="cpt-game-grid-card-title"><?php echo esc_html($item['title']); ?></h3>
+          <h3 class="cpt-game-grid-title"><?php echo esc_html($item['title']); ?></h3>
         </a>
-        
         <?php if ($meta_html): ?>
-          <p class="cpt-game-grid-meta">
-            <?php echo wp_kses_post($meta_html); ?>
-          </p>
-        <?php endif; ?>
-
-        <?php if ($summary): ?>
-          <p class="cpt-game-grid-excerpt"><?php echo esc_html(wp_trim_words($summary, 25)); ?></p>
+          <p class="cpt-game-grid-meta"><?php echo wp_kses_post($meta_html); ?></p>
         <?php endif; ?>
       </article>
     <?php endforeach; ?>
