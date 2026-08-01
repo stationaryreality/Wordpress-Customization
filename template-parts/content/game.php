@@ -4,9 +4,8 @@ $cover     = get_field('cover_image');
 $img_url   = $cover ? $cover['sizes']['medium'] : '';
 $wiki_slug = get_field('wikipedia_slug');
 $summary   = get_field('summary');
-$developer = get_field('developer');
 
-// Determine description (similar to Book's flexible logic)
+// === Description logic (exactly like Book) ===
 if ($summary) {
     $description = wp_kses_post($summary);
 } elseif ($wiki_slug && function_exists('kp_get_wikipedia_intro')) {
@@ -37,11 +36,7 @@ if ($summary) {
     'post_type'      => 'quote',
     'posts_per_page' => -1,
     'meta_query'     => [
-      [
-        'key'     => 'quote_source',
-        'value'   => $game_id,
-        'compare' => '='
-      ]
+      [ 'key' => 'quote_source', 'value' => $game_id, 'compare' => '=' ]
     ]
   ]);
   if (!empty($quotes)) {
@@ -53,11 +48,7 @@ if ($summary) {
     'post_type'      => 'excerpt',
     'posts_per_page' => -1,
     'meta_query'     => [
-      [
-        'key'     => 'excerpt_source',
-        'value'   => $game_id,
-        'compare' => '='
-      ]
+      [ 'key' => 'excerpt_source', 'value' => $game_id, 'compare' => '=' ]
     ]
   ]);
   if (!empty($excerpts)) {
