@@ -87,7 +87,7 @@ add_action('wp_enqueue_scripts', 'enqueue_new_style_files');
 function enqueue_keyboard_navigation() {
     // Only load on single Image or Concept pages
         if (is_singular(['image', 'concept', 'artist', 'book', 'element', 'excerpt', 
-        'game', 'movie', 'show', 'lyric', 'organization', 'profile', 'quote', 'song'])) {
+        'game', 'movie', 'show', 'lyric', 'organization', 'profile', 'quote', 'song', 'video'])) {
             wp_enqueue_script(
             'keyboard-nav',
             get_stylesheet_directory_uri() . '/assets/js/keyboard-nav.js',

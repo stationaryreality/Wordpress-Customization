@@ -1,127 +1,56 @@
 <?php
-// content/video-nav.php
+$query        = $args['query'] ?? null;
+$items        = $args['items'] ?? [];
+$info         = $args['info'] ?? [];
+$search_term  = $args['search_term'] ?? '';
 
-$current_id = get_the_ID();
+$title = $info['title'] ?? $args['title'] ?? 'Videos';
+$emoji = $info['emoji'] ?? $args['emoji'] ?? '📼';
 
-$video_ids = get_posts([
-    'post_type'   => 'video',
-    'numberposts' => -1,
-    'orderby'     => 'title',
-    'order'       => 'ASC',
-    'fields'      => 'ids',
-]);
+// Support legacy WP_Query passed from page templates
+if ($query instanceof WP_Query && $query->have_posts()) {
+    $items = [];
+    while ($query->have_posts()) {
+        $query->the_post();
+        
+        $screenshot = get_field('video_screenshot');
+        $img_url = $screenshot ? $screenshot['sizes']['large'] : get_the_post_thumbnail_url(get_the_ID(), 'large');
+        
+        $items[] = [
+            'title'   => get_the_title(),
+            'url'     => get_permalink(),
+            'image'   => $img_url,
+            'excerpt' => '',
+            'meta'    => ''
+        ];
+    }
+    wp_reset_postdata();
+}
 
-$current_index = array_search($current_id, $video_ids);
-
-$next_id = $video_ids[$current_index + 1] ?? null;
-$prev_id = $video_ids[$current_index - 1] ?? null;
+if (empty($items)) {
+    return;
+}
 ?>
 
-<div class="post-navigation-container video-nav"
-     style="
-        display:flex;
-        justify-content:center;
-        gap:60px;
-        margin-top:60px;
-        flex-wrap:wrap;
-     ">
+<section class="cpt-video-section">
+    <h2 class="cpt-video-section-title">
+        <?php if ($emoji) echo '<span class="emoji">' . esc_html($emoji) . '</span> '; ?>
+        <?php echo esc_html($title); ?>
+        <?php if ($search_term): ?>
+            <span>containing “<?php echo esc_html($search_term); ?>”</span>
+        <?php endif; ?>
+    </h2>
 
-    <?php if ($next_id): ?>
-
-        <div class="previous-post" style="text-align:center; max-width:260px;">
-
-            <h2>Next Video</h2>
-
-            <a href="<?php echo get_permalink($next_id); ?>"
-               style="
-                    display:inline-block;
-                    text-decoration:none;
-                    color:inherit;
-               ">
-
-                <?php
-                $cover = get_field('video_screenshot', $next_id);
-
-                if ($cover) {
-
-                    echo '<img
-                            src="' . esc_url($cover['sizes']['medium']) . '"
-                            alt="' . esc_attr(get_the_title($next_id)) . '"
-                            style="
-                                width:220px;
-                                aspect-ratio:16/9;
-                                object-fit:cover;
-                                border-radius:8px;
-                                margin-bottom:12px;
-                                display:block;
-                                margin-left:auto;
-                                margin-right:auto;
-                            "
-                          >';
-                }
-                ?>
-
-                <h3 style="
-                    font-size:1rem;
-                    line-height:1.4;
-                    margin:0;
-                ">
-                    <?php echo get_the_title($next_id); ?>
-                </h3>
-
-            </a>
-
-        </div>
-
-    <?php endif; ?>
-
-    <?php if ($prev_id): ?>
-
-        <div class="next-post" style="text-align:center; max-width:260px;">
-
-            <h2>Previous Video</h2>
-
-            <a href="<?php echo get_permalink($prev_id); ?>"
-               style="
-                    display:inline-block;
-                    text-decoration:none;
-                    color:inherit;
-               ">
-
-                <?php
-                $cover = get_field('video_screenshot', $prev_id);
-
-                if ($cover) {
-
-                    echo '<img
-                            src="' . esc_url($cover['sizes']['medium']) . '"
-                            alt="' . esc_attr(get_the_title($prev_id)) . '"
-                            style="
-                                width:220px;
-                                aspect-ratio:16/9;
-                                object-fit:cover;
-                                border-radius:8px;
-                                margin-bottom:12px;
-                                display:block;
-                                margin-left:auto;
-                                margin-right:auto;
-                            "
-                          >';
-                }
-                ?>
-
-                <h3 style="
-                    font-size:1rem;
-                    line-height:1.4;
-                    margin:0;
-                ">
-                    <?php echo get_the_title($prev_id); ?>
-                </h3>
-
-            </a>
-
-        </div>
-
-    <?php endif; ?>
-
-</div>
+    <div class="cpt-video-grid">
+        <?php foreach ($items as $item): ?>
+            <article class="cpt-video-grid-item">
+                <a href="<?php echo esc_url($item['url']); ?>" class="cpt-video-grid-link">
+                    <?php if (!empty($item['image'])): ?>
+                        <img src="<?php echo esc_url($item['image']); ?>" alt="<?php echo esc_attr($item['title']); ?>" class="cpt-video-grid-image">
+                    <?php endif; ?>
+                    <h3 class="cpt-video-grid-title"><?php echo esc_html($item['title']); ?></h3>
+                </a>
+            </article>
+        <?php endforeach; ?>
+    </div>
+</section>

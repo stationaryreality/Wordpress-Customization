@@ -1,0 +1,285 @@
+/* ============================================================
+   CPT: VIDEO
+   1:1 Structural Match with Book CPT (16:9 Video Variant)
+   ============================================================ */
+
+/* ========== SINGLE VIDEO PAGE ========== */
+
+.cpt-video-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cpt-video-title {
+    margin-bottom: 0.5em;
+    font-size: 2rem;
+    color: #111;
+}
+
+.cpt-video-bio {
+    margin: 2em auto;
+    max-width: 800px;
+    text-align: left;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #333;
+}
+
+/* Artist Link */
+.cpt-video-artist {
+    margin-top: 2em;
+    text-align: center;
+}
+
+.cpt-video-artist-link {
+    text-decoration: none;
+    color: inherit;
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.cpt-video-artist-link:hover {
+    transform: translateY(-3px);
+}
+
+.cpt-video-artist-thumb {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+    margin: 0 auto 0.5em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cpt-video-artist-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #111;
+    margin: 0;
+}
+
+.cpt-video-artist-link:hover .cpt-video-artist-name {
+    color: #0073aa;
+}
+
+/* Video Embed */
+.cpt-video-embed {
+    margin: 3em auto;
+    text-align: center;
+}
+
+.cpt-video-embed-wrapper {
+    display: inline-block;
+    max-width: 100%;
+}
+
+/* Parent Song Reference */
+.cpt-video-parent-song {
+    margin-top: 1.5em;
+    text-align: center;
+}
+
+.cpt-video-parent-link {
+    text-decoration: none;
+    color: inherit;
+    display: inline-block;
+    transition: opacity 0.2s ease;
+}
+
+.cpt-video-parent-link:hover {
+    opacity: 0.8;
+}
+
+.cpt-video-parent-thumb {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 4px;
+    display: block;
+    margin: 0 auto 0.5em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cpt-video-parent-title {
+    font-size: 0.95rem;
+    color: #555;
+}
+
+/* Lyrics List */
+.cpt-video-lyrics {
+    margin-top: 3em;
+    text-align: center;
+}
+
+.cpt-video-lyrics-title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: #111;
+}
+
+.cpt-video-lyrics-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 600px;
+    text-align: center;
+}
+
+.cpt-video-lyrics-item {
+    margin-bottom: 0.5rem;
+}
+
+.cpt-video-lyrics-item a {
+    color: #0073aa;
+    text-decoration: none;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.cpt-video-lyrics-item a:hover {
+    color: #005177;
+    text-decoration: underline;
+}
+
+.cpt-video-bubbles {
+    text-align: center;
+    margin-top: 2em;
+}
+
+/* ========== VIDEO NAVIGATION (Top) ========== */
+
+.cpt-video-nav-top {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.cpt-video-nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.cpt-video-nav-prev,
+.cpt-video-nav-next {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #555;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    flex: 1;
+    max-width: 200px;
+}
+
+.cpt-video-nav-prev:hover,
+.cpt-video-nav-next:hover {
+    color: #0073aa;
+}
+
+.cpt-video-nav-label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+    text-align: center;
+}
+
+.cpt-video-nav-thumb {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    transition: transform 0.2s ease;
+}
+
+.cpt-video-nav-prev:hover .cpt-video-nav-thumb,
+.cpt-video-nav-next:hover .cpt-video-nav-thumb {
+    transform: scale(1.05);
+}
+
+.cpt-video-nav-title {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: center;
+    word-break: break-word;
+    color: #111;
+}
+
+/* ========== VIDEO GRID ========== */
+
+.cpt-video-section {
+    margin-bottom: 4rem;
+    text-align: center;
+}
+
+.cpt-video-section-title {
+    margin-bottom: 2rem;
+    font-size: 1.75rem;
+}
+
+.main .cpt-video-section .cpt-video-grid,
+main .cpt-video-section .cpt-video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.cpt-video-grid-item {
+    text-align: center;
+    width: 100%;
+    max-width: 100%;
+}
+
+.cpt-video-grid-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.2s ease;
+}
+
+.cpt-video-grid-link:hover {
+    transform: translateY(-4px);
+}
+
+.cpt-video-grid-image {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 16 / 9; /* 16:9 for video thumbnails */
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 0.75rem;
+    display: block;
+    transition: box-shadow 0.2s ease;
+}
+
+.cpt-video-grid-link:hover .cpt-video-grid-image {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.cpt-video-grid-title {
+    font-size: 0.95rem;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.3;
+}
+
+.cpt-video-grid-title a {
+    color: #111;
+    text-decoration: none;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.cpt-video-grid-title a:hover {
+    color: #0073aa;
+    text-decoration: underline;
+}
