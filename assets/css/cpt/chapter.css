@@ -1,92 +1,32 @@
 /* ============================================================
    CPT: CHAPTER (Narrative Threads)
+   Styles for Chapter single pages, grids, and navigation.
    ============================================================ */
 
-/* ========== CHAPTER GRID ========== */
+/* ========== SINGLE CHAPTER PAGE ========== */
 
-.chapter-grid-section .section-title {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-/* More specific selector to override old .tag-posts-grid */
-.chapter-grid-section .chapter-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1.5rem;
-    max-width: 1200px;
+.cpt-chapter-content {
+    max-width: 800px;
     margin: 0 auto;
-    padding: 0 1rem;
 }
 
-/* Override any old .tag-post-item styles */
-.chapter-grid-section .chapter-grid-item {
-    background: #ffffff;
-    border: 1px solid #eaeaea;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    text-align: center;
-}
+/* ========== CHAPTER NAVIGATION (Bottom, Next Left, Prev Right) ========== */
 
-.chapter-grid-section .chapter-grid-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
-    border-color: #d0d0d0;
-}
-
-.chapter-grid-section .chapter-grid-item .core-card-image {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    display: block;
-}
-
-.chapter-grid-section .chapter-grid-item .core-card-title {
-    padding: 1rem;
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0;
-    line-height: 1.3;
-    text-align: center;
-}
-
-.chapter-grid-section .chapter-grid-item .core-card-title a {
-    color: #111;
-    text-decoration: none;
-}
-
-.chapter-grid-section .chapter-grid-item .core-card-title a:hover {
-    color: #0073aa;
-    text-decoration: underline;
-}
-
-/* ========== CHAPTER NAVIGATION ========== */
-
-.cpt-chapter-nav {
+.cpt-chapter-nav-bottom {
     display: flex;
     justify-content: space-between;
-    gap: 2rem;
-    margin-top: 4rem;
+    gap: 40px;
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid #eee;
     flex-wrap: wrap;
 }
 
 .cpt-chapter-nav-next,
 .cpt-chapter-nav-prev {
-    flex: 1 1 300px;
-    max-width: 45%;
     text-align: center;
-    background: #ffffff;
-    border: 1px solid #eaeaea;
-    border-radius: 8px;
-    padding: 1rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.cpt-chapter-nav-next:hover,
-.cpt-chapter-nav-prev:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+    flex: 1;
+    min-width: 200px;
 }
 
 .cpt-chapter-nav-next h2,
@@ -94,8 +34,8 @@
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: #666;
-    margin-bottom: 1rem;
+    color: #888;
+    margin-bottom: 15px;
     font-weight: 600;
 }
 
@@ -104,19 +44,116 @@
     display: block;
     text-decoration: none;
     color: inherit;
+    transition: transform 0.2s ease;
 }
 
-.cpt-chapter-nav .core-card-image {
+.cpt-chapter-nav-next a:hover,
+.cpt-chapter-nav-prev a:hover {
+    transform: translateY(-4px);
+}
+
+.cpt-chapter-nav-next img,
+.cpt-chapter-nav-prev img {
     width: 100%;
+    max-width: 250px;
+    height: auto;
     aspect-ratio: 16 / 9;
     object-fit: cover;
-    border-radius: 6px;
-    margin-bottom: 1rem;
+    border-radius: 8px;
+    margin: 0 auto 15px auto;
     display: block;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-.cpt-chapter-nav .core-card-title {
+.cpt-chapter-nav-next h3,
+.cpt-chapter-nav-prev h3 {
     font-size: 1.1rem;
     margin: 0;
+    color: #111;
+    line-height: 1.3;
+}
+
+.cpt-chapter-nav-next a:hover h3,
+.cpt-chapter-nav-prev a:hover h3 {
+    color: #0073aa;
+}
+
+/* ========== CHAPTER GRID (4-Column Layout) ========== */
+
+.cpt-chapter-grid-section {
+    margin-bottom: 4rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 1rem;
+}
+
+.cpt-chapter-grid-title {
     text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.75rem;
+}
+
+.cpt-chapter-grid {
+    display: grid;
+    /* 160px guarantees 4 columns on standard laptops */
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1.5rem;
+}
+
+.cpt-chapter-grid-item {
+    text-align: center;
+}
+
+.cpt-chapter-grid-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    overflow: hidden;
+    border-radius: 8px;
+    transition: transform 0.2s ease;
+}
+
+.cpt-chapter-grid-link:hover {
+    transform: translateY(-4px);
+}
+
+.cpt-chapter-grid-image {
+    width: 100%;
+    aspect-ratio: 16 / 9; 
+    object-fit: cover;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.cpt-chapter-grid-card-title {
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: normal; /* Clean, non-bold text */
+    line-height: 1.3;
+    color: #111;
+}
+
+.cpt-chapter-grid-link:hover .cpt-chapter-grid-card-title {
+    color: #0073aa;
+}
+
+/* Responsive Grid */
+@media (max-width: 768px) {
+    .cpt-chapter-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .cpt-chapter-nav-bottom {
+        flex-direction: column;
+        gap: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cpt-chapter-grid {
+        grid-template-columns: 1fr;
+    }
 }
