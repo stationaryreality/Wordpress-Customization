@@ -1,23 +1,12 @@
 <?php
-/**
- * Game Grid Template
- *
- * Standardized contract:
- * - items       => array (normalized cards)
- * - query       => WP_Query|null (optional, for legacy callers)
- * - info        => [ 'title' => '', 'emoji' => '', 'type' => '' ]
- * - search_term => string (optional)
- */
 $query        = $args['query'] ?? null;
 $items        = $args['items'] ?? [];
 $info         = $args['info'] ?? [];
 $search_term  = $args['search_term'] ?? '';
 
-// Backward compatibility: allow direct title/emoji from older callers
 $title = $info['title'] ?? $args['title'] ?? 'Games';
-$emoji = $info['emoji'] ?? $args['emoji'] ?? '';
+$emoji = $info['emoji'] ?? $args['emoji'] ?? '🎮';
 
-// If a WP_Query was passed, convert it to cards (legacy support)
 if ($query instanceof WP_Query && $query->have_posts()) {
     $items = [];
     while ($query->have_posts()) {
@@ -27,48 +16,44 @@ if ($query instanceof WP_Query && $query->have_posts()) {
     wp_reset_postdata();
 }
 
-// No data to render
 if (empty($items)) {
     return;
 }
 ?>
 
-<section class="cited-grid-wrapper cited-grid-wrapper--games">
-  <h1 class="cited-grid__heading">
-    <?php if ($emoji) echo $emoji . ' '; ?>
+<section class="cpt-game-grid-section">
+  <h2 class="cpt-game-grid-title">
+    <?php if ($emoji) echo '<span class="emoji">' . esc_html($emoji) . '</span> '; ?>
     <?php echo esc_html($title); ?>
     <?php if ($search_term): ?>
-      containing “<?php echo esc_html($search_term); ?>”
+      <span>containing “<?php echo esc_html($search_term); ?>”</span>
     <?php endif; ?>
-  </h1>
+  </h2>
 
-  <div class="cited-grid cited-grid--games">
+  <div class="cpt-game-grid">
     <?php foreach ($items as $item): ?>
       <?php
-        $developer = $item['meta'] ?? '';
-        $summary   = $item['excerpt'] ?? '';
+        // FIX: Treat meta strictly as a pre-formatted HTML string
+        $meta_html = !empty($item['meta']) ? $item['meta'] : '';
+        $summary   = !empty($item['excerpt']) ? $item['excerpt'] : '';
         $img_url   = !empty($item['image']) ? $item['image'] : '';
       ?>
-      <article class="cited-item">
-        <a class="cited-item__link" href="<?php echo esc_url($item['url']); ?>">
+      <article class="cpt-game-grid-item">
+        <a href="<?php echo esc_url($item['url']); ?>" class="cpt-game-grid-link">
           <?php if ($img_url): ?>
-            <div class="cited-item__thumb" aria-hidden="true">
-              <img src="<?php echo esc_url($img_url); ?>"
-                   alt="<?php echo esc_attr($item['title']); ?>"
-                   loading="lazy"
-                   decoding="async" />
-            </div>
+            <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($item['title']); ?>" class="cpt-game-grid-image">
           <?php endif; ?>
-
-          <h3 class="cited-item__title"><?php echo esc_html($item['title']); ?></h3>
+          <h3 class="cpt-game-grid-card-title"><?php echo esc_html($item['title']); ?></h3>
         </a>
-
-        <?php if ($developer): ?>
-          <p class="cited-item__meta"><strong><?php echo esc_html($developer); ?></strong></p>
+        
+        <?php if ($meta_html): ?>
+          <p class="cpt-game-grid-meta">
+            <?php echo wp_kses_post($meta_html); ?>
+          </p>
         <?php endif; ?>
 
         <?php if ($summary): ?>
-          <p class="cited-item__excerpt"><?php echo esc_html(wp_trim_words($summary, 25)); ?></p>
+          <p class="cpt-game-grid-excerpt"><?php echo esc_html(wp_trim_words($summary, 25)); ?></p>
         <?php endif; ?>
       </article>
     <?php endforeach; ?>

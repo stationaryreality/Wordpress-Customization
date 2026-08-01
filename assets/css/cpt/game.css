@@ -1,0 +1,202 @@
+/* ============================================================
+   CPT: GAME
+   Styles for Game single pages, grids, and navigation.
+   ============================================================ */
+
+/* ========== SINGLE GAME PAGE ========== */
+
+.cpt-game-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.cpt-game-cover {
+    display: block;
+    margin: 0 auto 1.5rem auto;
+    max-width: 300px;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.cpt-game-title {
+    margin-bottom: 1.5rem;
+}
+
+.cpt-game-bio {
+    text-align: left;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+}
+
+/* ========== GAME NAVIGATION (Top) ========== */
+
+.cpt-game-nav-top {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.cpt-game-nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.cpt-game-nav-prev,
+.cpt-game-nav-next {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #555;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    flex: 1;
+    max-width: 200px;
+}
+
+.cpt-game-nav-prev:hover,
+.cpt-game-nav-next:hover {
+    color: #0073aa;
+}
+
+.cpt-game-nav-label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+    text-align: center;
+}
+
+.cpt-game-nav-thumb {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    transition: transform 0.2s ease;
+}
+
+.cpt-game-nav-prev:hover .cpt-game-nav-thumb,
+.cpt-game-nav-next:hover .cpt-game-nav-thumb {
+    transform: scale(1.05);
+}
+
+.cpt-game-nav-title {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: center;
+    word-break: break-word;
+    color: #111;
+}
+
+.cpt-keyboard-hint-inline {
+    background: rgba(0, 0, 0, 0.05);
+    color: #666;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    cursor: help;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    align-self: center;
+}
+
+.cpt-keyboard-hint-inline:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* ========== GAME GRID ========== */
+
+.cpt-game-grid-section {
+    margin-bottom: 4rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 1rem;
+}
+
+.cpt-game-grid-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.75rem;
+}
+
+.cpt-game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.cpt-game-grid-item {
+    text-align: center;
+    background: #fff;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    padding: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cpt-game-grid-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+}
+
+.cpt-game-grid-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.cpt-game-grid-image {
+    width: 100%;
+    aspect-ratio: 3 / 4; /* Classic game cover ratio */
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.cpt-game-grid-card-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+    color: #111;
+}
+
+.cpt-game-grid-link:hover .cpt-game-grid-card-title {
+    color: #0073aa;
+}
+
+.cpt-game-grid-meta {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 0 0 0.5rem 0;
+    font-style: italic;
+}
+
+.cpt-game-grid-meta a {
+    color: #0073aa;
+    text-decoration: none;
+}
+
+.cpt-game-grid-meta a:hover {
+    text-decoration: underline;
+}
+
+.cpt-game-grid-excerpt {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.5;
+    margin: 0;
+}
