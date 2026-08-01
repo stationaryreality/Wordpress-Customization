@@ -11,6 +11,8 @@ if (!$youtube_url && $parent_song) {
 
 <div class="person-content cpt-video-content">
 
+    <?php get_template_part('template-parts/navigation/video'); ?>
+
     <h1 class="cpt-video-title"><?php the_title(); ?></h1>
 
     <?php if ($youtube_url): ?>
@@ -26,8 +28,8 @@ if (!$youtube_url && $parent_song) {
     </div>
 
     <?php if ($parent_song): ?>
-        <div class="cpt-video-parent-cta" style="margin-top: 3em; text-align: center;">
-            <p style="margin-bottom: 1rem; color: #555;">This video is part of a larger song entry.</p>
+        <div class="cpt-video-parent-cta">
+            <p>This video is part of a larger song entry.</p>
             <a href="<?php echo esc_url(get_permalink($parent_song->ID)); ?>" class="cpt-video-parent-button">
                 View Song Page: <?php echo esc_html(get_the_title($parent_song->ID)); ?> →
             </a>
@@ -35,5 +37,9 @@ if (!$youtube_url && $parent_song) {
     <?php endif; ?>
 
     <?php show_featured_in_threads('videos_linked'); ?>
+    
+    <div class="cpt-video-bubbles">
+        <?php echo fn_taxonomy_bubbles($video_id); ?>
+    </div>
 
 </div>
