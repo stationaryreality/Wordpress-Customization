@@ -52,8 +52,9 @@
 }
 
 .cpt-profile-related-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* This forces perfect centering */
     gap: 1.5rem;
     max-width: 800px;
     margin: 0 auto;
@@ -61,6 +62,7 @@
 }
 
 .cpt-profile-related-item {
+    width: 120px; /* Fixed width prevents weird stretching */
     text-decoration: none;
     color: inherit;
     display: block;
@@ -74,9 +76,9 @@
 
 .cpt-profile-related-image {
     width: 100%;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 2 / 3; /* Rectangular book ratio */
     object-fit: cover;
-    border-radius: 50%; /* Circular for consistency */
+    border-radius: 4px; /* Slight radius like books, NOT 50% */
     margin-bottom: 0.75rem;
     display: block;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
