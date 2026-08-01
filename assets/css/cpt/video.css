@@ -283,3 +283,34 @@ main .cpt-video-section .cpt-video-grid {
     color: #0073aa;
     text-decoration: underline;
 }
+
+/* ========== PARENT SONG CTA BUTTON ========== */
+
+.cpt-video-parent-cta {
+    margin-top: 3em;
+    text-align: center;
+}
+
+.cpt-video-parent-cta p {
+    margin-bottom: 1rem;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.cpt-video-parent-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #0073aa;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.cpt-video-parent-button:hover {
+    background-color: #005177;
+    color: #fff;
+    transform: translateY(-2px);
+}

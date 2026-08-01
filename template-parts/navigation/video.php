@@ -1,56 +1,44 @@
 <?php
-$query        = $args['query'] ?? null;
-$items        = $args['items'] ?? [];
-$info         = $args['info'] ?? [];
-$search_term  = $args['search_term'] ?? '';
+$current_id = get_the_ID();
+$video_ids = get_posts([
+    'post_type'      => 'video',
+    'posts_per_page' => -1,
+    'orderby'        => 'title',
+    'order'          => 'ASC',
+    'fields'         => 'ids',
+]);
 
-$title = $info['title'] ?? $args['title'] ?? 'Videos';
-$emoji = $info['emoji'] ?? $args['emoji'] ?? '📼';
-
-// Support legacy WP_Query passed from page templates
-if ($query instanceof WP_Query && $query->have_posts()) {
-    $items = [];
-    while ($query->have_posts()) {
-        $query->the_post();
-        
-        $screenshot = get_field('video_screenshot');
-        $img_url = $screenshot ? $screenshot['sizes']['large'] : get_the_post_thumbnail_url(get_the_ID(), 'large');
-        
-        $items[] = [
-            'title'   => get_the_title(),
-            'url'     => get_permalink(),
-            'image'   => $img_url,
-            'excerpt' => '',
-            'meta'    => ''
-        ];
-    }
-    wp_reset_postdata();
-}
-
-if (empty($items)) {
-    return;
-}
+$current_index = array_search($current_id, $video_ids);
+$next_id = $video_ids[$current_index + 1] ?? null;
+$prev_id = $video_ids[$current_index - 1] ?? null;
 ?>
 
-<section class="cpt-video-section">
-    <h2 class="cpt-video-section-title">
-        <?php if ($emoji) echo '<span class="emoji">' . esc_html($emoji) . '</span> '; ?>
-        <?php echo esc_html($title); ?>
-        <?php if ($search_term): ?>
-            <span>containing “<?php echo esc_html($search_term); ?>”</span>
+<div class="cpt-video-nav-top">
+    <div class="cpt-video-nav-row">
+        <?php if ($prev_id): ?>
+            <?php $cover = get_field('video_screenshot', $prev_id); $thumb = $cover ? $cover['sizes']['medium'] : ''; ?>
+            <a href="<?php echo get_permalink($prev_id); ?>" class="cpt-video-nav-prev cpt-keyboard-nav-prev">
+                <span class="cpt-video-nav-label">← Previous Video</span>
+                <?php if ($thumb): ?>
+                    <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr(get_the_title($prev_id)); ?>" class="cpt-video-nav-thumb">
+                <?php endif; ?>
+                <span class="cpt-video-nav-title"><?php echo get_the_title($prev_id); ?></span>
+            </a>
         <?php endif; ?>
-    </h2>
 
-    <div class="cpt-video-grid">
-        <?php foreach ($items as $item): ?>
-            <article class="cpt-video-grid-item">
-                <a href="<?php echo esc_url($item['url']); ?>" class="cpt-video-grid-link">
-                    <?php if (!empty($item['image'])): ?>
-                        <img src="<?php echo esc_url($item['image']); ?>" alt="<?php echo esc_attr($item['title']); ?>" class="cpt-video-grid-image">
-                    <?php endif; ?>
-                    <h3 class="cpt-video-grid-title"><?php echo esc_html($item['title']); ?></h3>
-                </a>
-            </article>
-        <?php endforeach; ?>
+        <?php if ($prev_id || $next_id): ?>
+            <span class="cpt-keyboard-hint-inline" title="Use arrow keys to navigate">Use ← ⌨️ → keys</span>
+        <?php endif; ?>
+
+        <?php if ($next_id): ?>
+            <?php $cover = get_field('video_screenshot', $next_id); $thumb = $cover ? $cover['sizes']['medium'] : ''; ?>
+            <a href="<?php echo get_permalink($next_id); ?>" class="cpt-video-nav-next cpt-keyboard-nav-next">
+                <span class="cpt-video-nav-label">Next Video →</span>
+                <?php if ($thumb): ?>
+                    <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr(get_the_title($next_id)); ?>" class="cpt-video-nav-thumb">
+                <?php endif; ?>
+                <span class="cpt-video-nav-title"><?php echo get_the_title($next_id); ?></span>
+            </a>
+        <?php endif; ?>
     </div>
-</section>
+</div>
