@@ -1,22 +1,15 @@
 /* ============================================================
    CPT: GAME
    Styles for Game single pages, grids, navigation, and archives.
-   Matches Book's structure but keeps required theme wrappers.
+   1:1 Structural Match with Book CPT
    ============================================================ */
 
 /* ========== SINGLE GAME PAGE ========== */
 
-/*
-   Outer wrapper – must include both theme class and CPT class.
-   This stops the ghost sidebar glitch at the outermost level.
-*/
-.person-content.cpt-game-content {
+.cpt-game-content {
     text-align: center;
     max-width: 800px;
     margin: 0 auto;
-    overflow-x: hidden;   /* CRITICAL: kills the repaint bug */
-    max-width: 100%;      /* ensure it never exceeds viewport width */
-    contain: layout style; /* helps browser isolate layout for smoother repaint */
 }
 
 .cpt-game-cover {
@@ -28,7 +21,6 @@
     object-fit: cover;
     border-radius: 4px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-width: 100%;      /* image never pushes container wider */
 }
 
 .cpt-game-title {
@@ -42,9 +34,6 @@
     font-size: 1.05rem;
     line-height: 1.7;
     color: #333;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    max-width: 100%;      /* bio text never overflows */
 }
 
 /* ========== GAME NAVIGATION (Top) ========== */
@@ -74,8 +63,6 @@
     transition: color 0.2s ease;
     flex: 1;
     max-width: 200px;
-    overflow: hidden;     /* keep long titles from breaking layout */
-    max-width: 100%;      /* allow them to shrink on small screens */
 }
 
 .cpt-game-nav-prev:hover,
@@ -97,7 +84,6 @@
     border-radius: 4px;
     margin-bottom: 0.5rem;
     transition: transform 0.2s ease;
-    max-width: 100%;
 }
 
 .cpt-game-nav-prev:hover .cpt-game-nav-thumb,
@@ -111,12 +97,10 @@
     font-weight: 600;
     line-height: 1.3;
     text-align: center;
-    word-break: break-word;  /* break long words to avoid overflow */
+    word-break: break-word;
     color: #111;
-    max-width: 100%;
 }
 
-/* Keyboard hint – shared across all CPTs */
 .cpt-keyboard-hint-inline {
     background: rgba(0, 0, 0, 0.05);
     color: #666;
@@ -136,7 +120,7 @@
     background: rgba(0, 0, 0, 0.1);
 }
 
-/* ========== GAME GRID VIEW (Bulletproof) ========== */
+/* ========== GAME GRID VIEW ========== */
 
 .cpt-game-section {
     margin-bottom: 4rem;
@@ -147,10 +131,6 @@
     margin-bottom: 2rem;
 }
 
-/*
-   High specificity to beat legacy theme styles.
-   Class names follow the unified pattern.
-*/
 .main .cpt-game-section .cpt-game-grid,
 main .cpt-game-section .cpt-game-grid {
     display: grid;

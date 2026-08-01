@@ -1,0 +1,206 @@
+/* ============================================================
+   CPT: LYRIC
+   Styles for Lyric single pages, lists, and navigation.
+   ============================================================ */
+
+/* ========== SINGLE LYRIC PAGE ========== */
+
+.cpt-lyric-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cpt-lyric-title {
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    color: #111;
+}
+
+.cpt-lyric-text {
+    margin: 2em auto;
+    max-width: 800px;
+    text-align: left;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #333;
+    white-space: pre-wrap;
+}
+
+.cpt-lyric-source {
+    margin-top: 2rem;
+    font-size: 0.95rem;
+    color: #555;
+    font-style: italic;
+}
+
+.cpt-lyric-source a {
+    color: #0073aa;
+    text-decoration: none;
+}
+
+.cpt-lyric-source a:hover {
+    text-decoration: underline;
+}
+
+/* ========== LYRIC NAVIGATION (Top) ========== */
+
+.cpt-lyric-nav-top {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.cpt-lyric-nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.cpt-lyric-nav-prev,
+.cpt-lyric-nav-next {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #555;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    flex: 1;
+    max-width: 200px;
+}
+
+.cpt-lyric-nav-prev:hover,
+.cpt-lyric-nav-next:hover {
+    color: #0073aa;
+}
+
+.cpt-lyric-nav-label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+    text-align: center;
+}
+
+.cpt-lyric-nav-title {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: center;
+    word-break: break-word;
+    color: #111;
+}
+
+/* ========== LYRIC LIST ========== */
+
+.cpt-lyric-section {
+    margin-bottom: 4rem;
+    text-align: center;
+}
+
+.cpt-lyric-section-title {
+    margin-bottom: 2rem;
+    font-size: 1.75rem;
+}
+
+.cpt-lyric-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cpt-lyric-item {
+    display: flex;
+    gap: 1.5rem;
+    text-align: left;
+    background: #fff;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    padding: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cpt-lyric-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+}
+
+.cpt-lyric-thumb {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+}
+
+.cpt-lyric-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+    display: block;
+}
+
+.cpt-lyric-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.cpt-lyric-card-title {
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.3;
+}
+
+.cpt-lyric-card-title a {
+    color: #111;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.cpt-lyric-card-title a:hover {
+    color: #0073aa;
+}
+
+.cpt-lyric-snippet {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.5;
+    margin: 0 0 0.5rem 0;
+    font-style: italic;
+}
+
+.cpt-lyric-meta {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 0;
+}
+
+.cpt-lyric-meta a {
+    color: #0073aa;
+    text-decoration: none;
+}
+
+.cpt-lyric-meta a:hover {
+    text-decoration: underline;
+}
+
+/* Mobile adjustment for list */
+@media (max-width: 600px) {
+    .cpt-lyric-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .cpt-lyric-thumb {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 1rem;
+    }
+}
