@@ -15,7 +15,7 @@
 .cpt-game-cover {
     display: block;
     margin: 0 auto 1.5rem auto;
-    max-width: 300px;
+    max-width: 150px;
     width: 100%;
     aspect-ratio: 3 / 4; /* Classic game box ratio (change to 2/3 to match books exactly) */
     object-fit: cover;
