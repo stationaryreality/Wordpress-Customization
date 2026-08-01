@@ -4,13 +4,12 @@
    ============================================================ */
 
 /* ========== SINGLE GAME PAGE ========== */
-.cpt-game-content {
-    text-align: center;
-}
 
 .cpt-game-content {
+    text-align: center;
     max-width: 800px;
     margin: 0 auto;
+    overflow-x: hidden; /* CRITICAL: fixes ghost sidebar repaint bug */
 }
 
 .cpt-game-cover {
@@ -21,7 +20,7 @@
     aspect-ratio: 3 / 4; /* Game box ratio */
     object-fit: cover;
     border-radius: 4px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .cpt-game-title {
@@ -38,6 +37,7 @@
 }
 
 /* ========== GAME NAVIGATION (Top) ========== */
+
 .cpt-game-nav-top {
     margin-bottom: 2rem;
     padding-bottom: 1rem;
@@ -101,6 +101,7 @@
     color: #111;
 }
 
+/* Keyboard hint – shared across all CPTs */
 .cpt-keyboard-hint-inline {
     background: rgba(0, 0, 0, 0.05);
     color: #666;
@@ -121,6 +122,7 @@
 }
 
 /* ========== GAME GRID VIEW (1:1 Match with Book Grid) ========== */
+
 .cpt-game-section {
     margin-bottom: 4rem;
     text-align: center;
@@ -130,10 +132,14 @@
     margin-bottom: 2rem;
 }
 
+/*
+   High specificity to beat legacy theme styles.
+   Class names follow the unified pattern.
+*/
 .main .cpt-game-section .cpt-game-grid,
 main .cpt-game-section .cpt-game-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* 5-column layout */
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* 5‑column layout */
     gap: 1.5rem;
     max-width: 1200px;
     margin: 0 auto;
@@ -160,17 +166,17 @@ main .cpt-game-section .cpt-game-grid {
 .cpt-game-grid-image {
     width: 100%;
     max-width: 100%;
-    aspect-ratio: 2 / 3; /* Matches book grid ratio */
+    aspect-ratio: 2 / 3; /* Matches book grid ratio – rectangular */
     object-fit: cover;
     border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 0.75rem;
     display: block;
     transition: box-shadow 0.2s ease;
 }
 
 .cpt-game-grid-item > a:hover .cpt-game-grid-image {
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
 .cpt-game-grid-title {
