@@ -8,6 +8,11 @@
     text-align: center;
 }
 
+.cpt-game-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
 .cpt-game-cover {
     width: 150px;
     height: auto;
