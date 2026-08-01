@@ -128,7 +128,7 @@
 .cpt-fragment-grid {
     display: grid;
     /* Lowered to 180px to guarantee 4 columns on standard desktops */
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 1.5rem;
 }
 
