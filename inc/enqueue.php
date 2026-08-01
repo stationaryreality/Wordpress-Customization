@@ -31,57 +31,38 @@ function child_theme_enqueue_custom_fonts() {
 }
 add_action('wp_enqueue_scripts', 'child_theme_enqueue_custom_fonts');
 
-//css files loader
-$css_files = [
-    'wordpress-overrides',
-    'navigation',
-    'profiles',
-    'grids',        // ← global grid rules
-    'videos',
-    'references',
-    'tools',
-    'misc',
-    'elements',     // ← Elements overrides (loaded after grids)
-    'image-grid'    // ← Image overrides (loaded last)
-];
+// ==========================================
+// LEGACY CSS LOADER (Toggleable for Testing)
+// ==========================================
+// Set to false to disable legacy CSS and test the new unified system.
+// Once migration is complete and verified, this entire block can be safely deleted.
+define('ENABLE_LEGACY_CSS', true); 
 
-foreach ($css_files as $file) {
-    wp_enqueue_style(
-        $file,
-        get_stylesheet_directory_uri() . "/assets/css/{$file}.css",
-        [],
-        filemtime(get_stylesheet_directory() . "/assets/css/{$file}.css")
-    );
-}
-
-
-// === NEW STYLE LOADER (Loads all refactored CSS) ===
-function enqueue_new_style_files() {
-    $base_path = get_stylesheet_directory() . '/assets/css';
-    $base_uri = get_stylesheet_directory_uri() . '/assets/css';
-    
-    // Define folder structure to load
-    $folders = [
-        'global' => glob("{$base_path}/global/*.css"), // ← Changed to glob()
-        'cpt' => glob("{$base_path}/cpt/*.css"),
-        'pages' => glob("{$base_path}/pages/*.css"),
-        'components' => glob("{$base_path}/components/*.css"),
-        'components/footnotes' => glob("{$base_path}/components/footnotes/*.css"),
-        'admin' => glob("{$base_path}/admin/*.css"),
+if (defined('ENABLE_LEGACY_CSS') && ENABLE_LEGACY_CSS) {
+    $legacy_css_files = [
+        'profiles',
+        'grids',
+        'videos',
+        'references',
+        'tools',
+        'elements',
+        'image-grid'
     ];
-    
-    foreach ($folders as $folder_name => $files) {
-        if (is_array($files)) {
-            foreach ($files as $file_path) {
-                $file_name = basename($file_path);
-                $handle = 'new-' . $folder_name . '-' . basename($file_name, '.css');
-                $relative_path = str_replace($base_path . '/', '', $file_path);
-                wp_enqueue_style($handle, "{$base_uri}/{$relative_path}", [], filemtime($file_path));
-            }
+
+    foreach ($legacy_css_files as $file) {
+        $file_path = get_stylesheet_directory() . "/assets/legacycss/{$file}.css";
+        
+        // Only enqueue if the file actually exists to prevent errors
+        if (file_exists($file_path)) {
+            wp_enqueue_style(
+                'legacy-' . $file,
+                get_stylesheet_directory_uri() . "/assets/legacycss/{$file}.css",
+                [],
+                filemtime($file_path)
+            );
         }
     }
 }
-add_action('wp_enqueue_scripts', 'enqueue_new_style_files');
 
 // === KEYBOARD NAVIGATION SCRIPT ===
 function enqueue_keyboard_navigation() {
