@@ -118,7 +118,7 @@
 
 .cpt-song-referenced-image {
     width: 100%;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 16 / 9; /* Changed from 1 / 1 to match Chapters/Fragments/Elements */
     object-fit: cover;
     border-radius: 4px;
     margin-bottom: 0.75rem;
