@@ -5,8 +5,8 @@ $img_url   = $cover ? $cover['sizes']['medium'] : '';
 $wiki_slug = get_field('wikipedia_slug');
 ?>
 
-<div class="cpt-game-content">
-
+<div class="person-content cpt-game-content">
+  
   <?php get_template_part('template-parts/navigation/game'); ?>
 
   <?php if ($img_url): ?>
