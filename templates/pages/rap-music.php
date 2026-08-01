@@ -103,24 +103,14 @@ get_header();
     ?>
         <div class="feature-group">
           <h3 class="feature-level"><?php echo esc_html($label); ?></h3>
-
-          <div class="song-grid">
-            <?php while ($rap_songs->have_posts()): $rap_songs->the_post();
-
-              $cover = get_field('cover_image');
-              $img_url = $cover ? $cover['sizes']['thumbnail'] : '';
-
-            ?>
-              <div class="book-item">
-                <a href="<?php the_permalink(); ?>">
-                  <?php if ($img_url): ?>
-                    <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>">
-                  <?php endif; ?>
-                  <h3><?php the_title(); ?></h3>
-                </a>
-              </div>
-            <?php endwhile; ?>
-          </div>
+          
+          <?php
+          // Use the unified song grid template instead of a hardcoded loop
+          get_template_part('template-parts/grids/song', null, [
+            'query' => $rap_songs,
+            'title' => '', // Title is handled by the section heading above
+          ]);
+          ?>
         </div>
     <?php
       endif;
