@@ -1,12 +1,15 @@
 /* ============================================================
    CPT: BOOK
-   Styles for Book single pages, grids, navigation, and archive pages.
+   Styles for Book single pages, grids, navigation, and archives.
    ============================================================ */
 
 /* ========== SINGLE BOOK PAGE ========== */
 
 .cpt-book-content {
     text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    overflow-x: hidden; /* CRITICAL: fixes ghost sidebar repaint bug */
 }
 
 .cpt-book-cover {
@@ -78,8 +81,10 @@
     margin-bottom: 2rem;
 }
 
-/* Higher specificity: main .cpt-book-section .cpt-book-grid 
-   This will beat almost any generic old theme CSS */
+/*
+   High specificity to override generic theme styles.
+   The class names themselves follow the unified naming convention.
+*/
 .main .cpt-book-section .cpt-book-grid,
 main .cpt-book-section .cpt-book-grid {
     display: grid;
@@ -90,7 +95,6 @@ main .cpt-book-section .cpt-book-grid {
     padding: 0 1rem;
 }
 
-/* Force the items to shrink and not be overridden by old max-widths */
 .cpt-book-grid-item {
     text-align: center;
     width: 100%;
@@ -108,21 +112,20 @@ main .cpt-book-section .cpt-book-grid {
     transform: translateY(-4px);
 }
 
-/* Force the image to obey the grid cell size */
 .cpt-book-grid-image {
     width: 100%;
     max-width: 100%;
     aspect-ratio: 2 / 3;
     object-fit: cover;
     border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 0.75rem;
     display: block;
     transition: box-shadow 0.2s ease;
 }
 
 .cpt-book-grid-item > a:hover .cpt-book-grid-image {
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
 .cpt-book-grid-title {
