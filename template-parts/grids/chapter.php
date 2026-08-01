@@ -1,65 +1,50 @@
 <?php
 /**
- * Chapter Grid Template
+ * Template Part: Chapter Grid
  */
 $query        = $args['query'] ?? null;
 $items        = $args['items'] ?? [];
-$section_title = $args['title'] ?? '';
-$emoji        = $args['emoji'] ?? '';
+$info         = $args['info'] ?? [];
 $search_term  = $args['search_term'] ?? '';
 
-if (empty($items) && !$query) {
+if (!$query && empty($items)) {
     $query = new WP_Query([
         'post_type'      => 'chapter',
         'posts_per_page' => -1,
-        'orderby'        => 'date',
-        'order'          => 'DESC',
+        'orderby'        => 'menu_order',
+        'order'          => 'ASC',
     ]);
 }
 
-if ( empty($items) && (!$query instanceof WP_Query || !$query->have_posts()) ) {
+$title = $info['title'] ?? $args['title'] ?? 'Narrative Threads';
+
+if ($query instanceof WP_Query && $query->have_posts()) {
+    $items = [];
+    while ($query->have_posts()) {
+        $query->the_post();
+        $items[] = kp_build_card('chapter', get_the_ID(), get_cpt_metadata());
+    }
+    wp_reset_postdata();
+}
+
+if (empty($items)) {
     return;
 }
 ?>
 
-<section class="cpt-section chapter-grid-section" style="margin-bottom:4rem;">
-  <?php if ($section_title): ?>
-    <h2 class="section-title">
-      <?php echo esc_html(trim($emoji . ' ' . $section_title)); ?>
-      <?php if ($search_term): ?>
-        containing “<?php echo esc_html($search_term); ?>”
-      <?php endif; ?>
-    </h2>
-  <?php endif; ?>
-
-  <div class="chapter-grid">
-    <?php if (!empty($items)): ?>
-      <?php foreach ($items as $item): ?>
-        <div class="chapter-grid-item core-card">
-          <a href="<?php echo esc_url($item['url']); ?>" class="core-card-image-wrapper">
-            <?php if (!empty($item['image'])): ?>
-              <img src="<?php echo esc_url($item['image']); ?>" alt="<?php echo esc_attr($item['title']); ?>" class="core-card-image">
-            <?php endif; ?>
-          </a>
-          <h3 class="core-card-title">
-            <a href="<?php echo esc_url($item['url']); ?>"><?php echo esc_html($item['title']); ?></a>
-          </h3>
-        </div>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <?php while ($query->have_posts()): $query->the_post(); ?>
-        <div class="chapter-grid-item core-card">
-          <a href="<?php the_permalink(); ?>" class="core-card-image-wrapper">
-            <?php if (has_post_thumbnail()): ?>
-              <img src="<?php echo esc_url(get_the_post_thumbnail_url(get_the_ID(), 'medium')); ?>" alt="<?php the_title_attribute(); ?>" class="core-card-image">
-            <?php endif; ?>
-          </a>
-          <h3 class="core-card-title">
-            <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-          </h3>
-        </div>
-      <?php endwhile; ?>
-      <?php wp_reset_postdata(); ?>
-    <?php endif; ?>
+<section class="cpt-chapter-grid-section">
+  <h2 class="cpt-chapter-grid-title"><?php echo esc_html($title); ?></h2>
+  
+  <div class="cpt-chapter-grid">
+    <?php foreach ($items as $item): ?>
+      <article class="cpt-chapter-grid-item">
+        <a href="<?php echo esc_url($item['url']); ?>" class="cpt-chapter-grid-link">
+          <?php if (!empty($item['image'])): ?>
+            <img src="<?php echo esc_url($item['image']); ?>" alt="<?php echo esc_attr($item['title']); ?>" class="cpt-chapter-grid-image">
+          <?php endif; ?>
+          <h3 class="cpt-chapter-grid-card-title"><?php echo esc_html($item['title']); ?></h3>
+        </a>
+      </article>
+    <?php endforeach; ?>
   </div>
 </section>
