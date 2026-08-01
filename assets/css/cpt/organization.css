@@ -1,0 +1,203 @@
+/* ============================================================
+   CPT: ORGANIZATION
+   1:1 Structural Match with Book CPT (Square Logo Variant)
+   ============================================================ */
+
+/* ========== SINGLE ORGANIZATION PAGE ========== */
+
+.cpt-organization-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cpt-organization-logo {
+    width: 150px;
+    height: auto;
+    display: block;
+    margin: 0 auto 1em;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.cpt-organization-title {
+    margin-bottom: 0.5em;
+    font-size: 2rem;
+    color: #111;
+}
+
+.cpt-organization-bio {
+    margin: 2em auto;
+    max-width: 800px;
+    text-align: left;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #333;
+}
+
+.cpt-organization-related {
+    margin-top: 3em;
+    text-align: center;
+}
+
+.cpt-organization-related-title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: #111;
+}
+
+.cpt-organization-related-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 600px;
+    text-align: left;
+    display: inline-block;
+}
+
+.cpt-organization-related-item {
+    margin-bottom: 0.5rem;
+}
+
+.cpt-organization-related-item a {
+    color: #0073aa;
+    text-decoration: none;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.cpt-organization-related-item a:hover {
+    color: #005177;
+    text-decoration: underline;
+}
+
+/* ========== ORGANIZATION NAVIGATION (Top) ========== */
+
+.cpt-organization-nav-top {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.cpt-organization-nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.cpt-organization-nav-prev,
+.cpt-organization-nav-next {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #555;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    flex: 1;
+    max-width: 200px;
+}
+
+.cpt-organization-nav-prev:hover,
+.cpt-organization-nav-next:hover {
+    color: #0073aa;
+}
+
+.cpt-organization-nav-label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+    text-align: center;
+}
+
+.cpt-organization-nav-title {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: center;
+    word-break: break-word;
+    color: #111;
+}
+
+/* ========== ORGANIZATION GRID (1:1 Match with Book Grid) ========== */
+
+.cpt-organization-section {
+    margin-bottom: 4rem;
+    text-align: center;
+}
+
+.cpt-organization-section-title {
+    margin-bottom: 2rem;
+    font-size: 1.75rem;
+}
+
+.main .cpt-organization-section .cpt-organization-grid,
+main .cpt-organization-section .cpt-organization-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.cpt-organization-grid-item {
+    text-align: center;
+    width: 100%;
+    max-width: 100%;
+}
+
+.cpt-organization-grid-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.2s ease;
+}
+
+.cpt-organization-grid-link:hover {
+    transform: translateY(-4px);
+}
+
+.cpt-organization-grid-image {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 1 / 1; /* Square logo ratio */
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 0.75rem;
+    display: block;
+    transition: box-shadow 0.2s ease;
+}
+
+.cpt-organization-grid-link:hover .cpt-organization-grid-image {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.cpt-organization-grid-title {
+    font-size: 0.95rem;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.3;
+}
+
+.cpt-organization-grid-title a {
+    color: #111;
+    text-decoration: none;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.cpt-organization-grid-title a:hover {
+    color: #0073aa;
+    text-decoration: underline;
+}
+
+.cpt-organization-grid-meta {
+    font-size: 0.85rem;
+    color: #555;
+    margin: 0;
+    line-height: 1.4;
+}
