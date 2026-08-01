@@ -5,7 +5,8 @@ $img_url   = $cover ? $cover['sizes']['medium'] : '';
 $wiki_slug = get_field('wikipedia_slug');
 ?>
 
-<div class="cpt-game-content">
+<!-- CRITICAL: Keep .person-content to prevent the theme footer from snapping up -->
+<div class="person-content cpt-game-content">
 
   <?php get_template_part('template-parts/navigation/game'); ?>
 
@@ -15,9 +16,9 @@ $wiki_slug = get_field('wikipedia_slug');
 
   <h1 class="cpt-game-title"><?php the_title(); ?></h1>
 
-  <div class="cpt-game-bio">
+  <!-- The max-width goes HERE, not on the main wrapper -->
+  <div class="person-bio cpt-game-bio">
     <?php
-    // Use Wikipedia intro if available, otherwise the post content
     $wiki_intro = $wiki_slug ? kp_get_wikipedia_intro($wiki_slug) : '';
     echo $wiki_intro ? wp_kses_post($wiki_intro) : wp_kses_post(get_the_content());
     ?>

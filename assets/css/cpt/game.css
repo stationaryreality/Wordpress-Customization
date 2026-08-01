@@ -1,44 +1,38 @@
 /* ============================================================
    CPT: GAME
-   Styles for Game single pages, grids, and navigation.
-   (Mirrors Book CPT architecture for rectangular media)
+   1:1 Structural Match with Book CPT
    ============================================================ */
 
 /* ========== SINGLE GAME PAGE ========== */
-
 .cpt-game-content {
-    max-width: 800px;
-    margin: 0 auto;
     text-align: center;
 }
 
 .cpt-game-cover {
+    width: 150px;
+    height: auto;
     display: block;
-    margin: 0 auto 1.5rem auto;
-    max-width: 150px;
-    width: 100%;
-    aspect-ratio: 3 / 4; /* Classic game box ratio (change to 2/3 to match books exactly) */
+    margin: 0 auto 1em;
+    aspect-ratio: 3 / 4; /* Game box ratio */
     object-fit: cover;
     border-radius: 4px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .cpt-game-title {
-    margin-bottom: 1.5rem;
-    font-size: 2rem;
-    color: #111;
+    margin-bottom: 0.5em;
 }
 
 .cpt-game-bio {
+    margin: 2em auto;
+    max-width: 800px;
     text-align: left;
     font-size: 1.05rem;
     line-height: 1.7;
     color: #333;
-    margin-bottom: 3rem;
 }
 
 /* ========== GAME NAVIGATION (Top) ========== */
-
 .cpt-game-nav-top {
     margin-bottom: 2rem;
     padding-bottom: 1rem;
@@ -121,99 +115,78 @@
     background: rgba(0, 0, 0, 0.1);
 }
 
-/* ========== GAME GRID (Matches Book Grid Exactly) ========== */
-
-.cpt-game-grid-section {
+/* ========== GAME GRID VIEW (1:1 Match with Book Grid) ========== */
+.cpt-game-section {
     margin-bottom: 4rem;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 1rem;
-}
-
-.cpt-game-grid-title {
     text-align: center;
-    margin-bottom: 2rem;
-    font-size: 1.75rem;
 }
 
-.cpt-game-grid {
+.cpt-game-section h2 {
+    margin-bottom: 2rem;
+}
+
+.main .cpt-game-section .cpt-game-grid,
+main .cpt-game-section .cpt-game-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Matches the tight 4-col layout */
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* 5-column layout */
     gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
 }
 
 .cpt-game-grid-item {
     text-align: center;
+    width: 100%;
+    max-width: 100%;
 }
 
-.cpt-game-grid-link {
-    display: block;
+.cpt-game-grid-item > a {
     text-decoration: none;
     color: inherit;
-    overflow: hidden;
-    border-radius: 8px;
+    display: block;
     transition: transform 0.2s ease;
 }
 
-.cpt-game-grid-link:hover {
+.cpt-game-grid-item > a:hover {
     transform: translateY(-4px);
 }
 
 .cpt-game-grid-image {
     width: 100%;
-    aspect-ratio: 3 / 4; /* Matches single page cover ratio */
+    max-width: 100%;
+    aspect-ratio: 2 / 3; /* Matches book grid ratio */
     object-fit: cover;
-    display: block;
     border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 0.75rem;
+    display: block;
+    transition: box-shadow 0.2s ease;
 }
 
-.cpt-game-grid-card-title {
-    margin-top: 1rem;
-    font-size: 1rem;
-    font-weight: normal;
+.cpt-game-grid-item > a:hover .cpt-game-grid-image {
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+.cpt-game-grid-title {
+    font-size: 0.95rem;
+    margin: 0 0 0.5rem 0;
     line-height: 1.3;
-    color: #111;
 }
 
-.cpt-game-grid-link:hover .cpt-game-grid-card-title {
+.cpt-game-grid-title a {
+    color: #111;
+    text-decoration: none;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.cpt-game-grid-title a:hover {
     color: #0073aa;
+    text-decoration: underline;
 }
 
 .cpt-game-grid-meta {
     font-size: 0.85rem;
-    color: #666;
-    margin: 0.5rem 0 0 0;
-    font-style: italic;
-}
-
-.cpt-game-grid-meta a {
-    color: #0073aa;
-    text-decoration: none;
-}
-
-.cpt-game-grid-meta a:hover {
-    text-decoration: underline;
-}
-
-.cpt-game-grid-excerpt {
-    font-size: 0.9rem;
     color: #555;
-    line-height: 1.5;
-    margin: 0.5rem 0 0 0;
-}
-
-/* Responsive Grid */
-@media (max-width: 768px) {
-    .cpt-game-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .cpt-game-grid {
-        grid-template-columns: 1fr;
-    }
+    margin: 0;
 }
