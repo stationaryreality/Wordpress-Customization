@@ -109,7 +109,7 @@
     color: #0073aa;
 }
 
-/* ========== FRAGMENT GRID (4-Column Test) ========== */
+/* ========== FRAGMENT GRID (4-Column Layout) ========== */
 
 .cpt-fragment-grid-section {
     margin-bottom: 4rem;
@@ -127,8 +127,8 @@
 
 .cpt-fragment-grid {
     display: grid;
-    /* 4-column layout test: fits more items, matches Elements/Images width */
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    /* Lowered to 180px to guarantee 4 columns on standard desktops */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 1.5rem;
 }
 
@@ -151,7 +151,7 @@
 
 .cpt-fragment-grid-image {
     width: 100%;
-    aspect-ratio: 16 / 9; /* Slightly rectangular, distinct from square images */
+    aspect-ratio: 16 / 9; 
     object-fit: cover;
     display: block;
     border-radius: 8px;
@@ -161,7 +161,7 @@
 .cpt-fragment-grid-card-title {
     margin-top: 1rem;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: normal; /* Removed bold for a cleaner look */
     line-height: 1.3;
     color: #111;
 }
@@ -170,14 +170,25 @@
     color: #0073aa;
 }
 
-/* Mobile adjustment for grid */
+/* Responsive Grid: Matches Chapter behavior */
+@media (max-width: 1024px) {
+    .cpt-fragment-grid {
+        /* Tablets: still tries for 3-4 columns */
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+}
+
 @media (max-width: 768px) {
     .cpt-fragment-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        /* Mobile: 2 columns */
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
     }
-    
-    .cpt-fragment-nav-bottom {
-        flex-direction: column;
-        gap: 30px;
+}
+
+@media (max-width: 480px) {
+    .cpt-fragment-grid {
+        /* Small mobile: 1 column, exactly like chapters */
+        grid-template-columns: 1fr;
     }
 }
