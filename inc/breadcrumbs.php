@@ -97,3 +97,14 @@ add_filter('wpseo_breadcrumb_links', function($links) {
 
     return $links;
 });
+
+// =====================================================
+// COMPLETELY REMOVE YOAST BREADCRUMBS ON HOMEPAGE
+// This prevents the HTML from rendering, reclaiming all vertical space.
+// =====================================================
+add_filter('wpseo_breadcrumb_output', function($output) {
+    if (is_front_page() || is_home()) {
+        return ''; // Return empty string to output nothing
+    }
+    return $output;
+});
