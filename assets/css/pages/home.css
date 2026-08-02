@@ -3,16 +3,6 @@
    Final compact grid layout
    ============================================================ */
 
-/* Reclaim top space on homepage */
-main.homepage-posts {
-    padding-top: 0.5rem !important; /* Cuts down the large theme top margin */
-    margin-top: 0 !important;
-}
-
-.homepage-section:first-child {
-    margin-top: 0 !important;
-}
-
 .homepage-section {
     margin-bottom: 16px;
 }
