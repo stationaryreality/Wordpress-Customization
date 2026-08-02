@@ -1,88 +1,60 @@
 /* ============================================================
    HOMEPAGE
-   Styles for the Custom Home template and its page grids.
+   Exact 1:1 migration of working homepage grid styles.
    ============================================================ */
 
-/* ========== HOMEPAGE SECTION CONTAINER ========== */
-
 .homepage-section {
-    margin-bottom: 3rem; /* Increased from 16px for better breathing room */
+    margin-bottom: 16px; /* Restored to original working value */
 }
 
-.homepage-section-title {
-    font-size: 1.75rem;
-    font-weight: 600;
-    color: #111;
-    margin-bottom: 1.5rem;
-    text-align: center;
-}
-
-/* ========== HOMEPAGE GRID ========== */
-
-.homepage-grid {
+.tag-posts-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px; /* Restored to original working value */
+    margin-top: 10px;
     align-items: stretch;
 }
 
-/* ========== HOMEPAGE GRID ITEM ========== */
-
-.homepage-item {
+.tag-post-item {
     background: #f9f9f9;
     border-radius: 8px;
-    padding: 1rem;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+    padding: 10px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.08);
     display: flex;
     flex-direction: column;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.homepage-item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
-}
-
-.homepage-item-thumbnail {
-    display: block;
-    margin-bottom: 0.75rem;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.homepage-item-thumbnail img {
+.tag-post-thumbnail img {
     width: 100%;
     height: auto;
-    max-height: 160px;
+    max-height: 140px; /* Restored to original working value */
     object-fit: cover;
-    display: block;
-    transition: transform 0.3s ease;
+    border-radius: 8px;
 }
 
-.homepage-item:hover .homepage-item-thumbnail img {
-    transform: scale(1.03);
-}
-
-.homepage-item-title {
-    font-size: 1.1rem;
-    font-weight: 600;
+.tag-post-title {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-top: 6px; /* Restored to original working value */
     line-height: 1.3;
-    margin-bottom: 0.5rem;
     text-decoration: none;
-    color: #222;
-    transition: color 0.2s ease;
+    color: #333;
 }
 
-.homepage-item-title:hover {
+.tag-post-title:hover {
     color: #0073aa;
 }
 
-.homepage-item-excerpt {
-    font-size: 0.9rem;
+.tag-post-excerpt {
     color: #555;
+    font-size: 0.875em;
+    margin-top: auto; /* This is the magic line that prevents the huge gaps */
+    padding-top: 8px;
     line-height: 1.5;
-    margin-top: auto; /* Pushes excerpt to the bottom for perfect alignment */
-    padding-top: 0.5rem;
+}
+
+.tag-post-item:hover {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
 }
 
 /* ========== RESPONSIVE ADJUSTMENTS ========== */
