@@ -12,12 +12,12 @@ if (empty($pages)) {
 <section class="homepage-section">
     
     <?php if ($title) : ?>
-        <h2 class="page-section-title">
+        <h2 class="homepage-section-title">
             <?php echo esc_html($title); ?>
         </h2>
     <?php endif; ?>
 
-    <div class="tag-posts-grid">
+    <div class="homepage-grid">
 
         <?php foreach ($pages as $item) :
 
@@ -36,30 +36,30 @@ if (empty($pages)) {
             }
         ?>
 
-            <div class="tag-post-item">
+            <article class="homepage-item">
 
-                <a href="<?php echo get_permalink($page->ID); ?>" class="tag-post-thumbnail">
+                <a href="<?php echo esc_url(get_permalink($page->ID)); ?>" class="homepage-item-thumbnail">
                     <?php if (has_post_thumbnail($page->ID)) : ?>
                         <?php echo get_the_post_thumbnail($page->ID, 'medium'); ?>
                     <?php endif; ?>
                 </a>
 
-                <a href="<?php echo get_permalink($page->ID); ?>" class="tag-post-title">
+                <a href="<?php echo esc_url(get_permalink($page->ID)); ?>" class="homepage-item-title">
                     <?php echo esc_html($item['title']); ?>
                 </a>
 
-<p class="tag-post-excerpt">
-    <?php 
-    $raw_excerpt = get_the_excerpt($page->ID);
-    if ( empty($raw_excerpt) ) {
-        $raw_excerpt = $item['description'];
-    }
-    // Strip any rogue HTML tags injected by other plugins
-    echo esc_html( wp_strip_all_tags($raw_excerpt) ); 
-    ?>
-</p>
+                <p class="homepage-item-excerpt">
+                    <?php 
+                    $raw_excerpt = get_the_excerpt($page->ID);
+                    if ( empty($raw_excerpt) ) {
+                        $raw_excerpt = $item['description'];
+                    }
+                    // Strip any rogue HTML tags injected by other plugins
+                    echo esc_html( wp_strip_all_tags($raw_excerpt) ); 
+                    ?>
+                </p>
 
-            </div>
+            </article>
 
         <?php endforeach; ?>
 
