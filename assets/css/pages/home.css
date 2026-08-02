@@ -1,6 +1,6 @@
 /* ============================================================
    HOMEPAGE
-   Exact 1:1 migration of working homepage grid styles.
+   Compact grid layout for better density
    ============================================================ */
 
 .homepage-section {
@@ -9,7 +9,7 @@
 
 .tag-posts-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 16px;
     margin-top: 10px;
     align-items: stretch;
@@ -18,7 +18,7 @@
 .tag-post-item {
     background: #f9f9f9;
     border-radius: 8px;
-    padding: 10px;
+    padding: 8px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.08);
     display: flex;
     flex-direction: column;
@@ -40,7 +40,7 @@
 .tag-post-thumbnail img {
     width: 100%;
     height: auto;
-    max-height: 140px;
+    max-height: 120px;
     object-fit: cover;
     border-radius: 8px;
     display: block;
@@ -52,7 +52,7 @@
 }
 
 .tag-post-title {
-    font-size: 1.1em;
+    font-size: 1em;
     font-weight: bold;
     margin-top: 6px;
     margin-bottom: 4px;
@@ -67,7 +67,7 @@
 
 .tag-post-excerpt {
     color: #555;
-    font-size: 0.875em;
+    font-size: 0.8em;
     margin-top: 0;
     margin-bottom: 0;
     padding-top: 4px;
