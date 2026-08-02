@@ -1,22 +1,33 @@
 /* ============================================================
    HOMEPAGE
-   Ultra-compact grid layout with left-aligned section titles
+   Final compact grid layout
    ============================================================ */
 
-.homepage-section {
-    margin-bottom: 12px;
+/* Reclaim top space on homepage */
+main.homepage-posts {
+    padding-top: 0.5rem !important; /* Cuts down the large theme top margin */
+    margin-top: 0 !important;
 }
 
-/* Left-aligned section titles, harmonious with grid titles but slightly more prominent */
+.homepage-section:first-child {
+    margin-top: 0 !important;
+}
+
+.homepage-section {
+    margin-bottom: 16px;
+}
+
+/* Unbolded, slightly larger section titles */
 .homepage-section-title,
 .page-section-title {
-    font-size: 1.05rem; /* Slightly larger than the 0.9em grid titles for hierarchy */
-    font-weight: 700;
-    color: #111;
-    text-align: left; /* Moved back to the left */
-    margin-top: 0.5rem;
+    font-size: 1.25rem; /* Increased size */
+    font-weight: 400; /* Unbolded */
+    color: #222;
+    text-align: left;
+    margin-top: 0.25rem;
     margin-bottom: 0.5rem;
     line-height: 1.2;
+    letter-spacing: -0.01em; /* Crisper look for normal weight text */
 }
 
 .tag-posts-grid {
