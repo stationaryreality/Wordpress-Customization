@@ -64,7 +64,7 @@ add_action('wp_enqueue_scripts', 'enqueue_css_files');
 // ==========================================
 // 2. LEGACY CSS TOGGLE (assets/legacycss/)
 // ==========================================
-define('ENABLE_LEGACY_CSS', true);
+define('ENABLE_LEGACY_CSS', false);
 
 if (ENABLE_LEGACY_CSS) {
     $legacy_files = glob(get_stylesheet_directory() . '/assets/legacycss/*.css');
