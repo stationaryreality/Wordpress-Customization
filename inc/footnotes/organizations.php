@@ -48,8 +48,12 @@ function fn_organizations($chapter_id, $group_titles) {
             ? "<div class=\"cpt-organization-footnote-thumb\"><a href=\"{$link}\"><img src=\"{$cover['url']}\" alt=\"{$title}\"></a></div>" 
             : '';
 
-        // Manual bio (preferred) or fallback to wiki
-        $manual_bio = get_field('organization_bio_manual', $org->ID);
+// Manual bio (preferred) or fallback to wiki
+$manual_bio = get_field('organization_bio_manual', $org->ID);
+if ($manual_bio) {
+    $manual_bio = esc_html($manual_bio);
+}
+
         $wiki_slug  = get_field('wikipedia_slug', $org->ID);
         $wiki_bio   = $wiki_slug ? get_wikipedia_intro($wiki_slug) : false;
 

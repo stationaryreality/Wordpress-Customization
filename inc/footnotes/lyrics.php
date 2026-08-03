@@ -47,10 +47,10 @@ function fn_lyrics($chapter_id, $group_titles) {
         echo '<div class="cpt-lyric-footnote-details">';
         echo "<a href=\"{$link}\">{$title}</a>";
 
-        $lyric = get_field('lyric_plain_text', $item->ID);
-        if ($lyric) {
-            echo "<div class=\"cpt-lyric-footnote-text\">{$lyric}</div>";
-        }
+$lyric = get_field('lyric_plain_text', $item->ID);
+if ($lyric) {
+    echo "<div class=\"cpt-lyric-footnote-text\">" . esc_html($lyric) . "</div>";
+}
 
         if ($song) {
             $src_title = esc_html(get_the_title($song));
