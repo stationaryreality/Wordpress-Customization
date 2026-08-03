@@ -240,3 +240,8 @@ main .cpt-element-section .cpt-element-grid {
     color: #111;
     text-decoration: none;
 }
+
+/* Element grid items in featured-in sections – square */
+.cpt-element-grid-image {
+    aspect-ratio: 1 / 1 !important;
+}
