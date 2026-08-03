@@ -1,0 +1,95 @@
+/* ==========================================================================
+   Site Tools: Footnotes Viewer
+   ========================================================================== */
+
+/* --- Form / Selector --- */
+.tool-footnotes-viewer .footnotes-form {
+    margin-bottom: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+}
+
+.tool-footnotes-viewer .footnotes-form label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.tool-footnotes-viewer .footnotes-form select {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    min-width: 300px;
+    max-width: 100%;
+    cursor: pointer;
+}
+
+.tool-footnotes-viewer .footnotes-form select:focus {
+    outline: none;
+    border-color: #007cba;
+    box-shadow: 0 0 0 2px rgba(0, 124, 186, 0.2);
+}
+
+/* --- Output Container --- */
+.tool-footnotes-viewer .footnotes-viewer-output {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+/* --- Meta Information Block --- */
+.tool-footnotes-viewer .footnotes-meta {
+    background: #f8f9fa;
+    border-left: 4px solid #007cba;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0 4px 4px 0;
+}
+
+.tool-footnotes-viewer .footnotes-meta h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    color: #1e1e1e;
+}
+
+.tool-footnotes-viewer .footnotes-meta p {
+    margin: 0.25rem 0;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.tool-footnotes-viewer .footnotes-meta a {
+    color: #007cba;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.tool-footnotes-viewer .footnotes-meta a:hover {
+    text-decoration: underline;
+}
+
+/* --- Rendered Shortcode Output --- */
+.tool-footnotes-viewer .footnotes-rendered {
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Ensure any nested elements from the shortcode look clean */
+.tool-footnotes-viewer .footnotes-rendered p {
+    margin-bottom: 1em;
+}
+
+.tool-footnotes-viewer .footnotes-rendered a {
+    color: #007cba;
+    text-decoration: none;
+}
+
+.tool-footnotes-viewer .footnotes-rendered a:hover {
+    text-decoration: underline;
+}

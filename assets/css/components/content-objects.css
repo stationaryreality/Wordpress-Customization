@@ -1,0 +1,84 @@
+/* ==========================================================================
+   Content Objects Grid (Cover Blocks)
+   ========================================================================== */
+
+.content-objects-section {
+    margin: 3rem 0;
+}
+
+.content-objects-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+}
+
+.content-objects-grid {
+    width: 100%;
+}
+
+.content-object {
+    text-align: center;
+}
+
+.content-object-title {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.content-object-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.content-object-title a:hover {
+    text-decoration: underline;
+}
+
+.content-object-render {
+    display: flex;
+    justify-content: center;
+}
+
+/* --- Grid Layouts --- */
+
+.content-objects-grid.layout-1col {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+.content-objects-grid.layout-2col {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+}
+
+.content-objects-grid.layout-3col {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
+}
+
+/* --- Mobile Responsiveness --- */
+
+@media (max-width: 900px) {
+    .content-objects-grid.layout-3col {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .content-objects-grid.layout-2col,
+    .content-objects-grid.layout-3col {
+        grid-template-columns: 1fr;
+    }
+    
+    .content-objects-section {
+        margin: 2rem 0;
+    }
+    
+    .content-objects-title {
+        margin-bottom: 1.5rem;
+        font-size: 1.25rem;
+    }
+}

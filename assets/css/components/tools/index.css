@@ -1,0 +1,97 @@
+/* ==========================================================================
+   Site Tools: Full Site Index
+   ========================================================================== */
+
+/* --- Header --- */
+.tool-index .cpt-total {
+    margin: 0.75em 0 1.5em 0;
+    font-size: 0.95rem;
+    color: #666;
+}
+
+.tool-index .tool-header p a {
+    color: #007cba;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.tool-index .tool-header p a:hover {
+    text-decoration: underline;
+}
+
+/* --- Filters Component (reused from cpt-filters) --- */
+.tool-index .cpt-filters {
+    margin-bottom: 2em;
+}
+
+.tool-index .cpt-filters button {
+    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    font-size: 0.9rem;
+    margin-right: 0.5rem;
+    margin-bottom: 1em;
+}
+
+.tool-index .cpt-filters button:hover {
+    background: #f3f3f3;
+}
+
+.tool-index .cpt-filters-types {
+    margin-top: 1em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.tool-index .cpt-filters-types label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+    user-select: none;
+}
+
+.tool-index .cpt-filters-types input[type="checkbox"] {
+    cursor: pointer;
+}
+
+/* --- List --- */
+.tool-index .cpt-clean-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tool-index .cpt-clean-list li {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tool-index .cpt-clean-list li:last-child {
+    border-bottom: none;
+}
+
+.tool-index .entry-emoji {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    width: 1.5rem;
+    text-align: center;
+}
+
+.tool-index .cpt-clean-list a {
+    color: #1e1e1e;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.tool-index .cpt-clean-list a:hover {
+    color: #007cba;
+    text-decoration: underline;
+}
