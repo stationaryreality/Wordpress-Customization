@@ -1,0 +1,13 @@
+/* Prevent parent container and alignment issues */
+body .entry-content .wp-block-cover,
+body .wp-block-post-content .wp-block-cover,
+body .post-content__wrap .wp-block-cover,
+body .wp-block-group .wp-block-cover,
+body .cpt-lyric-text .wp-block-cover,
+body .cpt-lyric-content .wp-block-cover,
+body .cpt-song-content .wp-block-cover {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    float: none !important;
+}
+
