@@ -1,6 +1,5 @@
 /* ============================================================
-   HOMEPAGE
-   Compact grid layout
+   HOMEPAGE - Compact Grid Layout
    ============================================================ */
 
 .homepage-section {
@@ -22,12 +21,13 @@
 
 .tag-posts-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(3, minmax(140px, 1fr)); /* 🔥 Changed: min width 140px */
+    gap: 12px; /* Slightly more gap for breathing room */
     margin-top: 8px;
     align-items: stretch;
 }
 
+/* 🔥 NEW: Constrain the maximum width of each item */
 .tag-post-item {
     background: #f9f9f9;
     border-radius: 6px;
@@ -36,6 +36,9 @@
     display: flex;
     flex-direction: column;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    max-width: 220px; /* 🔥 NEW: Items won't exceed this width */
+    margin: 0 auto; /* Center within grid cell */
+    width: 100%;
 }
 
 .tag-post-item:hover {
@@ -87,15 +90,58 @@
     line-height: 1.3;
 }
 
-/* 6. Responsive adjustments */
+/* ========== RESPONSIVE ========== */
+
+/* Tablet: 2 columns */
 @media (max-width: 768px) {
     .tag-posts-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(120px, 1fr)); /* 🔥 Changed: 2 columns with min width */
+        gap: 10px;
+    }
+    
+    .tag-post-item {
+        max-width: 200px; /* Slightly smaller on tablet */
     }
 }
 
+/* Mobile: 2 columns (not 1!) */
 @media (max-width: 480px) {
     .tag-posts-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr); /* 🔥 KEY CHANGE: 2 columns on mobile */
+        gap: 8px;
+    }
+    
+    .tag-post-item {
+        max-width: 160px; /* Smaller on mobile to keep items compact */
+        padding: 4px;
+    }
+    
+    .tag-post-thumbnail img {
+        max-height: 80px; /* Smaller thumbnails on mobile */
+    }
+    
+    .tag-post-title {
+        font-size: 0.8em;
+    }
+    
+    .tag-post-excerpt {
+        font-size: 0.65em;
+    }
+}
+
+/* Extra small: Still 2 columns */
+@media (max-width: 360px) {
+    .tag-posts-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+    
+    .tag-post-item {
+        max-width: 140px;
+        padding: 3px;
+    }
+    
+    .tag-post-thumbnail img {
+        max-height: 60px;
     }
 }
