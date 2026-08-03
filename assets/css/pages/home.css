@@ -1,38 +1,13 @@
 /* ============================================================
    HOMEPAGE
-   Compact 3-column grid layout
+   Compact grid layout
    ============================================================ */
-
-/* 1. NUCLEAR OVERRIDE: Force top space down to ~0.25 inches (10px) */
-body.home main,
-body.home .site-main,
-body.home .content-area,
-body.home .site-content {
-    padding-top: 10px !important;
-    margin-top: 0 !important;
-}
-
-/* 2. Ensure absolutely no breadcrumb wrapper is taking up space */
-body.home #breadcrumbs,
-body.home .yoast-breadcrumbs,
-body.home .breadcrumb {
-    display: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    height: 0 !important;
-}
-
-/* 3. Remove any top margin from the very first section */
-.homepage-section:first-child {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-}
 
 .homepage-section {
     margin-bottom: 16px;
 }
 
-/* 4. Unbolded, slightly larger section titles */
+/* Unbolded, slightly larger section titles */
 .homepage-section-title,
 .page-section-title {
     font-size: 1.25rem;
@@ -45,7 +20,6 @@ body.home .breadcrumb {
     letter-spacing: -0.01em;
 }
 
-/* 5. Grid Layout - 3 columns */
 .tag-posts-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
