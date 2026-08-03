@@ -30,15 +30,7 @@
     color: white !important;
 }
 
-/* Rounded image style */
-.is-style-rounded img {
-    width: 96px !important;
-    height: 96px !important;
-    border-radius: 50% !important;
-    object-fit: cover !important;
-    display: inline-block !important;
-    vertical-align: middle !important;
-}
+
 
 /* Prevent parent container and alignment issues */
 body .entry-content .wp-block-cover,

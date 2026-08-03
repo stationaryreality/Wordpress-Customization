@@ -1,18 +1,15 @@
 /* ============================================================
    FEATURED IN SECTIONS
-   Shared grid for "Featured In" / "Referenced In" sections
-   across artist, element, profile, and other CPT pages.
+   Shared grid for "Featured In" / "Narrative Threads" sections
    ============================================================ */
 
-.narrative-threads,
-.narrative-supporting {
+.featured-in-section {
     margin: 2.5rem auto 0;
     text-align: center;
     max-width: 1200px;
 }
 
-.narrative-threads h2,
-.narrative-supporting h2 {
+.featured-in-section-title {
     font-size: 1.25rem;
     font-weight: 500;
     margin-bottom: 1.25rem;
@@ -20,33 +17,32 @@
 }
 
 /* The key: fixed max-width columns + justify-content: center */
-.thread-grid {
+.featured-in-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 220px));
     gap: 1.5rem;
     justify-content: center;
     margin: 0 auto;
     padding: 0;
-    list-style: none;
 }
 
-.thread-item {
+.featured-in-item {
     text-align: center;
     max-width: 220px;
 }
 
-.thread-item a {
+.featured-in-link {
     text-decoration: none;
     color: inherit;
     display: block;
     transition: transform 0.2s ease;
 }
 
-.thread-item a:hover {
+.featured-in-link:hover {
     transform: translateY(-3px);
 }
 
-.thread-item img {
+.featured-in-image {
     width: 100%;
     aspect-ratio: 16 / 9;
     object-fit: cover;
@@ -57,11 +53,11 @@
     transition: box-shadow 0.2s ease;
 }
 
-.thread-item a:hover img {
+.featured-in-link:hover .featured-in-image {
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
-.thread-item h3 {
+.featured-in-item-title {
     margin: 0.5rem 0 0;
     font-size: 0.95rem;
     font-weight: 500;
@@ -69,24 +65,23 @@
     color: #111;
 }
 
-.thread-item a:hover h3 {
+.featured-in-link:hover .featured-in-item-title {
     color: #0073aa;
 }
 
 /* ========== ELEMENT VARIANT (1:1 aspect ratio) ========== */
-/* If elements use the same .thread-grid, add a modifier class */
-.thread-grid--elements .thread-item img {
+.featured-in-grid--elements .featured-in-image {
     aspect-ratio: 1 / 1;
 }
 
 /* ========== RESPONSIVE ========== */
 @media (max-width: 600px) {
-    .thread-grid {
+    .featured-in-grid {
         grid-template-columns: repeat(auto-fill, minmax(120px, 180px));
         gap: 1rem;
     }
     
-    .thread-item h3 {
+    .featured-in-item-title {
         font-size: 0.85rem;
     }
 }

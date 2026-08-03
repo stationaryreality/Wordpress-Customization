@@ -8,11 +8,11 @@ if (empty($items)) {
 }
 ?>
 
-<div class="narrative-threads" style="margin-top: 4em; text-align:center;">
+<div class="featured-in-section">
 
-    <h2><?php echo esc_html($title); ?></h2>
+    <h2 class="featured-in-section-title"><?php echo esc_html($title); ?></h2>
 
-    <div class="cpt-chapter-grid" style="max-width:1200px; margin:0 auto;">
+    <div class="featured-in-grid">
 
         <?php foreach ($items as $item):
 
@@ -20,17 +20,17 @@ if (empty($items)) {
 
         ?>
 
-            <article class="cpt-chapter-grid-item">
+            <article class="featured-in-item">
 
-                <a href="<?php echo get_permalink($item->ID); ?>" class="cpt-chapter-grid-link">
+                <a href="<?php echo get_permalink($item->ID); ?>" class="featured-in-link">
 
                     <?php if ($thumb): ?>
                         <img src="<?php echo esc_url($thumb); ?>"
                              alt="<?php echo esc_attr(get_the_title($item->ID)); ?>"
-                             class="cpt-chapter-grid-image">
+                             class="featured-in-image">
                     <?php endif; ?>
 
-                    <h3 class="cpt-chapter-grid-card-title">
+                    <h3 class="featured-in-item-title">
                         <?php echo esc_html(get_the_title($item->ID)); ?>
                     </h3>
 
