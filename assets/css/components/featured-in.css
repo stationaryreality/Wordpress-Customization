@@ -6,7 +6,6 @@
 .featured-in-section {
     margin: 2.5rem auto 0;
     text-align: center;
-    max-width: 1200px;
 }
 
 .featured-in-section-title {
@@ -16,15 +15,15 @@
     color: #111;
 }
 
-/* The key: fixed max-width columns + justify-content: center */
 .featured-in-grid {
-    width: 100%; /* Make grid fill its parent */
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 220px));
+    grid-template-columns: repeat(auto-fit, minmax(160px, 220px));
+
+    max-width: 1200px;
+    margin: 0 auto;
+
     gap: 1.5rem;
     justify-content: center;
-    margin: 0 auto;
-    padding: 0;
 }
 
 .featured-in-item {
