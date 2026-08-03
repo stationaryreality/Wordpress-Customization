@@ -18,3 +18,13 @@
     min-height: auto !important;
     height: auto !important;
 }
+
+/* Rounded image style */
+.is-style-rounded img {
+    width: 96px !important;
+    height: 96px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+}
