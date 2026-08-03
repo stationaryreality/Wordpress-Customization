@@ -1,0 +1,85 @@
+/* ==========================================================================
+   Site Tools: Newest Content
+   ========================================================================== */
+
+/* --- Header --- */
+.tool-newest-content .cpt-total {
+    margin: 0.75em 0 1.5em 0;
+    font-size: 0.95rem;
+    color: #666;
+}
+
+/* --- Chronological Tree --- */
+.tool-newest-content h2 {
+    font-size: 1.75rem;
+    margin: 2rem 0 1rem 0;
+    color: #1e1e1e;
+    border-bottom: 2px solid #007cba;
+    padding-bottom: 0.5rem;
+}
+
+.tool-newest-content h3 {
+    font-size: 1.25rem;
+    margin: 1.5rem 0 0.75rem 0;
+    color: #333;
+}
+
+.tool-newest-content h4 {
+    font-size: 1rem;
+    margin: 1rem 0 0.5rem 0;
+    color: #555;
+    font-weight: 600;
+}
+
+/* --- List --- */
+.tool-newest-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem 0;
+}
+
+.tool-newest-content ul li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tool-newest-content ul li:last-child {
+    border-bottom: none;
+}
+
+.tool-newest-content .cpt-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    width: 1.5rem;
+    text-align: center;
+}
+
+.tool-newest-content ul li a {
+    color: #1e1e1e;
+    text-decoration: none;
+    font-size: 0.95rem;
+    flex-grow: 1;
+}
+
+.tool-newest-content ul li a:hover {
+    color: #007cba;
+    text-decoration: underline;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 600px) {
+    .tool-newest-content h2 {
+        font-size: 1.5rem;
+    }
+    
+    .tool-newest-content h3 {
+        font-size: 1.1rem;
+    }
+    
+    .tool-newest-content h4 {
+        font-size: 0.95rem;
+    }
+}
