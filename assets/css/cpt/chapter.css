@@ -109,6 +109,14 @@
     color: #0073aa;
 }
 
+/* Responsive */
+@media (max-width: 768px) {
+    .cpt-chapter-nav-bottom {
+        flex-direction: column;
+        gap: 30px;
+    }
+}
+
 /* ========== CHAPTER GRID (4-Column Layout) ========== */
 
 .cpt-chapter-grid-section {
