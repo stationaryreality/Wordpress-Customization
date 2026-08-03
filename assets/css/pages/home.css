@@ -1,53 +1,54 @@
 /* ============================================================
    HOMEPAGE
-   Final compact grid layout
+   Compact 3-column grid layout
    ============================================================ */
+
+/* 1. NUCLEAR OVERRIDE: Force top space down to ~0.25 inches (10px) */
+body.home main,
+body.home .site-main,
+body.home .content-area,
+body.home .site-content {
+    padding-top: 10px !important;
+    margin-top: 0 !important;
+}
+
+/* 2. Ensure absolutely no breadcrumb wrapper is taking up space */
+body.home #breadcrumbs,
+body.home .yoast-breadcrumbs,
+body.home .breadcrumb {
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 0 !important;
+}
+
+/* 3. Remove any top margin from the very first section */
+.homepage-section:first-child {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
 
 .homepage-section {
     margin-bottom: 16px;
 }
 
-/* Add this to your home.css */
-
-.homepage-section {
-    margin-bottom: 24px;
-    padding: 16px;
-    background: #fafafa;
-    border-radius: 8px;
-    border: 1px solid #eaeaea;
-}
-
-.homepage-section:nth-child(even) {
-    background: #f5f5f5;
-}
-
-.homepage-section-title {
-    font-size: 1.25rem;
-    font-weight: 400;
-    color: #111;
-    text-align: left;
-    margin-top: 0;
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #ddd;
-}
-
-/* Unbolded, slightly larger section titles */
+/* 4. Unbolded, slightly larger section titles */
 .homepage-section-title,
 .page-section-title {
-    font-size: 1.25rem; /* Increased size */
-    font-weight: 400; /* Unbolded */
+    font-size: 1.25rem;
+    font-weight: 400;
     color: #222;
     text-align: left;
     margin-top: 0.25rem;
     margin-bottom: 0.5rem;
     line-height: 1.2;
-    letter-spacing: -0.01em; /* Crisper look for normal weight text */
+    letter-spacing: -0.01em;
 }
 
+/* 5. Grid Layout - 3 columns */
 .tag-posts-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     margin-top: 8px;
     align-items: stretch;
@@ -112,21 +113,15 @@
     line-height: 1.3;
 }
 
-/* ========== RESPONSIVE ADJUSTMENTS ========== */
-
+/* 6. Responsive adjustments */
 @media (max-width: 768px) {
-    .homepage-grid {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 1rem;
-    }
-    
-    .homepage-section-title {
-        font-size: 1.5rem;
+    .tag-posts-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 480px) {
-    .homepage-grid {
+    .tag-posts-grid {
         grid-template-columns: 1fr;
     }
 }
