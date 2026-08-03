@@ -3,12 +3,6 @@
 |--------------------------------------------------------------------------
 | Content Density Analyzer - Chapter, Fragment & Element Sorter
 |--------------------------------------------------------------------------
-|
-| Sorts chapters by number of attached CPTs (content density),
-| lists fragments that may be eligible for promotion to chapters,
-| and shows elements that could become fragments or fragments that
-| might be demoted to elements.
-|
 */
 
 // ===== CONFIGURABLE THRESHOLDS =====
@@ -42,21 +36,17 @@ function count_relationships($post_id) {
     
     if ($acf_fields) {
         foreach ($acf_fields as $field_name => $value) {
-            // Count relationship fields (arrays of posts)
             if (is_array($value)) {
                 foreach ($value as $item) {
                     if ($item instanceof WP_Post) {
                         $total_count++;
                     }
                 }
-            }
-            // Count single relationship fields
-            elseif ($value instanceof WP_Post) {
+            } elseif ($value instanceof WP_Post) {
                 $total_count++;
             }
         }
     }
-    
     return $total_count;
 }
 
@@ -128,118 +118,6 @@ $promotable_elements  = array_filter($element_data, function($e) {
 ?>
 
 <section class="tool-content-density-analyzer">
-    <style>
-        .density-tool {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        .stat-card {
-            background: #f8f9fa;
-            border-left: 4px solid #007cba;
-            padding: 1rem;
-            border-radius: 4px;
-        }
-        .stat-card h3 {
-            margin: 0 0 0.5rem 0;
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            color: #666;
-        }
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #1e1e1e;
-        }
-        .density-section {
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .density-section h2 {
-            margin-top: 0;
-            border-bottom: 2px solid #007cba;
-            padding-bottom: 0.5rem;
-        }
-        .content-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .content-table th,
-        .content-table td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-        .content-table th {
-            background: #f8f9fa;
-            font-weight: 600;
-            color: #1e1e1e;
-        }
-        .content-table tr:hover {
-            background: #f9f9f9;
-        }
-        .density-badge {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 3px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        .density-high {
-            background: #d4edda;
-            color: #155724;
-        }
-        .density-medium {
-            background: #fff3cd;
-            color: #856404;
-        }
-        .density-low {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        .promotion-badge {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 3px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            background: #cce5ff;
-            color: #004085;
-        }
-        .demotion-badge {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 3px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            background: #ffe5cc;
-            color: #854d00;
-        }
-        .threshold-note {
-            background: #e7f3ff;
-            border-left: 4px solid #007cba;
-            padding: 0.75rem;
-            margin-bottom: 1rem;
-            font-size: 0.875rem;
-        }
-        .recommendation-box {
-            background: #f0f7ff;
-            border: 1px solid #b8d4f0;
-            border-radius: 4px;
-            padding: 1rem;
-            margin-top: 1rem;
-        }
-    </style>
-
     <div class="density-tool">
         <header class="tool-header">
             <h1>📊 Content Density Analyzer</h1>
@@ -372,7 +250,7 @@ $promotable_elements  = array_filter($element_data, function($e) {
                                     <?php elseif ($fragment['ready_for_element']): ?>
                                         <span class="demotion-badge">↓ Demote to Element</span>
                                     <?php else: ?>
-                                        <span style="color: #999;">Keep as Fragment</span>
+                                        <span class="status-keep">Keep as Fragment</span>
                                     <?php endif; ?>
                                 </td>
                                 <td><?php echo esc_html($fragment['date']); ?></td>
@@ -388,7 +266,7 @@ $promotable_elements  = array_filter($element_data, function($e) {
         <!-- ===== ELEMENTS SECTION ===== -->
         <div class="density-section">
             <h2>🧩 Elements by Content Density</h2>
-            <p>Sorted from highest to lowest number of attached CPTs (via <code>related_content</code> field)</p>
+            <p>Sorted from highest to lowest number of attached CPTs</p>
             
             <?php if (count($element_data) > 0): ?>
                 <div class="threshold-note">
@@ -421,7 +299,7 @@ $promotable_elements  = array_filter($element_data, function($e) {
                                     <?php if ($element['ready_for_fragment']): ?>
                                         <span class="promotion-badge">↑ Promote to Fragment</span>
                                     <?php else: ?>
-                                        <span style="color: #999;">Keep as Element</span>
+                                        <span class="status-keep">Keep as Element</span>
                                     <?php endif; ?>
                                 </td>
                                 <td><?php echo esc_html($element['date']); ?></td>
@@ -438,7 +316,7 @@ $promotable_elements  = array_filter($element_data, function($e) {
         <div class="density-section">
             <h2>📈 Promotion & Demotion Recommendations</h2>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <div class="recommendation-grid">
                 <!-- Promote to Chapter -->
                 <div class="recommendation-box">
                     <h3 style="margin-top:0;">Fragments → Chapters</h3>
@@ -458,7 +336,7 @@ $promotable_elements  = array_filter($element_data, function($e) {
                 </div>
 
                 <!-- Demote to Element -->
-                <div class="recommendation-box" style="border-color: #d39e00;">
+                <div class="recommendation-box recommendation-box--demotion">
                     <h3 style="margin-top:0;">Fragments → Elements</h3>
                     <?php
                     $top_demotion_candidates = array_slice(array_filter($fragment_data, function($f) {
@@ -476,7 +354,7 @@ $promotable_elements  = array_filter($element_data, function($e) {
                 </div>
 
                 <!-- Elements → Fragments -->
-                <div class="recommendation-box" style="grid-column: 1 / -1; border-color: #28a745;">
+                <div class="recommendation-box recommendation-box--element-promotion">
                     <h3 style="margin-top:0;">Elements → Fragments</h3>
                     <?php
                     $top_element_candidates = array_slice(array_filter($element_data, function($e) {
@@ -494,7 +372,7 @@ $promotable_elements  = array_filter($element_data, function($e) {
                 </div>
             </div>
 
-            <hr style="margin: 1.5rem 0;">
+            <hr class="divider">
             <p>
                 <strong>Summary:</strong> 
                 <?php
