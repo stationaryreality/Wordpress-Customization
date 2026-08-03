@@ -74,7 +74,7 @@ foreach ($tree as &$months) {
         </p>
         <p style="margin: 1rem 0; font-size: 0.9rem; color: #666;">
             Showing content published since <?php echo date('F j, Y', strtotime('-6 months')); ?>.
-            <a href="?tool=index">View full site index →</a>
+            <a href="/site-tools/?tool=index">View full site index →</a>
         </p>
     </header>
 
