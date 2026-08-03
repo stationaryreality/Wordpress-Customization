@@ -12,7 +12,7 @@ if (empty($items)) {
 
     <h2><?php echo esc_html($title); ?></h2>
 
-    <div class="thread-grid">
+    <div class="cpt-chapter-grid" style="max-width:1200px; margin:0 auto;">
 
         <?php foreach ($items as $item):
 
@@ -20,20 +20,23 @@ if (empty($items)) {
 
         ?>
 
-            <div class="thread-item">
+            <article class="cpt-chapter-grid-item">
 
-                <a href="<?php echo get_permalink($item->ID); ?>">
+                <a href="<?php echo get_permalink($item->ID); ?>" class="cpt-chapter-grid-link">
 
                     <?php if ($thumb): ?>
                         <img src="<?php echo esc_url($thumb); ?>"
-                             alt="<?php echo esc_attr(get_the_title($item->ID)); ?>">
+                             alt="<?php echo esc_attr(get_the_title($item->ID)); ?>"
+                             class="cpt-chapter-grid-image">
                     <?php endif; ?>
 
-                    <h3><?php echo esc_html(get_the_title($item->ID)); ?></h3>
+                    <h3 class="cpt-chapter-grid-card-title">
+                        <?php echo esc_html(get_the_title($item->ID)); ?>
+                    </h3>
 
                 </a>
 
-            </div>
+            </article>
 
         <?php endforeach; ?>
 

@@ -1,3 +1,7 @@
+/* ============================================================
+   COVER BLOCK FIXES (migrated from legacy)
+   ============================================================ */
+
 /* Keep cover blocks narrow and centered */
 .wp-block-cover {
     max-width: 645px !important;
