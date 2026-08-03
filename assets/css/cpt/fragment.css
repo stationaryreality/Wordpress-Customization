@@ -10,34 +10,47 @@
     margin: 0 auto;
 }
 
+/* ========== ARTIST META ========== */
+
 .fragment-artist-meta {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     text-align: center;
-    margin: 2rem 0;
-    padding: 1.5rem;
-    background: #f9f9f9;
-    border-radius: 8px;
+    margin: 2em 0;
 }
 
 .fragment-artist-thumbnail {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
+    display: block;
+    margin: 0 auto 0.5em;
+    border-radius: 999px;
+    width: 150px;
+    height: 150px;
     object-fit: cover;
-    margin-bottom: 1rem;
 }
 
-.fragment-artist-name,
+.fragment-artist-name {
+    font-size: 1.4em;
+    margin: 0.3em 0;
+}
+
+.fragment-artist-name a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.fragment-artist-name a:hover {
+    text-decoration: underline;
+}
+
 .fragment-song-title {
-    margin: 0.25rem 0;
-    font-size: 1.1rem;
+    font-size: 1.1em;
+    color: #444;
 }
 
-.fragment-artist-name a,
 .fragment-song-title a {
-    color: #0073aa;
+    text-decoration: none;
+    color: inherit;
+}
+
+.fragment-song-title a:hover {
     text-decoration: underline;
 }
 
@@ -127,7 +140,6 @@
 
 .cpt-fragment-grid {
     display: grid;
-    /* Lowered to 180px to guarantee 4 columns on standard desktops */
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 1.5rem;
 }
@@ -161,7 +173,7 @@
 .cpt-fragment-grid-card-title {
     margin-top: 1rem;
     font-size: 1rem;
-    font-weight: normal; /* Removed bold for a cleaner look */
+    font-weight: normal;
     line-height: 1.3;
     color: #111;
 }
@@ -170,25 +182,28 @@
     color: #0073aa;
 }
 
-/* Responsive Grid: Matches Chapter behavior */
+/* ========== RESPONSIVE ========== */
+
 @media (max-width: 1024px) {
     .cpt-fragment-grid {
-        /* Tablets: still tries for 3-4 columns */
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     }
 }
 
 @media (max-width: 768px) {
     .cpt-fragment-grid {
-        /* Mobile: 2 columns */
         grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
+    }
+    
+    .cpt-fragment-nav-bottom {
+        flex-direction: column;
+        gap: 30px;
     }
 }
 
 @media (max-width: 480px) {
     .cpt-fragment-grid {
-        /* Small mobile: 1 column, exactly like chapters */
         grid-template-columns: 1fr;
     }
 }
