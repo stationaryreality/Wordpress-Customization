@@ -16,12 +16,11 @@ function show_featured_in_threads($meta_key, $post_id = null) {
         return;
     }
     ?>
-    <div class="narrative-threads" style="margin-top:4em; text-align:center;">
-
-        <h2>Featured In</h2>
+    <div class="featured-in-section">
+        <h2 class="featured-in-title">Featured In</h2>
 
         <?php if (!empty($threads)) : ?>
-            <div class="cpt-chapter-grid" style="max-width:1200px; margin:0 auto;">
+            <div class="featured-in-grid">
                 <?php foreach ($threads as $thread) :
                     $thumb = get_the_post_thumbnail_url($thread->ID, 'medium');
                     if (!$thumb) {
@@ -31,26 +30,24 @@ function show_featured_in_threads($meta_key, $post_id = null) {
                         }
                     }
                 ?>
-                    <article class="cpt-chapter-grid-item">
-                        <a href="<?php echo esc_url(get_permalink($thread->ID)); ?>" class="cpt-chapter-grid-link">
+                    <div class="featured-in-item">
+                        <a href="<?php echo esc_url(get_permalink($thread->ID)); ?>">
                             <?php if ($thumb) : ?>
                                 <img src="<?php echo esc_url($thumb); ?>"
                                      alt="<?php echo esc_attr(get_the_title($thread->ID)); ?>"
-                                     class="cpt-chapter-grid-image">
+                                     class="featured-in-image">
                             <?php endif; ?>
-                            <h3 class="cpt-chapter-grid-card-title">
-                                <?php echo esc_html(get_the_title($thread->ID)); ?>
-                            </h3>
+                            <h3 class="featured-in-title"><?php echo esc_html(get_the_title($thread->ID)); ?></h3>
                         </a>
-                    </article>
+                    </div>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
 
         <?php if (!empty($elements)) : ?>
-            <div style="margin-top:2.5rem;">
+            <div class="featured-in-elements">
                 <h3>Elements</h3>
-                <div class="cpt-chapter-grid" style="max-width:700px; margin:0 auto;">
+                <div class="featured-in-grid featured-in-grid--elements">
                     <?php foreach ($elements as $element) :
                         $image = get_field('element_image', $element->ID);
                         if (is_array($image)) {
@@ -59,23 +56,20 @@ function show_featured_in_threads($meta_key, $post_id = null) {
                             $thumb = get_the_post_thumbnail_url($element->ID, 'medium');
                         }
                     ?>
-                        <article class="cpt-chapter-grid-item cpt-element-grid-item">
-                            <a href="<?php echo esc_url(get_permalink($element->ID)); ?>" class="cpt-chapter-grid-link">
+                        <div class="featured-in-item featured-in-item--element">
+                            <a href="<?php echo esc_url(get_permalink($element->ID)); ?>">
                                 <?php if ($thumb) : ?>
                                     <img src="<?php echo esc_url($thumb); ?>"
                                          alt="<?php echo esc_attr(get_the_title($element->ID)); ?>"
-                                         class="cpt-chapter-grid-image cpt-element-grid-image">
+                                         class="featured-in-image featured-in-image--element">
                                 <?php endif; ?>
-                                <h3 class="cpt-chapter-grid-card-title">
-                                    <?php echo esc_html(get_the_title($element->ID)); ?>
-                                </h3>
+                                <h3 class="featured-in-title"><?php echo esc_html(get_the_title($element->ID)); ?></h3>
                             </a>
-                        </article>
+                        </div>
                     <?php endforeach; ?>
                 </div>
             </div>
         <?php endif; ?>
-
     </div>
     <?php
 }
