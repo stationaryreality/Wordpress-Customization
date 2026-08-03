@@ -7,6 +7,31 @@
     margin-bottom: 16px;
 }
 
+/* Add this to your home.css */
+
+.homepage-section {
+    margin-bottom: 24px;
+    padding: 16px;
+    background: #fafafa;
+    border-radius: 8px;
+    border: 1px solid #eaeaea;
+}
+
+.homepage-section:nth-child(even) {
+    background: #f5f5f5;
+}
+
+.homepage-section-title {
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: #111;
+    text-align: left;
+    margin-top: 0;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #ddd;
+}
+
 /* Unbolded, slightly larger section titles */
 .homepage-section-title,
 .page-section-title {
