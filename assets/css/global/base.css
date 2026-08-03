@@ -35,6 +35,7 @@
 .featured-in-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    justify-items: center;
     gap: 1.5rem;
     max-width: 1200px;
     margin: 0 auto;
