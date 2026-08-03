@@ -62,21 +62,6 @@ function enqueue_css_files() {
 add_action('wp_enqueue_scripts', 'enqueue_css_files');
 
 
-// ==========================================
-// 2. LEGACY CSS TOGGLE (assets/legacycss/)
-// ==========================================
-define('ENABLE_LEGACY_CSS', false);
-
-if (ENABLE_LEGACY_CSS) {
-    $legacy_files = glob(get_stylesheet_directory() . '/assets/legacycss/*.css');
-    
-    foreach ($legacy_files as $file_path) {
-        $file_name = basename($file_path);
-        $handle = 'legacy-' . basename($file_name, '.css');
-        wp_enqueue_style($handle, get_stylesheet_directory_uri() . "/assets/legacycss/{$file_name}", [], filemtime($file_path));
-    }
-}
-
 // === KEYBOARD NAVIGATION SCRIPT ===
 function enqueue_keyboard_navigation() {
     // Only load on single Image or Concept pages

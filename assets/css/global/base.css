@@ -19,6 +19,11 @@
     height: auto !important;
 }
 
+/* Optional: support taller covers when desired */
+.wp-block-cover.cover-tall {
+    min-height: 300px !important;
+}
+
 /* Rounded image style */
 .is-style-rounded img {
     width: 96px !important;

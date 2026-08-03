@@ -74,109 +74,100 @@ if (!empty($search)) {
 
 ?>
 
-<section class="tool-live-search">
+<section class="tool-plain-search">
 
-<header class="tool-header">
+    <header class="tool-header">
+        <h2>Plain Content Search</h2>
+        <p>
+            Search titles and content across all published CPTs.
+        </p>
+    </header>
 
-    <h2>Plain Content Search</h2>
+    <!-- ====================================================== -->
+    <!-- SEARCH -->
+    <!-- ====================================================== -->
 
-    <p>
-        Search titles and content across all published CPTs.
-    </p>
+    <form method="get" class="live-search-box">
+        <input type="hidden" name="tool" value="live-search">
 
-</header>
+        <input
+            type="text"
+            name="q"
+            value="<?php echo esc_attr($search); ?>"
+            placeholder="Search content..."
+        >
 
-<!-- ====================================================== -->
-<!-- SEARCH -->
-<!-- ====================================================== -->
+        <button type="submit">
+            Search
+        </button>
+    </form>
 
-<form method="get" class="live-search-box">
+    <!-- ====================================================== -->
+    <!-- RESULTS -->
+    <!-- ====================================================== -->
 
-    <input
-        type="hidden"
-        name="tool"
-        value="live-search"
-    >
+    <?php if (!empty($search)): ?>
 
-    <input
-        type="text"
-        name="q"
-        value="<?php echo esc_attr($search); ?>"
-        placeholder="Search content..."
-    >
+        <div class="live-search-results">
 
-    <button type="submit">
-        Search
-    </button>
+            <p class="live-search-results-count">
+                <?php echo count($results); ?> results found
+            </p>
 
-</form>
+            <ul id="liveSearchList">
 
-<!-- ====================================================== -->
-<!-- RESULTS -->
-<!-- ====================================================== -->
+                <?php foreach ($results as $e): ?>
 
-<?php if (!empty($search)): ?>
+                    <li
+                        data-type="<?php echo esc_attr($e['type']); ?>"
+                        data-id="<?php echo intval($e['id']); ?>"
+                    >
 
-<div class="live-search-results">
+                        <span class="entry-emoji">
+                            <?php echo esc_html($e['emoji']); ?>
+                        </span>
 
-    <p style="margin-bottom:1rem;">
-        <?php echo count($results); ?> results found
-    </p>
+                        <a href="<?php echo esc_url($e['url']); ?>"
+                           target="_blank">
 
-    <ul id="liveSearchList">
+                            <?php echo esc_html($e['title']); ?>
 
-        <?php foreach ($results as $e): ?>
+                        </a>
 
-            <li
-                data-type="<?php echo esc_attr($e['type']); ?>"
-                data-id="<?php echo intval($e['id']); ?>"
-            >
+                        <small>
+                            (<?php echo esc_html($e['type']); ?>)
+                        </small>
 
-                <span class="entry-emoji">
-                    <?php echo esc_html($e['emoji']); ?>
-                </span>
+                    </li>
 
-                <a href="<?php echo esc_url($e['url']); ?>"
-                   target="_blank">
+                <?php endforeach; ?>
 
-                    <?php echo esc_html($e['title']); ?>
+            </ul>
 
-                </a>
+        </div>
 
-                <small>
-                    (<?php echo esc_html($e['type']); ?>)
-                </small>
+        <!-- ====================================================== -->
+        <!-- EXPORT -->
+        <!-- ====================================================== -->
 
-            </li>
+        <div class="live-search-export">
 
-        <?php endforeach; ?>
+            <button type="button"
+                    onclick="generateIdExport()">
 
-    </ul>
+                Generate ID Export
 
-</div>
+            </button>
 
-<!-- ====================================================== -->
-<!-- EXPORT -->
-<!-- ====================================================== -->
+            <textarea
+                id="idExportOutput"
+                readonly
+                placeholder="Grouped CPT IDs will appear here..."
+            ></textarea>
 
-<div class="live-search-export">
+        </div>
 
-    <button type="button"
-            onclick="generateIdExport()">
-
-        Generate ID Export
-
-    </button>
-
-    <textarea
-        id="idExportOutput"
-        readonly
-        placeholder="Grouped CPT IDs will appear here..."
-    ></textarea>
-
-</div>
-
-<?php endif; ?>
+    <?php endif; ?>
 
 </section>
 
