@@ -1,38 +1,27 @@
 <?php
 
 function show_featured_in_threads($meta_key, $post_id = null) {
-    // If no post ID provided, use the current post
     if (!$post_id) {
         $post_id = get_the_ID();
     }
-
-    // Safety: if meta_key is empty, there's nothing to search for
     if (empty($meta_key)) {
         return;
     }
 
-$context = kp_build_featured_context($meta_key, $post_id);
+    $context = kp_build_featured_context($meta_key, $post_id);
+    $threads = array_merge($context['chapters'], $context['fragments']);
+    $elements = $context['elements'];
 
-$threads = array_merge(
-    $context['chapters'],
-    $context['fragments']
-);
-
-$elements = $context['elements'];
-
-    // If nothing found, exit quietly
     if (empty($threads) && empty($elements)) {
         return;
     }
-
-    // Output the two sections
     ?>
     <div class="narrative-threads" style="margin-top:4em; text-align:center;">
 
         <h2>Featured In</h2>
 
         <?php if (!empty($threads)) : ?>
-            <div class="thread-grid">
+            <div class="cpt-chapter-grid" style="max-width:1200px; margin:0 auto;">
                 <?php foreach ($threads as $thread) :
                     $thumb = get_the_post_thumbnail_url($thread->ID, 'medium');
                     if (!$thumb) {
@@ -42,15 +31,18 @@ $elements = $context['elements'];
                         }
                     }
                 ?>
-                    <div class="thread-item">
-                        <a href="<?php echo esc_url(get_permalink($thread->ID)); ?>">
+                    <article class="cpt-chapter-grid-item">
+                        <a href="<?php echo esc_url(get_permalink($thread->ID)); ?>" class="cpt-chapter-grid-link">
                             <?php if ($thumb) : ?>
                                 <img src="<?php echo esc_url($thumb); ?>"
-                                     alt="<?php echo esc_attr(get_the_title($thread->ID)); ?>">
+                                     alt="<?php echo esc_attr(get_the_title($thread->ID)); ?>"
+                                     class="cpt-chapter-grid-image">
                             <?php endif; ?>
-                            <h3><?php echo esc_html(get_the_title($thread->ID)); ?></h3>
+                            <h3 class="cpt-chapter-grid-card-title">
+                                <?php echo esc_html(get_the_title($thread->ID)); ?>
+                            </h3>
                         </a>
-                    </div>
+                    </article>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
@@ -58,14 +50,7 @@ $elements = $context['elements'];
         <?php if (!empty($elements)) : ?>
             <div style="margin-top:2.5rem;">
                 <h3>Elements</h3>
-<div style="
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(110px, 110px));
-    justify-content:center;
-    gap:12px;
-    max-width:700px;
-    margin:1rem auto 0;
-">
+                <div class="cpt-chapter-grid" style="max-width:700px; margin:0 auto;">
                     <?php foreach ($elements as $element) :
                         $image = get_field('element_image', $element->ID);
                         if (is_array($image)) {
@@ -74,28 +59,18 @@ $elements = $context['elements'];
                             $thumb = get_the_post_thumbnail_url($element->ID, 'medium');
                         }
                     ?>
-                        <div style="text-align:center;">
-                            <a href="<?php echo esc_url(get_permalink($element->ID)); ?>">
+                        <article class="cpt-chapter-grid-item cpt-element-grid-item">
+                            <a href="<?php echo esc_url(get_permalink($element->ID)); ?>" class="cpt-chapter-grid-link">
                                 <?php if ($thumb) : ?>
                                     <img src="<?php echo esc_url($thumb); ?>"
                                          alt="<?php echo esc_attr(get_the_title($element->ID)); ?>"
-                                         style="
-                                            width:100%;
-                                            aspect-ratio:1/1;
-                                            object-fit:cover;
-                                            border-radius:6px;
-                                            box-shadow:0 0 4px rgba(0,0,0,0.2);
-                                         ">
+                                         class="cpt-chapter-grid-image cpt-element-grid-image">
                                 <?php endif; ?>
-                                <div style="
-                                    font-size:0.8rem;
-                                    margin-top:0.4rem;
-                                    line-height:1.2;
-                                ">
+                                <h3 class="cpt-chapter-grid-card-title">
                                     <?php echo esc_html(get_the_title($element->ID)); ?>
-                                </div>
+                                </h3>
                             </a>
-                        </div>
+                        </article>
                     <?php endforeach; ?>
                 </div>
             </div>
