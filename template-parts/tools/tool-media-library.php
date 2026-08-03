@@ -10,6 +10,10 @@ $order = isset($_GET['order']) && $_GET['order'] === 'asc'
     ? 'ASC'
     : 'DESC';
 
+$search = isset($_GET['s'])
+    ? sanitize_text_field($_GET['s'])
+    : '';
+
 $args = [
     'post_type'      => 'attachment',
     'post_status'    => 'inherit',
@@ -28,6 +32,11 @@ $args = [
     'post_parent__not_in' => [0],
 ];
 
+// Add search if provided
+if (!empty($search)) {
+    $args['s'] = $search;
+}
+
 $media_query = new WP_Query($args);
 
 ?>
@@ -43,12 +52,12 @@ $media_query = new WP_Query($args);
 
         <div class="tool-controls">
 
-            <a href="?tool=media-library&order=desc"
+            <a href="?tool=media-library&order=desc&s=<?php echo esc_attr($search); ?>"
                class="<?php echo $order === 'DESC' ? 'active' : ''; ?>">
                 Newest
             </a>
 
-            <a href="?tool=media-library&order=asc"
+            <a href="?tool=media-library&order=asc&s=<?php echo esc_attr($search); ?>"
                class="<?php echo $order === 'ASC' ? 'active' : ''; ?>">
                 Oldest
             </a>
@@ -56,6 +65,37 @@ $media_query = new WP_Query($args);
         </div>
 
     </header>
+
+    <!-- ====================================================== -->
+    <!-- SEARCH BOX -->
+    <!-- ====================================================== -->
+
+    <form method="get" class="media-search-form">
+
+        <input type="hidden" name="tool" value="media-library">
+        <input type="hidden" name="order" value="<?php echo esc_attr(strtolower($order)); ?>">
+        <input type="hidden" name="pg" value="1">
+
+        <input
+            type="text"
+            name="s"
+            value="<?php echo esc_attr($search); ?>"
+            placeholder="Search by filename or title..."
+            class="media-search-input"
+        >
+
+        <button type="submit" class="media-search-button">
+            Search
+        </button>
+
+        <?php if (!empty($search)): ?>
+            <a href="?tool=media-library&order=<?php echo strtolower($order); ?>"
+               class="media-search-clear">
+                Clear Search
+            </a>
+        <?php endif; ?>
+
+    </form>
 
     <?php if ($media_query->have_posts()) : ?>
 
@@ -157,14 +197,37 @@ $media_query = new WP_Query($args);
             echo paginate_links([
                 'total'   => $media_query->max_num_pages,
                 'current' => $paged,
+                'add_args' => [
+                    's' => $search,
+                    'order' => strtolower($order),
+                ]
             ]);
             ?>
 
         </div>
 
+        <?php if (!empty($search)): ?>
+            <p style="margin-top: 1.5rem; color: #666; font-size: 0.9rem;">
+                Showing results for: <strong>"<?php echo esc_html($search); ?>"</strong>
+            </p>
+        <?php endif; ?>
+
     <?php else : ?>
 
-        <p>No attached images found.</p>
+        <div class="media-no-results">
+            <p>
+                <?php if (!empty($search)): ?>
+                    No images found matching "<strong><?php echo esc_html($search); ?></strong>".
+                <?php else: ?>
+                    No attached images found.
+                <?php endif; ?>
+            </p>
+            <?php if (!empty($search)): ?>
+                <a href="?tool=media-library">
+                    Browse all images
+                </a>
+            <?php endif; ?>
+        </div>
 
     <?php endif; ?>
 
