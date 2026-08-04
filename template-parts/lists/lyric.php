@@ -1,4 +1,7 @@
 <?php
+/**
+ * Unified Lyric Display
+ */
 $query        = $args['query'] ?? null;
 $items        = $args['items'] ?? [];
 $info         = $args['info'] ?? [];
@@ -33,15 +36,25 @@ if (empty($items)) {
     <div class="cpt-lyric-list">
         <?php foreach ($items as $item): ?>
             <?php
-            $image     = !empty($item['image']) ? $item['image'] : '';
-            $text      = !empty($item['excerpt']) ? $item['excerpt'] : '';
-            $meta_html = !empty($item['meta']) ? $item['meta'] : '';
+            $image = !empty($item['image']) ? $item['image'] : '';
+            $text  = !empty($item['excerpt']) ? $item['excerpt'] : '';
+            
+            // Restore explicit array extraction for song/artist links
+            $meta = !empty($item['meta']) && is_array($item['meta']) ? $item['meta'] : [];
+            $song_title  = $meta['song_title'] ?? '';
+            $song_url    = $meta['song_url'] ?? '';
+            $artist_name = $meta['artist_name'] ?? '';
+            $artist_url  = $meta['artist_url'] ?? '';
+            
+            // Fallback if meta is already a pre-formatted HTML string
+            $meta_html = (!empty($item['meta']) && is_string($item['meta'])) ? $item['meta'] : '';
             ?>
+            
             <article class="cpt-lyric-item">
                 <?php if ($image): ?>
                     <div class="cpt-lyric-thumb">
-                        <a href="<?php echo esc_url($item['url']); ?>">
-                            <img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($item['title']); ?>">
+                        <a href="<?php echo esc_url($song_url ?: $item['url']); ?>">
+                            <img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($song_title ?: $item['title']); ?>">
                         </a>
                     </div>
                 <?php endif; ?>
@@ -53,11 +66,18 @@ if (empty($items)) {
 
                     <?php if ($text): ?>
                         <p class="cpt-lyric-snippet">
-                            <?php echo esc_html(wp_trim_words($text, 40, '...')); ?>
+                            <?php echo esc_html(wp_trim_words($text, 80, '...')); ?>
                         </p>
                     <?php endif; ?>
 
-                    <?php if ($meta_html): ?>
+                    <?php if ($song_title && $song_url): ?>
+                        <p class="cpt-lyric-source">
+                            Source: <a href="<?php echo esc_url($song_url); ?>"><?php echo esc_html($song_title); ?></a>
+                            <?php if ($artist_name && $artist_url): ?>
+                                &nbsp;by <a href="<?php echo esc_url($artist_url); ?>"><?php echo esc_html($artist_name); ?></a>
+                            <?php endif; ?>
+                        </p>
+                    <?php elseif ($meta_html): ?>
                         <p class="cpt-lyric-meta">
                             <?php echo wp_kses_post($meta_html); ?>
                         </p>
