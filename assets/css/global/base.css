@@ -37,17 +37,3 @@
 .wp-block-cover a {
     text-decoration: underline;
 }
-
-.cpt-chapter-content .featured-image,
-.cpt-fragment-content .featured-image {
-    max-width: 700px;
-    margin: 2rem auto;
-    display: block;
-}
-
-.cpt-chapter-content .featured-image img,
-.cpt-fragment-content .featured-image img {
-    width: 100%;
-    height: auto;
-    display: block;
-}

@@ -41,6 +41,21 @@
     margin: 0 auto;
 }
 
+/* ========== FEATURED IMAGE ========== */
+
+body.single-chapter .featured-image,
+body.single-fragment .featured-image {
+    max-width: 600px;
+    margin: 2rem auto;
+}
+
+body.single-chapter .featured-image img,
+body.single-fragment .featured-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
 /* ========== CHAPTER NAVIGATION (Bottom, Next Left, Prev Right) ========== */
 
 .cpt-chapter-nav-bottom {
