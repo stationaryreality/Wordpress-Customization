@@ -115,7 +115,7 @@
 
 .cpt-lyric-item {
     display: flex;
-    gap: 1.5rem;
+    gap: 1.25rem;
     text-align: left;
     background: #fff;
     border: 1px solid #eaeaea;
@@ -135,6 +135,10 @@
     height: 80px;
 }
 
+.cpt-lyric-thumb a {
+    display: block;
+}
+
 .cpt-lyric-thumb img {
     width: 100%;
     height: 100%;
@@ -147,7 +151,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start; /* Aligns content to the top for consistent spacing */
 }
 
 .cpt-lyric-card-title {
@@ -156,37 +160,38 @@
     line-height: 1.3;
 }
 
-.cpt-lyric-card-title a {
+/* UNIFIED LINK STYLING: Underlined by default, blue on hover, NO italics */
+.cpt-lyric-card-title a,
+.cpt-lyric-source a,
+.cpt-lyric-meta a {
     color: #111;
-    text-decoration: none;
-    transition: color 0.2s ease;
+    text-decoration: underline;
+    text-decoration-color: #ccc; /* Subtle gray underline */
+    transition: color 0.2s ease, text-decoration-color 0.2s ease;
 }
 
-.cpt-lyric-card-title a:hover {
+.cpt-lyric-card-title a:hover,
+.cpt-lyric-source a:hover,
+.cpt-lyric-meta a:hover {
     color: #0073aa;
+    text-decoration-color: #0073aa;
 }
 
 .cpt-lyric-snippet {
     font-size: 0.95rem;
-    color: #555;
+    color: #444;
     line-height: 1.5;
-    margin: 0 0 0.5rem 0;
-    font-style: italic;
+    margin: 0 0 0.5rem 0; /* Tight spacing above source */
+    /* NO font-style: italic */
 }
 
+.cpt-lyric-source,
 .cpt-lyric-meta {
     font-size: 0.85rem;
-    color: #666;
+    color: #555;
     margin: 0;
-}
-
-.cpt-lyric-meta a {
-    color: #0073aa;
-    text-decoration: none;
-}
-
-.cpt-lyric-meta a:hover {
-    text-decoration: underline;
+    line-height: 1.4;
+    /* NO font-style: italic */
 }
 
 /* Mobile adjustment for list */
@@ -200,6 +205,6 @@
     .cpt-lyric-thumb {
         width: 120px;
         height: 120px;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
     }
 }

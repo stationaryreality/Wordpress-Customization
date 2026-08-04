@@ -39,22 +39,21 @@ if (empty($items)) {
             $image = !empty($item['image']) ? $item['image'] : '';
             $text  = !empty($item['excerpt']) ? $item['excerpt'] : '';
             
-            // Restore explicit array extraction for song/artist links
             $meta = !empty($item['meta']) && is_array($item['meta']) ? $item['meta'] : [];
             $song_title  = $meta['song_title'] ?? '';
             $song_url    = $meta['song_url'] ?? '';
             $artist_name = $meta['artist_name'] ?? '';
             $artist_url  = $meta['artist_url'] ?? '';
             
-            // Fallback if meta is already a pre-formatted HTML string
             $meta_html = (!empty($item['meta']) && is_string($item['meta'])) ? $item['meta'] : '';
             ?>
             
             <article class="cpt-lyric-item">
                 <?php if ($image): ?>
                     <div class="cpt-lyric-thumb">
-                        <a href="<?php echo esc_url($song_url ?: $item['url']); ?>">
-                            <img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($song_title ?: $item['title']); ?>">
+                        <!-- Image now links to the Lyric CPT, not the song -->
+                        <a href="<?php echo esc_url($item['url']); ?>">
+                            <img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($item['title']); ?>">
                         </a>
                     </div>
                 <?php endif; ?>
