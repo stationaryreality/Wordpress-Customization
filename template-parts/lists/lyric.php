@@ -71,7 +71,7 @@ if (empty($items)) {
 
                     <?php if ($song_title && $song_url): ?>
                         <p class="cpt-lyric-source">
-                            Source: <a href="<?php echo esc_url($song_url); ?>"><?php echo esc_html($song_title); ?></a>
+                            Song: <a href="<?php echo esc_url($song_url); ?>"><?php echo esc_html($song_title); ?></a>
                             <?php if ($artist_name && $artist_url): ?>
                                 &nbsp;by <a href="<?php echo esc_url($artist_url); ?>"><?php echo esc_html($artist_name); ?></a>
                             <?php endif; ?>

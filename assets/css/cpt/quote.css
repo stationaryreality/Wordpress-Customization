@@ -24,22 +24,25 @@
     font-size: 1.1rem;
     line-height: 1.7;
     color: #333;
-    font-style: italic;
+    font-style: normal; /* Removed italics for consistency */
 }
 
 .cpt-quote-source {
     margin-top: 2rem;
     font-size: 0.95rem;
     color: #555;
+    font-style: normal;
 }
 
 .cpt-quote-source a {
-    color: #0073aa;
-    text-decoration: none;
+    color: #111;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.2s ease;
 }
 
 .cpt-quote-source a:hover {
-    text-decoration: underline;
+    color: #0073aa;
 }
 
 /* ========== QUOTE NAVIGATION (Top) ========== */
@@ -93,7 +96,7 @@
     color: #111;
 }
 
-/* ========== QUOTE LIST ========== */
+/* ========== QUOTE LIST (Unified with Lyric) ========== */
 
 .cpt-quote-section {
     margin-bottom: 4rem;
@@ -115,12 +118,12 @@
 
 .cpt-quote-list-item {
     display: flex;
-    gap: 1.5rem;
+    gap: 1.25rem; /* Matches lyric gap */
     text-align: left;
     background: #fff;
     border: 1px solid #eaeaea;
     border-radius: 8px;
-    padding: 1.5rem;
+    padding: 1rem; /* Matches lyric padding */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -135,6 +138,10 @@
     height: 80px;
 }
 
+.cpt-quote-thumb a {
+    display: block;
+}
+
 .cpt-quote-thumb img {
     width: 100%;
     height: 100%;
@@ -147,48 +154,46 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
+/* BOLD title to make it obviously clickable */
 .cpt-quote-card-title {
     font-size: 1.1rem;
+    font-weight: 700; /* Bold */
     margin: 0 0 0.5rem 0;
     line-height: 1.3;
 }
 
-.cpt-quote-card-title a {
+/* REAL, STANDARD UNDERLINES: No italics, no borders */
+.cpt-quote-card-title a,
+.cpt-quote-meta a {
     color: #111;
-    text-decoration: none;
+    text-decoration: underline;
+    text-underline-offset: 2px;
     transition: color 0.2s ease;
+    font-style: normal;
 }
 
-.cpt-quote-card-title a:hover {
+.cpt-quote-card-title a:hover,
+.cpt-quote-meta a:hover {
     color: #0073aa;
 }
 
 .cpt-quote-snippet {
     font-size: 0.95rem;
-    color: #555;
+    color: #444;
     line-height: 1.5;
     margin: 0 0 0.5rem 0;
-    font-style: italic;
-    border-left: 3px solid #eee;
-    padding-left: 1rem;
+    font-style: normal; /* Removed italics and border-left */
 }
 
 .cpt-quote-meta {
     font-size: 0.85rem;
-    color: #666;
+    color: #555;
     margin: 0;
-}
-
-.cpt-quote-meta a {
-    color: #0073aa;
-    text-decoration: none;
-}
-
-.cpt-quote-meta a:hover {
-    text-decoration: underline;
+    line-height: 1.4;
+    font-style: normal;
 }
 
 /* Mobile adjustment for quote list */
@@ -200,15 +205,8 @@
     }
     
     .cpt-quote-thumb {
-        width: 100px;
-        height: 100px;
-        margin-bottom: 1rem;
-    }
-
-    .cpt-quote-snippet {
-        border-left: none;
-        border-top: 3px solid #eee;
-        padding-left: 0;
-        padding-top: 1rem;
+        width: 120px; /* Matches lyric mobile size */
+        height: 120px;
+        margin-bottom: 0.75rem;
     }
 }
