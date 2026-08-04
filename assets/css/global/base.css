@@ -33,3 +33,7 @@
     display: inline-block !important;
     vertical-align: middle !important;
 }
+
+.wp-block-cover a {
+    text-decoration: underline;
+}
