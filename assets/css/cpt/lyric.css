@@ -151,38 +151,40 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Aligns content to the top for consistent spacing */
+    justify-content: flex-start;
 }
 
+/* BOLD title to make it obviously clickable */
 .cpt-lyric-card-title {
     font-size: 1.1rem;
+    font-weight: 700; /* Bold */
     margin: 0 0 0.5rem 0;
     line-height: 1.3;
 }
 
-/* UNIFIED LINK STYLING: Underlined by default, blue on hover, NO italics */
+/* REAL, STANDARD UNDERLINES: No thin tricks, no italics */
 .cpt-lyric-card-title a,
 .cpt-lyric-source a,
 .cpt-lyric-meta a {
     color: #111;
-    text-decoration: underline;
-    text-decoration-color: #ccc; /* Subtle gray underline */
-    transition: color 0.2s ease, text-decoration-color 0.2s ease;
+    text-decoration: underline; /* Standard solid underline */
+    text-underline-offset: 2px; /* Prevents line from cutting through letters */
+    transition: color 0.2s ease;
+    font-style: normal; /* Explicitly kills any inherited italics */
 }
 
 .cpt-lyric-card-title a:hover,
 .cpt-lyric-source a:hover,
 .cpt-lyric-meta a:hover {
-    color: #0073aa;
-    text-decoration-color: #0073aa;
+    color: #0073aa; /* Turns blue on hover */
 }
 
 .cpt-lyric-snippet {
     font-size: 0.95rem;
     color: #444;
     line-height: 1.5;
-    margin: 0 0 0.5rem 0; /* Tight spacing above source */
-    /* NO font-style: italic */
+    margin: 0 0 0.5rem 0;
+    font-style: normal; /* Explicitly kills italics */
 }
 
 .cpt-lyric-source,
@@ -191,7 +193,7 @@
     color: #555;
     margin: 0;
     line-height: 1.4;
-    /* NO font-style: italic */
+    font-style: normal; /* Explicitly kills italics */
 }
 
 /* Mobile adjustment for list */
