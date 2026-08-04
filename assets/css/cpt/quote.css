@@ -4,7 +4,6 @@
    ============================================================ */
 
 /* ========== SINGLE QUOTE PAGE ========== */
-
 .cpt-quote-content {
     text-align: center;
     max-width: 800px;
@@ -24,7 +23,7 @@
     font-size: 1.1rem;
     line-height: 1.7;
     color: #333;
-    font-style: normal; /* Removed italics for consistency */
+    font-style: normal;
 }
 
 .cpt-quote-source {
@@ -36,8 +35,7 @@
 
 .cpt-quote-source a {
     color: #111;
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    text-decoration: underline; /* Standard, clean underline */
     transition: color 0.2s ease;
 }
 
@@ -46,7 +44,6 @@
 }
 
 /* ========== QUOTE NAVIGATION (Top) ========== */
-
 .cpt-quote-nav-top {
     margin-bottom: 2rem;
     padding-bottom: 1rem;
@@ -96,8 +93,7 @@
     color: #111;
 }
 
-/* ========== QUOTE LIST (Unified with Lyric) ========== */
-
+/* ========== QUOTE LIST (Unified & Square Images) ========== */
 .cpt-quote-section {
     margin-bottom: 4rem;
     text-align: center;
@@ -118,12 +114,12 @@
 
 .cpt-quote-list-item {
     display: flex;
-    gap: 1.25rem; /* Matches lyric gap */
+    gap: 1.25rem;
     text-align: left;
     background: #fff;
     border: 1px solid #eaeaea;
     border-radius: 8px;
-    padding: 1rem; /* Matches lyric padding */
+    padding: 1rem;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -142,10 +138,12 @@
     display: block;
 }
 
+/* FORCE SQUARE CROP: Prevents long book covers from bleeding */
 .cpt-quote-thumb img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    aspect-ratio: 1 / 1; /* Forces a perfect square */
+    object-fit: cover; /* Crops long images, stretches short ones neatly */
     border-radius: 4px;
     display: block;
 }
@@ -157,20 +155,17 @@
     justify-content: flex-start;
 }
 
-/* BOLD title to make it obviously clickable */
 .cpt-quote-card-title {
     font-size: 1.1rem;
-    font-weight: 700; /* Bold */
+    font-weight: 700;
     margin: 0 0 0.5rem 0;
     line-height: 1.3;
 }
 
-/* REAL, STANDARD UNDERLINES: No italics, no borders */
 .cpt-quote-card-title a,
 .cpt-quote-meta a {
     color: #111;
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    text-decoration: underline; /* Standard, clean underline */
     transition: color 0.2s ease;
     font-style: normal;
 }
@@ -185,7 +180,7 @@
     color: #444;
     line-height: 1.5;
     margin: 0 0 0.5rem 0;
-    font-style: normal; /* Removed italics and border-left */
+    font-style: normal;
 }
 
 .cpt-quote-meta {
@@ -196,7 +191,7 @@
     font-style: normal;
 }
 
-/* Mobile adjustment for quote list */
+/* Mobile adjustment */
 @media (max-width: 600px) {
     .cpt-quote-list-item {
         flex-direction: column;
@@ -205,7 +200,7 @@
     }
     
     .cpt-quote-thumb {
-        width: 120px; /* Matches lyric mobile size */
+        width: 120px;
         height: 120px;
         margin-bottom: 0.75rem;
     }
