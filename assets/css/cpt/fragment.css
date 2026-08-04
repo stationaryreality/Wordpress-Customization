@@ -10,6 +10,14 @@
     margin: 0 auto;
 }
 
+.chapter-content .wp-post-image,
+.fragment-content .wp-post-image {
+    max-width: 700px;
+    margin: 2rem auto;
+    display: block;
+    height: auto;
+}
+
 /* ========== ARTIST META ========== */
 
 .fragment-artist-meta {
