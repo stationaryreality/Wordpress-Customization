@@ -36,19 +36,15 @@ $containers = new WP_Query([
 ]);
 
 while ($containers->have_posts()) {
-
     $containers->the_post();
 
     $context = kp_build_reference_context(get_the_ID());
 
     foreach ($context as $items) {
-
         foreach ($items as $item) {
-
             if ($item instanceof WP_Post) {
                 $referenced_ids[$item->ID] = true;
             }
-
         }
     }
 
@@ -60,19 +56,12 @@ while ($containers->have_posts()) {
     $songs = get_field('chapter_songs', get_the_ID());
 
     if ($songs) {
-
         foreach ($songs as $row) {
-
             if (!empty($row['song']) && $row['song'] instanceof WP_Post) {
-
                 $referenced_ids[$row['song']->ID] = true;
-
             }
-
         }
-
     }
-
 }
 
 wp_reset_postdata();
@@ -83,11 +72,11 @@ $referenced_ids = array_keys($referenced_ids);
 /* ===== STEP 2: GET ALL POSTS ===== */
 
 $q = new WP_Query([
-  'post_type' => $all_types,
+  'post_type'      => $all_types,
   'posts_per_page' => -1,
-  'orderby' => 'title',
-  'order' => 'ASC',
-  'post_status' => 'publish'
+  'orderby'        => 'title',
+  'order'          => 'ASC',
+  'post_status'    => 'publish'
 ]);
 
 $entries = [];
@@ -96,7 +85,6 @@ $type_counts = [];
 /* ===== STEP 3: FILTER ===== */
 
 while ($q->have_posts()) {
-
   $q->the_post();
 
   $id   = get_the_ID();
@@ -132,34 +120,29 @@ ksort($type_counts);
 $total_count = count($entries);
 ?>
 
-<section class="admin-tool-section">
+<section class="tool-orphans">
 
-<h2>Orphans</h2>
+    <h2>Orphans</h2>
 
-<p style="margin:0.75em 0 1.5em 0;">
-<?php echo number_format($total_count); ?> orphaned entries
-</p>
+    <p class="tool-orphans-count">
+        <?php echo number_format($total_count); ?> orphaned entries
+    </p>
 
-<?php get_template_part('template-parts/tools/tool', 'filters', [
-  'type_counts' => $type_counts
-]); ?>
+    <?php get_template_part('template-parts/tools/tool', 'filters', [
+      'type_counts' => $type_counts
+    ]); ?>
 
-<ul class="cpt-clean-list">
-<?php foreach ($entries as $e): ?>
-
-<li data-type="<?php echo esc_attr($e['type']); ?>">
-
-<span class="entry-emoji">
-<?php echo $e['emoji']; ?>
-</span>
-
-<a href="<?php echo esc_url($e['url']); ?>" target="_blank" rel="noopener">
-<?php echo esc_html($e['title']); ?>
-</a>
-
-</li>
-
-<?php endforeach; ?>
-</ul>
+    <ul class="cpt-clean-list">
+        <?php foreach ($entries as $e): ?>
+            <li data-type="<?php echo esc_attr($e['type']); ?>">
+                <span class="entry-emoji">
+                    <?php echo esc_html($e['emoji']); ?>
+                </span>
+                <a href="<?php echo esc_url($e['url']); ?>" target="_blank" rel="noopener">
+                    <?php echo esc_html($e['title']); ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
 
 </section>

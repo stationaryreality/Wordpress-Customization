@@ -8,7 +8,6 @@
 | Lightweight raw-text viewer for core narrative/content CPTs.
 |
 | Initial supported CPTs:
-|
 | - quote
 | - lyric
 | - concept
@@ -41,363 +40,188 @@ $selected_post_id = isset($_GET['viewer_post'])
 
 <section class="tool-plaintext-viewer">
 
-<header class="tool-header">
+    <header class="tool-header">
+        <h2>Plaintext Content Viewer</h2>
+        <p>
+            Minimal raw-content reader for narrative and text-based CPTs.
+        </p>
+    </header>
 
-    <h2>Plaintext Content Viewer</h2>
+    <!-- ====================================================== -->
+    <!-- SELECTOR -->
+    <!-- ====================================================== -->
 
-    <p>
-        Minimal raw-content reader for narrative and text-based CPTs.
-    </p>
+    <form method="get" class="plaintext-form">
+        <input type="hidden" name="tool" value="plaintext">
 
-</header>
-
-<!-- ====================================================== -->
-<!-- SELECTOR -->
-<!-- ====================================================== -->
-
-<form method="get" class="plaintext-form">
-
-    <input type="hidden" name="tool" value="plaintext">
-
-    <!-- ============================================== -->
-    <!-- CPT SELECT -->
-    <!-- ============================================== -->
-
-    <label for="viewer_cpt">
-        Select Content Type
-    </label>
-
-    <select name="viewer_cpt"
-            id="viewer_cpt"
-            onchange="this.form.submit()">
-
-        <option value="">
-            -- Select Content Type --
-        </option>
-
-        <?php foreach ($cpts as $pt => $label): ?>
-
-            <option value="<?php echo esc_attr($pt); ?>"
-                <?php selected($selected_cpt, $pt); ?>>
-
-                <?php echo esc_html($label); ?>
-
-            </option>
-
-        <?php endforeach; ?>
-
-    </select>
-
-    <!-- ============================================== -->
-    <!-- POST SELECT -->
-    <!-- ============================================== -->
-
-    <?php if ($selected_cpt): ?>
-
-        <?php
-
-        $posts = get_posts([
-            'post_type'      => $selected_cpt,
-            'posts_per_page' => -1,
-            'orderby'        => 'title',
-            'order'          => 'ASC',
-            'post_status'    => 'publish',
-            'fields'         => 'ids',
-        ]);
-
-        ?>
-
-        <label for="viewer_post"
-               style="margin-top:1rem; display:block;">
-
-            Select Entry
+        <!-- CPT SELECT -->
+        <label for="viewer_cpt">
+            Select Content Type
         </label>
 
-        <select name="viewer_post"
-                id="viewer_post"
+        <select name="viewer_cpt"
+                id="viewer_cpt"
                 onchange="this.form.submit()">
 
             <option value="">
-                -- Select Entry --
+                -- Select Content Type --
             </option>
 
-            <?php foreach ($posts as $post_id): ?>
-
-                <option value="<?php echo intval($post_id); ?>"
-                    <?php selected($selected_post_id, $post_id); ?>>
-
-                    <?php echo esc_html(get_the_title($post_id)); ?>
-
+            <?php foreach ($cpts as $pt => $label): ?>
+                <option value="<?php echo esc_attr($pt); ?>"
+                    <?php selected($selected_cpt, $pt); ?>>
+                    <?php echo esc_html($label); ?>
                 </option>
-
             <?php endforeach; ?>
 
         </select>
 
-    <?php endif; ?>
+        <!-- POST SELECT -->
+        <?php if ($selected_cpt): ?>
 
-</form>
+            <?php
+            $posts = get_posts([
+                'post_type'      => $selected_cpt,
+                'posts_per_page' => -1,
+                'orderby'        => 'title',
+                'order'          => 'ASC',
+                'post_status'    => 'publish',
+                'fields'         => 'ids',
+            ]);
+            ?>
 
-<!-- ====================================================== -->
-<!-- OUTPUT -->
-<!-- ====================================================== -->
+            <label for="viewer_post" class="plaintext-post-label">
+                Select Entry
+            </label>
 
-<?php if ($selected_post_id): ?>
+            <select name="viewer_post"
+                    id="viewer_post"
+                    onchange="this.form.submit()">
 
-<?php
+                <option value="">
+                    -- Select Entry --
+                </option>
 
-$post = get_post($selected_post_id);
+                <?php foreach ($posts as $post_id): ?>
+                    <option value="<?php echo intval($post_id); ?>"
+                        <?php selected($selected_post_id, $post_id); ?>>
+                        <?php echo esc_html(get_the_title($post_id)); ?>
+                    </option>
+                <?php endforeach; ?>
 
-if ($post):
-
-    /*
-    |--------------------------------------------------------------------------
-    | Placeholder ACF Fields
-    |--------------------------------------------------------------------------
-    |
-    | Replace these with your actual field names later.
-    |
-    */
-
-    $quote_text     = get_field('quote_plain_text', $selected_post_id);
-    $lyric_text     = get_field('lyric_plain_text', $selected_post_id);
-    $concept_text   = get_field('definition', $selected_post_id);
-    $excerpt_text   = get_field('excerpt_plain_text', $selected_post_id);
-
-    $source         = get_field('source', $selected_post_id);
-    $author         = get_field('author', $selected_post_id);
-    $context        = get_field('context', $selected_post_id);
-
-    $post_type = get_post_type($selected_post_id);
-
-?>
-
-<div class="plaintext-output">
-
-    <!-- ============================================== -->
-    <!-- HEADER -->
-    <!-- ============================================== -->
-
-    <div class="plaintext-meta">
-
-        <h3>
-            <?php echo esc_html(get_the_title($selected_post_id)); ?>
-        </h3>
-
-        <p>
-
-            <strong>Type:</strong>
-            <?php echo esc_html($post_type); ?>
-
-        </p>
-
-        <?php if ($author): ?>
-
-            <p>
-
-                <strong>Author:</strong>
-                <?php echo esc_html($author); ?>
-
-            </p>
+            </select>
 
         <?php endif; ?>
 
-        <?php if ($source): ?>
+    </form>
 
-            <p>
+    <!-- ====================================================== -->
+    <!-- OUTPUT -->
+    <!-- ====================================================== -->
 
-                <strong>Source:</strong>
-                <?php echo esc_html($source); ?>
-
-            </p>
-
-        <?php endif; ?>
-
-    </div>
-
-    <hr style="margin:2rem 0;">
-
-    <!-- ============================================== -->
-    <!-- CONTENT -->
-    <!-- ============================================== -->
-
-    <div class="plaintext-body">
+    <?php if ($selected_post_id): ?>
 
         <?php
+        $post = get_post($selected_post_id);
 
-        /*
-        |--------------------------------------------------------------------------
-        | QUOTES
-        |--------------------------------------------------------------------------
-        */
+        if ($post):
 
-        if ($post_type === 'quote'):
+            $quote_text     = get_field('quote_plain_text', $selected_post_id);
+            $lyric_text     = get_field('lyric_plain_text', $selected_post_id);
+            $concept_text   = get_field('definition', $selected_post_id);
+            $excerpt_text   = get_field('excerpt_plain_text', $selected_post_id);
 
+            $source         = get_field('source', $selected_post_id);
+            $author         = get_field('author', $selected_post_id);
+            $context        = get_field('context', $selected_post_id);
+
+            $post_type = get_post_type($selected_post_id);
         ?>
 
-            <blockquote class="plaintext-block">
+            <div class="plaintext-output">
 
-                <?php
-                echo nl2br(
-                    esc_html($quote_text ?: '[quote_text field]')
-                );
-                ?>
+                <!-- HEADER -->
+                <div class="plaintext-meta">
+                    <h3>
+                        <?php echo esc_html(get_the_title($selected_post_id)); ?>
+                    </h3>
 
-            </blockquote>
+                    <p>
+                        <strong>Type:</strong>
+                        <?php echo esc_html($post_type); ?>
+                    </p>
 
-        <?php
+                    <?php if ($author): ?>
+                        <p>
+                            <strong>Author:</strong>
+                            <?php echo esc_html($author); ?>
+                        </p>
+                    <?php endif; ?>
 
-        /*
-        |--------------------------------------------------------------------------
-        | LYRICS
-        |--------------------------------------------------------------------------
-        */
+                    <?php if ($source): ?>
+                        <p>
+                            <strong>Source:</strong>
+                            <?php echo esc_html($source); ?>
+                        </p>
+                    <?php endif; ?>
+                </div>
 
-        elseif ($post_type === 'lyric'):
+                <hr class="plaintext-divider">
 
-        ?>
+                <!-- CONTENT -->
+                <div class="plaintext-body">
 
-            <pre class="plaintext-pre">
+                    <?php if ($post_type === 'quote'): ?>
 
-<?php
-echo esc_html($lyric_text ?: '[lyric_text field]');
-?>
+                        <blockquote class="plaintext-block">
+                            <?php
+                            echo nl2br(
+                                esc_html($quote_text ?: '[quote_text field]')
+                            );
+                            ?>
+                        </blockquote>
 
-            </pre>
+                    <?php elseif ($post_type === 'lyric'): ?>
 
-        <?php
+                        <pre class="plaintext-pre"><?php echo esc_html($lyric_text ?: '[lyric_text field]'); ?></pre>
 
-        /*
-        |--------------------------------------------------------------------------
-        | CONCEPTS
-        |--------------------------------------------------------------------------
-        */
+                    <?php elseif ($post_type === 'concept'): ?>
 
-        elseif ($post_type === 'concept'):
+                        <div class="plaintext-concept">
+                            <?php echo wpautop(esc_html($concept_text ?: '[concept_text field]')); ?>
+                        </div>
 
-        ?>
+                    <?php elseif ($post_type === 'excerpt'): ?>
 
-            <div class="plaintext-concept">
+                        <div class="plaintext-excerpt">
+                            <?php echo wpautop(esc_html($excerpt_text ?: '[excerpt_text field]')); ?>
+                        </div>
 
-                <?php
-                echo wpautop(
-                    esc_html($concept_text ?: '[concept_text field]')
-                );
-                ?>
+                    <?php endif; ?>
 
-            </div>
+                </div>
 
-        <?php
+                <!-- CONTEXT -->
+                <?php if ($context): ?>
+                    <hr class="plaintext-divider">
+                    <div class="plaintext-context">
+                        <h4>Context</h4>
+                        <?php echo wpautop(esc_html($context)); ?>
+                    </div>
+                <?php endif; ?>
 
-        /*
-        |--------------------------------------------------------------------------
-        | EXCERPTS
-        |--------------------------------------------------------------------------
-        */
-
-        elseif ($post_type === 'excerpt'):
-
-        ?>
-
-            <div class="plaintext-excerpt">
-
-                <?php
-                echo wpautop(
-                    esc_html($excerpt_text ?: '[excerpt_text field]')
-                );
-                ?>
+                <!-- RAW WP CONTENT -->
+                <?php if (!empty($post->post_content)): ?>
+                    <hr class="plaintext-divider">
+                    <div class="plaintext-wordpress-content">
+                        <h4>WordPress Content</h4>
+                        <?php echo wpautop(esc_html($post->post_content)); ?>
+                    </div>
+                <?php endif; ?>
 
             </div>
 
         <?php endif; ?>
-
-    </div>
-
-    <!-- ============================================== -->
-    <!-- CONTEXT -->
-    <!-- ============================================== -->
-
-    <?php if ($context): ?>
-
-        <hr style="margin:2rem 0;">
-
-        <div class="plaintext-context">
-
-            <h4>Context</h4>
-
-            <?php echo wpautop(esc_html($context)); ?>
-
-        </div>
-
     <?php endif; ?>
-
-    <!-- ============================================== -->
-    <!-- RAW WP CONTENT -->
-    <!-- ============================================== -->
-
-    <?php if (!empty($post->post_content)): ?>
-
-        <hr style="margin:2rem 0;">
-
-        <div class="plaintext-wordpress-content">
-
-            <h4>WordPress Content</h4>
-
-            <?php echo wpautop(esc_html($post->post_content)); ?>
-
-        </div>
-
-    <?php endif; ?>
-
-</div>
-
-<?php endif; ?>
-<?php endif; ?>
 
 </section>
-
-<style>
-
-.tool-plaintext-viewer {
-
-    max-width: 1100px;
-}
-
-.plaintext-output {
-
-    margin-top: 2rem;
-}
-
-.plaintext-body {
-
-    font-size: 1.05rem;
-    line-height: 1.8;
-}
-
-.plaintext-block {
-
-    border-left: 4px solid #999;
-    padding-left: 1.5rem;
-    margin-left: 0;
-    font-style: italic;
-}
-
-.plaintext-pre {
-
-    white-space: pre-wrap;
-    font-family: inherit;
-    line-height: 1.8;
-}
-
-.plaintext-concept,
-.plaintext-excerpt {
-
-    max-width: 850px;
-}
-
-.plaintext-meta p {
-
-    margin-bottom: 0.35rem;
-}
-
-</style>

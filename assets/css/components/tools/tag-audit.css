@@ -1,0 +1,198 @@
+/* ==========================================================================
+   Site Tools: Tag Audit / Taxonomy Review
+   ========================================================================== */
+
+/* --- Header & Export --- */
+.tool-tag-audit .tool-export-area {
+    margin: 1.5rem 0;
+}
+
+.tool-tag-audit .tool-export-area button {
+    cursor: pointer;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid #007cba;
+    border-radius: 4px;
+    background: #007cba;
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    transition: background 0.2s ease;
+}
+
+.tool-tag-audit .tool-export-area button:hover {
+    background: #005a87;
+}
+
+.tool-tag-audit .removal-export-textarea {
+    width: 100%;
+    min-height: 250px;
+    padding: 0.75rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    resize: vertical;
+}
+
+.tool-tag-audit .removal-export-textarea:focus {
+    outline: none;
+    border-color: #007cba;
+    box-shadow: 0 0 0 2px rgba(0, 124, 186, 0.2);
+}
+
+.tool-tag-audit hr.section-divider {
+    margin: 2.5rem 0;
+    border: 0;
+    border-top: 2px solid #eee;
+}
+
+.tool-tag-audit h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+/* --- Accordion (Details/Summary) --- */
+.tool-tag-audit details.taxonomy-review {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.tool-tag-audit details.taxonomy-review[open] {
+    border-color: #007cba;
+}
+
+.tool-tag-audit details.taxonomy-review summary {
+    padding: 1rem 1.25rem;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #1e1e1e;
+    cursor: pointer;
+    background: #f8f9fa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+}
+
+.tool-tag-audit details.taxonomy-review summary:hover {
+    background: #f0f0f0;
+}
+
+.tool-tag-audit .taxonomy-count {
+    opacity: 0.6;
+    font-weight: 400;
+    font-size: 0.9rem;
+}
+
+/* --- Inner Content --- */
+.tool-tag-audit .taxonomy-review-inner {
+    padding: 1.25rem;
+    border-top: 1px solid #eee;
+}
+
+/* --- Breakdown Badges --- */
+.tool-tag-audit .taxonomy-breakdown {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.tool-tag-audit .taxonomy-breakdown span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.6rem;
+    background: #e7f3ff;
+    color: #004085;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* --- Action Buttons --- */
+.tool-tag-audit .taxonomy-actions {
+    margin-bottom: 1rem;
+}
+
+.tool-tag-audit .taxonomy-actions button {
+    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    font-size: 0.85rem;
+    margin-right: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.tool-tag-audit .taxonomy-actions button:hover {
+    background: #f3f3f3;
+    border-color: #999;
+}
+
+/* --- List & Checkboxes --- */
+.tool-tag-audit .cpt-clean-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    border-radius: 4px;
+}
+
+.tool-tag-audit .cpt-clean-list li {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #eee;
+}
+
+.tool-tag-audit .cpt-clean-list li:last-child {
+    border-bottom: none;
+}
+
+.tool-tag-audit .cpt-clean-list label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.tool-tag-audit .cpt-clean-list input[type="checkbox"] {
+    cursor: pointer;
+    margin-right: 0.25rem;
+}
+
+.tool-tag-audit .entry-emoji {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    width: 1.5rem;
+    text-align: center;
+}
+
+.tool-tag-audit .cpt-clean-list a {
+    color: #1e1e1e;
+    text-decoration: none;
+    flex-grow: 1;
+}
+
+.tool-tag-audit .cpt-clean-list a:hover {
+    color: #007cba;
+    text-decoration: underline;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 600px) {
+    .tool-tag-audit details.taxonomy-review summary {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+}
