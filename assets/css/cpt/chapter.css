@@ -41,6 +41,28 @@
     margin: 0 auto;
 }
 
+/* ========== TIGHTEN SPACING ========== */
+
+/* Reduce title size */
+.cpt-chapter-content h1,
+.cpt-fragment-content h1 {
+    font-size: 2rem; /* ~32px instead of 51px */
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Reduce gap between image and content */
+.cpt-chapter-content,
+.cpt-fragment-content {
+    margin-top: 1rem;
+}
+
+/* Reduce gap between content and navigation */
+.cpt-chapter-nav-bottom,
+.cpt-fragment-nav-bottom {
+    margin-top: 1rem;
+}
+
 /* ========== FEATURED IMAGE ========== */
 
 body.single-chapter .featured-image,
