@@ -13,38 +13,36 @@
 /* ========== TIGHTEN SPACING ========== */
 
 /* Reduce title size */
-.cpt-chapter-content h1,
-.cpt-fragment-content h1 {
-    font-size: 2rem; /* ~32px instead of 51px */
-    margin-top: 1rem;
+body.single-fragment .post-title,
+body.single-fragment h1 {
+    font-size: 2rem;
+    margin-top: 0.5rem;
     margin-bottom: 1rem;
 }
 
-/* Reduce gap between image and content */
-.cpt-chapter-content,
-.cpt-fragment-content {
-    margin-top: 1rem;
-}
-
-/* Reduce gap between content and navigation */
-.cpt-chapter-nav-bottom,
-.cpt-fragment-nav-bottom {
-    margin-top: 1rem;
-}
-
-/* ========== FEATURED IMAGE ========== */
-
-body.single-chapter .featured-image,
+/* Reduce gap between featured image and content */
 body.single-fragment .featured-image {
     max-width: 600px;
-    margin: 2rem auto;
+    margin: 1rem auto;
+    margin-bottom: 1rem;
 }
 
-body.single-chapter .featured-image img,
 body.single-fragment .featured-image img {
     width: 100%;
     height: auto;
     display: block;
+}
+
+/* Reduce post-header spacing */
+body.single-fragment .post-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0;
+}
+
+/* Reduce gap between content and navigation */
+body.single-fragment .cpt-fragment-nav-bottom {
+    margin-top: 2rem;
+    padding-top: 2rem;
 }
 
 /* ========== ARTIST META ========== */
@@ -97,8 +95,8 @@ body.single-fragment .featured-image img {
     display: flex;
     justify-content: space-between;
     gap: 40px;
-    margin-top: 60px;
-    padding-top: 40px;
+    margin-top: 2rem;
+    padding-top: 2rem;
     border-top: 1px solid #eee;
     flex-wrap: wrap;
 }
@@ -200,7 +198,7 @@ body.single-fragment .featured-image img {
 
 .cpt-fragment-grid-image {
     width: 100%;
-    aspect-ratio: 16 / 9; 
+    aspect-ratio: 16 / 9;
     object-fit: cover;
     display: block;
     border-radius: 8px;
