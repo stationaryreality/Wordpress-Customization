@@ -38,6 +38,6 @@
     text-decoration: underline;
 }
 
-#main-sidebar {
-    transform: none !important;
+.main {
+    overflow-x: hidden !important;
 }
