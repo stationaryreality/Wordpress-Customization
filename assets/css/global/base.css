@@ -39,5 +39,5 @@
 }
 
 .main {
-    overflow-x: hidden !important;
+    min-height: 4000px !important;
 }
