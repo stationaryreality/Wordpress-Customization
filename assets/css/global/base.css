@@ -37,3 +37,11 @@
 .wp-block-cover a {
     text-decoration: underline;
 }
+
+#main-sidebar {
+    transform: none;
+}
+
+.main {
+    overflow-x: hidden;
+}
