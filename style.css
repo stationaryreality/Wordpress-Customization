@@ -2,11 +2,3 @@
 Theme Name: Author Child
 Template: author
 */
-
-#main-sidebar {
-    transform: none;
-}
-
-.main {
-    overflow-x: hidden;
-}
