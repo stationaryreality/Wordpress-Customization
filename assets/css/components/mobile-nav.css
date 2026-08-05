@@ -48,3 +48,135 @@
         align-items: center;
     }
 }
+
+/* ============================================================
+   MOBILE CPT NAVIGATION
+   Universal behavior for all CPT keyboard navigation
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    /* Hide the keyboard instruction on mobile.
+       Touch users don't need it. */
+    .cpt-keyboard-hint-inline {
+        display: none;
+    }
+
+    /*
+     * Give the navigation some breathing room from the
+     * screen edges.
+     */
+    [class*="-nav-row"] {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    /*
+     * Previous always belongs on the LEFT.
+     * The margin forces it there even when it is the only item.
+     */
+    .cpt-keyboard-nav-prev {
+        margin-right: auto;
+    }
+
+    /*
+     * Next always belongs on the RIGHT.
+     * The margin forces it there even when it is the only item.
+     */
+    .cpt-keyboard-nav-next {
+        margin-left: auto;
+    }
+
+    /*
+     * On mobile, replace the CPT-specific labels
+     * ("Previous Book", "Next Book", etc.)
+     * with the universal labels.
+     */
+    .cpt-keyboard-nav-prev .cpt-book-nav-label,
+    .cpt-keyboard-nav-prev [class*="-nav-label"] {
+        font-size: 0;
+    }
+
+    .cpt-keyboard-nav-prev .cpt-book-nav-label::after,
+    .cpt-keyboard-nav-prev [class*="-nav-label"]::after {
+        content: "Previous";
+        font-size: 0.9rem;
+    }
+
+    .cpt-keyboard-nav-next .cpt-book-nav-label,
+    .cpt-keyboard-nav-next [class*="-nav-label"] {
+        font-size: 0;
+    }
+
+    .cpt-keyboard-nav-next .cpt-book-nav-label::after,
+    .cpt-keyboard-nav-next [class*="-nav-label"]::after {
+        content: "Next";
+        font-size: 0.9rem;
+    }
+/* ============================================================
+   MOBILE CPT NAVIGATION
+   Universal behavior for all CPT keyboard navigation
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    /* Hide the keyboard instruction on mobile.
+       Touch users don't need it. */
+    .cpt-keyboard-hint-inline {
+        display: none;
+    }
+
+    /*
+     * Give the navigation some breathing room from the
+     * screen edges.
+     */
+    [class*="-nav-row"] {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    /*
+     * Previous always belongs on the LEFT.
+     * The margin forces it there even when it is the only item.
+     */
+    .cpt-keyboard-nav-prev {
+        margin-right: auto;
+    }
+
+    /*
+     * Next always belongs on the RIGHT.
+     * The margin forces it there even when it is the only item.
+     */
+    .cpt-keyboard-nav-next {
+        margin-left: auto;
+    }
+
+    /*
+     * On mobile, replace the CPT-specific labels
+     * ("Previous Book", "Next Book", etc.)
+     * with the universal labels.
+     */
+    .cpt-keyboard-nav-prev .cpt-book-nav-label,
+    .cpt-keyboard-nav-prev [class*="-nav-label"] {
+        font-size: 0;
+    }
+
+    .cpt-keyboard-nav-prev .cpt-book-nav-label::after,
+    .cpt-keyboard-nav-prev [class*="-nav-label"]::after {
+        content: "Previous";
+        font-size: 0.9rem;
+    }
+
+    .cpt-keyboard-nav-next .cpt-book-nav-label,
+    .cpt-keyboard-nav-next [class*="-nav-label"] {
+        font-size: 0;
+    }
+
+    .cpt-keyboard-nav-next .cpt-book-nav-label::after,
+    .cpt-keyboard-nav-next [class*="-nav-label"]::after {
+        content: "Next";
+        font-size: 0.9rem;
+    }
+
+}
+}
