@@ -45,6 +45,7 @@ function enqueue_css_files() {
         'components' => glob("{$base_path}/components/*.css"),
         'footnotes'  => glob("{$base_path}/components/footnotes/*.css"),
         'tools'      => glob("{$base_path}/components/tools/*.css"),
+        'portals'    => glob("{$base_path}/components/portals/*.css"),
         'admin'      => glob("{$base_path}/admin/*.css"),
     ];
     
