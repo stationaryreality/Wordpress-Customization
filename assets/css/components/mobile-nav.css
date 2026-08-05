@@ -1,0 +1,50 @@
+/* ============================================================
+   MOBILE CPT NAVIGATION
+   Desktop: Full previous/next navigation + keyboard hint
+   Mobile: Thumbnail-only previous/next navigation
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    /* Hide the keyboard instruction */
+    .cpt-keyboard-hint-inline {
+        display: none;
+    }
+
+    /* Keep previous/next links, but remove their visible text */
+    .cpt-keyboard-nav-prev span,
+    .cpt-keyboard-nav-next span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    /* Make the navigation links compact and thumbnail-focused */
+    .cpt-keyboard-nav-prev,
+    .cpt-keyboard-nav-next {
+        flex: 0 0 auto;
+        max-width: none;
+        align-items: center;
+    }
+
+    /* Standardize the mobile navigation thumbnails */
+    .cpt-keyboard-nav-prev img,
+    .cpt-keyboard-nav-next img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        margin-bottom: 0;
+    }
+
+    /* Keep the two thumbnails at opposite sides */
+    .cpt-keyboard-nav-row {
+        justify-content: space-between;
+        align-items: center;
+    }
+}
