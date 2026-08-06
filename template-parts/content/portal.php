@@ -8,11 +8,15 @@ the_post();
 |--------------------------------------------------------------------------
 | DATA
 |--------------------------------------------------------------------------
+|
+| Portal is simply one context that supplies normalized knowledge data.
+| The presentation system does not need a Portal-specific data wrapper.
+|
 */
 
-require locate_template(
-    'template-parts/portal/data.php'
-);
+$knowledge_data = kp_collect_knowledge([
+    'post_id' => get_the_ID(),
+]);
 
 /*
 |--------------------------------------------------------------------------
@@ -43,15 +47,13 @@ get_template_part(
         'view' => $view,
     ]
 );
-
 ?>
-
 
 <?php
 
 kp_render_knowledge_view(
     $view,
-    $portal_data
+    $knowledge_data
 );
 
 get_footer();
