@@ -36,6 +36,11 @@ $selected_cpt = isset($_GET['inspector_cpt'])
     ? sanitize_text_field($_GET['inspector_cpt'])
     : '';
 
+    // Ensure the CPT is allowed
+if ( $selected_cpt && ! array_key_exists( $selected_cpt, $cpts ) ) {
+    $selected_cpt = '';
+}
+
 $selected_post_id = isset($_GET['inspector_post'])
     ? intval($_GET['inspector_post'])
     : 0;
