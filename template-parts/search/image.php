@@ -10,6 +10,5 @@ get_template_part(
         'query'    => $query,
         'title'    => $info['title'],
         'emoji'    => $info['emoji'],
-        'subtitle' => 'containing “' . $search_term . '”',
-    ]
+        'search_term' => $search_term,    ]
 );
