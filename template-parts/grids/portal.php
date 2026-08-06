@@ -47,22 +47,21 @@ while ($query->have_posts()) {
   =========================================
   */
 
-$topic_terms = kp_filter_system_terms(
+  $topic_terms = kp_filter_system_terms(
     get_the_terms($post_id, 'topic') ?: []
-);
+  );
 
-$theme_terms = kp_filter_system_terms(
+  $theme_terms = kp_filter_system_terms(
     get_the_terms($post_id, 'theme') ?: []
-);
+  );
 
-if (!empty($topic_terms)) {
+  if (!empty($topic_terms)) {
     $topics[] = get_post();
-}
+  }
 
-if (!empty($theme_terms)) {
+  if (!empty($theme_terms)) {
     $themes[] = get_post();
-}
-
+  }
 }
 
 wp_reset_postdata();
@@ -71,36 +70,19 @@ wp_reset_postdata();
 
 <?php if (!empty($topics)) : ?>
 
-<section class="cpt-section portal-grid" style="margin-bottom:4rem;">
+<section class="cpt-section portal-grid">
 
-  <div style="text-align:center; margin-bottom:1.75rem;">
+  <div class="portal-grid__header">
 
-    <h2 style="margin-bottom:.5rem;">
+    <h2 class="portal-grid__title">
       🧩 Topic Portals
     </h2>
 
-    <p style="
-      color:#666;
-      max-width:760px;
-      margin:0 auto 1rem auto;
-      line-height:1.7;
-    ">
+    <p class="portal-grid__description">
       Fully developed topic hubs that organize major subjects and conceptual ecosystems across the site.
     </p>
 
-    <a
-      href="<?php echo esc_url(site_url('/topics')); ?>"
-      style="
-      display:inline-block;
-      padding:.55rem 1rem;
-      background:#f2f2f2;
-      border-radius:999px;
-      text-decoration:none;
-      color:#333;
-      font-weight:600;
-      font-size:.95rem;
-      "
-    >
+    <a href="<?php echo esc_url(site_url('/topics')); ?>" class="portal-grid__cta">
       → Browse Full Topics Directory
     </a>
 
@@ -145,37 +127,20 @@ wp_reset_postdata();
 
 <?php if (!empty($themes)) : ?>
 
-<section class="cpt-section portal-grid" style="margin-bottom:4rem;">
+<section class="cpt-section portal-grid">
 
-  <div style="text-align:center; margin-bottom:1.75rem;">
+  <div class="portal-grid__header">
 
-    <h2 style="margin-bottom:.5rem;">
+    <h2 class="portal-grid__title">
       🎨 Theme Portals
     </h2>
 
-    <p style="
-      color:#666;
-      max-width:760px;
-      margin:0 auto 1rem auto;
-      line-height:1.7;
-    ">
+    <p class="portal-grid__description">
       Symbolic and poetic hubs that gather recurring motifs, emotional structures,
       aesthetics, and thematic patterns from across the site.
     </p>
 
-    <a
-      href="<?php echo esc_url(site_url('/themes')); ?>"
-      style="
-      display:inline-block;
-      padding:.55rem 1rem;
-      background:#f2f2f2;
-      border-radius:999px;
-      text-decoration:none;
-      color:#333;
-      font-weight:600;
-      font-size:.95rem;
-      "
-    >
+    <a href="<?php echo esc_url(site_url('/themes')); ?>" class="portal-grid__cta">
       → Browse Full Themes Directory
     </a>
 
