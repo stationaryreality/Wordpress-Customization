@@ -253,7 +253,7 @@ $selected_post_id = isset($_GET['inspector_post'])
                                     }
                                     elseif (is_array($item)) {
                                         echo '<pre>';
-                                        print_r($item);
+                                        echo esc_html( print_r( $item, true ) );
                                         echo '</pre>';
                                     }
                                     else {
