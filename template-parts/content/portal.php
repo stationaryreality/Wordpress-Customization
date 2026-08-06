@@ -33,51 +33,6 @@ if (!in_array($view, $allowed_views, true)) {
     $view = 'index';
 }
 
-/*
-|--------------------------------------------------------------------------
-| CSS
-|--------------------------------------------------------------------------
-*/
-
-wp_enqueue_style(
-    'portal-index',
-    get_stylesheet_directory_uri()
-    . '/template-parts/portal/css/portal-index.css',
-    [],
-    filemtime(
-        get_stylesheet_directory()
-        . '/template-parts/portal/css/portal-index.css'
-    )
-);
-
-if ($view === 'list') {
-
-    wp_enqueue_style(
-        'portal-list',
-        get_stylesheet_directory_uri()
-        . '/template-parts/portal/css/portal-list.css',
-        [],
-        filemtime(
-            get_stylesheet_directory()
-            . '/template-parts/portal/css/portal-list.css'
-        )
-    );
-}
-
-if ($view === 'atlas') {
-
-    wp_enqueue_style(
-        'portal-atlas',
-        get_stylesheet_directory_uri()
-        . '/template-parts/portal/css/portal-atlas.css',
-        [],
-        filemtime(
-            get_stylesheet_directory()
-            . '/template-parts/portal/css/portal-atlas.css'
-        )
-    );
-}
-
 ?>
 
 <?php
