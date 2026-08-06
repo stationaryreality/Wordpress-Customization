@@ -339,8 +339,6 @@ require_once get_stylesheet_directory() . '/inc/collectors/knowledge-collector.p
 
 require_once get_stylesheet_directory() . '/inc/presentation/knowledge-registry.php';
 
-//require_once get_stylesheet_directory() . '/inc/presentation/build-portal-sections.php';
-
 //disabled - require_once get_stylesheet_directory() . '/inc/concept_relations.php';
 
 // Load shared taxonomy bubbles function
