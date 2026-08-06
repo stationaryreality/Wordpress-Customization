@@ -99,13 +99,16 @@ $selected_post_id = isset($_GET['footnote_post'])
 
     <?php
 
-    $selected_post = get_post($selected_post_id);
+$selected_post = get_post($selected_post_id);
 
-    if ($selected_post):
+if (
+    $selected_post &&
+    in_array($selected_post->post_type, array_keys($post_types)) &&
+    $selected_post->post_status === 'publish'
+):
+    setup_postdata($selected_post);
 
-        setup_postdata($selected_post);
-
-    ?>
+?>
 
     <div class="footnotes-viewer-output">
 
