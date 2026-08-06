@@ -27,7 +27,6 @@ $list_types = [
     'concept',
     'excerpt',
     'lyric',
-    'profile',
     'quote',
 ];
 
