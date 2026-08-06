@@ -32,6 +32,10 @@ $selected_cpt = isset($_GET['viewer_cpt'])
     ? sanitize_text_field($_GET['viewer_cpt'])
     : '';
 
+    if ( $selected_cpt && ! array_key_exists( $selected_cpt, $cpts ) ) {
+    $selected_cpt = '';
+}
+
 $selected_post_id = isset($_GET['viewer_post'])
     ? intval($_GET['viewer_post'])
     : 0;
