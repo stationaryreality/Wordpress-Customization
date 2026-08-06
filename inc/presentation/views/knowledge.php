@@ -1,16 +1,28 @@
 <?php
 /**
- * Knowledge Portal Template
- * Renders sections using normalized card data.
+ * Knowledge View
+ *
+ * Renders normalized knowledge sections using the site's
+ * standard grid/list presentation components.
+ *
+ * The view is context-independent. It does not care whether
+ * the knowledge data came from a Portal, taxonomy, search,
+ * or another future context.
  */
+
 $sections = $knowledge_data['sections'] ?? [];
 $map      = $knowledge_data['map'] ?? [];
 
 /*
 |--------------------------------------------------------------------------
-| TEMPLATE MAP
+| PRESENTATION TYPE
 |--------------------------------------------------------------------------
+|
+| Some knowledge types use list presentation while the others
+| use grid presentation.
+|
 */
+
 $list_types = [
     'concept',
     'excerpt',
@@ -19,7 +31,14 @@ $list_types = [
     'quote',
 ];
 
+/*
+|--------------------------------------------------------------------------
+| RENDER SECTIONS
+|--------------------------------------------------------------------------
+*/
+
 foreach ($sections as $type => $items) {
+
     if (empty($items)) {
         continue;
     }
@@ -29,14 +48,24 @@ foreach ($sections as $type => $items) {
         'emoji' => '',
     ];
 
-    $folder = in_array($type, $list_types, true) ? 'lists' : 'grids';
+    $folder = in_array($type, $list_types, true)
+        ? 'lists'
+        : 'grids';
 
-    $template = locate_template("template-parts/{$folder}/{$type}.php");
+    $template = locate_template(
+        "template-parts/{$folder}/{$type}.php"
+    );
+
     if (!$template) {
         continue;
     }
 
-    // Standardized contract – all templates now receive the same shape
+    /*
+     * Standard presentation contract.
+     *
+     * The underlying templates can continue using the same
+     * normalized item structure regardless of their source.
+     */
     get_template_part(
         "template-parts/{$folder}/{$type}",
         null,
