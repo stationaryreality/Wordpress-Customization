@@ -3,8 +3,8 @@
  * Knowledge Portal Template
  * Renders sections using normalized card data.
  */
-$sections = $portal_data['sections'] ?? [];
-$map      = $portal_data['map'] ?? [];
+$sections = $knowledge_data['sections'] ?? [];
+$map      = $knowledge_data['map'] ?? [];
 
 /*
 |--------------------------------------------------------------------------

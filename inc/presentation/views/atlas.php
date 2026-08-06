@@ -4,12 +4,12 @@
  * A clean, visual map of all CPTs.
  */
 
-$sections        = $portal_data['sections'] ?? [];
-$active_sections = $portal_data['active_sections'] ?? [];
-$total_entries   = $portal_data['total_entries'] ?? 0;
-$section_order   = $portal_data['section_order'] ?? [];
-$section_labels  = $portal_data['section_labels'] ?? [];
-$map             = $portal_data['map'] ?? [];
+$sections        = $knowledge_data['sections'] ?? [];
+$active_sections = $knowledge_data['active_sections'] ?? [];
+$total_entries   = $knowledge_data['total_entries'] ?? 0;
+$section_order   = $knowledge_data['section_order'] ?? [];
+$section_labels  = $knowledge_data['section_labels'] ?? [];
+$map             = $knowledge_data['map'] ?? [];
 
 ?>
 

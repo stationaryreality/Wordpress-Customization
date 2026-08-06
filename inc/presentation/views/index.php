@@ -1,8 +1,7 @@
 <?php
 
-$sections = $portal_data['sections'] ?? [];
-
-$map      = $portal_data['map'] ?? [];
+$sections = $knowledge_data['sections'] ?? [];
+$map      = $knowledge_data['map'] ?? [];
 
 /*
 |--------------------------------------------------------------------------

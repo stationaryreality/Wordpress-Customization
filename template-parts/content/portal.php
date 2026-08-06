@@ -49,11 +49,9 @@ get_template_part(
 
 <?php
 
-kp_load_knowledge_view(
+kp_render_knowledge_view(
     $view,
-    [
-        'portal_data' => $portal_data,
-    ]
+    $portal_data
 );
 
 get_footer();

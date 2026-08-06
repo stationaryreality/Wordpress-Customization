@@ -1,9 +1,9 @@
 <?php
 
-$sections        = $portal_data['sections'] ?? [];
-$section_order   = $portal_data['section_order'] ?? [];
-$section_labels  = $portal_data['section_labels'] ?? [];
-$map             = $portal_data['map'] ?? [];
+$sections        = $knowledge_data['sections'] ?? [];
+$section_order   = $knowledge_data['section_order'] ?? [];
+$section_labels  = $knowledge_data['section_labels'] ?? [];
+$map             = $knowledge_data['map'] ?? [];
 
 ?>
 
