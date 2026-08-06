@@ -1,13 +1,11 @@
 /* =========================================
-   Portal Grid Styles
+   Portal Grid — extracted from inline styles
    ========================================= */
 
-/* Section wrapper */
 .portal-grid {
   margin-bottom: 4rem;
 }
 
-/* Header area */
 .portal-grid__header {
   text-align: center;
   margin-bottom: 1.75rem;
@@ -33,54 +31,4 @@
   color: #333;
   font-weight: 600;
   font-size: 0.95rem;
-}
-
-.portal-grid__cta:hover {
-  background: #e5e5e5;
-}
-
-/* Grid layout */
-.tag-posts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.5rem;
-}
-
-.tag-post-item {
-  display: flex;
-  flex-direction: column;
-}
-
-.tag-post-thumbnail {
-  display: block;
-  margin-bottom: 0.75rem;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.tag-post-thumbnail img {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 8px;
-}
-
-.tag-post-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #111;
-  text-decoration: none;
-  margin-bottom: 0.4rem;
-  line-height: 1.3;
-}
-
-.tag-post-title:hover {
-  color: #555;
-}
-
-.tag-post-excerpt {
-  color: #555;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  margin: 0;
 }
