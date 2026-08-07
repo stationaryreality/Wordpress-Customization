@@ -83,6 +83,21 @@
     text-align: center;
 }
 
+/* ADDED: nav thumb styling */
+.cpt-lyric-nav-thumb {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    transition: transform 0.2s ease;
+}
+
+.cpt-lyric-nav-prev:hover .cpt-lyric-nav-thumb,
+.cpt-lyric-nav-next:hover .cpt-lyric-nav-thumb {
+    transform: scale(1.05);
+}
+
 .cpt-lyric-nav-title {
     display: block;
     font-size: 0.95rem;
@@ -154,29 +169,27 @@
     justify-content: flex-start;
 }
 
-/* BOLD title to make it obviously clickable */
 .cpt-lyric-card-title {
     font-size: 1.1rem;
-    font-weight: 700; /* Bold */
+    font-weight: 700;
     margin: 0 0 0.5rem 0;
     line-height: 1.3;
 }
 
-/* REAL, STANDARD UNDERLINES: No thin tricks, no italics */
 .cpt-lyric-card-title a,
 .cpt-lyric-source a,
 .cpt-lyric-meta a {
     color: #111;
-    text-decoration: underline; /* Standard solid underline */
-    text-underline-offset: 2px; /* Prevents line from cutting through letters */
+    text-decoration: underline;
+    text-underline-offset: 2px;
     transition: color 0.2s ease;
-    font-style: normal; /* Explicitly kills any inherited italics */
+    font-style: normal;
 }
 
 .cpt-lyric-card-title a:hover,
 .cpt-lyric-source a:hover,
 .cpt-lyric-meta a:hover {
-    color: #0073aa; /* Turns blue on hover */
+    color: #0073aa;
 }
 
 .cpt-lyric-snippet {
@@ -184,7 +197,7 @@
     color: #444;
     line-height: 1.5;
     margin: 0 0 0.5rem 0;
-    font-style: normal; /* Explicitly kills italics */
+    font-style: normal;
 }
 
 .cpt-lyric-source,
@@ -193,7 +206,7 @@
     color: #555;
     margin: 0;
     line-height: 1.4;
-    font-style: normal; /* Explicitly kills italics */
+    font-style: normal;
 }
 
 /* Mobile adjustment for list */
@@ -203,10 +216,11 @@
         align-items: center;
         text-align: center;
     }
-    
+
+    /* FIXED: changed from 120px to 60px so thumbs shrink on mobile */
     .cpt-lyric-thumb {
-        width: 120px;
-        height: 120px;
+        width: 60px;
+        height: 60px;
         margin-bottom: 0.75rem;
     }
 }
