@@ -196,7 +196,8 @@
 .main .cpt-element-section .cpt-element-grid,
 main .cpt-element-section .cpt-element-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    /* CHANGED: 120px → 90px for 5-column layout like organization */
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
     gap: 1.5rem;
     max-width: 1200px;
     margin: 0 auto;
