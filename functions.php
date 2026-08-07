@@ -323,7 +323,7 @@ require_once get_stylesheet_directory() . '/inc/collectors/reference-context.php
 
 require_once get_stylesheet_directory() . '/inc/collectors/featured-context.php';
 
-require_once get_stylesheet_directory() . '/inc/collectors/search-context.php';
+//require_once get_stylesheet_directory() . '/inc/collectors/search-context.php';
 
 require_once get_stylesheet_directory() . '/inc/references.php';
 
