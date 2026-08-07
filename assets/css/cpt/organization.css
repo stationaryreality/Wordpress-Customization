@@ -113,6 +113,21 @@
     text-align: center;
 }
 
+/* ADDED: nav thumb styling */
+.cpt-organization-nav-thumb {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    transition: transform 0.2s ease;
+}
+
+.cpt-organization-nav-prev:hover .cpt-organization-nav-thumb,
+.cpt-organization-nav-next:hover .cpt-organization-nav-thumb {
+    transform: scale(1.05);
+}
+
 .cpt-organization-nav-title {
     display: block;
     font-size: 0.95rem;
@@ -165,7 +180,7 @@ main .cpt-organization-section .cpt-organization-grid {
 .cpt-organization-grid-image {
     width: 100%;
     max-width: 100%;
-    aspect-ratio: 1 / 1; /* Square logo ratio */
+    aspect-ratio: 1 / 1;
     object-fit: cover;
     border-radius: 4px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
