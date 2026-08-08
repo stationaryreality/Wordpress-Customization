@@ -93,8 +93,11 @@ foreach ($tree as &$months) {
                     <ul>
                         <?php foreach ($items as $item): ?>
                             <li>
-                                <a href="<?php echo esc_url( $item['url'] ); ?>">
-                                <?php echo esc_html( $item['title'] ); ?>
+                                <span class="cpt-icon">
+                                    <?php echo esc_html($item['icon']); ?>
+                                </span>
+                                <a href="<?php echo esc_url($item['url']); ?>">
+                                    <?php echo esc_html($item['title']); ?>
                                 </a>
                             </li>
                         <?php endforeach; ?>
