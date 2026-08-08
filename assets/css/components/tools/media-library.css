@@ -1,6 +1,5 @@
 /* ==========================================================================
    Site Tools: Full Media Library
-   Merged: keep the new style, adopt old sizing (grid + aspect ratio)
    ========================================================================== */
 
 /* --- Header & Controls --- */
@@ -12,7 +11,6 @@
     display: flex;
     gap: 0.5rem;
     margin-top: 1rem;
-    flex-wrap: wrap;               /* from better-sizes file */
 }
 
 .admin-tool-media-library .tool-controls a {
@@ -36,12 +34,11 @@
     border-color: #111;
 }
 
-/* --- Grid Layout (using old sizing) --- */
+/* --- Grid Layout --- */
 .admin-tool-media-library .media-library-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* ← old size */
-    gap: 1.5rem;                       /* keep the new's roomier gap */
-    margin-top: 2rem;                  /* from better-sizes */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
 }
 
 /* --- Media Card --- */
@@ -59,11 +56,11 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* --- Thumbnail (old aspect ratio) --- */
+/* --- Thumbnail --- */
 .admin-tool-media-library .media-thumb {
     display: block;
     background: #f5f5f5;
-    aspect-ratio: 1 / 1;            /* ← old square size */
+    aspect-ratio: 16 / 9;
     overflow: hidden;
 }
 
@@ -78,9 +75,9 @@
     transform: scale(1.05);
 }
 
-/* --- Meta Information (new style, extended with .media-date) --- */
+/* --- Meta Information --- */
 .admin-tool-media-library .media-meta {
-    padding: 1rem;                   /* keep new's comfortable padding */
+    padding: 1rem;
     font-size: 0.85rem;
     color: #555;
     display: flex;
@@ -99,11 +96,6 @@
 .admin-tool-media-library .media-dimensions {
     color: #888;
     font-family: monospace;
-    font-size: 0.8rem;
-}
-
-.admin-tool-media-library .media-date {
-    color: #888;
     font-size: 0.8rem;
 }
 
@@ -160,7 +152,7 @@
 /* --- Mobile Responsiveness --- */
 @media (max-width: 600px) {
     .admin-tool-media-library .media-library-grid {
-        grid-template-columns: 1fr;     /* single column on small screens */
+        grid-template-columns: 1fr;
     }
     
     .admin-tool-media-library .tool-pagination {
