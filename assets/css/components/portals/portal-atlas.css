@@ -227,7 +227,7 @@
     line-height: 1.4;
     color: #666;
     
-    /* Clamp to 2 lines instead of 3 */
+/* Clamp to 2 lines instead of 3 */
     display: -webkit-box;
     -webkit-box-orient: vertical;
     line-clamp: 2;
