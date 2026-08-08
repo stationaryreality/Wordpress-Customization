@@ -6,8 +6,10 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
     max-width: 1400px;
     margin: 0 auto;
+    padding: 0 1rem;                     /* tiny breathing room on phone */
 }
 
+/* ---- Stats Grid (already responsive) ---- */
 .tool-content-density-analyzer .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -35,12 +37,15 @@
     color: #1e1e1e;
 }
 
+/* ---- Density Section (table wrapper) ---- */
 .tool-content-density-analyzer .density-section {
     background: white;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 1.5rem;
     margin-bottom: 2rem;
+    overflow-x: auto;                    /* ← KEY: allows table to scroll independently */
+    -webkit-overflow-scrolling: touch;   /* smooth scroll on iOS */
 }
 
 .tool-content-density-analyzer .density-section h2 {
@@ -49,9 +54,11 @@
     padding-bottom: 0.5rem;
 }
 
+/* ---- Tables (will now be scrollable when needed) ---- */
 .tool-content-density-analyzer .content-table {
     width: 100%;
     border-collapse: collapse;
+    min-width: 600px;                    /* ensures the table doesn’t squish too much */
 }
 
 .tool-content-density-analyzer .content-table th,
@@ -59,6 +66,7 @@
     padding: 0.75rem;
     text-align: left;
     border-bottom: 1px solid #eee;
+    white-space: nowrap;                 /* keeps single-line rows (optional) */
 }
 
 .tool-content-density-analyzer .content-table th {
@@ -71,6 +79,7 @@
     background: #f9f9f9;
 }
 
+/* ---- Badges ---- */
 .tool-content-density-analyzer .density-badge {
     display: inline-block;
     padding: 0.25rem 0.5rem;
@@ -114,6 +123,7 @@
     color: #854d00;
 }
 
+/* ---- Info & Recommendation boxes ---- */
 .tool-content-density-analyzer .threshold-note {
     background: #e7f3ff;
     border-left: 4px solid #007cba;
@@ -130,7 +140,6 @@
     margin-top: 1rem;
 }
 
-/* --- Specific Overrides for Recommendation Boxes --- */
 .tool-content-density-analyzer .recommendation-box--demotion {
     border-color: #d39e00;
 }
@@ -140,7 +149,6 @@
     border-color: #28a745;
 }
 
-/* --- Layout & Utility Classes (replacing inline styles) --- */
 .tool-content-density-analyzer .recommendation-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -157,9 +165,20 @@
     color: #999;
 }
 
-/* --- Mobile Responsiveness --- */
+/* ---- Mobile: single column for recommendation grid, smaller stat cards ---- */
 @media (max-width: 768px) {
     .tool-content-density-analyzer .recommendation-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tool-content-density-analyzer .density-section {
+        padding: 1rem;                  /* reduce padding on small screens */
+    }
+}
+
+/* ---- Extra tiny screens: stat cards can stack to 1 column if needed ---- */
+@media (max-width: 480px) {
+    .tool-content-density-analyzer .stats-grid {
         grid-template-columns: 1fr;
     }
 }
