@@ -1,69 +1,61 @@
+/* ==========================================================================
+   Portal List View
+   ========================================================================== */
+
 .portal-list {
-
     max-width: 1100px;
-
     margin: 0 auto;
-
     padding: 50px 24px 100px;
 }
 
 .portal-list-header {
-
     margin-bottom: 50px;
 }
 
 .portal-list-title {
-
     margin-bottom: 20px;
-
     padding-bottom: 10px;
-
     border-bottom: 1px solid rgba(255,255,255,.1);
 }
 
+.portal-list-section {
+    margin-bottom: 3rem;
+}
+
 .portal-entry-list {
-
     list-style: none;
-
     margin: 0;
-
     padding: 0;
 }
 
 .portal-entry-list li {
-
     display: flex;
-
-    align-items: center;
-
+    align-items: flex-start; /* FIX: Keeps icon anchored to top if title wraps */
     gap: 12px;
-
     padding: 10px 0;
-
     border-bottom: 1px solid rgba(255,255,255,.05);
 }
 
-.portal-icon {
-
-    width: 28px;
-
-    text-align: center;
+.portal-entry-list li:last-child {
+    border-bottom: none;
 }
 
-.portal-type-label {
-
-    margin-left: auto;
-
-    opacity: .6;
-
-    font-size: 12px;
-
-    text-transform: uppercase;
-
-    letter-spacing: .08em;
+/* FIX: Prevent icon from squishing and anchor it optically */
+.portal-icon {
+    width: 28px;
+    text-align: center;
+    flex-shrink: 0;
+    padding-top: 2px; 
 }
 
 .portal-entry-list a {
-
     text-decoration: none;
+    color: inherit;
+    line-height: 1.4;
+    flex-grow: 1; /* Takes up remaining space */
+    transition: color 0.2s ease;
+}
+
+.portal-entry-list a:hover {
+    color: #007cba; /* Adjust to your theme's accent color */
 }
