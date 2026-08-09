@@ -1,111 +1,146 @@
-.portal-index {
+/* ==========================================================================
+   Portal Index / Site-Wide Index List
+   ========================================================================== */
 
-    max-width: 1200px;
-
+.portal-list {
+    max-width: 1100px;
     margin: 0 auto;
-
-    padding: 40px 24px 100px;
+    padding: 50px 24px 100px;
 }
 
-.portal-index-header {
-
-    margin-bottom: 40px;
+.portal-list-header {
+    margin-bottom: 50px;
 }
 
-.portal-index-total {
-
-    opacity: .7;
+.portal-list-title {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,.1);
 }
 
-.portal-view-switcher {
-
-    max-width: 1200px;
-
-    margin: 20px auto;
-
-    padding: 0 24px;
-}
-
-.portal-view-switcher select {
-
-    padding: 8px 12px;
-}
-
+/* --- Filter Section --- */
 .portal-index-filters {
+    margin-bottom: 2rem;
+}
 
-    margin-bottom: 40px;
+.portal-index-filters button {
+    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    background: transparent;
+    color: inherit;
+    font-size: 0.9rem;
+    margin-right: 0.5rem;
+    margin-bottom: 1rem;
+    transition: background 0.2s ease;
+}
+
+.portal-index-filters button:hover {
+    background: rgba(255,255,255,0.1);
 }
 
 .portal-filter-list {
-
     display: flex;
-
     flex-wrap: wrap;
-
     gap: 12px;
-
-    margin-top: 16px;
 }
 
-.portal-alpha-nav {
-
+.portal-filter-list label {
     display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+    user-select: none;
+}
 
+/* --- A-Z Nav --- */
+.portal-alpha-nav {
+    display: flex;
     flex-wrap: wrap;
-
-    gap: 8px;
-
-    margin-bottom: 40px;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 .portal-alpha-nav a {
-
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.05);
+    color: inherit;
     text-decoration: none;
-
-    padding: 6px 10px;
-
-    border-radius: 6px;
-
-    background: rgba(255,255,255,.05);
+    font-weight: 600;
+    transition: background 0.2s ease;
 }
 
-.portal-alpha-group {
+.portal-alpha-nav a:hover {
+    background: rgba(255,255,255,0.15);
+}
 
-    margin-bottom: 48px;
+/* --- Groups & Lists --- */
+.portal-alpha-group {
+    margin-bottom: 3rem;
+    scroll-margin-top: 2rem; /* Smooth scroll offset */
 }
 
 .portal-alpha-letter {
-
-    font-size: 2rem;
-
-    margin-bottom: 16px;
-
-    border-bottom: 1px solid rgba(255,255,255,.1);
-
-    padding-bottom: 8px;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 .portal-alpha-list {
-
     list-style: none;
-
     margin: 0;
-
     padding: 0;
 }
 
 .portal-alpha-list li {
-
     display: flex;
-
-    gap: 10px;
-
-    padding: 6px 0;
+    align-items: flex-start; /* Keeps icon at top if title wraps */
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,.05);
 }
 
+.portal-alpha-list li:last-child {
+    border-bottom: none;
+}
+
+/* THE FIX: Prevent icon from squishing and anchor it to the top */
 .portal-entry-icon {
-
-    width: 24px;
-
+    width: 28px;
     text-align: center;
+    flex-shrink: 0; 
+    padding-top: 2px; /* Optical alignment with the first line of text */
+}
+
+.portal-alpha-list a {
+    text-decoration: none;
+    color: inherit;
+    line-height: 1.4;
+    transition: color 0.2s ease;
+}
+
+.portal-alpha-list a:hover {
+    color: #007cba; /* Adjust to your theme's accent color */
+}
+
+/* Mobile tweak */
+@media (max-width: 600px) {
+    .portal-alpha-nav {
+        gap: 0.25rem;
+    }
+    .portal-alpha-nav a {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9rem;
+    }
 }
