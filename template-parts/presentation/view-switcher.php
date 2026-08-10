@@ -1,6 +1,6 @@
 <?php
 
-$view = $args['view'] ?? 'index';
+$view = $args['view'] ?? 'knowledge';
 
 $allowed_views = [
     'knowledge',
