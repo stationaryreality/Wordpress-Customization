@@ -24,7 +24,7 @@ $knowledge_data = kp_collect_knowledge([
 |--------------------------------------------------------------------------
 */
 
-$view = $_GET['view'] ?? 'index';
+$view = $_GET['view'] ?? 'knowledge';
 
 $allowed_views = [
     'knowledge',
