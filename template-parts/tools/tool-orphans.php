@@ -125,7 +125,7 @@ $total_count = count($entries);
     <h2>Orphans</h2>
 
     <p class="tool-orphans-count">
-        <?php echo number_format($total_count); ?> orphaned entries - These are CPTs (Custom Post Types) that are not attached to anything.
+        <?php echo number_format($total_count); ?> orphaned entries - These are CPTs (Custom Post Types) that are not attached to anything, but should be eventually.
     </p>
 
     <?php get_template_part('template-parts/tools/tool', 'filters', [
