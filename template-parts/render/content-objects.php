@@ -17,12 +17,12 @@ if (empty($posts)) {
     <?php endif; ?>
 
 <?php
-
 $count = count($posts);
 
-if ($count >= 25) {
+// Updated Thresholds
+if ($count >= 9) {
     $layout_class = 'layout-3col';
-} elseif ($count >= 9) {
+} elseif ($count >= 4) {
     $layout_class = 'layout-2col';
 } else {
     $layout_class = 'layout-1col';
@@ -31,40 +31,29 @@ if ($count >= 25) {
 
 <div class="content-objects-grid <?php echo esc_attr($layout_class); ?>">
     
-        <?php foreach ($posts as $post_obj):
+    <?php foreach ($posts as $post_obj):
+        $post_id = is_object($post_obj) ? $post_obj->ID : intval($post_obj);
+        $content_post = get_post($post_id);
 
-            $post_id = is_object($post_obj)
-                ? $post_obj->ID
-                : intval($post_obj);
+        if (!$content_post) {
+            continue;
+        }
+    ?>
 
-            $content_post = get_post($post_id);
+        <article class="content-object">
+            <h3 class="content-object-title">
+                <a href="<?php echo esc_url(get_permalink($post_id)); ?>">
+                    <?php echo esc_html(get_the_title($post_id)); ?>
+                </a>
+            </h3>
 
-            if (!$content_post) {
-                continue;
-            }
-        ?>
+            <div class="content-object-render">
+                <?php echo apply_filters('the_content', $content_post->post_content); ?>
+            </div>
+        </article>
 
-            <article class="content-object">
+    <?php endforeach; ?>
 
-                <h3 class="content-object-title">
-                    <a href="<?php echo esc_url(get_permalink($post_id)); ?>">
-                        <?php echo esc_html(get_the_title($post_id)); ?>
-                    </a>
-                </h3>
-
-                <div class="content-object-render">
-                    <?php
-                    echo apply_filters(
-                        'the_content',
-                        $content_post->post_content
-                    );
-                    ?>
-                </div>
-
-            </article>
-
-        <?php endforeach; ?>
-
-    </div>
+</div>
 
 </section>
