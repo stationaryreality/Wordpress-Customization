@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Content Objects Grid (Cover Blocks) - Masonry & Miniature Cards
+   Content Objects Grid - Proportional Scaling (Masonry + Zoom)
    ========================================================================== */
 
 .content-objects-section {
@@ -16,20 +16,18 @@
     width: 100%;
 }
 
-/* --- 1. Base Card Styling (Visual Grouping) --- */
+/* --- Base Card Styling --- */
 .content-object {
     background: #ffffff;
     border: 1px solid #e5e9f0;
-    border-radius: 8px; 
+    border-radius: 8px;
     padding: 1.5rem;
-    margin-bottom: 2rem; 
-    text-align: center; 
+    margin-bottom: 2rem;
+    text-align: center;
     
-    /* Crucial for masonry: prevents breaking across columns */
-    break-inside: avoid; 
-    -webkit-column-break-inside: avoid; 
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
     
-    /* Hover lift */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -59,64 +57,47 @@
     justify-content: center;
 }
 
-/* Ensure images scale down properly inside the miniature card */
 .content-object-render img {
     max-width: 100%;
     height: auto;
     border-radius: 4px;
 }
 
-/* --- 2. Masonry Layouts (No Gaps) --- */
+/* --- Masonry Layouts (No Gaps) --- */
 .content-objects-grid.layout-1col {
     column-count: 1;
 }
 
+/* 2-column layout */
 .content-objects-grid.layout-2col {
     column-count: 2;
     column-gap: 2rem;
 }
 
+/* Remove 3-column layout entirely, force 2 columns */
 .content-objects-grid.layout-3col {
-    column-count: 3;
+    column-count: 2;
     column-gap: 2rem;
 }
 
-/* --- 3. The "Miniature" Fix (Kills the Bookmark Look) --- */
-/* We constrain the max-width so they don't stretch across the whole column */
-.content-objects-grid.layout-2col .content-object {
-    max-width: 400px; /* Tweak this number to make them bigger/smaller */
-    margin-left: auto;
-    margin-right: auto;
-}
-
+/* --- Proportional Scaling --- */
+/* This scales the ENTIRE block down proportionally, like a photograph */
+.content-objects-grid.layout-2col .content-object,
 .content-objects-grid.layout-3col .content-object {
-    max-width: 300px; 
-    margin-left: auto;
-    margin-right: auto;
+    zoom: 0.5; /* Adjust this: 0.6 for bigger, 0.4 for smaller */
 }
 
 /* --- Mobile Responsiveness --- */
-
-@media (max-width: 900px) {
-    .content-objects-grid.layout-3col {
-        column-count: 2;
-    }
-    /* On tablets, use the 2-col width restriction */
-    .content-objects-grid.layout-3col .content-object {
-        max-width: 400px;
-    }
-}
-
 @media (max-width: 600px) {
     .content-objects-grid.layout-2col,
     .content-objects-grid.layout-3col {
         column-count: 1;
     }
     
-    /* On mobile, let them expand to fill the single column nicely */
+    /* On mobile, remove the zoom scaling */
     .content-objects-grid.layout-2col .content-object,
     .content-objects-grid.layout-3col .content-object {
-        max-width: 100%; 
+        zoom: 1;
     }
     
     .content-objects-section {
