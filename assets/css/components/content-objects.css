@@ -114,3 +114,9 @@
         margin-bottom: 1.5rem;
     }
 }
+
+/* --- Counteract zoom on the title to keep it readable --- */
+.content-objects-grid.layout-2col .content-object-title,
+.content-objects-grid.layout-3col .content-object-title {
+    zoom: 1.75; /* Adjust this number to taste */
+}
