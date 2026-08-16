@@ -17,7 +17,7 @@ if (empty($items) && (!$artist_query instanceof WP_Query || !$artist_query->have
 <section class="cpt-artist-section">
 
 <?php if ($title): ?>
-    <h2>
+    <h2 class="cpt-artist-title">
         <?php echo esc_html(trim($emoji . ' ' . $title)); ?>
         <?php if ($search_term): ?>
             containing “<?php echo esc_html($search_term); ?>”
