@@ -122,6 +122,24 @@
     color: #0073aa;
 }
 
+/* ==========================================================================
+   Artists Featured Page Group Titles
+   ========================================================================== */
+
+.page-artists-featured .cpt-artist-feature-level {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+}
+
+.page-artists-featured .cpt-artist-feature-group {
+    margin-bottom: 3rem;
+}
+
+.page-artists-featured .cpt-artist-feature-group:last-child {
+    margin-bottom: 0;
+}
+
 /* ========== ARTIST NAVIGATION (Top) ========== */
 
 .cpt-artist-nav-top {
