@@ -2,6 +2,13 @@
 get_header();
 
 $search_term = get_search_query();
+
+$test_search_context = kp_build_search_context($search_term);
+
+echo '<pre>';
+print_r($test_search_context);
+echo '</pre>';
+
 $cpt_sections = get_cpt_metadata(); // central CPT metadata
 
 echo '<main class="search-results">';
