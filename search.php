@@ -8,113 +8,14 @@ echo '<main class="search-results">';
 echo '<h1>Search results for “' . esc_html($search_term) . '”</h1>';
 
 /**
- * Build a map: post_type => [term-matching post IDs...]
- * Exact match (case-insensitive) against term name OR match by slug.
+ * Build normalized search context.
+ *
+ * Search construction is handled by the Search Context collector.
+ * This keeps search logic separate from presentation.
  */
-$taxonomies_to_include  = ['theme', 'topic']; // add more if needed
-$term_posts_by_type    = [];
-$search_term_lower     = mb_strtolower($search_term);
-$search_term_slug      = sanitize_title($search_term);
+$search_context = kp_build_search_context($search_term);
 
-foreach ($taxonomies_to_include as $taxonomy) {
-    $terms = get_terms([
-        'taxonomy'   => $taxonomy,
-        'hide_empty' => false,
-    ]);
-    if (empty($terms) || is_wp_error($terms)) {
-        continue;
-    }
-
-    foreach ($terms as $term) {
-        // case-insensitive exact name OR slug match
-        if (mb_strtolower($term->name) === $search_term_lower || $term->slug === $search_term_slug) {
-            $posts_in_term = get_posts([
-                'post_type'      => array_keys($cpt_sections),
-                'tax_query'      => [[
-                    'taxonomy' => $taxonomy,
-                    'field'    => 'term_id',
-                    'terms'    => $term->term_id,
-                ]],
-                'posts_per_page' => -1,
-                'fields'         => 'ids',
-            ]);
-            foreach ($posts_in_term as $pid) {
-                $ptype = get_post_type($pid);
-                if ($ptype) {
-                    $term_posts_by_type[$ptype][] = intval($pid);
-                }
-            }
-        }
-    }
-}
-// Normalize/unique
-foreach ($term_posts_by_type as $ptype => $ids) {
-    $term_posts_by_type[$ptype] = array_values(array_unique($ids));
-}
-
-/**
- * NEW: Build search section data (replaces render_cpt_results).
- * Returns an array with type, query, info, search_term.
- */
-function kp_build_search_section(
-    $type,
-    $info,
-    $search_term,
-    $term_posts_by_type = []
-) {
-    $query_args = [
-        'post_type'      => $type,
-        's'              => $search_term,
-        'posts_per_page' => -1,
-        'relevanssi'     => true,
-    ];
-
-    $query = new WP_Query($query_args);
-
-    if (function_exists('relevanssi_do_query')) {
-        relevanssi_do_query($query);
-    }
-
-    if (!empty($term_posts_by_type[$type])) {
-        $existing_ids = [];
-
-        foreach ((array) $query->posts as $p) {
-            $existing_ids[] = is_object($p) ? $p->ID : intval($p);
-        }
-
-        $new_ids = array_diff(
-            $term_posts_by_type[$type],
-            $existing_ids
-        );
-
-        if (!empty($new_ids)) {
-            $new_posts = get_posts([
-                'post_type'      => $type,
-                'post__in'       => $new_ids,
-                'posts_per_page' => -1,
-                'orderby'        => 'post__in',
-            ]);
-
-            $query->posts = array_merge(
-                (array) $query->posts,
-                $new_posts
-            );
-
-            $query->post_count = count($query->posts);
-            $query->found_posts = max(
-                $query->found_posts,
-                $query->post_count
-            );
-        }
-    }
-
-    return [
-        'type'        => $type,
-        'query'       => $query,
-        'info'        => $info,
-        'search_term' => $search_term,
-    ];
-}
+$search_sections = $search_context['sections'] ?? [];
 
 /**
  * Helper: Render taxonomy results (unchanged)
@@ -156,35 +57,45 @@ function render_taxonomy_results($taxonomy, $title, $emoji, $search_term) {
 // PRIORITY ORDER
 // -------------------
 
-// 1. Portal CPT – build section
 $sections = [];
-$sections[] = kp_build_search_section(
-    'portal',
-    $cpt_sections['portal'],
-    $search_term,
-    $term_posts_by_type
-);
 
-// 2. Topics – render directly (unchanged)
+/*
+ * Preserve the existing Portal-first presentation order.
+ */
+if (isset($search_sections['portal'])) {
+    $sections[] = $search_sections['portal'];
+}
+
+
+/*
+ * Topics and Themes remain independently rendered for now.
+ *
+ * This is intentionally unchanged during the Search Context
+ * migration. Their eventual unification belongs to the
+ * Search / Taxonomy presentation work.
+ */
 render_taxonomy_results('topic', 'Topics', '🧩', $search_term);
 
-// 3. Themes – render directly (unchanged)
 render_taxonomy_results('theme', 'Themes', '🎨', $search_term);
 
-// 4. Remaining CPTs (excluding portal) – build sections
-foreach ($cpt_sections as $type => $info) {
+
+/*
+ * Add the remaining normalized search sections.
+ */
+foreach ($search_sections as $type => $section) {
     if ($type === 'portal') {
         continue;
     }
-    $sections[] = kp_build_search_section(
-        $type,
-        $info,
-        $search_term,
-        $term_posts_by_type
-    );
+
+    $sections[] = $section;
 }
 
-// Render all collected knowledge sections - Restored
+
+/*
+ * Existing presentation layer.
+ *
+ * We are deliberately not changing the renderer yet.
+ */
 kp_render_knowledge_sections($sections);
 
 echo '</main>';
