@@ -32,7 +32,19 @@
     font-size: 1.4em;
     margin-bottom: 1em;
     text-align: center; /* Explicitly center the heading */
+    
 }
+
+/* ==========================================================================
+   Artist Section Title
+   ========================================================================== */
+
+.cpt-artist-section .cpt-artist-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+}
+
 
 /* ========== ARTIST SONG GRID (Inside Single Page) ========== */
 
