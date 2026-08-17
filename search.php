@@ -2,7 +2,6 @@
 get_header();
 
 $search_term = get_search_query();
-$cpt_sections = get_cpt_metadata(); // central CPT metadata
 
 echo '<main class="search-results">';
 echo '<h1>Search results for “' . esc_html($search_term) . '”</h1>';
