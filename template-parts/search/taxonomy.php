@@ -1,83 +1,142 @@
 <?php
 /**
- * Template part for displaying search results from a taxonomy
+ * Template part for displaying matching taxonomy terms in search results.
  *
- * Expects:
- * - $info        (array: title, emoji)
- * - $search_term (string)
- * - $taxonomy    (string)
+ * Expected args:
+ * - info        array  ['title' => string, 'emoji' => string]
+ * - search_term string
+ * - taxonomy    string
+ *
+ * Portal behavior:
+ * If a published Portal CPT is assigned to a Topic/Theme term,
+ * the raw taxonomy term result is hidden.
  */
 
-if (!isset($info) || !isset($search_term) || !isset($taxonomy)) {
+$args = isset($args) ? $args : [];
+
+$info        = $args['info'] ?? [];
+$search_term = $args['search_term'] ?? '';
+$taxonomy    = $args['taxonomy'] ?? '';
+
+if (!$taxonomy || trim($search_term) === '') {
     return;
 }
 
-// Dummy image for now
-$dummy_image = wp_get_attachment_image_url(19327, 'thumbnail');
+$title = $info['title'] ?? ucfirst($taxonomy);
+$emoji = $info['emoji'] ?? '';
 
-// Use Relevanssi to find posts tagged with terms matching the search term
-$query_args = [
-    'post_type'      => 'any',
-    'posts_per_page' => -1,
-    'tax_query'      => [
-        [
-            'taxonomy' => $taxonomy,
-            'field'    => 'name',
-            'terms'    => $search_term,
-            'operator' => 'LIKE',
-        ],
-    ],
-];
+/*
+ * Find matching terms.
+ */
+$terms = get_terms([
+    'taxonomy'   => $taxonomy,
+    'hide_empty' => false,
+    'name__like' => $search_term,
+]);
 
-$query = new WP_Query($query_args);
+if (empty($terms) || is_wp_error($terms)) {
+    return;
+}
 
-$found_terms = [];
-if ($query->have_posts()) :
-    while ($query->have_posts()) : $query->the_post();
-        $post_terms = wp_get_post_terms(get_the_ID(), $taxonomy);
-        foreach ($post_terms as $t) {
-            if (stripos($t->name, $search_term) !== false) {
-                $found_terms[$t->term_id] = $t;
+/*
+ * Portal override cache.
+ *
+ * Collect all published Portal posts and their assigned topic/theme term IDs.
+ * This runs once per request, even though this template part is included
+ * twice: once for Topics and once for Themes.
+ */
+static $kp_portal_term_ids = null;
+
+if (!is_array($kp_portal_term_ids)) {
+    $kp_portal_term_ids = [
+        'topic' => [],
+        'theme' => [],
+    ];
+
+    $portal_ids = get_posts([
+        'post_type'              => 'portal',
+        'post_status'            => 'publish',
+        'numberposts'            => -1,
+        'fields'                 => 'ids',
+        'no_found_rows'          => true,
+        'update_post_meta_cache' => false,
+    ]);
+
+    foreach ($portal_ids as $portal_id) {
+        $portal_topics = get_the_terms($portal_id, 'topic');
+
+        if ($portal_topics && !is_wp_error($portal_topics)) {
+            foreach ($portal_topics as $portal_term) {
+                $kp_portal_term_ids['topic'][] = (int) $portal_term->term_id;
             }
         }
-    endwhile;
-    wp_reset_postdata();
-endif;
 
-$found_terms = array_values($found_terms);
-if (empty($found_terms)) return;
+        $portal_themes = get_the_terms($portal_id, 'theme');
 
-$taxonomy_obj = get_taxonomy($taxonomy);
-$label = $taxonomy_obj ? $taxonomy_obj->labels->name : ucfirst($taxonomy);
+        if ($portal_themes && !is_wp_error($portal_themes)) {
+            foreach ($portal_themes as $portal_term) {
+                $kp_portal_term_ids['theme'][] = (int) $portal_term->term_id;
+            }
+        }
+    }
+
+    $kp_portal_term_ids['topic'] = array_unique($kp_portal_term_ids['topic']);
+    $kp_portal_term_ids['theme'] = array_unique($kp_portal_term_ids['theme']);
+}
+
+/*
+ * Filter out terms that already have a published Portal.
+ */
+$portal_term_ids = $kp_portal_term_ids[$taxonomy] ?? [];
+$visible_terms   = [];
+
+foreach ($terms as $term) {
+    if (in_array((int) $term->term_id, $portal_term_ids, true)) {
+        continue;
+    }
+
+    $term_link = get_term_link($term);
+
+    if (is_wp_error($term_link)) {
+        continue;
+    }
+
+    $visible_terms[] = [
+        'url'         => $term_link,
+        'name'        => $term->name,
+        'description' => $term->description,
+    ];
+}
+
+if (empty($visible_terms)) {
+    return;
+}
 ?>
 
-<section class="search-section search-section-<?php echo esc_attr($taxonomy); ?> container max-w-3xl mx-auto p-6">
-    <h2 class="text-2xl font-bold mb-4">
-        <?php echo esc_html($info['emoji'] . ' ' . $info['title']); ?>
-        <?php if ($search_term) : ?>
+<section class="search-tax-section">
+
+    <h2 class="search-tax-title">
+        <?php echo esc_html(trim($emoji . ' ' . $title)); ?>
+
+        <?php if ($search_term): ?>
             containing “<?php echo esc_html($search_term); ?>”
         <?php endif; ?>
     </h2>
 
-    <div class="taxonomy-list space-y-4">
-        <?php foreach ($found_terms as $t) : ?>
-            <?php $term_link = get_term_link($t); ?>
-            <?php if (is_wp_error($term_link)) continue; ?>
-            <div class="taxonomy-entry flex items-center gap-4 border-b pb-2">
-                <a href="<?php echo esc_url($term_link); ?>" class="taxonomy-thumb">
-                    <img src="<?php echo esc_url($dummy_image); ?>" alt="<?php echo esc_attr($label); ?> thumbnail" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">
-                </a>
-                <div class="taxonomy-text">
-                    <a href="<?php echo esc_url($term_link); ?>" class="font-medium text-lg">
-                        <?php echo esc_html($t->name); ?>
-                    </a>
-                    <?php if ($t->description) : ?>
-                        <p class="text-gray-600 text-sm">
-                            <?php echo esc_html(wp_trim_words($t->description, 20, '...')); ?>
-                        </p>
-                    <?php endif; ?>
-                </div>
-            </div>
+    <div class="search-tax-list">
+        <?php foreach ($visible_terms as $item): ?>
+            <a class="search-tax-item" href="<?php echo esc_url($item['url']); ?>">
+                <span class="search-tax-name">
+                    <?php echo esc_html($item['name']); ?>
+                </span>
+
+                <?php if (!empty($item['description'])): ?>
+                    <span class="search-tax-description">
+                        <?php echo esc_html(wp_trim_words($item['description'], 18, '…')); ?>
+                    </span>
+                <?php endif; ?>
+            </a>
         <?php endforeach; ?>
     </div>
+
 </section>
