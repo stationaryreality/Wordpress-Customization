@@ -339,7 +339,7 @@ require_once get_stylesheet_directory() . '/inc/presentation/cards/build-card.ph
 
 require_once get_stylesheet_directory() . '/inc/collectors/knowledge-collector.php';
 
-require_once get_stylesheet_directory() . '/inc/collectors/reference-context.php';
+//require_once get_stylesheet_directory() . '/inc/collectors/reference-context.php';
 
 require_once get_stylesheet_directory() . '/inc/presentation/knowledge-registry.php';
 
