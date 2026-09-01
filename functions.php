@@ -339,11 +339,8 @@ require_once get_stylesheet_directory() . '/inc/presentation/cards/build-card.ph
 
 require_once get_stylesheet_directory() . '/inc/collectors/knowledge-collector.php';
 
-//require_once get_stylesheet_directory() . '/inc/collectors/reference-context.php';
-
 require_once get_stylesheet_directory() . '/inc/presentation/knowledge-registry.php';
 
-//disabled - require_once get_stylesheet_directory() . '/inc/concept_relations.php';
 
 // Load shared taxonomy bubbles function
 add_action('after_setup_theme', function() {
