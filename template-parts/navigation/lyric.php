@@ -6,7 +6,7 @@ $song_field = get_field('song', $current_id);
 $current_song_id = 0;
 if ($song_field) {
     if (is_array($song_field)) $song_field = reset($song_field);
-    $current_song_id = is_object($song_field) ? $song_field->ID : $song_field;
+    $current_song_id = is_object($song_field) ? $song_field->ID : (int)$song_field;
 }
 
 $is_rap = false;
@@ -30,7 +30,27 @@ if ($current_song_id) {
     }
 }
 
-// 2. Fetch all lyrics
+// 2. Get all target Song IDs for this bucket (1 DB Query)
+$song_args = [
+    'post_type'      => 'song',
+    'posts_per_page' => -1,
+    'fields'         => 'ids',
+];
+
+if ($is_rap) {
+    $song_args['tax_query'] = [['taxonomy' => 'song_category', 'field' => 'slug', 'terms' => 'rap']];
+} else {
+    $song_args['tax_query'] = [
+        'relation' => 'AND',
+        ['taxonomy' => 'feature_level', 'field' => 'slug', 'terms' => $feature_slug],
+        ['taxonomy' => 'song_category', 'field' => 'slug', 'terms' => 'rap', 'operator' => 'NOT IN']
+    ];
+}
+
+$target_song_ids = get_posts($song_args);
+$target_song_map = array_flip($target_song_ids); // Creates a lightning-fast hash map for lookups
+
+// 3. Get all Lyric IDs ordered by title (1 DB Query)
 $all_lyric_ids = get_posts([
     'post_type'      => 'lyric',
     'posts_per_page' => -1,
@@ -39,35 +59,42 @@ $all_lyric_ids = get_posts([
     'fields'         => 'ids',
 ]);
 
-// 3. Filter lyrics to match the current bucket
+// 4. Prime the meta cache for all lyrics at once (1 DB Query)
+// This is the magic step: it fetches the ACF 'song' field for EVERY lyric in one go.
+if (!empty($all_lyric_ids)) {
+    update_meta_cache('post', $all_lyric_ids);
+}
+
+// 5. Filter lyrics in PHP memory (0 DB Queries)
 $lyric_ids = [];
-
 foreach ($all_lyric_ids as $lyric_id) {
-    $l_song_field = get_field('song', $lyric_id);
-    $l_song_id = 0;
-    if ($l_song_field) {
-        if (is_array($l_song_field)) $l_song_field = reset($l_song_field);
-        $l_song_id = is_object($l_song_field) ? $l_song_field->ID : $l_song_field;
-    }
-
-    if ($is_rap) {
-        // Keep only lyrics attached to Rap songs
-        if ($l_song_id && has_term('rap', 'song_category', $l_song_id)) {
-            $lyric_ids[] = $lyric_id;
+    // Because of update_meta_cache, this reads from RAM, not the database
+    $song_meta_values = get_post_meta($lyric_id, 'song', false);
+    
+    $match_found = false;
+    foreach ($song_meta_values as $meta_val) {
+        // Handle standard numeric ID
+        if (is_numeric($meta_val) && isset($target_song_map[(int)$meta_val])) {
+            $match_found = true;
+            break;
         }
-    } else {
-        // Keep only lyrics attached to non-Rap songs with the same feature_level
-        if ($l_song_id && !has_term('rap', 'song_category', $l_song_id)) {
-            $l_terms = wp_get_post_terms($l_song_id, 'feature_level', ['fields' => 'slugs']);
-            $l_feature_slug = $l_terms[0] ?? '';
-            
-            if ($l_feature_slug === $feature_slug) {
-                $lyric_ids[] = $lyric_id;
+        // Handle ACF serialized arrays (Relationship fields store data serialized)
+        if (is_string($meta_val) && is_serialized($meta_val)) {
+            $unserialized = maybe_unserialize($meta_val);
+            if (is_array($unserialized)) {
+                foreach ($unserialized as $sub_val) {
+                    $sub_id = is_object($sub_val) ? $sub_val->ID : (int)$sub_val;
+                    if (isset($target_song_map[$sub_id])) {
+                        $match_found = true;
+                        break;
+                    }
+                }
             }
-        } elseif (!$l_song_id && empty($feature_slug)) {
-            // Fallback for lyrics with no song attached
-            $lyric_ids[] = $lyric_id;
         }
+    }
+    
+    if ($match_found) {
+        $lyric_ids[] = $lyric_id;
     }
 }
 
@@ -76,6 +103,7 @@ $next_id = $lyric_ids[$current_index + 1] ?? null;
 $prev_id = $lyric_ids[$current_index - 1] ?? null;
 
 // Helper function to get the image for a lyric's nav
+// This only runs a maximum of 2 times now (once for prev, once for next)
 function get_lyric_nav_image($lyric_id) {
     $song = get_field('song', $lyric_id);
     if ($song) {
