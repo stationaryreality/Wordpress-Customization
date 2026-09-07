@@ -1,29 +1,31 @@
-/* ========== TAG BUBBLES ========== */
-.tag-bubbles {
-    display: inline-flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.5em;
-    max-width: 90%;
-    margin: 0 auto;
-}
+/* ========== TAG BUBBLES (IMPROVED) ========== */
 
+.cpt-topic-footnote-bubble,
+.cpt-theme-footnote-bubble,
 .tag-bubble {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 4px 10px;
-    border: 1px solid #000;
-    border-radius: 20px;
-    background: #fff;
-    color: #000;
+    padding: 5px 14px;
+    border: none;
+    border-radius: 999px;
+    background: #f5f5f5;
+    color: #1a1a1a;
     text-decoration: none;
-    font-size: 0.9em;
+    font-size: 0.85em;
     line-height: 1.4;
-    transition: background 0.2s ease, color 0.2s ease;
+    box-shadow: inset 0 0 0 1.5px #ccc;
+    transition: all 0.2s ease;
 }
 
+.cpt-topic-footnote-bubble:hover,
+.cpt-theme-footnote-bubble:hover,
 .tag-bubble:hover {
-    background: #000;
+    background: #1a1a1a;
     color: #fff;
+    box-shadow: inset 0 0 0 1.5px #1a1a1a;
+}
+
+.bubble-wrapper {
+    display: inline-flex;
 }
