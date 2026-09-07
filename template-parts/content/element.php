@@ -62,6 +62,14 @@
         endif;
         ?>
 
+        <?php 
+        // --- NEW ELEMENT TERMS BUBBLES ---
+        $group_titles = get_cpt_metadata();
+        echo fn_element_topics(get_the_ID(), $group_titles);
+        echo fn_element_themes(get_the_ID(), $group_titles);
+        // ---------------------------------
+        ?>
+
         <?php echo kp_render_element_sources(get_the_ID()); ?>
 
         <?php wp_link_pages([
