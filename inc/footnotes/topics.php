@@ -6,6 +6,9 @@
 
 function fn_topics($chapter_id, $group_titles) {
     $topics = kp_get_container_inherited_terms($chapter_id, 'topic');
+        if (empty($topics)) { 
+            return ''; 
+        }
 
     usort($topics, fn($a, $b) => strcmp($a->name, $b->name));
 

@@ -58,14 +58,29 @@ function kp_get_container_inherited_terms($post_id, $taxonomy) {
             foreach ($own_terms as $term) $terms[$term->term_id] = $term;
         }
     } 
-    elseif (in_array($post_type, ['chapter', 'fragment'])) {
-        // Chapters/Fragments use the centralized context builder
-        if (function_exists('kp_build_reference_context')) {
-            $context = kp_build_reference_context($post_id);
-            $related_ids = kp_flatten_context_array($context);
-        }
-        // Chapters/Fragments DO NOT get their own manual tags (as requested)
+elseif (in_array($post_type, ['chapter', 'fragment'])) {
+    if (function_exists('kp_build_reference_context')) {
+        $context = kp_build_reference_context($post_id);
+        $related_ids = kp_flatten_chapter_context($context);
     }
+
+    // kp_build_reference_context skips Elements themselves,
+    // so we need to grab their terms separately.
+    $attached_elements = get_field('attached_elements', $post_id);
+    if (!empty($attached_elements) && is_array($attached_elements)) {
+        foreach ($attached_elements as $el) {
+            $el_id = ($el instanceof WP_Post) ? $el->ID : (int)$el;
+            if (!$el_id) continue;
+
+            $el_terms = get_the_terms($el_id, $taxonomy);
+            if (!empty($el_terms) && !is_wp_error($el_terms)) {
+                foreach ($el_terms as $term) {
+                    $terms[$term->term_id] = $term;
+                }
+            }
+        }
+    }
+}
 
     // --- 2. FETCH TERMS FROM ALL RELATED CPTS ---
     
