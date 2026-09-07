@@ -7,21 +7,26 @@
 /**
  * Safely flattens the grouped reference context into a simple array of Post IDs.
  */
-function kp_flatten_context_array($context) {
+function kp_flatten_chapter_context($context) {
     $ids = [];
     if (empty($context)) return $ids;
     
-    if (is_numeric($context)) return [(int)$context];
-    if ($context instanceof WP_Post) return [$context->ID];
-    if (is_object($context) && isset($context->ID)) return [(int)$context->ID];
+    if (is_object($context)) $context = get_object_vars($context);
+    if (!is_array($context)) return $ids;
 
-    if (is_array($context)) {
-        // If it's a single post array (e.g., ['ID' => 123])
-        if (isset($context['ID'])) return [(int)$context['ID']];
-        
-        // Recursively flatten grouped arrays
-        foreach ($context as $item) {
-            $ids = array_merge($ids, kp_flatten_context_array($item));
+    foreach ($context as $group_or_post) {
+        if (is_array($group_or_post) || is_object($group_or_post)) {
+            if (is_object($group_or_post)) $group_or_post = get_object_vars($group_or_post);
+            foreach ($group_or_post as $item) {
+                if ($item instanceof WP_Post) $ids[] = $item->ID;
+                elseif (is_numeric($item)) $ids[] = (int)$item;
+            }
+        } 
+        elseif ($group_or_post instanceof WP_Post) {
+            $ids[] = $group_or_post->ID;
+        } 
+        elseif (is_numeric($group_or_post)) {
+            $ids[] = (int)$group_or_post;
         }
     }
     return $ids;
@@ -41,10 +46,8 @@ function kp_get_container_inherited_terms($post_id, $taxonomy) {
     $exclude_types = ['chapter', 'fragment', 'element'];
     $related_ids   = [];
 
-    // --- 1. GATHER RELATED CPT IDs BASED ON CONTAINER TYPE ---
-    
+    // --- 1. ELEMENT LOGIC ---
     if ($post_type === 'element') {
-        // Elements use the simple ACF field
         $related = get_field('related_content', $post_id);
         if (!empty($related) && is_array($related)) {
             foreach ($related as $item) {
@@ -58,36 +61,67 @@ function kp_get_container_inherited_terms($post_id, $taxonomy) {
             foreach ($own_terms as $term) $terms[$term->term_id] = $term;
         }
     } 
-    elseif (in_array($post_type, ['chapter', 'fragment'])) {
-        // Chapters/Fragments use the centralized context builder
+    // --- 2. CHAPTER / FRAGMENT LOGIC ---
+    elseif (in_array($post_type, ['chapter', 'fragment'], true)) {
+        
+        // Get all leaf CPTs (direct and inside elements)
         if (function_exists('kp_build_reference_context')) {
             $context = kp_build_reference_context($post_id);
-            $related_ids = kp_flatten_context_array($context);
+            $related_ids = kp_flatten_chapter_context($context);
         }
-        // Chapters/Fragments DO NOT get their own manual tags (as requested)
+
+        // DEFENSIVE FIX: Grab tags directly attached to the Elements themselves
+        $attached_elements = function_exists('get_field') ? get_field('attached_elements', $post_id) : null;
+        
+        if (!empty($attached_elements)) {
+            if (!is_array($attached_elements)) {
+                $attached_elements = [$attached_elements];
+            }
+            
+            foreach ($attached_elements as $el) {
+                $el_id = 0;
+                
+                // Normalize whatever ACF returns (Object, ID, or Array)
+                if ($el instanceof WP_Post) {
+                    $el_id = $el->ID;
+                } elseif (is_numeric($el)) {
+                    $el_id = (int)$el;
+                } elseif (is_array($el) && isset($el['ID'])) {
+                    $el_id = (int)$el['ID'];
+                }
+                
+                // Only fetch terms if it's a valid Element ID
+                if ($el_id > 0 && get_post_type($el_id) === 'element') {
+                    $el_terms = get_the_terms($el_id, $taxonomy);
+                    
+                    if (!empty($el_terms) && !is_wp_error($el_terms) && is_array($el_terms)) {
+                        foreach ($el_terms as $term) {
+                            if ($term instanceof WP_Term) {
+                                $terms[$term->term_id] = $term; // Deduplicate
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    // --- 2. FETCH TERMS FROM ALL RELATED CPTS ---
-    
+    // --- 3. FETCH TERMS FROM ALL LEAF CPTS ---
     $related_ids = array_unique(array_filter($related_ids));
     
     foreach ($related_ids as $rel_id) {
         $rel_type = get_post_type($rel_id);
-        
-        // Skip containers, we only want leaf CPTs (lyrics, quotes, etc.)
         if (!$rel_type || in_array($rel_type, $exclude_types, true)) continue;
 
         $rel_terms = get_the_terms($rel_id, $taxonomy);
         if (!empty($rel_terms) && !is_wp_error($rel_terms)) {
             foreach ($rel_terms as $term) {
-                // Deduplicate by term ID
-                $terms[$term->term_id] = $term;
+                $terms[$term->term_id] = $term; // Deduplicate
             }
         }
     }
 
-    // --- 3. SORT AND RETURN ---
-    
+    // --- 4. SORT AND RETURN ---
     if (!empty($terms)) {
         $terms = array_values($terms);
         usort($terms, fn($a, $b) => strcasecmp($a->name, $b->name));
