@@ -6,8 +6,6 @@
 
 function fn_themes($chapter_id, $group_titles) {
     $themes = kp_get_container_inherited_terms($chapter_id, 'theme');    
-        if (empty($themes)) 
-            {return '';}
 
     usort($themes, fn($a, $b) => strcmp($a->name, $b->name));
 
