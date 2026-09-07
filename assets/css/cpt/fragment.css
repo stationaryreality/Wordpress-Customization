@@ -45,49 +45,6 @@ body.single-fragment .cpt-fragment-nav-bottom {
     padding-top: 2rem;
 }
 
-/* ========== ARTIST META ========== */
-
-.fragment-artist-meta {
-    text-align: center;
-    margin: 2em 0;
-}
-
-.fragment-artist-thumbnail {
-    display: block;
-    margin: 0 auto 0.5em;
-    border-radius: 999px;
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-}
-
-.fragment-artist-name {
-    font-size: 1.4em;
-    margin: 0.3em 0;
-}
-
-.fragment-artist-name a {
-    text-decoration: none;
-    color: inherit;
-}
-
-.fragment-artist-name a:hover {
-    text-decoration: underline;
-}
-
-.fragment-song-title {
-    font-size: 1.1em;
-    color: #444;
-}
-
-.fragment-song-title a {
-    text-decoration: none;
-    color: inherit;
-}
-
-.fragment-song-title a:hover {
-    text-decoration: underline;
-}
 
 /* ========== FRAGMENT NAVIGATION (Bottom, Next Left, Prev Right) ========== */
 

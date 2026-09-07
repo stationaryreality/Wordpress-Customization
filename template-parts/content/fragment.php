@@ -31,14 +31,14 @@
                 $artist_name = get_the_title($primary_artist->ID);
                 $artist_link = get_permalink($primary_artist->ID);
                 ?>
-                <div class="fragment-artist-meta">
+                <div class="kp-artist-meta">
                     <?php if ($img_url): ?>
                         <a href="<?php echo esc_url($artist_link); ?>">
-                            <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($artist_name); ?>" class="fragment-artist-thumbnail">
+                            <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($artist_name); ?>" class="kp-artist-thumbnail">
                         </a>
                     <?php endif; ?>
 
-                    <h2 class="fragment-artist-name">
+                    <h2 class="kp-artist-name">
                         <a href="<?php echo esc_url($artist_link); ?>">
                             <?php echo esc_html($artist_name); ?>
                         </a>
@@ -48,7 +48,7 @@
                     $song_title = get_the_title($primary_song->ID);
                     $song_link  = get_permalink($primary_song->ID);
                     ?>
-                    <div class="fragment-song-title">
+                    <div class="kp-song-title">
                         <a href="<?php echo esc_url($song_link); ?>">
                             <?php echo esc_html($song_title); ?>
                         </a>

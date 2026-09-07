@@ -1,0 +1,43 @@
+/* ========== UNIVERSAL ARTIST META (Chapters, Fragments, Elements) ========== */
+
+.kp-artist-meta {
+    text-align: center;
+    margin: 2em 0;
+}
+
+.kp-artist-thumbnail {
+    display: block;
+    margin: 0 auto 0.5em;
+    border-radius: 999px;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.kp-artist-name {
+    font-size: 1.4em;
+    margin: 0.3em 0;
+}
+
+.kp-artist-name a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.kp-artist-name a:hover {
+    text-decoration: underline;
+}
+
+.kp-song-title {
+    font-size: 1.1em;
+    color: #444;
+}
+
+.kp-song-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.kp-song-title a:hover {
+    text-decoration: underline;
+}
