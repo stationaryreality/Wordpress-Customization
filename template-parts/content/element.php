@@ -10,6 +10,41 @@
             <h1 class="post-title"><?php the_title(); ?></h1>
         </header>
 
+        <?php
+        // Show primary song header if Element has valid context
+        $element_primary_song = kp_get_element_primary_song(get_the_ID());
+        if ($element_primary_song instanceof WP_Post):
+            $artist_field = get_field('song_artist', $element_primary_song->ID);
+            $primary_artist = $artist_field ? get_post($artist_field) : null;
+
+            if ($primary_artist instanceof WP_Post):
+                $portrait    = get_field('portrait_image', $primary_artist->ID);
+                $img_url     = $portrait ? $portrait['sizes']['thumbnail'] : '';
+                $artist_name = get_the_title($primary_artist->ID);
+                $artist_link = get_permalink($primary_artist->ID);
+                ?>
+                <div class="kp-artist-meta">
+                    <?php if ($img_url): ?>
+                        <a href="<?php echo esc_url($artist_link); ?>">
+                            <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($artist_name); ?>" class="kp-artist-thumbnail">
+                        </a>
+                    <?php endif; ?>
+
+                    <h2 class="kp-artist-name">
+                        <a href="<?php echo esc_url($artist_link); ?>">
+                            <?php echo esc_html($artist_name); ?>
+                        </a>
+                    </h2>
+
+                    <div class="kp-song-title">
+                        <a href="<?php echo esc_url(get_permalink($element_primary_song->ID)); ?>">
+                            <?php echo esc_html(get_the_title($element_primary_song->ID)); ?>
+                        </a>
+                    </div>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
+
         <div class="post-content">
             <?php the_content(); ?>
         </div>

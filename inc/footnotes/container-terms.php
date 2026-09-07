@@ -195,3 +195,60 @@ function fn_element_themes($element_id, $group_titles) {
 
     return ob_get_clean();
 }
+
+/**
+ * Detects if an Element has a valid primary song context.
+ * Returns the WP_Post of the primary song if:
+ * 1. A Chapter/Fragment is in the Element's related_content
+ * 2. That Chapter/Fragment has a primary song
+ * 3. That primary song is ALSO in the Element's related_content
+ */
+function kp_get_element_primary_song($element_id) {
+    $related = get_field('related_content', $element_id);
+    if (empty($related) || !is_array($related)) {
+        return null;
+    }
+
+    $container_id = null;
+    $related_song_ids = [];
+
+    foreach ($related as $item) {
+        $item_id = ($item instanceof WP_Post) ? $item->ID : (int)$item;
+        if (!$item_id) continue;
+
+        $item_type = get_post_type($item_id);
+
+        // Find the hidden Chapter/Fragment relation
+        if (in_array($item_type, ['chapter', 'fragment'], true) && !$container_id) {
+            $container_id = $item_id;
+        }
+
+        // Collect all song IDs in related_content
+        if ($item_type === 'song') {
+            $related_song_ids[] = $item_id;
+        }
+    }
+
+    if (!$container_id || empty($related_song_ids)) {
+        return null;
+    }
+
+    // Get the primary song from the Chapter/Fragment
+    $container_songs = get_field('chapter_songs', $container_id);
+    if (empty($container_songs) || !is_array($container_songs)) {
+        return null;
+    }
+
+    foreach ($container_songs as $row) {
+        if (!empty($row['role']) && $row['role'] === 'primary' && !empty($row['song'])) {
+            $primary_song_id = ($row['song'] instanceof WP_Post) ? $row['song']->ID : (int)$row['song'];
+
+            // Only return if this primary song is also in the Element's related_content
+            if (in_array($primary_song_id, $related_song_ids, true)) {
+                return get_post($primary_song_id);
+            }
+        }
+    }
+
+    return null;
+}
