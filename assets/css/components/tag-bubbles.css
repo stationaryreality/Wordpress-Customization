@@ -1,29 +1,33 @@
-/* ========== TAG BUBBLES (IMPROVED) ========== */
+/* ========== TAG BUBBLES (UNIFIED) ========== */
+
+.cpt-topic-footnote-bubbles,
+.cpt-theme-footnote-bubbles {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5em;
+}
 
 .cpt-topic-footnote-bubble,
 .cpt-theme-footnote-bubble,
 .tag-bubble {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
     padding: 5px 14px;
     border: none;
     border-radius: 999px;
-    background: #f5f5f5;
-    color: #1a1a1a;
+    background: #eee;
+    color: #222;
     text-decoration: none;
     font-size: 0.85em;
-    line-height: 1.4;
-    box-shadow: inset 0 0 0 1.5px #ccc;
-    transition: all 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
 .cpt-topic-footnote-bubble:hover,
 .cpt-theme-footnote-bubble:hover,
 .tag-bubble:hover {
-    background: #1a1a1a;
+    background: #222;
     color: #fff;
-    box-shadow: inset 0 0 0 1.5px #1a1a1a;
 }
 
 .bubble-wrapper {
