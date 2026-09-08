@@ -121,7 +121,9 @@ function kp_get_container_inherited_terms($post_id, $taxonomy) {
         }
     }
 
-    // --- 4. SORT AND RETURN ---
+    // --- 4. FILTER, SORT AND RETURN ---
+    $terms = kp_filter_system_terms($terms);
+
     if (!empty($terms)) {
         $terms = array_values($terms);
         usort($terms, fn($a, $b) => strcasecmp($a->name, $b->name));
