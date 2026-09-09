@@ -4,11 +4,11 @@
 get_header(); ?>
 
 <main class="homepage-posts">
-  <a id="elements"></a>
+  <a id="strands"></a>
   <section>
     <?php
 get_template_part('template-parts/grids/element', null, [
-        'title' => 'Elements',
+        'title' => 'Strands',
       ]);
     ?>
   </section>
