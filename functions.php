@@ -170,7 +170,7 @@ function site_get_navigation_sections() {
         'Narrative Content' => [
             [ 'title' => 'Narrative Threads', 'slug' => 'narrative-threads' ],
             [ 'title' => 'Narrative Episodes', 'slug' => 'narrative-episodes' ],
-            [ 'title' => 'Narrative Elements', 'slug' => 'narrative-elements' ],
+            [ 'title' => 'Narrative Strands', 'slug' => 'narrative-strands' ],
         ],
         'Site Resources' => [
             [ 'title' => 'Site Engineering', 'slug' => 'developer-notes' ],
