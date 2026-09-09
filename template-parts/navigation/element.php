@@ -22,7 +22,7 @@ $prev_id = $element_ids[$current_index - 1] ?? null;
       $thumb_url = ($cover && isset($cover['sizes']['thumbnail'])) ? $cover['sizes']['thumbnail'] : get_the_post_thumbnail_url($prev_id, 'thumbnail');
       ?>
       <a href="<?php echo get_permalink($prev_id); ?>" class="cpt-element-nav-prev cpt-keyboard-nav-prev">
-        <span class="cpt-element-nav-label">← Previous Element</span>
+        <span class="cpt-element-nav-label">← Previous Strand</span>
         <?php if ($thumb_url): ?>
           <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr(get_the_title($prev_id)); ?>" class="cpt-element-nav-thumb">
         <?php endif; ?>
@@ -42,7 +42,7 @@ $prev_id = $element_ids[$current_index - 1] ?? null;
       $thumb_url = ($cover && isset($cover['sizes']['thumbnail'])) ? $cover['sizes']['thumbnail'] : get_the_post_thumbnail_url($next_id, 'thumbnail');
       ?>
       <a href="<?php echo get_permalink($next_id); ?>" class="cpt-element-nav-next cpt-keyboard-nav-next">
-        <span class="cpt-element-nav-label">Next Element →</span>
+        <span class="cpt-element-nav-label">Next Strand →</span>
         <?php if ($thumb_url): ?>
           <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr(get_the_title($next_id)); ?>" class="cpt-element-nav-thumb">
         <?php endif; ?>
