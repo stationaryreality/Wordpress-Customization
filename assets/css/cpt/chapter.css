@@ -27,11 +27,6 @@
     margin-top: 1rem;
 }
 
-/* Reduce gap between content and navigation */
-.cpt-chapter-nav-bottom,
-.cpt-fragment-nav-bottom {
-    margin-top: 1rem;
-}
 
 /* ========== FEATURED IMAGE ========== */
 
@@ -48,80 +43,69 @@ body.single-fragment .featured-image img {
     display: block;
 }
 
-/* ========== CHAPTER NAVIGATION (Bottom, Next Left, Prev Right) ========== */
+/* ========== CHAPTER NAVIGATION (Top, Standard Order) ========== */
 
-.cpt-chapter-nav-bottom {
+.cpt-chapter-nav-top {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.cpt-chapter-nav-row {
     display: flex;
     justify-content: space-between;
-    gap: 40px;
-    margin-top: 60px;
-    padding-top: 40px;
-    border-top: 1px solid #eee;
-    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 20px;
 }
 
-.cpt-chapter-nav-next,
-.cpt-chapter-nav-prev {
-    text-align: center;
-    flex: 1;
-    min-width: 200px;
-}
-
-.cpt-chapter-nav-next h2,
-.cpt-chapter-nav-prev h2 {
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #888;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.cpt-chapter-nav-next a,
-.cpt-chapter-nav-prev a {
-    display: block;
+.cpt-chapter-nav-prev,
+.cpt-chapter-nav-next {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-decoration: none;
-    color: inherit;
-    transition: transform 0.2s ease;
+    color: #555;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    flex: 1;
+    max-width: 200px;
 }
 
-.cpt-chapter-nav-next a:hover,
-.cpt-chapter-nav-prev a:hover {
-    transform: translateY(-4px);
-}
-
-.cpt-chapter-nav-next img,
-.cpt-chapter-nav-prev img {
-    width: 100%;
-    max-width: 250px;
-    height: auto;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    border-radius: 8px;
-    margin: 0 auto 15px auto;
-    display: block;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-.cpt-chapter-nav-next h3,
-.cpt-chapter-nav-prev h3 {
-    font-size: 1.1rem;
-    margin: 0;
-    color: #111;
-    line-height: 1.3;
-}
-
-.cpt-chapter-nav-next a:hover h3,
-.cpt-chapter-nav-prev a:hover h3 {
+.cpt-chapter-nav-prev:hover,
+.cpt-chapter-nav-next:hover {
     color: #0073aa;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .cpt-chapter-nav-bottom {
-        flex-direction: column;
-        gap: 30px;
-    }
+.cpt-chapter-nav-label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+    text-align: center;
+}
+
+.cpt-chapter-nav-thumb {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    transition: transform 0.2s ease;
+}
+
+.cpt-chapter-nav-prev:hover .cpt-chapter-nav-thumb,
+.cpt-chapter-nav-next:hover .cpt-chapter-nav-thumb {
+    transform: scale(1.05);
+}
+
+.cpt-chapter-nav-title {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: center;
+    word-break: break-word;
+    color: #111;
 }
 
 /* ========== CHAPTER GRID (4-Column Layout) ========== */
