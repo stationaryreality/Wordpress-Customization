@@ -11,7 +11,7 @@
  */
 $query        = $args['query'] ?? null;
 $items        = $args['items'] ?? [];
-$title        = $args['title'] ?? 'Elements';
+$title        = $args['title'] ?? 'Strands';
 $emoji        = $args['emoji'] ?? '';
 $search_term  = $args['search_term'] ?? '';
 
