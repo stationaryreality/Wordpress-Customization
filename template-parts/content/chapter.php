@@ -1,5 +1,7 @@
 <div <?php post_class(); ?>>
 
+  <?php get_template_part('template-parts/navigation/chapter'); ?>
+
     <?php ct_author_featured_image(); ?>
 
     <article>
@@ -72,7 +74,5 @@
         </div>
 
     </article>
-
-  <?php get_template_part('template-parts/navigation/chapter'); ?>
 
 </div>

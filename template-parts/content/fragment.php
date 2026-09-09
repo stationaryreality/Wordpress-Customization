@@ -1,4 +1,7 @@
 <div <?php post_class('cpt-fragment-content'); ?>>
+
+    <?php get_template_part('template-parts/navigation/fragment'); ?>
+
     <?php do_action('post_before'); ?>
     <?php ct_author_featured_image(); ?>
 
@@ -69,6 +72,4 @@
 
     <?php do_action('post_after'); ?>
 
-    <!-- Bottom Navigation -->
-    <?php get_template_part('template-parts/navigation/fragment'); ?>
 </div>
