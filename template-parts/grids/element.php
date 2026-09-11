@@ -11,7 +11,7 @@
  */
 $query        = $args['query'] ?? null;
 $items        = $args['items'] ?? [];
-$title        = $args['title'] ?? 'Elements';
+$title        = $args['title'] ?? 'Strands';
 $emoji        = $args['emoji'] ?? '';
 $search_term  = $args['search_term'] ?? '';
 
@@ -34,7 +34,7 @@ if ($query instanceof WP_Query && $query->have_posts()) {
             'title'   => get_the_title(),
             'url'     => get_permalink(),
             'image'   => get_the_post_thumbnail_url(get_the_ID(), 'medium'),
-            'excerpt' => get_the_excerpt(),
+            // 'excerpt' removed from array since we aren't displaying it
         ];
     }
     wp_reset_postdata();
@@ -72,11 +72,7 @@ if (empty($items)) {
             <?php echo esc_html($item['title']); ?>
           </a>
         </h3>
-        <?php if (!empty($item['excerpt'])): ?>
-          <p class="square-card-caption">
-            <?php echo esc_html(wp_trim_words($item['excerpt'], 20)); ?>
-          </p>
-        <?php endif; ?>
+        <!-- Excerpt block intentionally removed to prevent auto-generated post content from cluttering the grid -->
       </div>
     <?php endforeach; ?>
   </div>
