@@ -195,8 +195,7 @@
 
 .cpt-element-grid {
     display: grid;
-    /* TWEAKED: 90px → 140px to reliably force ~5 columns and give titles breathing room */
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
     gap: 1.5rem;
     max-width: 1200px;
     margin: 0 auto;
