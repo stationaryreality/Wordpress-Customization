@@ -1,53 +1,77 @@
 <?php
-$current_id = get_the_ID();
+/**
+ * Template Part: Element Grid
+ * 
+ * Parameters:
+ * - $query       => WP_Query|null
+ * - $items       => array (normalized cards)
+ * - $title       => string
+ * - $emoji       => string (optional)
+ * - $search_term => string (optional)
+ */
+$query        = $args['query'] ?? null;
+$items        = $args['items'] ?? [];
+$title        = $args['title'] ?? 'Strands';
+$emoji        = $args['emoji'] ?? '';
+$search_term  = $args['search_term'] ?? '';
 
-$element_ids = get_posts([
-  'post_type'   => 'element',
-  'numberposts' => -1,
-  'orderby'     => 'title',
-  'order'       => 'ASC',
-  'fields'      => 'ids',
-]);
+// Fallback query if no items or query provided
+if (!$query && empty($items)) {
+    $query = new WP_Query([
+        'post_type'      => 'element',
+        'posts_per_page' => -1,
+        'orderby'        => 'title',
+        'order'          => 'ASC',
+    ]);
+}
 
-$current_index = array_search($current_id, $element_ids);
-$next_id = $element_ids[$current_index + 1] ?? null;
-$prev_id = $element_ids[$current_index - 1] ?? null;
+// Convert WP_Query to items array
+if ($query instanceof WP_Query && $query->have_posts()) {
+    $items = [];
+    while ($query->have_posts()) {
+        $query->the_post();
+        $items[] = [
+            'title'   => get_the_title(),
+            'url'     => get_permalink(),
+            'image'   => get_the_post_thumbnail_url(get_the_ID(), 'medium'),
+        ];
+    }
+    wp_reset_postdata();
+}
+
+// No data = bail
+if (empty($items)) {
+    return;
+}
 ?>
 
-<div class="cpt-element-nav-top">
-  <div class="cpt-element-nav-row">
-    <?php if ($prev_id): ?>
-      <?php
-      $cover = get_field('image_file', $prev_id);
-      $thumb_url = ($cover && isset($cover['sizes']['thumbnail'])) ? $cover['sizes']['thumbnail'] : get_the_post_thumbnail_url($prev_id, 'thumbnail');
-      ?>
-      <a href="<?php echo get_permalink($prev_id); ?>" class="cpt-element-nav-prev cpt-keyboard-nav-prev">
-        <span class="cpt-element-nav-label">← Previous Strand</span>
-        <?php if ($thumb_url): ?>
-          <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr(get_the_title($prev_id)); ?>" class="cpt-element-nav-thumb">
-        <?php endif; ?>
-        <span class="cpt-element-nav-title"><?php echo get_the_title($prev_id); ?></span>
-      </a>
+<section class="cpt-element-section">
+  <h2>
+    <?php if ($emoji) echo esc_html($emoji) . ' '; ?>
+    <?php echo esc_html($title); ?>
+    <?php if ($search_term): ?>
+      <span>containing “<?php echo esc_html($search_term); ?>”</span>
     <?php endif; ?>
+  </h2>
 
-    <?php if ($prev_id || $next_id): ?>
-      <span class="cpt-keyboard-hint-inline" title="Use arrow keys to navigate">
-        Use ← ⌨️ → keys
-      </span>
-    <?php endif; ?>
-
-    <?php if ($next_id): ?>
-      <?php
-      $cover = get_field('image_file', $next_id);
-      $thumb_url = ($cover && isset($cover['sizes']['thumbnail'])) ? $cover['sizes']['thumbnail'] : get_the_post_thumbnail_url($next_id, 'thumbnail');
-      ?>
-      <a href="<?php echo get_permalink($next_id); ?>" class="cpt-element-nav-next cpt-keyboard-nav-next">
-        <span class="cpt-element-nav-label">Next Strand →</span>
-        <?php if ($thumb_url): ?>
-          <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr(get_the_title($next_id)); ?>" class="cpt-element-nav-thumb">
-        <?php endif; ?>
-        <span class="cpt-element-nav-title"><?php echo get_the_title($next_id); ?></span>
-      </a>
-    <?php endif; ?>
+  <div class="cpt-element-grid">
+    <?php foreach ($items as $item): ?>
+      <div class="cpt-element-item">
+        <a href="<?php echo esc_url($item['url']); ?>" class="cpt-element-link">
+          <?php if (!empty($item['image'])): ?>
+            <img 
+              src="<?php echo esc_url($item['image']); ?>" 
+              alt="<?php echo esc_attr($item['title']); ?>"
+              class="cpt-element-image"
+            >
+          <?php endif; ?>
+        </a>
+        <h3 class="cpt-element-title">
+          <a href="<?php echo esc_url($item['url']); ?>">
+            <?php echo esc_html($item['title']); ?>
+          </a>
+        </h3>
+      </div>
+    <?php endforeach; ?>
   </div>
-</div>
+</section>

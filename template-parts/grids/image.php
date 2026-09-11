@@ -1,13 +1,6 @@
 <?php
 /**
  * Template Part: Image Grid (Grouped by Media Type)
- *
- * Supports:
- * 1. $query (WP_Query) – legacy
- * 2. $items (array of normalized cards)
- * 
- * Groups images by media_type taxonomy, sorted alphabetically
- * with "Unsorted" items at the bottom
  */
 $query        = $args['query'] ?? null;
 $items        = $args['items'] ?? [];
@@ -15,7 +8,6 @@ $title        = $args['title'] ?? 'Images';
 $emoji        = $args['emoji'] ?? '';
 $search_term  = $args['search_term'] ?? '';
 
-// Fallback query if no items and no query
 if (!$query && empty($items)) {
     $query = new WP_Query([
         'post_type'      => 'image',
@@ -25,7 +17,6 @@ if (!$query && empty($items)) {
     ]);
 }
 
-// Convert WP_Query to items if needed
 if ($query instanceof WP_Query && $query->have_posts()) {
     $items = [];
     while ($query->have_posts()) {
@@ -33,7 +24,6 @@ if ($query instanceof WP_Query && $query->have_posts()) {
         $image_field = get_field('image_file');
         $img_url = $image_field ? $image_field['sizes']['medium'] : get_the_post_thumbnail_url(get_the_ID(), 'medium');
         
-        // Get media_type taxonomy terms
         $media_types = wp_get_post_terms(get_the_ID(), 'media_type', ['fields' => 'names']);
         $media_type = !empty($media_types) ? $media_types[0] : 'Unsorted';
         
@@ -41,7 +31,6 @@ if ($query instanceof WP_Query && $query->have_posts()) {
             'title'      => get_the_title(),
             'url'        => get_permalink(),
             'image'      => $img_url,
-            'caption'    => get_field('image_caption'),
             'media_type' => $media_type,
         ];
     }
@@ -52,7 +41,7 @@ if (empty($items)) {
     return;
 }
 
-// Group items by media_type
+// Group and sort
 $grouped = [];
 foreach ($items as $item) {
     $type = $item['media_type'] ?? 'Unsorted';
@@ -62,12 +51,10 @@ foreach ($items as $item) {
     $grouped[$type][] = $item;
 }
 
-// Sort groups alphabetically, but keep "Unsorted" at the bottom
 $unsorted = isset($grouped['Unsorted']) ? $grouped['Unsorted'] : [];
 unset($grouped['Unsorted']);
-ksort($grouped); // Sort alphabetically by key
+ksort($grouped);
 
-// Add Unsorted back at the end if it exists
 if (!empty($unsorted)) {
     $grouped['Unsorted'] = $unsorted;
 }
@@ -103,11 +90,7 @@ if (!empty($unsorted)) {
                 <?php echo esc_html($item['title']); ?>
               </a>
             </h4>
-            <?php if (!empty($item['caption'])): ?>
-              <p class="square-card-caption">
-                <?php echo esc_html(wp_trim_words($item['caption'], 20)); ?>
-              </p>
-            <?php endif; ?>
+            <!-- Caption intentionally removed -->
           </div>
         <?php endforeach; ?>
       </div>
