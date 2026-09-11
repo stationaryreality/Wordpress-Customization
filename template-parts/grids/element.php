@@ -11,7 +11,7 @@
  */
 $query        = $args['query'] ?? null;
 $items        = $args['items'] ?? [];
-$title        = $args['title'] ?? 'Strands';
+$title        = $args['title'] ?? 'Elements';
 $emoji        = $args['emoji'] ?? '';
 $search_term  = $args['search_term'] ?? '';
 
@@ -34,6 +34,7 @@ if ($query instanceof WP_Query && $query->have_posts()) {
             'title'   => get_the_title(),
             'url'     => get_permalink(),
             'image'   => get_the_post_thumbnail_url(get_the_ID(), 'medium'),
+            'excerpt' => get_the_excerpt(),
         ];
     }
     wp_reset_postdata();
@@ -45,7 +46,7 @@ if (empty($items)) {
 }
 ?>
 
-<section class="cpt-element-section">
+<section class="square-grid-section">
   <h2>
     <?php if ($emoji) echo esc_html($emoji) . ' '; ?>
     <?php echo esc_html($title); ?>
@@ -54,23 +55,28 @@ if (empty($items)) {
     <?php endif; ?>
   </h2>
 
-  <div class="cpt-element-grid">
+  <div class="square-grid">
     <?php foreach ($items as $item): ?>
-      <div class="cpt-element-item">
-        <a href="<?php echo esc_url($item['url']); ?>" class="cpt-element-link">
+      <div class="square-card">
+        <a href="<?php echo esc_url($item['url']); ?>" class="square-card-link">
           <?php if (!empty($item['image'])): ?>
             <img 
               src="<?php echo esc_url($item['image']); ?>" 
               alt="<?php echo esc_attr($item['title']); ?>"
-              class="cpt-element-image"
+              class="square-image"
             >
           <?php endif; ?>
         </a>
-        <h3 class="cpt-element-title">
+        <h3 class="square-card-title">
           <a href="<?php echo esc_url($item['url']); ?>">
             <?php echo esc_html($item['title']); ?>
           </a>
         </h3>
+        <?php if (!empty($item['excerpt'])): ?>
+          <p class="square-card-caption">
+            <?php echo esc_html(wp_trim_words($item['excerpt'], 20)); ?>
+          </p>
+        <?php endif; ?>
       </div>
     <?php endforeach; ?>
   </div>
