@@ -236,3 +236,25 @@
     color: #111;
     text-decoration: none;
 }
+
+/* ========== ELEMENT GRID GROUPING (Strand Type) ========== */
+
+.cpt-element-group {
+    margin-bottom: 3rem;
+}
+
+.cpt-element-group:last-child {
+    margin-bottom: 0;
+}
+
+.cpt-element-group-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e5e9f0;
+    text-align: center;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
