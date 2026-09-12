@@ -34,7 +34,6 @@ if ($query instanceof WP_Query && $query->have_posts()) {
             'title'   => get_the_title(),
             'url'     => get_permalink(),
             'image'   => get_the_post_thumbnail_url(get_the_ID(), 'medium'),
-            // 'excerpt' removed from array since we aren't displaying it
         ];
     }
     wp_reset_postdata();
@@ -46,7 +45,7 @@ if (empty($items)) {
 }
 ?>
 
-<section class="square-grid-section">
+<section class="cpt-element-section">
   <h2>
     <?php if ($emoji) echo esc_html($emoji) . ' '; ?>
     <?php echo esc_html($title); ?>
@@ -55,24 +54,23 @@ if (empty($items)) {
     <?php endif; ?>
   </h2>
 
-  <div class="square-grid">
+  <div class="cpt-element-grid">
     <?php foreach ($items as $item): ?>
-      <div class="square-card">
-        <a href="<?php echo esc_url($item['url']); ?>" class="square-card-link">
+      <div class="cpt-element-item">
+        <a href="<?php echo esc_url($item['url']); ?>" class="cpt-element-link">
           <?php if (!empty($item['image'])): ?>
             <img 
               src="<?php echo esc_url($item['image']); ?>" 
               alt="<?php echo esc_attr($item['title']); ?>"
-              class="square-image"
+              class="cpt-element-image"
             >
           <?php endif; ?>
         </a>
-        <h3 class="square-card-title">
+        <h3 class="cpt-element-title">
           <a href="<?php echo esc_url($item['url']); ?>">
             <?php echo esc_html($item['title']); ?>
           </a>
         </h3>
-        <!-- Excerpt block intentionally removed to prevent auto-generated post content from cluttering the grid -->
       </div>
     <?php endforeach; ?>
   </div>
