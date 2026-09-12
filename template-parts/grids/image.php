@@ -1,10 +1,6 @@
 <?php
 /**
- * Template Part: Image Grid
- *
- * Supports:
- * 1. $query (WP_Query) – legacy
- * 2. $items (array of normalized cards)
+ * Template Part: Image Grid (Grouped by Media Type)
  */
 $query        = $args['query'] ?? null;
 $items        = $args['items'] ?? [];
@@ -12,7 +8,6 @@ $title        = $args['title'] ?? 'Images';
 $emoji        = $args['emoji'] ?? '';
 $search_term  = $args['search_term'] ?? '';
 
-// Fallback query if no items and no query
 if (!$query && empty($items)) {
     $query = new WP_Query([
         'post_type'      => 'image',
@@ -22,18 +17,22 @@ if (!$query && empty($items)) {
     ]);
 }
 
-// Convert WP_Query to items if needed
 if ($query instanceof WP_Query && $query->have_posts()) {
     $items = [];
     while ($query->have_posts()) {
         $query->the_post();
         $image_field = get_field('image_file');
         $img_url = $image_field ? $image_field['sizes']['medium'] : get_the_post_thumbnail_url(get_the_ID(), 'medium');
+        
+        // Get taxonomy_media_type taxonomy, default to 'Unsorted'
+        $media_types = wp_get_post_terms(get_the_ID(), 'media_type', ['fields' => 'names']);
+        $media_type = !empty($media_types) ? $media_types[0] : 'Unsorted';
+        
         $items[] = [
-            'title'   => get_the_title(),
-            'url'     => get_permalink(),
-            'image'   => $img_url,
-            'caption' => get_field('image_caption'),
+            'title'      => get_the_title(),
+            'url'        => get_permalink(),
+            'image'      => $img_url,
+            'media_type' => $media_type,
         ];
     }
     wp_reset_postdata();
@@ -41,6 +40,24 @@ if ($query instanceof WP_Query && $query->have_posts()) {
 
 if (empty($items)) {
     return;
+}
+
+// Group and sort alphabetically, keeping 'Unsorted' at the very end
+$grouped = [];
+foreach ($items as $item) {
+    $type = $item['media_type'] ?? 'Unsorted';
+    if (!isset($grouped[$type])) {
+        $grouped[$type] = [];
+    }
+    $grouped[$type][] = $item;
+}
+
+$unsorted = isset($grouped['Unsorted']) ? $grouped['Unsorted'] : [];
+unset($grouped['Unsorted']);
+ksort($grouped); // Sorts alphabetically
+
+if (!empty($unsorted)) {
+    $grouped['Unsorted'] = $unsorted;
 }
 ?>
 
@@ -53,29 +70,30 @@ if (empty($items)) {
     <?php endif; ?>
   </h2>
 
-  <div class="square-grid">
-    <?php foreach ($items as $item): ?>
-      <div class="square-card">
-        <a href="<?php echo esc_url($item['url']); ?>" class="square-card-link">
-          <?php if (!empty($item['image'])): ?>
-            <img 
-              src="<?php echo esc_url($item['image']); ?>" 
-              alt="<?php echo esc_attr($item['title']); ?>"
-              class="square-image"
-            >
-          <?php endif; ?>
-        </a>
-        <h3 class="square-card-title">
-          <a href="<?php echo esc_url($item['url']); ?>">
-            <?php echo esc_html($item['title']); ?>
-          </a>
-        </h3>
-        <?php if (!empty($item['caption'])): ?>
-          <p class="square-card-caption">
-            <?php echo esc_html(wp_trim_words($item['caption'], 20)); ?>
-          </p>
-        <?php endif; ?>
+  <?php foreach ($grouped as $group_name => $group_items): ?>
+    <div class="img-grid-group">
+      <h3 class="img-grid-group-title"><?php echo esc_html($group_name); ?></h3>
+      
+      <div class="square-grid">
+        <?php foreach ($group_items as $item): ?>
+          <div class="square-card">
+            <a href="<?php echo esc_url($item['url']); ?>" class="square-card-link">
+              <?php if (!empty($item['image'])): ?>
+                <img 
+                  src="<?php echo esc_url($item['image']); ?>" 
+                  alt="<?php echo esc_attr($item['title']); ?>"
+                  class="square-image"
+                >
+              <?php endif; ?>
+            </a>
+            <h4 class="square-card-title">
+              <a href="<?php echo esc_url($item['url']); ?>">
+                <?php echo esc_html($item['title']); ?>
+              </a>
+            </h4>
+          </div>
+        <?php endforeach; ?>
       </div>
-    <?php endforeach; ?>
-  </div>
+    </div>
+  <?php endforeach; ?>
 </section>

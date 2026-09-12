@@ -127,7 +127,7 @@
     line-height: 1.5;
 }
 
-/* ========== IMAGE GRID (Shared Square Style) ========== */
+/* ========== IMAGE GRID (Original Shared Square Style) ========== */
 
 .square-grid-section {
     margin-bottom: 4rem;
@@ -140,7 +140,6 @@
 
 .square-grid {
     display: grid;
-    /* CHANGED: 150px → 90px for 5-column layout like organization */
     grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
     gap: 1.5rem;
     max-width: 1200px;
@@ -184,9 +183,24 @@
     text-decoration: none;
 }
 
-.square-card-caption {
-    margin-top: 0.25rem;
-    font-size: 0.85rem;
-    color: #666;
-    line-height: 1.3;
+/* ========== IMAGE GRID GROUPING (Media Type) ========== */
+
+.img-grid-group {
+    margin-bottom: 3rem;
+}
+
+.img-grid-group:last-child {
+    margin-bottom: 0;
+}
+
+.img-grid-group-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e5e9f0;
+    text-align: center;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
 }
