@@ -3,7 +3,7 @@ $query = $args['query'];
 $info  = $args['info'];
 
 get_template_part(
-    'template-parts/lists/profile',
+    'template-parts/grids/profile',
     null,
     [
         'query'       => $query,
