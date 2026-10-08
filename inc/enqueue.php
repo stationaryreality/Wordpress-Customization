@@ -63,6 +63,19 @@ function enqueue_css_files() {
 add_action('wp_enqueue_scripts', 'enqueue_css_files');
 
 
+function lr_enqueue_css() {
+    if (is_page_template('listening-room.php')) {
+        wp_enqueue_style(
+            'listening-room',
+            get_stylesheet_directory_uri() . '/assets/css/pages/listening-room.css',
+            [],
+            filemtime(get_stylesheet_directory() . '/assets/css/pages/listening-room.css')
+        );
+    }
+}
+add_action('wp_enqueue_scripts', 'lr_enqueue_css');
+
+
 // === KEYBOARD NAVIGATION SCRIPT ===
 function enqueue_keyboard_navigation() {
     // Only load on single Image or Concept pages
