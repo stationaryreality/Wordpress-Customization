@@ -397,7 +397,7 @@ body {
   </a>
 
   <h1 class="lr-page-title">The Listening Room</h1>
-  <p class="lr-page-sub">Curated soundscapes for reading, reflection, and philosophical inquiry.</p>
+  <p class="lr-page-sub">Selected tracks from the archive, chosen for mood, atmosphere, and heavy personal rotation.</p>
 
   <?php foreach ($all_groups as $group): ?>
     <?php if (empty($group['songs'])) continue; ?>
