@@ -181,9 +181,9 @@ function site_get_navigation_sections() {
             [ 'title' => 'Get Updates', 'slug' => 'get-updates' ],
         ],
         'Media & Music' => [
-            [ 'title' => 'Listening Room', 'slug' => 'the-listening-room' ],
             [ 'title' => 'Song Excerpts', 'slug' => 'song-excerpts' ],
             [ 'title' => 'Image Gallery', 'slug' => 'image-gallery' ],
+            [ 'title' => 'Listening Room', 'slug' => 'the-listening-room' ],
             [ 'title' => 'Video Room', 'slug' => 'video-room' ],
             [ 'title' => 'Movies Referenced', 'slug' => 'movies-referenced' ],
             [ 'title' => 'TV Shows Referenced', 'slug' => 'tv-shows-referenced' ],
