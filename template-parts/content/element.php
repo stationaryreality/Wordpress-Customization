@@ -11,8 +11,8 @@
         </header>
 
 <?php 
-$primary_song = kp_get_primary_song(get_the_ID());
-kp_render_artist_header($primary_song); 
+$primary_songs = kp_get_primary_songs(get_the_ID());
+kp_render_artist_header($primary_songs); 
 ?>
 
         <div class="post-content">

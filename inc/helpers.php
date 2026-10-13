@@ -192,6 +192,7 @@ function kp_filter_system_terms( $terms ) {
     });
 }
 
+
 /**
  * UNIVERSAL PRIMARY SONGS GETTER
  * Finds the primary song(s) for Chapters, Fragments, and Elements.
@@ -201,7 +202,6 @@ function kp_get_primary_songs($post_id) {
     $primary_songs = [];
 
     // 1. CONTEXT CHECK (For Elements attached to Chapters/Fragments)
-    // If the element inherits a song from its parent, that takes priority.
     if ($post_type === 'element' && function_exists('kp_get_element_primary_song')) {
         $context_song = kp_get_element_primary_song($post_id);
         if ($context_song instanceof WP_Post) {
@@ -228,7 +228,6 @@ function kp_get_primary_songs($post_id) {
             $related = get_field('related_content', $post_id);
             if (!empty($related) && is_array($related)) {
                 foreach ($related as $item) {
-                    // Find the first item that is actually a Song
                     if ($item instanceof WP_Post && $item->post_type === 'song') {
                         $primary_songs[] = $item;
                         break; // Stop at the first one found
@@ -250,50 +249,68 @@ function kp_get_primary_songs($post_id) {
         }
     }
 
-    return array_unique($primary_songs);
+    // SAFE DEDUPLICATION (Replaces array_unique to prevent PHP 8 crashes)
+    $unique_songs = [];
+    $seen_ids = [];
+    foreach ($primary_songs as $song) {
+        if (!in_array($song->ID, $seen_ids)) {
+            $unique_songs[] = $song;
+            $seen_ids[] = $song->ID;
+        }
+    }
+    
+    return $unique_songs;
 }
 
 /**
- * 2. UNIVERSAL ARTIST HEADER RENDERER
- * Outputs the clean HTML block for the primary song.
+ * UNIVERSAL ARTIST HEADER RENDERER
+ * Handles arrays and correctly displays "doubles" side-by-side.
  */
-function kp_render_artist_header($primary_song) {
-    if (!$primary_song instanceof WP_Post) return;
+function kp_render_artist_header($primary_songs) { 
+    if (empty($primary_songs) || !is_array($primary_songs)) return;
 
-    $artist_field = get_field('song_artist', $primary_song->ID);
-    $primary_artist = $artist_field ? get_post($artist_field) : null;
+    echo '<div class="kp-artist-meta-wrapper">';
 
-    if (!$primary_artist instanceof WP_Post) return;
+    foreach ($primary_songs as $primary_song) {
+        if (!$primary_song instanceof WP_Post) continue;
 
-    $portrait    = get_field('portrait_image', $primary_artist->ID);
-    $img_url     = $portrait ? $portrait['sizes']['thumbnail'] : '';
-    $artist_name = get_the_title($primary_artist->ID);
-    $artist_link = get_permalink($primary_artist->ID);
-    
-    $song_title = get_the_title($primary_song->ID);
-    $song_link  = get_permalink($primary_song->ID);
-    ?>
-    <div class="kp-artist-meta">
-        <?php if ($img_url): ?>
-            <a href="<?php echo esc_url($artist_link); ?>" class="kp-artist-link">
-                <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($artist_name); ?>" class="kp-artist-thumbnail">
-            </a>
-        <?php endif; ?>
+        $artist_field = get_field('song_artist', $primary_song->ID);
+        $primary_artist = $artist_field ? get_post($artist_field) : null;
 
-        <h2 class="kp-artist-name">
-            <a href="<?php echo esc_url($artist_link); ?>" class="kp-artist-link">
-                <?php echo esc_html($artist_name); ?>
-            </a>
-        </h2>
+        if (!$primary_artist instanceof WP_Post) continue;
 
-        <div class="kp-song-title">
-            <a href="<?php echo esc_url($song_link); ?>" class="kp-song-link">
-                <?php echo esc_html($song_title); ?>
-            </a>
+        $portrait    = get_field('portrait_image', $primary_artist->ID);
+        $img_url     = $portrait ? $portrait['sizes']['thumbnail'] : '';
+        $artist_name = get_the_title($primary_artist->ID);
+        $artist_link = get_permalink($primary_artist->ID);
+        
+        $song_title = get_the_title($primary_song->ID);
+        $song_link  = get_permalink($primary_song->ID);
+        ?>
+        <div class="kp-artist-meta">
+            <?php if ($img_url): ?>
+                <a href="<?php echo esc_url($artist_link); ?>" class="kp-artist-link">
+                    <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($artist_name); ?>" class="kp-artist-thumbnail">
+                </a>
+            <?php endif; ?>
+
+            <h2 class="kp-artist-name">
+                <a href="<?php echo esc_url($artist_link); ?>" class="kp-artist-link">
+                    <?php echo esc_html($artist_name); ?>
+                </a>
+            </h2>
+
+            <div class="kp-song-title">
+                <a href="<?php echo esc_url($song_link); ?>" class="kp-song-link">
+                    <?php echo esc_html($song_title); ?>
+                </a>
+            </div>
         </div>
-    </div>
-    <?php
+        <?php
+    }
+    echo '</div>';
 }
+
 
 require_once get_stylesheet_directory() . '/inc/helpers/wikipedia.php';
 
