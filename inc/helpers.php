@@ -193,49 +193,64 @@ function kp_filter_system_terms( $terms ) {
 }
 
 /**
- * 1. UNIVERSAL PRIMARY SONG GETTER
- * Determines the primary song for Chapters, Fragments, and Elements.
+ * UNIVERSAL PRIMARY SONGS GETTER
+ * Finds the primary song(s) for Chapters, Fragments, and Elements.
  */
-function kp_get_primary_song($post_id) {
+function kp_get_primary_songs($post_id) {
     $post_type = get_post_type($post_id);
-    
-    // A. If it's an Element, try the old context logic first (Attached Chapter/Fragment)
+    $primary_songs = [];
+
+    // 1. CONTEXT CHECK (For Elements attached to Chapters/Fragments)
+    // If the element inherits a song from its parent, that takes priority.
     if ($post_type === 'element' && function_exists('kp_get_element_primary_song')) {
         $context_song = kp_get_element_primary_song($post_id);
         if ($context_song instanceof WP_Post) {
-            return $context_song;
+            $primary_songs[] = $context_song;
         }
     }
 
-    // B. Check the ACF Repeater field 
-    // (Assuming all 3 CPTs use the same 'chapter_songs' repeater field name)
-    $songs = get_field('chapter_songs', $post_id);
-
-    if (!empty($songs) && is_array($songs)) {
-        // Look for explicitly marked 'primary' role
-        foreach ($songs as $row) {
-            if (!empty($row['role']) && $row['role'] === 'primary' && !empty($row['song']) && $row['song'] instanceof WP_Post) {
-                return $row['song'];
+    // 2. ELEMENT LOGIC (Song Based -> related_content)
+    if ($post_type === 'element') {
+        $terms = get_the_terms($post_id, 'strand_type');
+        $is_song_based = false;
+        
+        if (!is_wp_error($terms) && !empty($terms)) {
+            foreach ($terms as $term) {
+                if ($term->slug === 'song-based') {
+                    $is_song_based = true;
+                    break;
+                }
             }
         }
 
-        // Fallback for "Song Based" Elements: take the FIRST song in the array
-        if ($post_type === 'element') {
-            $terms = get_the_terms($post_id, 'strand_type'); 
-            if (!is_wp_error($terms) && !empty($terms)) {
-                foreach ($terms as $term) {
-                    if ($term->slug === 'song-based') { 
-                        $first_song = $songs[0]['song'];
-                        if ($first_song instanceof WP_Post) {
-                            return $first_song;
-                        }
+        // If it is Song Based, check related_content for the first song
+        if ($is_song_based) {
+            $related = get_field('related_content', $post_id);
+            if (!empty($related) && is_array($related)) {
+                foreach ($related as $item) {
+                    // Find the first item that is actually a Song
+                    if ($item instanceof WP_Post && $item->post_type === 'song') {
+                        $primary_songs[] = $item;
+                        break; // Stop at the first one found
                     }
+                }
+            }
+        }
+    } 
+    
+    // 3. CHAPTER & FRAGMENT LOGIC (Repeater -> role=primary)
+    else {
+        $songs = get_field('chapter_songs', $post_id);
+        if (!empty($songs) && is_array($songs)) {
+            foreach ($songs as $row) {
+                if (!empty($row['role']) && $row['role'] === 'primary' && !empty($row['song']) && $row['song'] instanceof WP_Post) {
+                    $primary_songs[] = $row['song'];
                 }
             }
         }
     }
 
-    return null;
+    return array_unique($primary_songs);
 }
 
 /**
