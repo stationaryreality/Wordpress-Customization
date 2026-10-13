@@ -2,42 +2,50 @@
 
 .kp-artist-meta {
     text-align: center;
-    margin: 2em 0;
+    margin: 2.5em 0 3em;
 }
 
 .kp-artist-thumbnail {
     display: block;
-    margin: 0 auto 0.5em;
+    margin: 0 auto 0.8em;
     border-radius: 999px;
-    width: 150px;
-    height: 150px;
+    width: 130px; 
+    height: 130px;
     object-fit: cover;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Subtle zoom on the image when hovering the link */
+.kp-artist-link:hover .kp-artist-thumbnail {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
 }
 
 .kp-artist-name {
-    font-size: 1.4em;
-    margin: 0.3em 0;
+    font-size: 1.35em;
+    font-weight: 700; /* Bold */
+    margin: 0.3em 0 0.1em;
+    color: #111; /* Adjust if dark mode */
 }
 
-.kp-artist-name a {
+.kp-artist-link,
+.kp-song-link {
     text-decoration: none;
-    color: inherit;
+    color: inherit; /* Matches surrounding text color by default */
+    transition: color 0.2s ease;
 }
 
-.kp-artist-name a:hover {
+/* Bold and Blue on hover */
+.kp-artist-link:hover,
+.kp-song-link:hover {
+    color: #0056b3; /* A clean, classic link blue */
     text-decoration: underline;
 }
 
 .kp-song-title {
     font-size: 1.1em;
-    color: #444;
-}
-
-.kp-song-title a {
-    text-decoration: none;
-    color: inherit;
-}
-
-.kp-song-title a:hover {
-    text-decoration: underline;
+    color: #555;
+    font-weight: 500;
+    margin-top: 0.2em;
 }

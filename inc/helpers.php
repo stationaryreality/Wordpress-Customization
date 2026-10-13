@@ -192,6 +192,94 @@ function kp_filter_system_terms( $terms ) {
     });
 }
 
+/**
+ * 1. UNIVERSAL PRIMARY SONG GETTER
+ * Determines the primary song for Chapters, Fragments, and Elements.
+ */
+function kp_get_primary_song($post_id) {
+    $post_type = get_post_type($post_id);
+    
+    // A. If it's an Element, try the old context logic first (Attached Chapter/Fragment)
+    if ($post_type === 'element' && function_exists('kp_get_element_primary_song')) {
+        $context_song = kp_get_element_primary_song($post_id);
+        if ($context_song instanceof WP_Post) {
+            return $context_song;
+        }
+    }
+
+    // B. Check the ACF Repeater field 
+    // (Assuming all 3 CPTs use the same 'chapter_songs' repeater field name)
+    $songs = get_field('chapter_songs', $post_id);
+
+    if (!empty($songs) && is_array($songs)) {
+        // Look for explicitly marked 'primary' role
+        foreach ($songs as $row) {
+            if (!empty($row['role']) && $row['role'] === 'primary' && !empty($row['song']) && $row['song'] instanceof WP_Post) {
+                return $row['song'];
+            }
+        }
+
+        // Fallback for "Song Based" Elements: take the FIRST song in the array
+        if ($post_type === 'element') {
+            $terms = get_the_terms($post_id, 'strand_type'); 
+            if (!is_wp_error($terms) && !empty($terms)) {
+                foreach ($terms as $term) {
+                    if ($term->slug === 'song-based') { 
+                        $first_song = $songs[0]['song'];
+                        if ($first_song instanceof WP_Post) {
+                            return $first_song;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return null;
+}
+
+/**
+ * 2. UNIVERSAL ARTIST HEADER RENDERER
+ * Outputs the clean HTML block for the primary song.
+ */
+function kp_render_artist_header($primary_song) {
+    if (!$primary_song instanceof WP_Post) return;
+
+    $artist_field = get_field('song_artist', $primary_song->ID);
+    $primary_artist = $artist_field ? get_post($artist_field) : null;
+
+    if (!$primary_artist instanceof WP_Post) return;
+
+    $portrait    = get_field('portrait_image', $primary_artist->ID);
+    $img_url     = $portrait ? $portrait['sizes']['thumbnail'] : '';
+    $artist_name = get_the_title($primary_artist->ID);
+    $artist_link = get_permalink($primary_artist->ID);
+    
+    $song_title = get_the_title($primary_song->ID);
+    $song_link  = get_permalink($primary_song->ID);
+    ?>
+    <div class="kp-artist-meta">
+        <?php if ($img_url): ?>
+            <a href="<?php echo esc_url($artist_link); ?>" class="kp-artist-link">
+                <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($artist_name); ?>" class="kp-artist-thumbnail">
+            </a>
+        <?php endif; ?>
+
+        <h2 class="kp-artist-name">
+            <a href="<?php echo esc_url($artist_link); ?>" class="kp-artist-link">
+                <?php echo esc_html($artist_name); ?>
+            </a>
+        </h2>
+
+        <div class="kp-song-title">
+            <a href="<?php echo esc_url($song_link); ?>" class="kp-song-link">
+                <?php echo esc_html($song_title); ?>
+            </a>
+        </div>
+    </div>
+    <?php
+}
+
 require_once get_stylesheet_directory() . '/inc/helpers/wikipedia.php';
 
 require_once get_stylesheet_directory() . '/inc/helpers/featured-in.php';
