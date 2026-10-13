@@ -66,8 +66,28 @@ while ($containers->have_posts()) {
 
 wp_reset_postdata();
 
-$referenced_ids = array_keys($referenced_ids);
+    // --------------------------------------
+    // Songs in the Listening Room are NOT orphans
+    // --------------------------------------
+    $lr_songs = get_posts([
+        'post_type'      => 'song',
+        'posts_per_page' => -1,
+        'fields'         => 'ids',
+        'tax_query'      => [
+            [
+                'taxonomy' => 'listening_room', // Confirm this matches your exact taxonomy name
+                'field'    => 'slug',
+                'terms'    => 'listening-room',
+            ],
+        ],
+    ]);
 
+    foreach ($lr_songs as $lr_id) {
+        $referenced_ids[$lr_id] = true;
+    }
+
+    // Convert the array keys (IDs) back to a flat array
+$referenced_ids = array_keys($referenced_ids);
 
 /* ===== STEP 2: GET ALL POSTS ===== */
 
