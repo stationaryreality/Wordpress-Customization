@@ -1,19 +1,47 @@
 <?php
-$artist_id  = get_the_ID();
-$bio        = get_field('bio', $artist_id);
-$portrait   = get_field('portrait_image', $artist_id);
-$img_url    = $portrait ? $portrait['sizes']['medium'] : '';
-$wiki_slug  = get_field('wikipedia_slug', $artist_id);
+$artist_id     = get_the_ID();
+$bio           = get_field('bio', $artist_id);
+$portrait      = get_field('portrait_image', $artist_id);
+$img_url       = $portrait ? $portrait['sizes']['medium'] : '';
+$wiki_slug     = get_field('wikipedia_slug', $artist_id);
+$group_members = get_field('group_members', $artist_id);
 
-$songs = get_posts([
-  'post_type'      => 'song',
-  'posts_per_page' => -1,
-  'meta_query'     => [
-    [ 'key' => 'song_artist', 'value' => $artist_id, 'compare' => '=' ]
-  ],
-  'orderby' => 'title',
-  'order'   => 'ASC'
+// Query songs where this artist is the primary artist
+$primary_songs = get_posts([
+    'post_type'      => 'song',
+    'posts_per_page' => -1,
+    'meta_query'     => [
+        ['key' => 'song_artist', 'value' => $artist_id, 'compare' => '=']
+    ],
+    'orderby' => 'title',
+    'order'   => 'ASC'
 ]);
+
+// Query songs where this artist appears in additional_artists
+$additional_songs = get_posts([
+    'post_type'      => 'song',
+    'posts_per_page' => -1,
+    'meta_query'     => [
+        ['key' => 'additional_artists', 'value' => $artist_id, 'compare' => 'LIKE']
+    ],
+    'orderby' => 'title',
+    'order'   => 'ASC'
+]);
+
+// Merge and deduplicate
+$all_song_ids = [];
+$songs = [];
+foreach (array_merge($primary_songs, $additional_songs) as $s) {
+    if (!in_array($s->ID, $all_song_ids)) {
+        $all_song_ids[] = $s->ID;
+        $songs[] = $s;
+    }
+}
+
+// Sort alphabetically by title
+usort($songs, function($a, $b) {
+    return strcmp(get_the_title($a->ID), get_the_title($b->ID));
+});
 ?>
 
 <div class="cpt-artist-content">
@@ -25,6 +53,22 @@ $songs = get_posts([
   <?php endif; ?>
 
   <h1><?php the_title(); ?></h1>
+
+  <?php if (!empty($group_members)): ?>
+    <div class="cpt-artist-members">
+      <?php foreach ($group_members as $member): 
+        $member_portrait = get_field('portrait_image', $member->ID);
+        $member_thumb    = $member_portrait ? $member_portrait['sizes']['thumbnail'] : '';
+      ?>
+        <a href="<?php echo esc_url(get_permalink($member->ID)); ?>" class="cpt-artist-member-link">
+          <?php if ($member_thumb): ?>
+            <img src="<?php echo esc_url($member_thumb); ?>" alt="<?php echo esc_attr(get_the_title($member->ID)); ?>" class="cpt-artist-member-thumb">
+          <?php endif; ?>
+          <span class="cpt-artist-member-name"><?php echo esc_html(get_the_title($member->ID)); ?></span>
+        </a>
+      <?php endforeach; ?>
+    </div>
+  <?php endif; ?>
 
   <div class="cpt-artist-bio">
     <?php if ($bio): ?>
@@ -41,11 +85,11 @@ $songs = get_posts([
   if (!empty($songs)) {
       foreach ($songs as $song) {
           $song_lyrics = get_posts([
-              'post_type'  => 'lyric',
+              'post_type'      => 'lyric',
               'posts_per_page' => -1,
-              'orderby'    => 'title',
-              'order'      => 'ASC',
-              'meta_query' => [ [ 'key' => 'song', 'value' => $song->ID, 'compare' => '=' ] ]
+              'orderby'        => 'title',
+              'order'          => 'ASC',
+              'meta_query'     => [['key' => 'song', 'value' => $song->ID, 'compare' => '=']]
           ]);
           foreach ($song_lyrics as $lyric) {
               $lyrics[$lyric->ID] = $lyric;
@@ -107,9 +151,9 @@ $songs = get_posts([
   foreach ($featured_chapters as $id => $item) { unset($referenced_in[$id]); }
   foreach ($featured_fragments as $id => $item) { unset($referenced_in[$id]); }
 
-  get_template_part('template-parts/views/featured-in-grid', null, [ 'title' => 'Narrative Threads', 'items' => $featured_chapters ]);
-  get_template_part('template-parts/views/featured-in-grid', null, [ 'title' => 'Narrative Fragments', 'items' => $featured_fragments ]);
-  get_template_part('template-parts/views/featured-in-grid', null, [ 'title' => 'Referenced In', 'items' => $referenced_in ]);
+  get_template_part('template-parts/views/featured-in-grid', null, ['title' => 'Narrative Threads', 'items' => $featured_chapters]);
+  get_template_part('template-parts/views/featured-in-grid', null, ['title' => 'Narrative Fragments', 'items' => $featured_fragments]);
+  get_template_part('template-parts/views/featured-in-grid', null, ['title' => 'Referenced In', 'items' => $referenced_in]);
   ?>
 
 </div>

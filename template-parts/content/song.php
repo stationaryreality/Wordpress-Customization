@@ -1,9 +1,10 @@
 <?php
-$song_id        = get_the_ID();
-$cover          = get_field('cover_image', $song_id);
-$img_url        = $cover ? $cover['sizes']['medium'] : '';
-$artist_profile = get_field('song_artist', $song_id);
-$youtube_url    = get_field('youtube_url', $song_id);
+$song_id            = get_the_ID();
+$cover              = get_field('cover_image', $song_id);
+$img_url            = $cover ? $cover['sizes']['medium'] : '';
+$artist_profile     = get_field('song_artist', $song_id);
+$additional_artists = get_field('additional_artists', $song_id);
+$youtube_url        = get_field('youtube_url', $song_id);
 ?>
 
 <div class="person-content cpt-song-content">
@@ -32,6 +33,19 @@ $youtube_url    = get_field('youtube_url', $song_id);
                 <?php endif; ?>
                 <h3 class="cpt-song-artist-name"><?php echo esc_html(get_the_title($artist_profile->ID)); ?></h3>
             </a>
+        </div>
+    <?php endif; ?>
+
+    <?php if (!empty($additional_artists)): ?>
+        <div class="cpt-song-additional-artists">
+            <span class="cpt-song-additional-label">Featuring</span>
+            <div class="cpt-song-additional-list">
+                <?php foreach ($additional_artists as $add_artist): ?>
+                    <a href="<?php echo esc_url(get_permalink($add_artist->ID)); ?>" class="cpt-song-additional-link">
+                        <?php echo esc_html(get_the_title($add_artist->ID)); ?>
+                    </a>
+                <?php endforeach; ?>
+            </div>
         </div>
     <?php endif; ?>
 
