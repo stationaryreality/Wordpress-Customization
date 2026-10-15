@@ -50,43 +50,49 @@
     margin-top: 0.2em;
 }
 
-
-/* Song Page & Artist Page - Additional Artists */
-.cpt-song-additional-artists {
+/* Song Page - Artists Row (Primary left, Additional right) */
+.cpt-song-artists-row {
     display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 32px;
+    margin: 24px 0 32px;
+    flex-wrap: wrap;
+}
+
+.cpt-song-artist-node {
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 10px;
-    margin: 12px 0 24px;
-    flex-wrap: wrap;
-}
-
-.cpt-song-additional-label {
-    font-size: 0.85em;
-    color: #777;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.cpt-song-additional-list {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.cpt-song-additional-link {
-    font-size: 0.95em;
-    color: #0066cc;
     text-decoration: none;
-    padding: 2px 8px;
-    border-radius: 4px;
-    background: rgba(0, 102, 204, 0.06);
-    transition: background 0.2s;
+    gap: 8px;
 }
 
-.cpt-song-additional-link:hover {
-    background: rgba(0, 102, 204, 0.12);
-    text-decoration: underline;
+.cpt-song-artist-thumb {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e0e0e0;
+    transition: border-color 0.2s, transform 0.2s;
 }
+
+.cpt-song-artist-node:hover .cpt-song-artist-thumb {
+    border-color: #0066cc;
+    transform: scale(1.05);
+}
+
+.cpt-song-artist-name {
+    font-size: 0.9em;
+    color: #444;
+    transition: color 0.2s;
+    text-align: center;
+}
+
+.cpt-song-artist-node:hover .cpt-song-artist-name {
+    color: #0066cc;
+}
+
 
 /* Artist Page - Members Pyramid */
 .cpt-artist-members {
