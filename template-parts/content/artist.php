@@ -4,7 +4,6 @@ $bio           = get_field('bio', $artist_id);
 $portrait      = get_field('portrait_image', $artist_id);
 $img_url       = $portrait ? $portrait['sizes']['medium'] : '';
 $wiki_slug     = get_field('wikipedia_slug', $artist_id);
-$group_members = get_field('group_members', $artist_id);
 
 // Query songs where this artist is the primary artist
 $primary_songs = get_posts([
@@ -54,22 +53,6 @@ usort($songs, function($a, $b) {
 
   <h1><?php the_title(); ?></h1>
 
-  <?php if (!empty($group_members)): ?>
-    <div class="cpt-artist-members">
-      <?php foreach ($group_members as $member): 
-        $member_portrait = get_field('portrait_image', $member->ID);
-        $member_thumb    = $member_portrait ? $member_portrait['sizes']['thumbnail'] : '';
-      ?>
-        <a href="<?php echo esc_url(get_permalink($member->ID)); ?>" class="cpt-artist-member-link">
-          <?php if ($member_thumb): ?>
-            <img src="<?php echo esc_url($member_thumb); ?>" alt="<?php echo esc_attr(get_the_title($member->ID)); ?>" class="cpt-artist-member-thumb">
-          <?php endif; ?>
-          <span class="cpt-artist-member-name"><?php echo esc_html(get_the_title($member->ID)); ?></span>
-        </a>
-      <?php endforeach; ?>
-    </div>
-  <?php endif; ?>
-
   <div class="cpt-artist-bio">
     <?php if ($bio): ?>
       <?php echo wp_kses_post($bio); ?>
@@ -81,6 +64,7 @@ usort($songs, function($a, $b) {
   </div>
 
   <?php
+  // --- LYRICS QUERY (Now strictly checks the lyric_artist field) ---
   $lyrics = [];
   if (!empty($songs)) {
       foreach ($songs as $song) {
@@ -89,7 +73,14 @@ usort($songs, function($a, $b) {
               'posts_per_page' => -1,
               'orderby'        => 'title',
               'order'          => 'ASC',
-              'meta_query'     => [['key' => 'song', 'value' => $song->ID, 'compare' => '=']]
+              'meta_query'     => [
+                  'relation' => 'AND',
+                  // 1. Must be attached to this specific song
+                  ['key' => 'song', 'value' => $song->ID, 'compare' => '='],
+                  // 2. Must have this artist selected in the lyric_artist field
+                  // (The quotes around the ID match ACF's serialized array format for multi-select fields)
+                  ['key' => 'lyric_artist', 'value' => '"' . $artist_id . '"', 'compare' => 'LIKE']
+              ]
           ]);
           foreach ($song_lyrics as $lyric) {
               $lyrics[$lyric->ID] = $lyric;
