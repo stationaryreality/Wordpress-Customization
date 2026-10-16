@@ -64,26 +64,40 @@ usort($songs, function($a, $b) {
   </div>
 
   <?php
-  // --- LYRICS QUERY (Now strictly checks the lyric_artist field) ---
+  // --- LYRICS QUERY (With Smart Fallback Logic) ---
   $lyrics = [];
   if (!empty($songs)) {
       foreach ($songs as $song) {
+          // 1. Get ALL lyrics attached to this specific song
           $song_lyrics = get_posts([
               'post_type'      => 'lyric',
               'posts_per_page' => -1,
               'orderby'        => 'title',
               'order'          => 'ASC',
-              'meta_query'     => [
-                  'relation' => 'AND',
-                  // 1. Must be attached to this specific song
-                  ['key' => 'song', 'value' => $song->ID, 'compare' => '='],
-                  // 2. Must have this artist selected in the lyric_artist field
-                  // (The quotes around the ID match ACF's serialized array format for multi-select fields)
-                  ['key' => 'lyric_artist', 'value' => '"' . $artist_id . '"', 'compare' => 'LIKE']
-              ]
+              'meta_query'     => [['key' => 'song', 'value' => $song->ID, 'compare' => '=']]
           ]);
+
+          // 2. Filter the lyrics to see if the current artist should get credit
           foreach ($song_lyrics as $lyric) {
-              $lyrics[$lyric->ID] = $lyric;
+              $lyric_artists = get_field('lyric_artist', $lyric->ID); // Get explicit speakers
+
+              // SCENARIO A: The lyric_artist field is EXPLICITLY filled out
+              if (!empty($lyric_artists) && is_array($lyric_artists)) {
+                  foreach ($lyric_artists as $l_artist) {
+                      if ($l_artist->ID == $artist_id) {
+                          $lyrics[$lyric->ID] = $lyric;
+                          break; // Found them, stop checking this lyric
+                      }
+                  }
+              } 
+              // SCENARIO B: The lyric_artist field is BLANK (The Fallback)
+              else {
+                  $song_primary = get_field('song_artist', $song->ID);
+                  // If the primary artist of the song matches the current page's artist, give them the lyric
+                  if ($song_primary && $song_primary->ID == $artist_id) {
+                      $lyrics[$lyric->ID] = $lyric;
+                  }
+              }
           }
       }
   }
