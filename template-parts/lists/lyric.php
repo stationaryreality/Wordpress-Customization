@@ -69,18 +69,14 @@ if (empty($items)) {
                         </p>
                     <?php endif; ?>
 
-                    <?php if ($song_title && $song_url): ?>
-                        <p class="cpt-lyric-source">
-                            Song: <a href="<?php echo esc_url($song_url); ?>"><?php echo esc_html($song_title); ?></a>
-                            <?php if ($artist_name && $artist_url): ?>
-                                &nbsp;by <a href="<?php echo esc_url($artist_url); ?>"><?php echo esc_html($artist_name); ?></a>
-                            <?php endif; ?>
-                        </p>
-                    <?php elseif ($meta_html): ?>
-                        <p class="cpt-lyric-meta">
-                            <?php echo wp_kses_post($meta_html); ?>
-                        </p>
-                    <?php endif; ?>
+                    <p class="cpt-lyric-source">
+                        <?php 
+                        $lyric_id = $item['id'] ?? 0;
+                        if ($lyric_id) {
+                            echo kp_lyric_attribution($lyric_id);
+                        }
+                        ?>
+                    </p>
                 </div>
             </article>
         <?php endforeach; ?>

@@ -311,6 +311,71 @@ function kp_render_artist_header($primary_songs) {
     echo '</div>';
 }
 
+/**
+ * Builds lyric attribution string.
+ * e.g. "Bulworth verse by Kam featuring Prodigy, KRS-One & Method Man"
+ */
+function kp_lyric_attribution($lyric_id) {
+    $song = get_field('song', $lyric_id);
+    if (!$song) return '';
+    $song_id    = is_object($song) ? $song->ID : $song;
+    $song_title = get_the_title($song_id);
+    $song_url   = get_permalink($song_id);
+
+    // Build ordered artist list: primary + additionals
+    $primary     = get_field('song_artist', $song_id);
+    $additionals = get_field('additional_artists', $song_id);
+
+    $track_ids = [];
+    if ($primary) {
+        $track_ids[] = is_object($primary) ? $primary->ID : $primary;
+    }
+    if (!empty($additionals)) {
+        foreach ($additionals as $add) {
+            $aid = is_object($add) ? $add->ID : $add;
+            if (!in_array($aid, $track_ids)) $track_ids[] = $aid;
+        }
+    }
+
+    // Speakers: lyric_artist field, fallback to primary
+    $lyric_artists = get_field('lyric_artist', $lyric_id);
+    $speaker_ids   = [];
+    if (!empty($lyric_artists) && is_array($lyric_artists)) {
+        foreach ($lyric_artists as $la) {
+            $speaker_ids[] = is_object($la) ? $la->ID : $la;
+        }
+    } elseif ($primary) {
+        $speaker_ids[] = is_object($primary) ? $primary->ID : $primary;
+    }
+
+    // Build speaker names with links
+    $speaker_parts = [];
+    foreach ($speaker_ids as $sid) {
+        $speaker_parts[] = '<a href="' . esc_url(get_permalink($sid)) . '">' . esc_html(get_the_title($sid)) . '</a>';
+    }
+    $speaker_str = kp_join_names($speaker_parts);
+
+    // Build featuring names (everyone else on track)
+    $feat_parts = [];
+    foreach ($track_ids as $tid) {
+        if (!in_array($tid, $speaker_ids)) {
+            $feat_parts[] = '<a href="' . esc_url(get_permalink($tid)) . '">' . esc_html(get_the_title($tid)) . '</a>';
+        }
+    }
+
+    $out = 'Song: <a href="' . esc_url($song_url) . '">' . esc_html($song_title) . '</a> verse by ' . $speaker_str;
+    if (!empty($feat_parts)) {
+        $out .= ' featuring ' . kp_join_names($feat_parts);
+    }
+    return $out;
+}
+
+function kp_join_names($parts) {
+    if (empty($parts)) return '';
+    if (count($parts) === 1) return $parts[0];
+    $last = array_pop($parts);
+    return implode(', ', $parts) . ' & ' . $last;
+}
 
 require_once get_stylesheet_directory() . '/inc/helpers/wikipedia.php';
 

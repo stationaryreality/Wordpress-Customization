@@ -47,4 +47,7 @@ if (!$image && has_post_thumbnail($post_id)) {
     $image = get_the_post_thumbnail_url($post_id, 'medium');
 }
 
-return compact('title', 'url', 'excerpt', 'image', 'meta', 'type');
+return array_merge(
+    compact('title', 'url', 'excerpt', 'image', 'meta', 'type'),
+    ['id' => $post_id]
+);
