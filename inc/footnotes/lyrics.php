@@ -53,22 +53,7 @@ if ($lyric) {
 }
 
         if ($song) {
-            $src_title = esc_html(get_the_title($song));
-            $src_link  = get_permalink($song);
-
-            // Fetch artist
-            $artist = get_field('song_artist', $song->ID);
-            if (is_array($artist)) {
-                $artist = reset($artist);
-            }
-            $artist_name = $artist ? esc_html(get_the_title($artist)) : '';
-            $artist_link = $artist ? get_permalink($artist) : '';
-
-            echo "<p class=\"cpt-lyric-footnote-source\">Source: <a href=\"{$src_link}\">{$src_title}</a>";
-            if ($artist_name) {
-                echo " by <a href=\"{$artist_link}\">{$artist_name}</a>";
-            }
-            echo "</p>";
+            echo '<p class="cpt-lyric-footnote-source">' . kp_lyric_attribution($item->ID) . '</p>';
         }
 
         echo '</div>'; // end cpt-lyric-footnote-details

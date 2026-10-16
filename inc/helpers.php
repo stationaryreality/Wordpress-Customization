@@ -313,7 +313,6 @@ function kp_render_artist_header($primary_songs) {
 
 /**
  * Builds lyric attribution string.
- * e.g. "Bulworth verse by Kam featuring Prodigy, KRS-One & Method Man"
  */
 function kp_lyric_attribution($lyric_id) {
     $song = get_field('song', $lyric_id);
@@ -322,59 +321,71 @@ function kp_lyric_attribution($lyric_id) {
     $song_title = get_the_title($song_id);
     $song_url   = get_permalink($song_id);
 
-    // Build ordered artist list: primary + additionals
-    $primary     = get_field('song_artist', $song_id);
-    $additionals = get_field('additional_artists', $song_id);
+    // Primary artist
+    $primary = get_field('song_artist', $song_id);
+    $primary_id = $primary ? (is_object($primary) ? $primary->ID : $primary) : 0;
 
-    $track_ids = [];
-    if ($primary) {
-        $track_ids[] = is_object($primary) ? $primary->ID : $primary;
-    }
-    if (!empty($additionals)) {
-        foreach ($additionals as $add) {
-            $aid = is_object($add) ? $add->ID : $add;
-            if (!in_array($aid, $track_ids)) $track_ids[] = $aid;
-        }
-    }
-
-    // Speakers: lyric_artist field, fallback to primary
+    // Check if lyric_artist is explicitly set
     $lyric_artists = get_field('lyric_artist', $lyric_id);
-    $speaker_ids   = [];
-    if (!empty($lyric_artists) && is_array($lyric_artists)) {
+    $has_explicit_speaker = !empty($lyric_artists) && is_array($lyric_artists);
+
+    // ── CASE 1: lyric_artist is populated → use "verse by X featuring Y" ──
+    if ($has_explicit_speaker) {
+        $speaker_ids = [];
         foreach ($lyric_artists as $la) {
             $speaker_ids[] = is_object($la) ? $la->ID : $la;
         }
-    } elseif ($primary) {
-        $speaker_ids[] = is_object($primary) ? $primary->ID : $primary;
-    }
 
-    // Build speaker names with links
-    $speaker_parts = [];
-    foreach ($speaker_ids as $sid) {
-        $speaker_parts[] = '<a href="' . esc_url(get_permalink($sid)) . '">' . esc_html(get_the_title($sid)) . '</a>';
-    }
-    $speaker_str = kp_join_names($speaker_parts);
-
-    // Build featuring names (everyone else on track)
-    $feat_parts = [];
-    foreach ($track_ids as $tid) {
-        if (!in_array($tid, $speaker_ids)) {
-            $feat_parts[] = '<a href="' . esc_url(get_permalink($tid)) . '">' . esc_html(get_the_title($tid)) . '</a>';
+        // Build ordered track artist list: primary + additionals
+        $track_ids = [];
+        if ($primary) $track_ids[] = $primary_id;
+        $additionals = get_field('additional_artists', $song_id);
+        if (!empty($additionals)) {
+            foreach ($additionals as $add) {
+                $aid = is_object($add) ? $add->ID : $add;
+                if (!in_array($aid, $track_ids)) $track_ids[] = $aid;
+            }
         }
+
+        // Speakers with links
+        $speaker_parts = [];
+        foreach ($speaker_ids as $sid) {
+            $speaker_parts[] = '<a href="' . esc_url(get_permalink($sid)) . '">' . esc_html(get_the_title($sid)) . '</a>';
+        }
+
+        // Featuring: everyone on track except the speakers
+        $feat_parts = [];
+        foreach ($track_ids as $tid) {
+            if (!in_array($tid, $speaker_ids)) {
+                $feat_parts[] = '<a href="' . esc_url(get_permalink($tid)) . '">' . esc_html(get_the_title($tid)) . '</a>';
+            }
+        }
+
+        $out = 'Song: <a href="' . esc_url($song_url) . '">' . esc_html($song_title) . '</a> verse by ' . implode(', ', $speaker_parts);
+        if (count($speaker_parts) > 1) {
+            $last = array_pop($speaker_parts);
+            $out = 'Song: <a href="' . esc_url($song_url) . '">' . esc_html($song_title) . '</a> verse by ' . implode(', ', $speaker_parts) . ' & ' . $last;
+        }
+        if (!empty($feat_parts)) {
+            if (count($feat_parts) === 1) {
+                $out .= ' featuring ' . $feat_parts[0];
+            } else {
+                $last = array_pop($feat_parts);
+                $out .= ' featuring ' . implode(', ', $feat_parts) . ' & ' . $last;
+            }
+        }
+        return $out;
     }
 
-    $out = 'Song: <a href="' . esc_url($song_url) . '">' . esc_html($song_title) . '</a> verse by ' . $speaker_str;
-    if (!empty($feat_parts)) {
-        $out .= ' featuring ' . kp_join_names($feat_parts);
+    // ── CASE 2: lyric_artist is blank → use simple "Song: X by Y" ──
+    if ($primary) {
+        $artist_name = get_the_title($primary_id);
+        $artist_url  = get_permalink($primary_id);
+        return 'Song: <a href="' . esc_url($song_url) . '">' . esc_html($song_title) . '</a> by <a href="' . esc_url($artist_url) . '">' . esc_html($artist_name) . '</a>';
     }
-    return $out;
-}
 
-function kp_join_names($parts) {
-    if (empty($parts)) return '';
-    if (count($parts) === 1) return $parts[0];
-    $last = array_pop($parts);
-    return implode(', ', $parts) . ' & ' . $last;
+    // Fallback: just the song link
+    return 'Song: <a href="' . esc_url($song_url) . '">' . esc_html($song_title) . '</a>';
 }
 
 require_once get_stylesheet_directory() . '/inc/helpers/wikipedia.php';
