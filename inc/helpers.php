@@ -388,6 +388,162 @@ function kp_lyric_attribution($lyric_id) {
     return 'Song: <a href="' . esc_url($song_url) . '">' . esc_html($song_title) . '</a>';
 }
 
+
+/**
+ * Gets all tiers a song or artist belongs to.
+ * Priority: thread > episode > strand > featured > referenced
+ */
+function kp_get_tiers($post_id) {
+    static $cache = [];
+    if (isset($cache[$post_id])) {
+        return $cache[$post_id];
+    }
+
+    $post_type = get_post_type($post_id);
+    $tiers = [];
+
+    // ── SONG TIERS ──
+    if ($post_type === 'song') {
+        // 1. Thread (Chapters)
+        $chapters = get_posts(['post_type' => 'chapter', 'posts_per_page' => -1, 'fields' => 'ids']);
+        foreach ($chapters as $cid) {
+            foreach (kp_get_primary_songs($cid) as $song) {
+                if ($song->ID == $post_id) {
+                    $tiers[] = 'thread';
+                    break 2;
+                }
+            }
+        }
+
+        // 2. Episode (Fragments)
+        $fragments = get_posts(['post_type' => 'fragment', 'posts_per_page' => -1, 'fields' => 'ids']);
+        foreach ($fragments as $fid) {
+            foreach (kp_get_primary_songs($fid) as $song) {
+                if ($song->ID == $post_id) {
+                    $tiers[] = 'episode';
+                    break 2;
+                }
+            }
+        }
+
+        // 3. Strand (Song-Based Elements)
+        $elements = get_posts(['post_type' => 'element', 'posts_per_page' => -1, 'fields' => 'ids']);
+        foreach ($elements as $eid) {
+            $terms = get_the_terms($eid, 'strand_type');
+            if (!is_wp_error($terms) && !empty($terms)) {
+                foreach ($terms as $term) {
+                    if ($term->slug === 'song-based') {
+                        foreach (kp_get_primary_songs($eid) as $song) {
+                            if ($song->ID == $post_id) {
+                                $tiers[] = 'strand';
+                                break 3;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // 4. Featured (Listening Room)
+        $terms = get_the_terms($post_id, 'listening_room');
+        if (!is_wp_error($terms) && !empty($terms)) {
+            foreach ($terms as $term) {
+                if ($term->slug === 'listening-room') {
+                    $tiers[] = 'featured';
+                    break;
+                }
+            }
+        }
+
+        // 5. Referenced (Fallback)
+        if (empty($tiers)) {
+            $tiers[] = 'referenced';
+        }
+
+        $tiers = array_unique($tiers);
+        $cache[$post_id] = $tiers;
+        return $tiers;
+    }
+
+    // ── ARTIST TIERS ──
+    if ($post_type === 'artist') {
+        $artist_songs = get_posts([
+            'post_type'      => 'song',
+            'posts_per_page' => -1,
+            'fields'         => 'ids',
+            'meta_query'     => [
+                'relation' => 'OR',
+                ['key' => 'song_artist', 'value' => $post_id, 'compare' => '='],
+                ['key' => 'additional_artists', 'value' => $post_id, 'compare' => 'LIKE']
+            ]
+        ]);
+
+        $artist_tiers = [];
+        foreach ($artist_songs as $song_id) {
+            $song_tiers = kp_get_tiers($song_id); // Uses cache
+            foreach ($song_tiers as $t) {
+                if (!in_array($t, $artist_tiers)) {
+                    $artist_tiers[] = $t;
+                }
+            }
+        }
+
+        if (empty($artist_tiers)) {
+            $artist_tiers[] = 'referenced';
+        }
+
+        // Sort by priority
+        $priority = ['thread', 'episode', 'strand', 'featured', 'referenced'];
+        usort($artist_tiers, function($a, $b) use ($priority) {
+            return array_search($a, $priority) <=> array_search($b, $priority);
+        });
+
+        $artist_tiers = array_unique($artist_tiers);
+        $cache[$post_id] = $artist_tiers;
+        return $artist_tiers;
+    }
+
+    $cache[$post_id] = ['referenced'];
+    return ['referenced'];
+}
+
+/**
+ * Gets the label for a tier
+ */
+function kp_get_tier_label($tier) {
+    $labels = [
+        'thread'     => 'Narrative Thread',
+        'episode'    => 'Narrative Episode',
+        'strand'     => 'Narrative Strand',
+        'featured'   => 'Featured',
+        'referenced' => 'Referenced'
+    ];
+    return $labels[$tier] ?? 'Referenced';
+}
+
+/**
+ * Gets all posts that belong to a specific tier (allows duplicates)
+ */
+function kp_get_tier_posts($tier, $post_type) {
+    $all_posts = get_posts([
+        'post_type'      => $post_type,
+        'posts_per_page' => -1,
+        'orderby'        => 'title',
+        'order'          => 'ASC',
+        'fields'         => 'ids'
+    ]);
+    
+    $tier_posts = [];
+    foreach ($all_posts as $pid) {
+        $tiers = kp_get_tiers($pid);
+        if (in_array($tier, $tiers)) {
+            $tier_posts[] = $pid;
+        }
+    }
+    return $tier_posts;
+}
+
+
 require_once get_stylesheet_directory() . '/inc/helpers/wikipedia.php';
 
 require_once get_stylesheet_directory() . '/inc/helpers/featured-in.php';

@@ -1,36 +1,11 @@
 <?php
-$current_id = get_the_ID();
+$current_id   = get_the_ID();
+$tiers        = kp_get_tiers($current_id);
+$primary_tier = $tiers[0]; // Highest priority tier
+$tier_label   = kp_get_tier_label($primary_tier);
 
-// 1. Find what song_group(s) this song belongs to
-$group_terms = wp_get_post_terms($current_id, 'song_group', ['fields' => 'ids']);
+$song_ids = kp_get_tier_posts($primary_tier, 'song');
 
-$args = [
-    'post_type'      => 'song',
-    'posts_per_page' => -1,
-    'orderby'        => 'title',
-    'order'          => 'ASC',
-    'fields'         => 'ids',
-];
-
-// 2. If it has a group, restrict the query to that group
-if (!empty($group_terms)) {
-    $args['tax_query'] = [
-        [
-            'taxonomy' => 'song_group',
-            'field'    => 'term_id',
-            'terms'    => $group_terms,
-        ]
-    ];
-    $first_term = get_term($group_terms[0], 'song_group');
-    $heading_prefix = $first_term ? $first_term->name . ' Song' : 'Song';
-} else {
-    // Fallback for ungrouped songs
-    $heading_prefix = 'Song';
-}
-
-$song_ids = get_posts($args);
-
-// 3. Find current position and get next/prev
 $current_index = array_search($current_id, $song_ids);
 if ($current_index !== false) {
     $next_id = $song_ids[$current_index + 1] ?? null;
@@ -39,6 +14,8 @@ if ($current_index !== false) {
     $next_id = null;
     $prev_id = null;
 }
+
+$heading_prefix = $tier_label . ' Song';
 ?>
 
 <div class="cpt-song-nav-top">
