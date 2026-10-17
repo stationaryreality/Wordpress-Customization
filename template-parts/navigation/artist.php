@@ -1,11 +1,9 @@
 <?php
 $current_id = get_the_ID();
 
-// Get artist type
-$artist_type_terms = wp_get_post_terms($current_id, 'artist_type', ['fields' => 'slugs']);
-$artist_type = !empty($artist_type_terms) ? $artist_type_terms[0] : '';
+// 1. Find what artist_type(s) this artist belongs to
+$type_terms = wp_get_post_terms($current_id, 'artist_type', ['fields' => 'ids']);
 
-// Prepare base query
 $args = [
     'post_type'      => 'artist',
     'posts_per_page' => -1,
@@ -14,43 +12,32 @@ $args = [
     'fields'         => 'ids',
 ];
 
-if ($artist_type === 'rapper') {
+// 2. If they have a type, restrict the query to that type
+if (!empty($type_terms)) {
     $args['tax_query'] = [
         [
             'taxonomy' => 'artist_type',
-            'field'    => 'slug',
-            'terms'    => 'rapper',
-            'operator' => 'IN',
-        ],
+            'field'    => 'term_id',
+            'terms'    => $type_terms,
+        ]
     ];
-    $nav_label = 'Rap Artist';
+    $first_term = get_term($type_terms[0], 'artist_type');
+    $nav_label = $first_term ? ucfirst($first_term->name) . ' Artist' : 'Artist';
 } else {
-    $feature_terms = wp_get_post_terms($current_id, 'feature_level', ['fields' => 'slugs']);
-    $feature_slug = !empty($feature_terms) ? $feature_terms[0] : '';
-
-    $args['tax_query'] = [
-        'relation' => 'AND',
-        [
-            'taxonomy' => 'artist_type',
-            'field'    => 'slug',
-            'terms'    => 'rapper',
-            'operator' => 'NOT IN',
-        ],
-        [
-            'taxonomy' => 'feature_level',
-            'field'    => 'slug',
-            'terms'    => $feature_slug,
-            'operator' => 'IN',
-        ],
-    ];
-
-    $nav_label = ucfirst($feature_slug) . ' Artist';
+    $nav_label = 'Artist';
 }
 
 $artist_ids = get_posts($args);
+
+// 3. Find current position and get next/prev
 $current_index = array_search($current_id, $artist_ids);
-$next_id = $artist_ids[$current_index + 1] ?? null;
-$prev_id = $artist_ids[$current_index - 1] ?? null;
+if ($current_index !== false) {
+    $next_id = $artist_ids[$current_index + 1] ?? null;
+    $prev_id = $artist_ids[$current_index - 1] ?? null;
+} else {
+    $next_id = null;
+    $prev_id = null;
+}
 ?>
 
 <div class="cpt-artist-nav-top">

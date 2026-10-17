@@ -1,45 +1,44 @@
 <?php
 $current_id = get_the_ID();
-$is_rap = has_term('rap', 'song_category', $current_id);
 
-if ($is_rap) {
-    $song_ids = get_posts([
-        'post_type' => 'song',
-        'numberposts' => -1,
-        'orderby' => 'title',
-        'order' => 'ASC',
-        'fields' => 'ids',
-        'tax_query' => [['taxonomy' => 'song_category', 'field' => 'slug', 'terms' => 'rap']]
-    ]);
-    $heading_prefix = 'Rap Song';
-} else {
-    $terms = wp_get_post_terms($current_id, 'feature_level', ['fields' => 'slugs']);
-    $tier = $terms[0] ?? '';
+// 1. Find what song_group(s) this song belongs to
+$group_terms = wp_get_post_terms($current_id, 'song_group', ['fields' => 'ids']);
 
-    $song_ids = get_posts([
-        'post_type' => 'song',
-        'numberposts' => -1,
-        'orderby' => 'title',
-        'order' => 'ASC',
-        'fields' => 'ids',
-        'tax_query' => [
-            'relation' => 'AND',
-            ['taxonomy' => 'feature_level', 'field' => 'slug', 'terms' => $tier],
-            ['taxonomy' => 'song_category', 'field' => 'slug', 'terms' => 'rap', 'operator' => 'NOT IN']
+$args = [
+    'post_type'      => 'song',
+    'posts_per_page' => -1,
+    'orderby'        => 'title',
+    'order'          => 'ASC',
+    'fields'         => 'ids',
+];
+
+// 2. If it has a group, restrict the query to that group
+if (!empty($group_terms)) {
+    $args['tax_query'] = [
+        [
+            'taxonomy' => 'song_group',
+            'field'    => 'term_id',
+            'terms'    => $group_terms,
         ]
-    ]);
-
-    $heading_prefix = match($tier) {
-        'narrative' => 'Narrative Song',
-        'featured' => 'Featured Song',
-        'referenced' => 'Referenced Song',
-        default => 'Song'
-    };
+    ];
+    $first_term = get_term($group_terms[0], 'song_group');
+    $heading_prefix = $first_term ? $first_term->name . ' Song' : 'Song';
+} else {
+    // Fallback for ungrouped songs
+    $heading_prefix = 'Song';
 }
 
+$song_ids = get_posts($args);
+
+// 3. Find current position and get next/prev
 $current_index = array_search($current_id, $song_ids);
-$next_id = $song_ids[$current_index + 1] ?? null;
-$prev_id = $song_ids[$current_index - 1] ?? null;
+if ($current_index !== false) {
+    $next_id = $song_ids[$current_index + 1] ?? null;
+    $prev_id = $song_ids[$current_index - 1] ?? null;
+} else {
+    $next_id = null;
+    $prev_id = null;
+}
 ?>
 
 <div class="cpt-song-nav-top">
