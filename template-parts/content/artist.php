@@ -1,19 +1,46 @@
 <?php
-$artist_id  = get_the_ID();
-$bio        = get_field('bio', $artist_id);
-$portrait   = get_field('portrait_image', $artist_id);
-$img_url    = $portrait ? $portrait['sizes']['medium'] : '';
-$wiki_slug  = get_field('wikipedia_slug', $artist_id);
+$artist_id     = get_the_ID();
+$bio           = get_field('bio', $artist_id);
+$portrait      = get_field('portrait_image', $artist_id);
+$img_url       = $portrait ? $portrait['sizes']['medium'] : '';
+$wiki_slug     = get_field('wikipedia_slug', $artist_id);
 
-$songs = get_posts([
-  'post_type'      => 'song',
-  'posts_per_page' => -1,
-  'meta_query'     => [
-    [ 'key' => 'song_artist', 'value' => $artist_id, 'compare' => '=' ]
-  ],
-  'orderby' => 'title',
-  'order'   => 'ASC'
+// Query songs where this artist is the primary artist
+$primary_songs = get_posts([
+    'post_type'      => 'song',
+    'posts_per_page' => -1,
+    'meta_query'     => [
+        ['key' => 'song_artist', 'value' => $artist_id, 'compare' => '=']
+    ],
+    'orderby' => 'title',
+    'order'   => 'ASC'
 ]);
+
+// Query songs where this artist appears in additional_artists
+$additional_songs = get_posts([
+    'post_type'      => 'song',
+    'posts_per_page' => -1,
+    'meta_query'     => [
+        ['key' => 'additional_artists', 'value' => $artist_id, 'compare' => 'LIKE']
+    ],
+    'orderby' => 'title',
+    'order'   => 'ASC'
+]);
+
+// Merge and deduplicate
+$all_song_ids = [];
+$songs = [];
+foreach (array_merge($primary_songs, $additional_songs) as $s) {
+    if (!in_array($s->ID, $all_song_ids)) {
+        $all_song_ids[] = $s->ID;
+        $songs[] = $s;
+    }
+}
+
+// Sort alphabetically by title
+usort($songs, function($a, $b) {
+    return strcmp(get_the_title($a->ID), get_the_title($b->ID));
+});
 ?>
 
 <div class="cpt-artist-content">
@@ -37,30 +64,60 @@ $songs = get_posts([
   </div>
 
   <?php
+  // --- LYRICS: explicit lyric_artist, otherwise fall back to song primary ---
   $lyrics = [];
+
   if (!empty($songs)) {
       foreach ($songs as $song) {
+
           $song_lyrics = get_posts([
-              'post_type'  => 'lyric',
+              'post_type'      => 'lyric',
               'posts_per_page' => -1,
-              'orderby'    => 'title',
-              'order'      => 'ASC',
-              'meta_query' => [ [ 'key' => 'song', 'value' => $song->ID, 'compare' => '=' ] ]
+              'orderby'        => 'title',
+              'order'          => 'ASC',
+              'meta_query'     => [
+                  ['key' => 'song', 'value' => $song->ID, 'compare' => '=']
+              ]
           ]);
+
           foreach ($song_lyrics as $lyric) {
-              $lyrics[$lyric->ID] = $lyric;
+              $lyric_artists = get_field('lyric_artist', $lyric->ID);
+
+              // A: lyric_artist is explicitly set → only listed artists get it
+              if (!empty($lyric_artists) && is_array($lyric_artists)) {
+                  foreach ($lyric_artists as $l_artist) {
+                      $lid = is_object($l_artist) ? $l_artist->ID : $l_artist;
+                      if ($lid == $artist_id) {
+                          $lyrics[$lyric->ID] = $lyric;
+                          break;
+                      }
+                  }
+              }
+              // B: lyric_artist is blank → belongs to the song's primary artist
+              else {
+                  $song_primary = get_field('song_artist', $song->ID);
+                  $pid = $song_primary ? (is_object($song_primary) ? $song_primary->ID : $song_primary) : 0;
+
+                  if ($pid == $artist_id) {
+                      $lyrics[$lyric->ID] = $lyric;
+                  }
+              }
           }
       }
   }
-  
+
   $lyrics = array_values($lyrics);
   usort($lyrics, function($a, $b) {
       return strcmp(get_the_title($a->ID), get_the_title($b->ID));
   });
 
   if (!empty($lyrics)):
-      get_template_part('template-parts/render/content-objects', null, ['posts' => $lyrics, 'title' => 'Song Excerpts']);
-  endif; 
+      get_template_part(
+          'template-parts/render/content-objects',
+          null,
+          ['posts' => $lyrics, 'title' => 'Song Excerpts']
+      );
+  endif;
   ?>
 
   <?php if (!empty($songs)): ?>
@@ -69,7 +126,7 @@ $songs = get_posts([
       <div class="cpt-artist-song-grid">
         <?php foreach ($songs as $song):
           $cover = get_field('cover_image', $song->ID);
-          $song_img_url = $cover ? $cover['sizes']['thumbnail'] : ''; 
+          $song_img_url = $cover ? $cover['sizes']['thumbnail'] : '';
         ?>
           <div class="cpt-artist-song-card">
             <a href="<?php echo get_permalink($song->ID); ?>">
@@ -92,6 +149,7 @@ $songs = get_posts([
   if (!empty($songs)) {
       foreach ($songs as $song) {
           $roles = kp_get_song_thread_roles($song->ID);
+
           foreach (array_merge($roles['chapter']['primary'], $roles['chapter']['secondary']) as $item) {
               $featured_chapters[$item->ID] = $item;
           }
@@ -107,9 +165,9 @@ $songs = get_posts([
   foreach ($featured_chapters as $id => $item) { unset($referenced_in[$id]); }
   foreach ($featured_fragments as $id => $item) { unset($referenced_in[$id]); }
 
-  get_template_part('template-parts/views/featured-in-grid', null, [ 'title' => 'Narrative Threads', 'items' => $featured_chapters ]);
-  get_template_part('template-parts/views/featured-in-grid', null, [ 'title' => 'Narrative Fragments', 'items' => $featured_fragments ]);
-  get_template_part('template-parts/views/featured-in-grid', null, [ 'title' => 'Referenced In', 'items' => $referenced_in ]);
+  get_template_part('template-parts/views/featured-in-grid', null, ['title' => 'Narrative Threads', 'items' => $featured_chapters]);
+  get_template_part('template-parts/views/featured-in-grid', null, ['title' => 'Narrative Fragments', 'items' => $featured_fragments]);
+  get_template_part('template-parts/views/featured-in-grid', null, ['title' => 'Referenced In', 'items' => $referenced_in]);
   ?>
 
 </div>
