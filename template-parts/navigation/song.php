@@ -1,21 +1,45 @@
 <?php
-$current_id   = get_the_ID();
-$tiers        = kp_get_tiers($current_id);
-$primary_tier = $tiers[0]; // Highest priority tier
-$tier_label   = kp_get_tier_label($primary_tier);
+$current_id = get_the_ID();
+$is_rap = has_term('rap', 'song_category', $current_id);
 
-$song_ids = kp_get_tier_posts($primary_tier, 'song');
-
-$current_index = array_search($current_id, $song_ids);
-if ($current_index !== false) {
-    $next_id = $song_ids[$current_index + 1] ?? null;
-    $prev_id = $song_ids[$current_index - 1] ?? null;
+if ($is_rap) {
+    $song_ids = get_posts([
+        'post_type' => 'song',
+        'numberposts' => -1,
+        'orderby' => 'title',
+        'order' => 'ASC',
+        'fields' => 'ids',
+        'tax_query' => [['taxonomy' => 'song_category', 'field' => 'slug', 'terms' => 'rap']]
+    ]);
+    $heading_prefix = 'Rap Song';
 } else {
-    $next_id = null;
-    $prev_id = null;
+    $terms = wp_get_post_terms($current_id, 'feature_level', ['fields' => 'slugs']);
+    $tier = $terms[0] ?? '';
+
+    $song_ids = get_posts([
+        'post_type' => 'song',
+        'numberposts' => -1,
+        'orderby' => 'title',
+        'order' => 'ASC',
+        'fields' => 'ids',
+        'tax_query' => [
+            'relation' => 'AND',
+            ['taxonomy' => 'feature_level', 'field' => 'slug', 'terms' => $tier],
+            ['taxonomy' => 'song_category', 'field' => 'slug', 'terms' => 'rap', 'operator' => 'NOT IN']
+        ]
+    ]);
+
+    $heading_prefix = match($tier) {
+        'narrative' => 'Narrative Song',
+        'featured' => 'Featured Song',
+        'referenced' => 'Referenced Song',
+        default => 'Song'
+    };
 }
 
-$heading_prefix = $tier_label . ' Song';
+$current_index = array_search($current_id, $song_ids);
+$next_id = $song_ids[$current_index + 1] ?? null;
+$prev_id = $song_ids[$current_index - 1] ?? null;
 ?>
 
 <div class="cpt-song-nav-top">
