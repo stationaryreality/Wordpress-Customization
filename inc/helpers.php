@@ -390,120 +390,133 @@ function kp_lyric_attribution($lyric_id) {
 
 
 /**
- * Gets all tiers a song or artist belongs to.
- * Priority: thread > episode > strand > featured > referenced
+ * Builds the complete tier map ONCE per page load using request-level static memory.
+ * Eliminates N+1 queries by using inverted mapping (Song -> Artist instead of Artist -> Song).
  */
-function kp_get_tiers($post_id) {
-    static $cache = [];
-    if (isset($cache[$post_id])) {
-        return $cache[$post_id];
+function kp_get_tier_map() {
+    static $map = null;
+    
+    // If the map is already built in memory for this page load, return it instantly.
+    if ($map !== null) {
+        return $map;
+    }
+    
+    $map = ['songs' => [], 'artists' => []];
+    $priority = ['thread', 'episode', 'strand', 'featured', 'referenced'];
+    
+    // ── 1. GET ALL SONGS & ARTISTS (2 Queries Total) ──
+    $all_song_ids = get_posts(['post_type' => 'song', 'posts_per_page' => -1, 'fields' => 'ids']);
+    $all_artist_ids = get_posts(['post_type' => 'artist', 'posts_per_page' => -1, 'fields' => 'ids']);
+    
+    foreach ($all_song_ids as $id) $map['songs'][$id] = [];
+    foreach ($all_artist_ids as $id) $map['artists'][$id] = [];
+
+    // ── 2. FEATURED (Listening Room) - 1 Query ──
+    $featured_ids = get_posts([
+        'post_type'      => 'song',
+        'posts_per_page' => -1,
+        'fields'         => 'ids',
+        'tax_query'      => [['taxonomy' => 'listening_room', 'field' => 'slug', 'terms' => 'listening-room']]
+    ]);
+    foreach ($featured_ids as $id) {
+        if (isset($map['songs'][$id])) $map['songs'][$id][] = 'featured';
     }
 
-    $post_type = get_post_type($post_id);
-    $tiers = [];
-
-    // ── SONG TIERS ──
-    if ($post_type === 'song') {
-        // 1. Thread (Chapters)
-        $chapters = get_posts(['post_type' => 'chapter', 'posts_per_page' => -1, 'fields' => 'ids']);
-        foreach ($chapters as $cid) {
-            foreach (kp_get_primary_songs($cid) as $song) {
-                if ($song->ID == $post_id) {
-                    $tiers[] = 'thread';
-                    break 2;
+    // ── 3. THREAD & EPISODE (Chapters & Fragments) ──
+    $narrative_cpts = ['chapter' => 'thread', 'fragment' => 'episode'];
+    foreach ($narrative_cpts as $cpt => $tier) {
+        $cpt_ids = get_posts(['post_type' => $cpt, 'posts_per_page' => -1, 'fields' => 'ids']);
+        foreach ($cpt_ids as $cid) {
+            $songs = kp_get_primary_songs($cid);
+            foreach ($songs as $song) {
+                if (isset($map['songs'][$song->ID]) && !in_array($tier, $map['songs'][$song->ID])) {
+                    $map['songs'][$song->ID][] = $tier;
                 }
             }
         }
+    }
 
-        // 2. Episode (Fragments)
-        $fragments = get_posts(['post_type' => 'fragment', 'posts_per_page' => -1, 'fields' => 'ids']);
-        foreach ($fragments as $fid) {
-            foreach (kp_get_primary_songs($fid) as $song) {
-                if ($song->ID == $post_id) {
-                    $tiers[] = 'episode';
-                    break 2;
-                }
-            }
-        }
-
-        // 3. Strand (Song-Based Elements)
-        $elements = get_posts(['post_type' => 'element', 'posts_per_page' => -1, 'fields' => 'ids']);
-        foreach ($elements as $eid) {
-            $terms = get_the_terms($eid, 'strand_type');
-            if (!is_wp_error($terms) && !empty($terms)) {
-                foreach ($terms as $term) {
-                    if ($term->slug === 'song-based') {
-                        foreach (kp_get_primary_songs($eid) as $song) {
-                            if ($song->ID == $post_id) {
-                                $tiers[] = 'strand';
-                                break 3;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // 4. Featured (Listening Room)
-        $terms = get_the_terms($post_id, 'listening_room');
+    // ── 4. STRAND (Song-Based Elements) ──
+    $elements = get_posts(['post_type' => 'element', 'posts_per_page' => -1, 'fields' => 'ids']);
+    foreach ($elements as $eid) {
+        $terms = get_the_terms($eid, 'strand_type');
         if (!is_wp_error($terms) && !empty($terms)) {
             foreach ($terms as $term) {
-                if ($term->slug === 'listening-room') {
-                    $tiers[] = 'featured';
+                if ($term->slug === 'song-based') {
+                    $songs = kp_get_primary_songs($eid);
+                    foreach ($songs as $song) {
+                        if (isset($map['songs'][$song->ID]) && !in_array('strand', $map['songs'][$song->ID])) {
+                            $map['songs'][$song->ID][] = 'strand';
+                        }
+                    }
                     break;
                 }
             }
         }
-
-        // 5. Referenced (Fallback)
-        if (empty($tiers)) {
-            $tiers[] = 'referenced';
-        }
-
-        $tiers = array_unique($tiers);
-        $cache[$post_id] = $tiers;
-        return $tiers;
     }
 
-    // ── ARTIST TIERS ──
-    if ($post_type === 'artist') {
-        $artist_songs = get_posts([
-            'post_type'      => 'song',
-            'posts_per_page' => -1,
-            'fields'         => 'ids',
-            'meta_query'     => [
-                'relation' => 'OR',
-                ['key' => 'song_artist', 'value' => $post_id, 'compare' => '='],
-                ['key' => 'additional_artists', 'value' => $post_id, 'compare' => 'LIKE']
-            ]
-        ]);
-
-        $artist_tiers = [];
-        foreach ($artist_songs as $song_id) {
-            $song_tiers = kp_get_tiers($song_id); // Uses cache
-            foreach ($song_tiers as $t) {
-                if (!in_array($t, $artist_tiers)) {
-                    $artist_tiers[] = $t;
+    // ── 5. INVERTED MAPPING: Map Songs to Artists (Fixes the N+1 Problem) ──
+    // Instead of querying songs for every artist, we look at the songs we already have.
+    foreach ($all_song_ids as $song_id) {
+        $song_tiers = $map['songs'][$song_id];
+        if (empty($song_tiers)) $song_tiers = ['referenced']; // Fallback for orphaned songs
+        
+        $primary = get_field('song_artist', $song_id);
+        $additionals = get_field('additional_artists', $song_id);
+        
+        $artist_ids_on_song = [];
+        if ($primary) {
+            $artist_ids_on_song[] = is_object($primary) ? $primary->ID : $primary;
+        }
+        if (!empty($additionals)) {
+            foreach ($additionals as $add) {
+                $aid = is_object($add) ? $add->ID : $add;
+                if (!in_array($aid, $artist_ids_on_song)) $artist_ids_on_song[] = $aid;
+            }
+        }
+        
+        // Assign the song's tiers to its artists
+        foreach ($artist_ids_on_song as $aid) {
+            if (!isset($map['artists'][$aid])) $map['artists'][$aid] = [];
+            foreach ($song_tiers as $tier) {
+                if (!in_array($tier, $map['artists'][$aid])) {
+                    $map['artists'][$aid][] = $tier;
                 }
             }
         }
-
-        if (empty($artist_tiers)) {
-            $artist_tiers[] = 'referenced';
-        }
-
-        // Sort by priority
-        $priority = ['thread', 'episode', 'strand', 'featured', 'referenced'];
-        usort($artist_tiers, function($a, $b) use ($priority) {
-            return array_search($a, $priority) <=> array_search($b, $priority);
-        });
-
-        $artist_tiers = array_unique($artist_tiers);
-        $cache[$post_id] = $artist_tiers;
-        return $artist_tiers;
     }
 
-    $cache[$post_id] = ['referenced'];
+    // ── 6. FINALIZE: Fill Referenced fallback & Sort by Priority ──
+    foreach ($map['songs'] as $id => $tiers) {
+        if (empty($tiers)) $map['songs'][$id] = ['referenced'];
+        usort($map['songs'][$id], function($a, $b) use ($priority) {
+            return array_search($a, $priority) <=> array_search($b, $priority);
+        });
+    }
+    
+    foreach ($map['artists'] as $id => $tiers) {
+        if (empty($tiers)) $map['artists'][$id] = ['referenced'];
+        usort($map['artists'][$id], function($a, $b) use ($priority) {
+            return array_search($a, $priority) <=> array_search($b, $priority);
+        });
+    }
+
+    return $map;
+}
+
+/**
+ * Gets tiers for a specific song or artist (Reads from memory)
+ */
+function kp_get_tiers($post_id) {
+    $post_type = get_post_type($post_id);
+    $map = kp_get_tier_map();
+    
+    if ($post_type === 'song') {
+        return $map['songs'][$post_id] ?? ['referenced'];
+    }
+    if ($post_type === 'artist') {
+        return $map['artists'][$post_id] ?? ['referenced'];
+    }
     return ['referenced'];
 }
 
@@ -522,27 +535,25 @@ function kp_get_tier_label($tier) {
 }
 
 /**
- * Gets all posts that belong to a specific tier (allows duplicates)
+ * Gets all posts in a specific tier (Reads from memory)
  */
 function kp_get_tier_posts($tier, $post_type) {
-    $all_posts = get_posts([
-        'post_type'      => $post_type,
-        'posts_per_page' => -1,
-        'orderby'        => 'title',
-        'order'          => 'ASC',
-        'fields'         => 'ids'
-    ]);
+    $map = kp_get_tier_map();
+    $key = $post_type === 'song' ? 'songs' : 'artists';
     
     $tier_posts = [];
-    foreach ($all_posts as $pid) {
-        $tiers = kp_get_tiers($pid);
+    foreach ($map[$key] as $post_id => $tiers) {
         if (in_array($tier, $tiers)) {
-            $tier_posts[] = $pid;
+            $tier_posts[] = $post_id;
         }
     }
+    
+    usort($tier_posts, function($a, $b) {
+        return strcmp(get_the_title($a), get_the_title($b));
+    });
+    
     return $tier_posts;
 }
-
 
 require_once get_stylesheet_directory() . '/inc/helpers/wikipedia.php';
 
