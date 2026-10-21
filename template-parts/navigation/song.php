@@ -1,45 +1,119 @@
 <?php
+global $wpdb;
 $current_id = get_the_ID();
-$is_rap = has_term('rap', 'song_category', $current_id);
 
-if ($is_rap) {
-    $song_ids = get_posts([
-        'post_type' => 'song',
-        'numberposts' => -1,
-        'orderby' => 'title',
-        'order' => 'ASC',
-        'fields' => 'ids',
-        'tax_query' => [['taxonomy' => 'song_category', 'field' => 'slug', 'terms' => 'rap']]
-    ]);
-    $heading_prefix = 'Rap Song';
-} else {
-    $terms = wp_get_post_terms($current_id, 'feature_level', ['fields' => 'slugs']);
-    $tier = $terms[0] ?? '';
+// ── DETERMINE CURRENT TIER (by priority) ──
+$current_tier = 'referenced';
 
-    $song_ids = get_posts([
-        'post_type' => 'song',
-        'numberposts' => -1,
-        'orderby' => 'title',
-        'order' => 'ASC',
-        'fields' => 'ids',
-        'tax_query' => [
-            'relation' => 'AND',
-            ['taxonomy' => 'feature_level', 'field' => 'slug', 'terms' => $tier],
-            ['taxonomy' => 'song_category', 'field' => 'slug', 'terms' => 'rap', 'operator' => 'NOT IN']
-        ]
-    ]);
-
-    $heading_prefix = match($tier) {
-        'narrative' => 'Narrative Song',
-        'featured' => 'Featured Song',
-        'referenced' => 'Referenced Song',
-        default => 'Song'
-    };
+// 1. Check Thread: Is this song referenced by any Chapter?
+$thread_check = $wpdb->get_var($wpdb->prepare(
+    "SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key LIKE 'chapter_songs_%%_song' AND meta_value = %d",
+    $current_id
+));
+if ($thread_check > 0) {
+    $current_tier = 'thread';
 }
 
+// 2. Check Episode: Is this song referenced by any Fragment?
+if ($current_tier === 'referenced') {
+    $episode_check = $wpdb->get_var($wpdb->prepare(
+        "SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key LIKE 'fragment_songs_%%_song' AND meta_value = %d",
+        $current_id
+    ));
+    if ($episode_check > 0) {
+        $current_tier = 'episode';
+    }
+}
+
+// 3. Check Strand: Is this song referenced by any Song-Based Element?
+if ($current_tier === 'referenced') {
+    $strand_check = $wpdb->get_var($wpdb->prepare(
+        "SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key = 'related_content' AND meta_value = %d",
+        $current_id
+    ));
+    if ($strand_check > 0) {
+        $current_tier = 'strand';
+    }
+}
+
+// 4. Check Featured: Is this song in the Listening Room?
+if ($current_tier === 'referenced') {
+    $lr_terms = get_the_terms($current_id, 'listening_room');
+    if (!is_wp_error($lr_terms) && !empty($lr_terms)) {
+        foreach ($lr_terms as $term) {
+            if ($term->slug === 'listening-room') {
+                $current_tier = 'featured';
+                break;
+            }
+        }
+    }
+}
+
+// ── GET ALL SONGS IN THIS TIER ──
+$song_ids = [];
+
+switch ($current_tier) {
+    case 'thread':
+        $song_ids = $wpdb->get_col(
+            "SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key LIKE 'chapter_songs_%%_song'"
+        );
+        break;
+
+    case 'episode':
+        $song_ids = $wpdb->get_col(
+            "SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key LIKE 'fragment_songs_%%_song'"
+        );
+        break;
+
+    case 'strand':
+        $song_ids = $wpdb->get_col(
+            "SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key = 'related_content'"
+        );
+        break;
+
+    case 'featured':
+        $song_ids = get_posts([
+            'post_type'      => 'song',
+            'posts_per_page' => -1,
+            'fields'         => 'ids',
+            'tax_query'      => [
+                ['taxonomy' => 'listening_room', 'field' => 'slug', 'terms' => 'listening-room']
+            ]
+        ]);
+        break;
+
+    default: // referenced = everything not in the above
+        $all_songs = get_posts(['post_type' => 'song', 'posts_per_page' => -1, 'fields' => 'ids']);
+        $accounted = array_merge(
+            $wpdb->get_col("SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key LIKE 'chapter_songs_%%_song'"),
+            $wpdb->get_col("SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key LIKE 'fragment_songs_%%_song'"),
+            $wpdb->get_col("SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key = 'related_content'"),
+            get_posts(['post_type' => 'song', 'posts_per_page' => -1, 'fields' => 'ids', 'tax_query' => [['taxonomy' => 'listening_room', 'field' => 'slug', 'terms' => 'listening-room']]])
+        );
+        $song_ids = array_diff($all_songs, array_unique($accounted));
+        break;
+}
+
+// Convert to integers and sort by title
+$song_ids = array_map('intval', array_unique(array_filter($song_ids)));
+usort($song_ids, function($a, $b) {
+    return strcmp(get_the_title($a), get_the_title($b));
+});
+
+// ── GET PREV/NEXT ──
 $current_index = array_search($current_id, $song_ids);
-$next_id = $song_ids[$current_index + 1] ?? null;
-$prev_id = $song_ids[$current_index - 1] ?? null;
+$next_id = ($current_index !== false) ? ($song_ids[$current_index + 1] ?? null) : null;
+$prev_id = ($current_index !== false) ? ($song_ids[$current_index - 1] ?? null) : null;
+
+// ── LABEL ──
+$labels = [
+    'thread'     => 'Narrative Thread',
+    'episode'    => 'Narrative Episode',
+    'strand'     => 'Narrative Strand',
+    'featured'   => 'Featured',
+    'referenced' => 'Referenced'
+];
+$heading_prefix = ($labels[$current_tier] ?? 'Referenced') . ' Song';
 ?>
 
 <div class="cpt-song-nav-top">
