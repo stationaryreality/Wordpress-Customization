@@ -400,7 +400,7 @@ function kp_get_song_tiers() {
     $tiers = ['thread'=>[], 'episode'=>[], 'strand'=>[], 'featured'=>[], 'referenced'=>[]];
     $assigned = [];
 
-    // THREAD (Chapters) — highest priority
+    // THREAD (Chapters)
     $chapters = get_posts(['post_type'=>'chapter','posts_per_page'=>-1,'fields'=>'ids']);
     foreach ($chapters as $cid) {
         foreach (kp_get_primary_songs($cid) as $song) {
@@ -412,7 +412,7 @@ function kp_get_song_tiers() {
         }
     }
 
-    // EPISODE (Fragments) — skip songs already in Thread
+    // EPISODE (Fragments)
     $fragments = get_posts(['post_type'=>'fragment','posts_per_page'=>-1,'fields'=>'ids']);
     foreach ($fragments as $fid) {
         foreach (kp_get_primary_songs($fid) as $song) {
@@ -424,25 +424,20 @@ function kp_get_song_tiers() {
         }
     }
 
-    // STRAND (Song-Based Elements) — read related_content directly, first song only
+    // STRAND (Song-Based Elements) — use kp_get_primary_songs, which correctly
+    // finds the first SONG-type item in the mixed related_content field
     $elements = get_posts(['post_type'=>'element','posts_per_page'=>-1,'fields'=>'ids']);
     foreach ($elements as $eid) {
         $terms = get_the_terms($eid, 'strand_type');
         $is_song_based = false;
         if (!is_wp_error($terms) && !empty($terms)) {
             foreach ($terms as $term) {
-                if ($term->slug === 'song-based') {
-                    $is_song_based = true;
-                    break;
-                }
+                if ($term->slug === 'song-based') { $is_song_based = true; break; }
             }
         }
-
         if ($is_song_based) {
-            $related = get_field('related_content', $eid);
-            if (!empty($related)) {
-                $first = $related[0]; // first song = the song the strand is based on
-                $sid = is_object($first) ? $first->ID : $first;
+            foreach (kp_get_primary_songs($eid) as $song) {
+                $sid = is_object($song) ? $song->ID : $song;
                 if ($sid && !isset($assigned[$sid])) {
                     $assigned[$sid] = true;
                     $tiers['strand'][] = $sid;
