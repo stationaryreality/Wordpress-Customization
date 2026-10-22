@@ -1,111 +1,90 @@
 <?php
-global $wpdb;
 $current_id = get_the_ID();
 
-// ── DETERMINE CURRENT TIER (by priority) ──
-$current_tier = 'referenced';
+// Build tier lists once per request (guarded against re-declaration)
+if (!function_exists('kp_nav_song_tiers')) {
+    function kp_nav_song_tiers() {
+        static $tiers = null;
+        if ($tiers !== null) return $tiers;
 
-// 1. Check Thread: Is this song referenced by any Chapter?
-$thread_check = $wpdb->get_var($wpdb->prepare(
-    "SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key LIKE 'chapter_songs_%%_song' AND meta_value = %d",
-    $current_id
-));
-if ($thread_check > 0) {
-    $current_tier = 'thread';
-}
+        $tiers = ['thread'=>[], 'episode'=>[], 'strand'=>[], 'featured'=>[], 'referenced'=>[]];
 
-// 2. Check Episode: Is this song referenced by any Fragment?
-if ($current_tier === 'referenced') {
-    $episode_check = $wpdb->get_var($wpdb->prepare(
-        "SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key LIKE 'fragment_songs_%%_song' AND meta_value = %d",
-        $current_id
-    ));
-    if ($episode_check > 0) {
-        $current_tier = 'episode';
-    }
-}
-
-// 3. Check Strand: Is this song referenced by any Song-Based Element?
-if ($current_tier === 'referenced') {
-    $strand_check = $wpdb->get_var($wpdb->prepare(
-        "SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key = 'related_content' AND meta_value = %d",
-        $current_id
-    ));
-    if ($strand_check > 0) {
-        $current_tier = 'strand';
-    }
-}
-
-// 4. Check Featured: Is this song in the Listening Room?
-if ($current_tier === 'referenced') {
-    $lr_terms = get_the_terms($current_id, 'listening_room');
-    if (!is_wp_error($lr_terms) && !empty($lr_terms)) {
-        foreach ($lr_terms as $term) {
-            if ($term->slug === 'listening-room') {
-                $current_tier = 'featured';
-                break;
+        // ── Thread (Chapters) ──
+        $chapters = get_posts(['post_type'=>'chapter','posts_per_page'=>-1,'fields'=>'ids']);
+        foreach ($chapters as $cid) {
+            foreach (kp_get_primary_songs($cid) as $song) {
+                if (!in_array($song->ID, $tiers['thread'])) $tiers['thread'][] = $song->ID;
             }
         }
-    }
-}
 
-// ── GET ALL SONGS IN THIS TIER ──
-$song_ids = [];
+        // ── Episode (Fragments) ──
+        $fragments = get_posts(['post_type'=>'fragment','posts_per_page'=>-1,'fields'=>'ids']);
+        foreach ($fragments as $fid) {
+            foreach (kp_get_primary_songs($fid) as $song) {
+                if (!in_array($song->ID, $tiers['episode'])) $tiers['episode'][] = $song->ID;
+            }
+        }
 
-switch ($current_tier) {
-    case 'thread':
-        $song_ids = $wpdb->get_col(
-            "SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key LIKE 'chapter_songs_%%_song'"
-        );
-        break;
+        // ── Strand (Song-Based Elements) ──
+        $elements = get_posts(['post_type'=>'element','posts_per_page'=>-1,'fields'=>'ids']);
+        foreach ($elements as $eid) {
+            $terms = get_the_terms($eid, 'strand_type');
+            if (!is_wp_error($terms) && !empty($terms)) {
+                foreach ($terms as $term) {
+                    if ($term->slug === 'song-based') {
+                        foreach (kp_get_primary_songs($eid) as $song) {
+                            if (!in_array($song->ID, $tiers['strand'])) $tiers['strand'][] = $song->ID;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
 
-    case 'episode':
-        $song_ids = $wpdb->get_col(
-            "SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key LIKE 'fragment_songs_%%_song'"
-        );
-        break;
-
-    case 'strand':
-        $song_ids = $wpdb->get_col(
-            "SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key = 'related_content'"
-        );
-        break;
-
-    case 'featured':
-        $song_ids = get_posts([
+        // ── Featured (Listening Room) ──
+        $tiers['featured'] = get_posts([
             'post_type'      => 'song',
             'posts_per_page' => -1,
             'fields'         => 'ids',
             'tax_query'      => [
-                ['taxonomy' => 'listening_room', 'field' => 'slug', 'terms' => 'listening-room']
+                ['taxonomy'=>'listening_room','field'=>'slug','terms'=>'listening-room']
             ]
         ]);
-        break;
 
-    default: // referenced = everything not in the above
-        $all_songs = get_posts(['post_type' => 'song', 'posts_per_page' => -1, 'fields' => 'ids']);
-        $accounted = array_merge(
-            $wpdb->get_col("SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key LIKE 'chapter_songs_%%_song'"),
-            $wpdb->get_col("SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key LIKE 'fragment_songs_%%_song'"),
-            $wpdb->get_col("SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key = 'related_content'"),
-            get_posts(['post_type' => 'song', 'posts_per_page' => -1, 'fields' => 'ids', 'tax_query' => [['taxonomy' => 'listening_room', 'field' => 'slug', 'terms' => 'listening-room']]])
-        );
-        $song_ids = array_diff($all_songs, array_unique($accounted));
-        break;
+        // ── Referenced = everything not in the above ──
+        $all_songs = get_posts(['post_type'=>'song','posts_per_page'=>-1,'fields'=>'ids']);
+        $accounted = array_unique(array_merge(
+            $tiers['thread'], $tiers['episode'], $tiers['strand'], $tiers['featured']
+        ));
+        $tiers['referenced'] = array_values(array_diff($all_songs, $accounted));
+
+        return $tiers;
+    }
 }
 
-// Convert to integers and sort by title
-$song_ids = array_map('intval', array_unique(array_filter($song_ids)));
+$tiers = kp_nav_song_tiers();
+
+// ── Determine current song's highest-priority tier ──
+$priority = ['thread','episode','strand','featured','referenced'];
+$current_tier = 'referenced';
+foreach ($priority as $t) {
+    if (in_array($current_id, $tiers[$t])) {
+        $current_tier = $t;
+        break;
+    }
+}
+
+// ── Sorted list for this tier ──
+$song_ids = $tiers[$current_tier];
 usort($song_ids, function($a, $b) {
     return strcmp(get_the_title($a), get_the_title($b));
 });
 
-// ── GET PREV/NEXT ──
+// ── Prev / Next ──
 $current_index = array_search($current_id, $song_ids);
 $next_id = ($current_index !== false) ? ($song_ids[$current_index + 1] ?? null) : null;
 $prev_id = ($current_index !== false) ? ($song_ids[$current_index - 1] ?? null) : null;
 
-// ── LABEL ──
 $labels = [
     'thread'     => 'Narrative Thread',
     'episode'    => 'Narrative Episode',
@@ -113,7 +92,7 @@ $labels = [
     'featured'   => 'Featured',
     'referenced' => 'Referenced'
 ];
-$heading_prefix = ($labels[$current_tier] ?? 'Referenced') . ' Song';
+$heading_prefix = $labels[$current_tier] . ' Song';
 ?>
 
 <div class="cpt-song-nav-top">
