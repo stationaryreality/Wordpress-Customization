@@ -12,7 +12,20 @@ foreach ($priority as $t) {
     }
 }
 
-$song_ids = $tiers[$current_tier];
+// Rap / non-rap separation
+$is_rap = has_term('rap', 'song_category', $current_id);
+$rap_songs = get_posts([
+    'post_type'      => 'song',
+    'posts_per_page' => -1,
+    'fields'         => 'ids',
+    'tax_query'      => [['taxonomy'=>'song_category','field'=>'slug','terms'=>'rap']]
+]);
+
+// Keep only songs matching the current song's rap status
+$song_ids = array_values(array_filter($tiers[$current_tier], function($sid) use ($rap_songs, $is_rap) {
+    return in_array($sid, $rap_songs) === $is_rap;
+}));
+
 usort($song_ids, function($a, $b) {
     return strcmp(get_the_title($a), get_the_title($b));
 });
