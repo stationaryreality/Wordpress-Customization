@@ -14,51 +14,31 @@ get_header();
     <h2 class="section-heading">🎤 Rap Artists</h2>
 
     <?php
-    // reuse existing rap artists template logic
-    $artist_tiers = [
-      'narrative'  => '📖 Narrative Rap Artists',
-      'featured'   => '🎧 Featured Rap Artists',
-      'referenced' => '🎤 Referenced Rap Artists',
-    ];
-
-    foreach ($artist_tiers as $feature_slug => $feature_label):
-
-      $rapper_query = new WP_Query([
-        'post_type'      => 'artist',
-        'posts_per_page' => -1,
-        'tax_query'      => [
-          [
-            'taxonomy' => 'feature_level',
-            'field'    => 'slug',
-            'terms'    => $feature_slug,
-          ],
-          [
-            'taxonomy' => 'artist_type',
-            'field'    => 'slug',
-            'terms'    => ['rapper'],
-            'operator' => 'IN',
-          ],
+    $rapper_query = new WP_Query([
+      'post_type'      => 'artist',
+      'posts_per_page' => -1,
+      'tax_query'      => [
+        [
+          'taxonomy' => 'artist_type',
+          'field'    => 'slug',
+          'terms'    => ['rapper'],
         ],
-        'orderby' => 'title',
-        'order'   => 'ASC',
-      ]);
+      ],
+      'orderby' => 'title',
+      'order'   => 'ASC',
+    ]);
 
-      if ($rapper_query->have_posts()):
+    if ($rapper_query->have_posts()):
     ?>
-        <div class="feature-group rapper-group">
-          <h3 class="feature-level"><?php echo esc_html($feature_label); ?></h3>
-
-          <?php
-          set_query_var('artist_query', $rapper_query);
-          get_template_part('template-parts/grids/artist');
-          ?>
-        </div>
+      <div class="feature-group rapper-group">
+        <?php
+        set_query_var('artist_query', $rapper_query);
+        get_template_part('template-parts/grids/artist');
+        ?>
+      </div>
     <?php
-      endif;
-
-      wp_reset_postdata();
-
-    endforeach;
+    endif;
+    wp_reset_postdata();
     ?>
   </section>
 
@@ -71,53 +51,33 @@ get_header();
     <h2 class="section-heading">🎧 Rap Songs</h2>
 
     <?php
-    $song_tiers = [
-      'narrative'  => '📖 Narrative Thread Rap Songs',
-      'featured'   => '🎧 Featured Rap Songs',
-      'referenced' => '🎤 Referenced Rap Songs',
-    ];
-
-    foreach ($song_tiers as $slug => $label):
-
-      $rap_songs = new WP_Query([
-        'post_type'      => 'song',
-        'posts_per_page' => -1,
-        'tax_query'      => [
-          [
-            'taxonomy' => 'feature_level',
-            'field'    => 'slug',
-            'terms'    => $slug,
-          ],
-          [
-            'taxonomy' => 'song_category',
-            'field'    => 'slug',
-            'terms'    => ['rap'],
-            'operator' => 'IN',
-          ],
+    $rap_songs_query = new WP_Query([
+      'post_type'      => 'song',
+      'posts_per_page' => -1,
+      'tax_query'      => [
+        [
+          'taxonomy' => 'song_category',
+          'field'    => 'slug',
+          'terms'    => ['rap'],
         ],
-        'orderby' => 'title',
-        'order'   => 'ASC',
-      ]);
+      ],
+      'orderby' => 'title',
+      'order'   => 'ASC',
+    ]);
 
-      if ($rap_songs->have_posts()):
+    if ($rap_songs_query->have_posts()):
     ?>
-        <div class="feature-group">
-          <h3 class="feature-level"><?php echo esc_html($label); ?></h3>
-          
-          <?php
-          // Use the unified song grid template instead of a hardcoded loop
-          get_template_part('template-parts/grids/song', null, [
-            'query' => $rap_songs,
-            'title' => '', // Title is handled by the section heading above
-          ]);
-          ?>
-        </div>
+      <div class="feature-group">
+        <?php
+        get_template_part('template-parts/grids/song', null, [
+          'query' => $rap_songs_query,
+          'title' => '',
+        ]);
+        ?>
+      </div>
     <?php
-      endif;
-
-      wp_reset_postdata();
-
-    endforeach;
+    endif;
+    wp_reset_postdata();
     ?>
   </section>
 
@@ -130,26 +90,45 @@ get_header();
     <h2 class="section-heading">🎤 Rap Lyrics</h2>
 
     <?php
-    $rap_lyrics_query = new WP_Query([
-      'post_type'      => 'lyric',
+    // Get all rap song IDs first
+    $rap_song_ids = get_posts([
+      'post_type'      => 'song',
       'posts_per_page' => -1,
-      'orderby'        => 'title',
-      'order'          => 'ASC',
+      'fields'         => 'ids',
       'tax_query'      => [
         [
           'taxonomy' => 'song_category',
           'field'    => 'slug',
           'terms'    => ['rap'],
-          'operator' => 'IN',
         ],
       ],
     ]);
 
-get_template_part('template-parts/lists/lyric', null, [
-      'query' => $rap_lyrics_query,
-      'title' => '',
-      'emoji' => '',
-    ]);
+    if (!empty($rap_song_ids)):
+      $rap_lyrics_query = new WP_Query([
+        'post_type'      => 'lyric',
+        'posts_per_page' => -1,
+        'orderby'        => 'title',
+        'order'          => 'ASC',
+        'meta_query'     => [
+          [
+            'key'     => 'song',
+            'value'   => $rap_song_ids,
+            'compare' => 'IN',
+          ],
+        ],
+      ]);
+
+      get_template_part('template-parts/lists/lyric', null, [
+        'query' => $rap_lyrics_query,
+        'title' => '',
+        'emoji' => '',
+      ]);
+      
+      wp_reset_postdata();
+    else:
+      echo '<p>No rap lyrics found.</p>';
+    endif;
     ?>
   </section>
 
