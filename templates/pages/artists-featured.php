@@ -1,147 +1,77 @@
 <?php
-/* Template Name: Artists Featured */
-get_header();
+$current_id = get_the_ID();
+$artist_tiers = kp_get_artist_tiers();
+$priority = ['thread', 'episode', 'strand', 'featured', 'referenced'];
+
+// Find this artist's single tier
+$current_tier = 'referenced';
+foreach ($priority as $t) {
+    if (in_array($current_id, $artist_tiers[$t])) {
+        $current_tier = $t;
+        break;
+    }
+}
+
+// Rap / non-rap separation
+$is_rapper = has_term('rapper', 'artist_type', $current_id);
+$rappers = get_posts([
+    'post_type'      => 'artist',
+    'posts_per_page' => -1,
+    'fields'         => 'ids',
+    'tax_query'      => [['taxonomy' => 'artist_type', 'field' => 'slug', 'terms' => 'rapper']]
+]);
+
+// Keep only artists matching the current artist's rap status
+$artist_ids = array_values(array_filter($artist_tiers[$current_tier], function($aid) use ($rappers, $is_rapper) {
+    return in_array($aid, $rappers) === $is_rapper;
+}));
+
+// Sort alphabetically by title
+usort($artist_ids, function($a, $b) {
+    return strcmp(get_the_title($a), get_the_title($b));
+});
+
+// Prev / Next
+$current_index = array_search($current_id, $artist_ids);
+$next_id = ($current_index !== false) ? ($artist_ids[$current_index + 1] ?? null) : null;
+$prev_id = ($current_index !== false) ? ($artist_ids[$current_index - 1] ?? null) : null;
+
+$labels = [
+    'thread'     => 'Narrative Thread',
+    'episode'    => 'Narrative Episode',
+    'strand'     => 'Narrative Strand',
+    'featured'   => 'Featured',
+    'referenced' => 'Referenced'
+];
+$nav_label = $labels[$current_tier] . ' Artist';
 ?>
 
-<main id="primary" class="site-main page-artists-featured">
-    <?php
-    
-    // ──────────────────────────────────────────────
-    // 1. COLLECT SONG IDs (Same logic as Songs page)
-    // ──────────────────────────────────────────────
-    
-    $thread_song_ids  = [];
-    $episode_song_ids = [];
-    $strand_song_ids  = [];
+<div class="cpt-artist-nav-top">
+  <div class="cpt-artist-nav-row">
+    <?php if ($prev_id): ?>
+      <?php $portrait = get_field('portrait_image', $prev_id); $thumb_url = $portrait ? $portrait['sizes']['thumbnail'] : ''; ?>
+      <a href="<?php echo get_permalink($prev_id); ?>" class="cpt-artist-nav-prev cpt-keyboard-nav-prev">
+        <span class="cpt-artist-nav-label">← Previous <?php echo esc_html($nav_label); ?></span>
+        <?php if ($thumb_url): ?>
+          <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr(get_the_title($prev_id)); ?>" class="cpt-artist-nav-thumb">
+        <?php endif; ?>
+        <span class="cpt-artist-nav-title"><?php echo get_the_title($prev_id); ?></span>
+      </a>
+    <?php endif; ?>
 
-    // A. Chapters (Narrative Thread)
-    $chapters = get_posts(['post_type' => 'chapter', 'posts_per_page' => -1, 'fields' => 'ids']);
-    foreach ($chapters as $cid) {
-        foreach (kp_get_primary_songs($cid) as $song) $thread_song_ids[] = $song->ID;
-    }
+    <?php if ($prev_id || $next_id): ?>
+      <span class="cpt-keyboard-hint-inline" title="Use arrow keys to navigate">Use ← ⌨️ → keys</span>
+    <?php endif; ?>
 
-    // B. Fragments (Narrative Episode)
-    $fragments = get_posts(['post_type' => 'fragment', 'posts_per_page' => -1, 'fields' => 'ids']);
-    foreach ($fragments as $fid) {
-        foreach (kp_get_primary_songs($fid) as $song) $episode_song_ids[] = $song->ID;
-    }
-
-    // C. Elements (Narrative Strand)
-    $elements = get_posts(['post_type' => 'element', 'posts_per_page' => -1, 'fields' => 'ids']);
-    foreach ($elements as $eid) {
-        $terms = get_the_terms($eid, 'strand_type');
-        if (!is_wp_error($terms) && !empty($terms)) {
-            foreach ($terms as $term) {
-                if ($term->slug === 'song-based') {
-                    foreach (kp_get_primary_songs($eid) as $song) $strand_song_ids[] = $song->ID;
-                    break;
-                }
-            }
-        }
-    }
-
-    // D. Featured Songs (Listening Room)
-    $featured_query = new WP_Query([
-        'post_type'      => 'song',
-        'posts_per_page' => -1,
-        'fields'         => 'ids',
-        'tax_query'      => [['taxonomy' => 'listening_room', 'field' => 'slug', 'terms' => 'listening-room']],
-    ]);
-    $featured_song_ids = $featured_query->posts;
-    wp_reset_postdata();
-
-
-    // ──────────────────────────────────────────────
-    // 2. CONVERT SONG IDs TO ARTIST IDs
-    // ──────────────────────────────────────────────
-    
-    function lr_extract_artists($song_ids) {
-        $artist_ids = [];
-        foreach ($song_ids as $song_id) {
-            $artist_field = get_field('song_artist', $song_id);
-            if ($artist_field) {
-                $artist_post = get_post($artist_field);
-                // Ensure it's a valid Artist post type
-                if ($artist_post instanceof WP_Post && $artist_post->post_type === 'artist') {
-                    $artist_ids[] = $artist_post->ID;
-                }
-            }
-        }
-        return array_unique(array_filter($artist_ids));
-    }
-
-    $thread_artist_ids   = lr_extract_artists($thread_song_ids);
-    $episode_artist_ids  = lr_extract_artists($episode_song_ids);
-    $strand_artist_ids   = lr_extract_artists($strand_song_ids);
-    $featured_artist_ids = lr_extract_artists($featured_song_ids);
-
-
-    // ──────────────────────────────────────────────
-    // 3. REFERENCED ARTISTS = EVERYTHING ELSE
-    // ──────────────────────────────────────────────
-    
-    $all_artist_ids = get_posts(['post_type' => 'artist', 'posts_per_page' => -1, 'fields' => 'ids']);
-    $accounted_artist_ids = array_merge($thread_artist_ids, $episode_artist_ids, $strand_artist_ids, $featured_artist_ids);
-    $referenced_artist_ids = array_diff($all_artist_ids, array_unique($accounted_artist_ids));
-
-
-    // ──────────────────────────────────────────────
-    // 4. EXCLUDE RAPPERS (Matching your original code)
-    // ──────────────────────────────────────────────
-    
-    $rappers = get_posts([
-        'post_type'      => 'artist',
-        'posts_per_page' => -1,
-        'fields'         => 'ids',
-        'tax_query'      => [['taxonomy' => 'artist_type', 'field' => 'slug', 'terms' => 'rapper']]
-    ]);
-
-    if (!empty($rappers)) {
-        $thread_artist_ids     = array_diff($thread_artist_ids, $rappers);
-        $episode_artist_ids    = array_diff($episode_artist_ids, $rappers);
-        $strand_artist_ids     = array_diff($strand_artist_ids, $rappers);
-        $featured_artist_ids   = array_diff($featured_artist_ids, $rappers);
-        $referenced_artist_ids = array_diff($referenced_artist_ids, $rappers);
-    }
-
-
-    // ──────────────────────────────────────────────
-    // 5. RENDER SECTIONS USING YOUR EXISTING GRID
-    // ──────────────────────────────────────────────
-    
-    function lr_render_artist_section($title, $artist_ids) {
-        if (empty($artist_ids)) return;
-
-        $artist_query = new WP_Query([
-            'post_type'      => 'artist',
-            'posts_per_page' => -1,
-            'post__in'       => $artist_ids,
-            'orderby'        => 'title',
-            'order'          => 'ASC',
-        ]);
-
-        if ($artist_query->have_posts()) {
-            ?>
-            <div class="cpt-artist-feature-group">
-                <h3 class="cpt-artist-feature-level"><?php echo esc_html($title); ?></h3>
-                <?php
-                // Pass the query to your existing artist grid template part
-                set_query_var('artist_query', $artist_query);
-                get_template_part('template-parts/grids/artist');
-                ?>
-            </div>
-            <?php
-            wp_reset_postdata();
-        }
-    }
-
-    // Render in order
-    lr_render_artist_section('📖 Narrative Thread Artists', $thread_artist_ids);
-    lr_render_artist_section('🎬 Narrative Episode Artists', $episode_artist_ids);
-    lr_render_artist_section('🧵 Narrative Strand Artists', $strand_artist_ids);
-    lr_render_artist_section('🎧 Featured Artists', $featured_artist_ids);
-    lr_render_artist_section('🎤 Referenced Artists', $referenced_artist_ids);
-    ?>
-</main>
-
-<?php get_footer(); ?>
+    <?php if ($next_id): ?>
+      <?php $portrait = get_field('portrait_image', $next_id); $thumb_url = $portrait ? $portrait['sizes']['thumbnail'] : ''; ?>
+      <a href="<?php echo get_permalink($next_id); ?>" class="cpt-artist-nav-next cpt-keyboard-nav-next">
+        <span class="cpt-artist-nav-label">Next <?php echo esc_html($nav_label); ?> →</span>
+        <?php if ($thumb_url): ?>
+          <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr(get_the_title($next_id)); ?>" class="cpt-artist-nav-thumb">
+        <?php endif; ?>
+        <span class="cpt-artist-nav-title"><?php echo get_the_title($next_id); ?></span>
+      </a>
+    <?php endif; ?>
+  </div>
+</div>
