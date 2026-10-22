@@ -388,6 +388,132 @@ function kp_lyric_attribution($lyric_id) {
     return 'Song: <a href="' . esc_url($song_url) . '">' . esc_html($song_title) . '</a>';
 }
 
+/**
+ * Mutually-exclusive SONG tiers.
+ * Each song appears in exactly ONE tier (highest priority wins).
+ * Priority: thread > episode > strand > featured > referenced
+ */
+function kp_get_song_tiers() {
+    static $tiers = null;
+    if ($tiers !== null) return $tiers;
+
+    $tiers = ['thread'=>[], 'episode'=>[], 'strand'=>[], 'featured'=>[], 'referenced'=>[]];
+    $assigned = [];
+
+    // THREAD (Chapters) — highest priority
+    $chapters = get_posts(['post_type'=>'chapter','posts_per_page'=>-1,'fields'=>'ids']);
+    foreach ($chapters as $cid) {
+        foreach (kp_get_primary_songs($cid) as $song) {
+            if (!isset($assigned[$song->ID])) {
+                $assigned[$song->ID] = true;
+                $tiers['thread'][] = $song->ID;
+            }
+        }
+    }
+
+    // EPISODE (Fragments) — skip songs already in Thread
+    $fragments = get_posts(['post_type'=>'fragment','posts_per_page'=>-1,'fields'=>'ids']);
+    foreach ($fragments as $fid) {
+        foreach (kp_get_primary_songs($fid) as $song) {
+            if (!isset($assigned[$song->ID])) {
+                $assigned[$song->ID] = true;
+                $tiers['episode'][] = $song->ID;
+            }
+        }
+    }
+
+    // STRAND (Song-Based Elements) — skip songs already in Thread/Episode
+    $elements = get_posts(['post_type'=>'element','posts_per_page'=>-1,'fields'=>'ids']);
+    foreach ($elements as $eid) {
+        $terms = get_the_terms($eid, 'strand_type');
+        if (!is_wp_error($terms) && !empty($terms)) {
+            foreach ($terms as $term) {
+                if ($term->slug === 'song-based') {
+                    foreach (kp_get_primary_songs($eid) as $song) {
+                        if (!isset($assigned[$song->ID])) {
+                            $assigned[$song->ID] = true;
+                            $tiers['strand'][] = $song->ID;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    // FEATURED (Listening Room) — skip songs already in higher tiers
+    $featured = get_posts([
+        'post_type'=>'song','posts_per_page'=>-1,'fields'=>'ids',
+        'tax_query'=>[['taxonomy'=>'listening_room','field'=>'slug','terms'=>'listening-room']]
+    ]);
+    foreach ($featured as $song_id) {
+        if (!isset($assigned[$song_id])) {
+            $assigned[$song_id] = true;
+            $tiers['featured'][] = $song_id;
+        }
+    }
+
+    // REFERENCED = everything not assigned above
+    $all_songs = get_posts(['post_type'=>'song','posts_per_page'=>-1,'fields'=>'ids']);
+    foreach ($all_songs as $song_id) {
+        if (!isset($assigned[$song_id])) {
+            $tiers['referenced'][] = $song_id;
+        }
+    }
+
+    return $tiers;
+}
+
+/**
+ * Mutually-exclusive ARTIST tiers, derived from song tiers.
+ * Each artist appears in exactly ONE tier (the highest tier of any of their songs).
+ */
+function kp_get_artist_tiers() {
+    static $artist_tiers = null;
+    if ($artist_tiers !== null) return $artist_tiers;
+
+    $song_tiers = kp_get_song_tiers();
+    $priority   = ['thread','episode','strand','featured','referenced'];
+
+    $artist_tiers = ['thread'=>[], 'episode'=>[], 'strand'=>[], 'featured'=>[], 'referenced'=>[]];
+    $assigned = [];
+
+    // Walk tiers in priority order; first tier an artist appears in = their tier
+    foreach ($priority as $tier_name) {
+        if ($tier_name === 'referenced') continue; // handled by fallback below
+        foreach ($song_tiers[$tier_name] as $song_id) {
+            $primary    = get_field('song_artist', $song_id);
+            $additional = get_field('additional_artists', $song_id);
+
+            $artist_ids = [];
+            if ($primary) $artist_ids[] = is_object($primary) ? $primary->ID : $primary;
+            if (!empty($additional)) {
+                foreach ($additional as $a) {
+                    $aid = is_object($a) ? $a->ID : $a;
+                    if (!in_array($aid, $artist_ids)) $artist_ids[] = $aid;
+                }
+            }
+
+            foreach ($artist_ids as $aid) {
+                if (!isset($assigned[$aid])) {
+                    $assigned[$aid] = true;
+                    $artist_tiers[$tier_name][] = $aid;
+                }
+            }
+        }
+    }
+
+    // Artists with no songs, or only referenced songs → referenced
+    $all_artists = get_posts(['post_type'=>'artist','posts_per_page'=>-1,'fields'=>'ids']);
+    foreach ($all_artists as $aid) {
+        if (!isset($assigned[$aid])) {
+            $artist_tiers['referenced'][] = $aid;
+        }
+    }
+
+    return $artist_tiers;
+}
+
 
 require_once get_stylesheet_directory() . '/inc/helpers/wikipedia.php';
 
