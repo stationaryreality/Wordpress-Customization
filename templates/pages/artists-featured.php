@@ -1,3 +1,4 @@
+/* Template Name: Songs Featured */
 <?php
 $current_id = get_the_ID();
 $artist_tiers = kp_get_artist_tiers();
