@@ -121,15 +121,17 @@ add_action('template_redirect', function() {
     }
 });
 
-
 // Emoji & Page Mapper
 /**
  * Return CPT metadata: title, emoji, link
  */
 function get_cpt_metadata($cpt_name = '') {
     $all = [
-        'featured_artists'  => ['title' => 'Songs Featured',            'emoji' => '🎤', 'link' => '/artists-featured/'],
-        'other_artists'     => ['title' => 'Songs Referenced',          'emoji' => '🎤', 'link' => '/artists-featured/'],
+        // VIRTUAL keys for footnotes (corrected titles + proper links)
+        'featured_artists'  => ['title' => 'Featured Artists',          'emoji' => '🎤', 'link' => '/artists-featured/'],
+        'other_artists'     => ['title' => 'Other Artists',             'emoji' => '🎤', 'link' => '/artists-featured/'],
+        
+        // Real CPT keys (unchanged)
         'songs_referenced'  => ['title' => 'Songs Excerpts',            'emoji' => '🎵', 'link' => '/song-excerpts/'],
         'concept'           => ['title' => 'Lexicon',                   'emoji' => '🔎', 'link' => '/lexicon/'],
         'portal'            => ['title' => 'Portal Pages',              'emoji' => '🚪', 'link' => '/portal-pages/'],
@@ -151,7 +153,6 @@ function get_cpt_metadata($cpt_name = '') {
         'show'              => ['title' => 'TV Shows Referenced',       'emoji' => '📺', 'link' => '/tv-shows-referenced/'],
         'game'              => ['title' => 'Video Games',               'emoji' => '🎮', 'link' => '/video-games/'],
         'video'             => ['title' => 'Video Room',                'emoji' => '📼', 'link' => '/video-room/'],
-
     ];
 
     return $cpt_name ? ($all[$cpt_name] ?? null) : $all;

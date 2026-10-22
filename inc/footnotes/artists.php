@@ -46,7 +46,9 @@ function fn_collect_chapter_artists($chapter_id) {
             ];
         }
 
-        $artists[$group][$artist_key]['songs'][] = $song_title;
+        // Store title AND id so we can link to the song later
+        $song_entry = ['title' => $song_title, 'id' => $song_post->ID];
+        $artists[$group][$artist_key]['songs'][] = $song_entry;
     }
 
     // --- INHERITED SONGS FROM ELEMENTS ---
@@ -72,8 +74,17 @@ function fn_collect_chapter_artists($chapter_id) {
             ];
         }
 
-        if (!in_array($song_title, $artists['other'][$artist_key]['songs'], true)) {
-            $artists['other'][$artist_key]['songs'][] = $song_title;
+        // Check for duplicate by ID to prevent same song listed twice
+        $song_entry = ['title' => $song_title, 'id' => $song_post->ID];
+        $already_exists = false;
+        foreach ($artists['other'][$artist_key]['songs'] as $existing) {
+            if ($existing['id'] === $song_post->ID) {
+                $already_exists = true;
+                break;
+            }
+        }
+        if (!$already_exists) {
+            $artists['other'][$artist_key]['songs'][] = $song_entry;
         }
     }
 
@@ -133,8 +144,11 @@ function fn_render_artist_group($artists, $meta, $alphabetize = false) {
         echo '<div class="cpt-artist-footnote-details">';
         echo "<a href=\"" . esc_url($link) . "\" class=\"cpt-artist-footnote-name\">" . $title . "</a>";
         
+        // Render songs as clickable links
         foreach ($songs as $song) {
-            echo "<span class=\"cpt-artist-footnote-song\">" . esc_html($song) . "</span>";
+            $song_title = esc_html($song['title']);
+            $song_url   = esc_url(get_permalink($song['id']));
+            echo "<a href=\"{$song_url}\" class=\"cpt-artist-footnote-song\">{$song_title}</a>";
         }
         
         echo '</div>';
