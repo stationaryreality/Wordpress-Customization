@@ -1,78 +1,76 @@
-/* Template Name: Songs Featured */
 <?php
-$current_id = get_the_ID();
-$artist_tiers = kp_get_artist_tiers();
-$priority = ['thread', 'episode', 'strand', 'featured', 'referenced'];
-
-// Find this artist's single tier
-$current_tier = 'referenced';
-foreach ($priority as $t) {
-    if (in_array($current_id, $artist_tiers[$t])) {
-        $current_tier = $t;
-        break;
-    }
-}
-
-// Rap / non-rap separation
-$is_rapper = has_term('rapper', 'artist_type', $current_id);
-$rappers = get_posts([
-    'post_type'      => 'artist',
-    'posts_per_page' => -1,
-    'fields'         => 'ids',
-    'tax_query'      => [['taxonomy' => 'artist_type', 'field' => 'slug', 'terms' => 'rapper']]
-]);
-
-// Keep only artists matching the current artist's rap status
-$artist_ids = array_values(array_filter($artist_tiers[$current_tier], function($aid) use ($rappers, $is_rapper) {
-    return in_array($aid, $rappers) === $is_rapper;
-}));
-
-// Sort alphabetically by title
-usort($artist_ids, function($a, $b) {
-    return strcmp(get_the_title($a), get_the_title($b));
-});
-
-// Prev / Next
-$current_index = array_search($current_id, $artist_ids);
-$next_id = ($current_index !== false) ? ($artist_ids[$current_index + 1] ?? null) : null;
-$prev_id = ($current_index !== false) ? ($artist_ids[$current_index - 1] ?? null) : null;
-
-$labels = [
-    'thread'     => 'Narrative Thread',
-    'episode'    => 'Narrative Episode',
-    'strand'     => 'Narrative Strand',
-    'featured'   => 'Featured',
-    'referenced' => 'Referenced'
-];
-$nav_label = $labels[$current_tier] . ' Artist';
+/* Template Name: Songs Featured */
+get_header();
 ?>
+<main id="primary" class="site-main cpt-song-archive">
+    <section class="cpt-song-section">
 
-<div class="cpt-artist-nav-top">
-  <div class="cpt-artist-nav-row">
-    <?php if ($prev_id): ?>
-      <?php $portrait = get_field('portrait_image', $prev_id); $thumb_url = $portrait ? $portrait['sizes']['thumbnail'] : ''; ?>
-      <a href="<?php echo get_permalink($prev_id); ?>" class="cpt-artist-nav-prev cpt-keyboard-nav-prev">
-        <span class="cpt-artist-nav-label">← Previous <?php echo esc_html($nav_label); ?></span>
-        <?php if ($thumb_url): ?>
-          <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr(get_the_title($prev_id)); ?>" class="cpt-artist-nav-thumb">
-        <?php endif; ?>
-        <span class="cpt-artist-nav-title"><?php echo get_the_title($prev_id); ?></span>
-      </a>
-    <?php endif; ?>
+        <?php
+        // ══════════════════════════════════════════════
+        // THIS IS THE FIX: We ONLY pull from the exclusive helper.
+        // Because of how the helper works, $tiers['featured'] 
+        // CANNOT contain any song that is already in a strand.
+        // ══════════════════════════════════════════════
+        $tiers = kp_get_song_tiers(); 
+        
+        $thread_ids     = $tiers['thread'];
+        $episode_ids    = $tiers['episode'];
+        $strand_ids     = $tiers['strand'];
+        $featured_ids   = $tiers['featured']; 
+        $referenced_ids = $tiers['referenced'];
 
-    <?php if ($prev_id || $next_id): ?>
-      <span class="cpt-keyboard-hint-inline" title="Use arrow keys to navigate">Use ← ⌨️ → keys</span>
-    <?php endif; ?>
+        // Optional: exclude Rap (preserved from your original)
+        $rap_songs = get_posts([
+            'post_type'=>'song','posts_per_page'=>-1,'fields'=>'ids',
+            'tax_query'=>[['taxonomy'=>'song_category','field'=>'slug','terms'=>'rap']]
+        ]);
+        if (!empty($rap_songs)) {
+            $thread_ids     = array_values(array_diff($thread_ids, $rap_songs));
+            $episode_ids    = array_values(array_diff($episode_ids, $rap_songs));
+            $strand_ids     = array_values(array_diff($strand_ids, $rap_songs));
+            $featured_ids   = array_values(array_diff($featured_ids, $rap_songs));
+            $referenced_ids = array_values(array_diff($referenced_ids, $rap_songs));
+        }
 
-    <?php if ($next_id): ?>
-      <?php $portrait = get_field('portrait_image', $next_id); $thumb_url = $portrait ? $portrait['sizes']['thumbnail'] : ''; ?>
-      <a href="<?php echo get_permalink($next_id); ?>" class="cpt-artist-nav-next cpt-keyboard-nav-next">
-        <span class="cpt-artist-nav-label">Next <?php echo esc_html($nav_label); ?> →</span>
-        <?php if ($thumb_url): ?>
-          <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr(get_the_title($next_id)); ?>" class="cpt-artist-nav-thumb">
-        <?php endif; ?>
-        <span class="cpt-artist-nav-title"><?php echo get_the_title($next_id); ?></span>
-      </a>
-    <?php endif; ?>
-  </div>
-</div>
+        // Render function
+        if (!function_exists('lr_render_song_section')) {
+            function lr_render_song_section($title, $song_ids) {
+                if (empty($song_ids)) return;
+                $songs = new WP_Query([
+                    'post_type'=>'song','posts_per_page'=>-1,
+                    'post__in'=>$song_ids,'orderby'=>'title','order'=>'ASC',
+                ]);
+                if (!$songs->have_posts()) return;
+                ?>
+                <div class="cpt-song-tier-group">
+                    <h3 class="cpt-song-tier-title"><?php echo esc_html($title); ?></h3>
+                    <div class="cpt-song-grid">
+                        <?php while ($songs->have_posts()): $songs->the_post();
+                            $cover = get_field('cover_image');
+                            $img_url = $cover ? $cover['sizes']['thumbnail'] : '';
+                        ?>
+                            <article class="cpt-song-grid-item">
+                                <a href="<?php the_permalink(); ?>" class="cpt-song-grid-link">
+                                    <?php if ($img_url): ?>
+                                        <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title_attribute(); ?>" class="cpt-song-grid-image">
+                                    <?php endif; ?>
+                                    <h3 class="cpt-song-grid-title"><?php the_title(); ?></h3>
+                                </a>
+                            </article>
+                        <?php endwhile; ?>
+                    </div>
+                </div>
+                <?php wp_reset_postdata();
+            }
+        }
+
+        lr_render_song_section('📖 Narrative Thread Songs', $thread_ids);
+        lr_render_song_section('🎬 Narrative Episode Songs', $episode_ids);
+        lr_render_song_section('🧵 Narrative Strand Songs', $strand_ids);
+        lr_render_song_section('🎧 Featured Songs', $featured_ids);
+        lr_render_song_section('🎤 Referenced Songs', $referenced_ids);
+        ?>
+
+    </section>
+</main>
+<?php get_footer(); ?>
