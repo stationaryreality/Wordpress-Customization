@@ -404,9 +404,10 @@ function kp_get_song_tiers() {
     $chapters = get_posts(['post_type'=>'chapter','posts_per_page'=>-1,'fields'=>'ids']);
     foreach ($chapters as $cid) {
         foreach (kp_get_primary_songs($cid) as $song) {
-            if (!isset($assigned[$song->ID])) {
-                $assigned[$song->ID] = true;
-                $tiers['thread'][] = $song->ID;
+            $sid = is_object($song) ? $song->ID : $song;
+            if ($sid && !isset($assigned[$sid])) {
+                $assigned[$sid] = true;
+                $tiers['thread'][] = $sid;
             }
         }
     }
@@ -415,49 +416,58 @@ function kp_get_song_tiers() {
     $fragments = get_posts(['post_type'=>'fragment','posts_per_page'=>-1,'fields'=>'ids']);
     foreach ($fragments as $fid) {
         foreach (kp_get_primary_songs($fid) as $song) {
-            if (!isset($assigned[$song->ID])) {
-                $assigned[$song->ID] = true;
-                $tiers['episode'][] = $song->ID;
+            $sid = is_object($song) ? $song->ID : $song;
+            if ($sid && !isset($assigned[$sid])) {
+                $assigned[$sid] = true;
+                $tiers['episode'][] = $sid;
             }
         }
     }
 
-    // STRAND (Song-Based Elements) — skip songs already in Thread/Episode
+    // STRAND (Song-Based Elements) — read related_content directly, first song only
     $elements = get_posts(['post_type'=>'element','posts_per_page'=>-1,'fields'=>'ids']);
     foreach ($elements as $eid) {
         $terms = get_the_terms($eid, 'strand_type');
+        $is_song_based = false;
         if (!is_wp_error($terms) && !empty($terms)) {
             foreach ($terms as $term) {
                 if ($term->slug === 'song-based') {
-                    foreach (kp_get_primary_songs($eid) as $song) {
-                        if (!isset($assigned[$song->ID])) {
-                            $assigned[$song->ID] = true;
-                            $tiers['strand'][] = $song->ID;
-                        }
-                    }
+                    $is_song_based = true;
                     break;
+                }
+            }
+        }
+
+        if ($is_song_based) {
+            $related = get_field('related_content', $eid);
+            if (!empty($related)) {
+                $first = $related[0]; // first song = the song the strand is based on
+                $sid = is_object($first) ? $first->ID : $first;
+                if ($sid && !isset($assigned[$sid])) {
+                    $assigned[$sid] = true;
+                    $tiers['strand'][] = $sid;
                 }
             }
         }
     }
 
-    // FEATURED (Listening Room) — skip songs already in higher tiers
+    // FEATURED (Listening Room) — skip songs already in a higher tier
     $featured = get_posts([
         'post_type'=>'song','posts_per_page'=>-1,'fields'=>'ids',
         'tax_query'=>[['taxonomy'=>'listening_room','field'=>'slug','terms'=>'listening-room']]
     ]);
-    foreach ($featured as $song_id) {
-        if (!isset($assigned[$song_id])) {
-            $assigned[$song_id] = true;
-            $tiers['featured'][] = $song_id;
+    foreach ($featured as $sid) {
+        if (!isset($assigned[$sid])) {
+            $assigned[$sid] = true;
+            $tiers['featured'][] = $sid;
         }
     }
 
     // REFERENCED = everything not assigned above
     $all_songs = get_posts(['post_type'=>'song','posts_per_page'=>-1,'fields'=>'ids']);
-    foreach ($all_songs as $song_id) {
-        if (!isset($assigned[$song_id])) {
-            $tiers['referenced'][] = $song_id;
+    foreach ($all_songs as $sid) {
+        if (!isset($assigned[$sid])) {
+            $tiers['referenced'][] = $sid;
         }
     }
 
