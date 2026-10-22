@@ -31,68 +31,49 @@ function child_theme_enqueue_custom_fonts() {
 }
 add_action('wp_enqueue_scripts', 'child_theme_enqueue_custom_fonts');
 
-
 // ==========================================
-// SMART CONDITIONAL CSS LOADER
+// 1. PERMANENT CSS LOADER (assets/css/)
 // ==========================================
-function smart_conditional_css_loader() {
-    if (is_admin()) return; // Never run in admin
-
+function enqueue_css_files() {
     $base_path = get_stylesheet_directory() . '/assets/css';
     $base_uri  = get_stylesheet_directory_uri() . '/assets/css';
-
-    // Helper to enqueue safely
-    $enqueue = function($handle, $file) use ($base_path, $base_uri) {
-        $uri = str_replace($base_path, $base_uri, $file);
-        wp_enqueue_style($handle, $uri, [], filemtime($file));
-    };
-
-    // 1. GLOBAL (Always load on standard pages)
-    $global_files = glob("{$base_path}/global/*.css");
-    if ($global_files) {
-        foreach ($global_files as $file) $enqueue('global-' . basename($file, '.css'), $file);
-    }
-
-    // 2. SHARED COMPONENTS (Load on all standard pages)
-    // Since Listening Room skips wp_head(), it naturally ignores these.
-    $shared_folders = ['components', 'components/footnotes', 'components/tools', 'components/portals'];
-    foreach ($shared_folders as $folder) {
-        $files = glob("{$base_path}/{$folder}/*.css");
-        if ($files) {
-            foreach ($files as $file) $enqueue('shared-' . basename($file, '.css'), $file);
-        }
-    }
-
-    // 3. PAGES (Conditional based on page slug matching filename)
-    $page_files = glob("{$base_path}/pages/*.css");
-    if ($page_files) {
-        foreach ($page_files as $file) {
-            $slug = basename($file, '.css');
-            $load = false;
-            
-            // Map specific slugs to their WP conditionals
-            if ($slug === 'home' && (is_front_page() || is_page('home'))) $load = true;
-            elseif ($slug === 'listening-room' && (is_page('listening-room') || is_page_template('template-listening-room-full.php'))) $load = true;
-            elseif (is_page($slug)) $load = true; // Fallback for any other page slug
-            
-            if ($load) $enqueue('page-' . $slug, $file);
-        }
-    }
-
-    // 4. CPTs (Conditional based on post type matching filename)
-    $cpt_files = glob("{$base_path}/cpt/*.css");
-    if ($cpt_files) {
-        foreach ($cpt_files as $file) {
-            $slug = basename($file, '.css');
-            if ($slug === 'artist-heads') {
-                if (is_singular('artist') || is_post_type_archive('artist')) $enqueue('cpt-' . $slug, $file);
-            } else {
-                if (is_singular($slug) || is_post_type_archive($slug)) $enqueue('cpt-' . $slug, $file);
+    
+    $folders = [
+        'global'     => glob("{$base_path}/global/*.css"),
+        'cpt'        => glob("{$base_path}/cpt/*.css"),
+        'pages'      => glob("{$base_path}/pages/*.css"),
+        'components' => glob("{$base_path}/components/*.css"),
+        'footnotes'  => glob("{$base_path}/components/footnotes/*.css"),
+        'tools'      => glob("{$base_path}/components/tools/*.css"),
+        'portals'    => glob("{$base_path}/components/portals/*.css"),
+        'admin'      => glob("{$base_path}/admin/*.css"),
+    ];
+    
+    foreach ($folders as $folder_name => $files) {
+        if (is_array($files)) {
+            foreach ($files as $file_path) {
+                $file_name = basename($file_path);
+                $handle = 'css-' . $folder_name . '-' . basename($file_name, '.css');
+                $relative_path = str_replace($base_path . '/', '', $file_path);
+                wp_enqueue_style($handle, "{$base_uri}/{$relative_path}", [], filemtime($file_path));
             }
         }
     }
 }
-add_action('wp_enqueue_scripts', 'smart_conditional_css_loader');
+add_action('wp_enqueue_scripts', 'enqueue_css_files');
+
+
+function lr_enqueue_css() {
+    if (is_page_template('listening-room.php')) {
+        wp_enqueue_style(
+            'listening-room',
+            get_stylesheet_directory_uri() . '/assets/css/pages/listening-room.css',
+            [],
+            filemtime(get_stylesheet_directory() . '/assets/css/pages/listening-room.css')
+        );
+    }
+}
+add_action('wp_enqueue_scripts', 'lr_enqueue_css');
 
 
 // === KEYBOARD NAVIGATION SCRIPT ===
