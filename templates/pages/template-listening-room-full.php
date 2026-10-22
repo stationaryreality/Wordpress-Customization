@@ -11,7 +11,6 @@ $groups = get_terms([
     'order'      => 'ASC',
 ]);
 
-// Separate ungrouped
 $ungrouped = null;
 foreach ($groups as $key => $group) {
     if ($group->slug === 'ungrouped') {
@@ -38,10 +37,30 @@ function lr_get_songs($group_slug) {
         while ($songs->have_posts()) {
             $songs->the_post();
             $cover   = get_field('cover_image');
+            
+            // 1. Clean Title: Remove trailing parentheses like " (Rusted Root)"
+            $raw_title = get_the_title();
+            $clean_title = preg_replace('/\s*\([^)]+\)\s*$/', '', $raw_title);
+            
+            // 2. Fetch Artist (Checks ACF Post Object, ACF Text, then Taxonomy fallback)
+            $artist_name = 'Unknown Artist';
+            $artist_field = get_field('artist'); // Update 'artist' if your ACF field name is different
+            if ($artist_field) {
+                if (is_object($artist_field)) $artist_name = $artist_field->post_title;
+                elseif (is_array($artist_field) && isset($artist_field[0])) $artist_name = is_object($artist_field[0]) ? $artist_field[0]->post_title : $artist_field[0];
+                elseif (is_string($artist_field)) $artist_name = $artist_field;
+            } else {
+                $terms = get_the_terms(get_the_ID(), 'artist'); // Update 'artist' if your taxonomy is different
+                if ($terms && !is_wp_error($terms)) $artist_name = $terms[0]->name;
+            }
+
             $results[] = [
-                'title'   => get_the_title(),
-                'yt_url'  => get_field('youtube_url'), // ← confirm ACF field name
+                'id'      => get_the_ID(),
+                'title'   => $clean_title,
+                'artist'  => $artist_name,
+                'yt_url'  => get_field('youtube_url'),
                 'cover'   => $cover ? $cover['sizes']['thumbnail'] : '',
+                'link'    => get_permalink(),
             ];
         }
         wp_reset_postdata();
@@ -69,324 +88,13 @@ if ($ungrouped) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Listening Room — <?php bloginfo('name'); ?></title>
-<style>
-/* ══════════════════════════════════════════
-   THE LISTENING ROOM — FULL PAGE
-   ══════════════════════════════════════════ */
-
-*, *::before, *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
-  background: #0e0e12;
-  color: #e0e0e0;
-  overflow: hidden; /* we handle scrolling inside panels */
-  height: 100vh;
-}
-
-
-/* ── LAYOUT: Two fixed panels ── */
-.lr-left {
-  position: fixed;
-  top: 0; left: 0; bottom: 0;
-  width: 42%;
-  overflow-y: auto;
-  padding: 48px 36px 80px;
-  border-right: 1px solid rgba(255,255,255,0.06);
-  scrollbar-width: thin;
-  scrollbar-color: #333 transparent;
-}
-
-.lr-left::-webkit-scrollbar {
-  width: 5px;
-}
-.lr-left::-webkit-scrollbar-track {
-  background: transparent;
-}
-.lr-left::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 10px;
-}
-
-.lr-right {
-  position: fixed;
-  top: 0; right: 0; bottom: 0;
-  width: 58%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
-  background: #0a0a0e;
-}
-
-
-/* ── LEFT PANEL: Header ── */
-.lr-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: #666;
-  text-decoration: none;
-  font-size: 13px;
-  letter-spacing: 0.5px;
-  margin-bottom: 40px;
-  transition: color 0.2s;
-}
-
-.lr-back:hover {
-  color: #fff;
-}
-
-.lr-page-title {
-  font-size: 28px;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 8px;
-  letter-spacing: -0.5px;
-}
-
-.lr-page-sub {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 48px;
-  line-height: 1.6;
-}
-
-
-/* ── LEFT PANEL: Groups & Tracks ── */
-.lr-group {
-  margin-bottom: 36px;
-}
-
-.lr-group-name {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2.5px;
-  color: #555;
-  margin-bottom: 14px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-
-.lr-track {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  width: 100%;
-  padding: 10px 12px;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  cursor: pointer;
-  transition: background 0.15s ease;
-  text-align: left;
-  font-family: inherit;
-}
-
-.lr-track:hover {
-  background: rgba(255,255,255,0.05);
-}
-
-.lr-track.is-active {
-  background: rgba(255,255,255,0.08);
-}
-
-.lr-track.is-active .lr-track-name {
-  color: #fff;
-  font-weight: 600;
-}
-
-.lr-track-thumb {
-  width: 44px;
-  height: 44px;
-  border-radius: 6px;
-  object-fit: cover;
-  flex-shrink: 0;
-  background: #1a1a1f;
-}
-
-.lr-track-name {
-  font-size: 14px;
-  color: #aaa;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 0;
-}
-
-.lr-track-eq {
-  margin-left: auto;
-  flex-shrink: 0;
-  display: flex;
-  align-items: flex-end;
-  gap: 2px;
-  height: 16px;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.lr-track:hover .lr-track-eq,
-.lr-track.is-active .lr-track-eq {
-  opacity: 1;
-}
-
-/* Tiny animated equalizer bars */
-.lr-track-eq span {
-  display: block;
-  width: 3px;
-  background: #666;
-  border-radius: 1px;
-  animation: none;
-}
-
-.lr-track.is-active .lr-track-eq span {
-  background: #fff;
-  animation: lr-eq 0.8s ease-in-out infinite alternate;
-}
-
-.lr-track-eq span:nth-child(1) { height: 6px; animation-delay: 0s; }
-.lr-track-eq span:nth-child(2) { height: 12px; animation-delay: 0.2s; }
-.lr-track-eq span:nth-child(3) { height: 8px; animation-delay: 0.4s; }
-
-@keyframes lr-eq {
-  from { transform: scaleY(0.4); }
-  to   { transform: scaleY(1); }
-}
-
-
-/* ── RIGHT PANEL: Player ── */
-.lr-player-shell {
-  width: 100%;
-  max-width: 820px;
-}
-
-.lr-video-frame {
-  position: relative;
-  width: 100%;
-  padding-top: 56.25%;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #111;
-  box-shadow: 0 20px 80px rgba(0,0,0,0.6);
-}
-
-.lr-video-frame iframe {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-/* Placeholder state */
-.lr-placeholder {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  color: #444;
-  font-size: 15px;
-}
-
-.lr-placeholder svg {
-  opacity: 0.25;
-}
-
-/* Now Playing bar below video */
-.lr-now-playing {
-  margin-top: 24px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.lr-np-art {
-  width: 52px;
-  height: 52px;
-  border-radius: 8px;
-  object-fit: cover;
-  background: #1a1a1f;
-  display: none;
-}
-
-.lr-np-text {
-  min-width: 0;
-}
-
-.lr-np-label {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #555;
-  margin-bottom: 3px;
-}
-
-.lr-np-title {
-  font-size: 17px;
-  font-weight: 600;
-  color: #fff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.lr-np-group {
-  font-size: 13px;
-  color: #666;
-  margin-top: 2px;
-}
-
-
-/* ── RESPONSIVE: Stack on mobile ── */
-@media (max-width: 900px) {
-  body {
-    overflow: auto;
-    height: auto;
-  }
-
-  .lr-left {
-    position: relative;
-    width: 100%;
-    border-right: none;
-    padding: 32px 20px 40px;
-  }
-
-  .lr-right {
-    position: relative;
-    width: 100%;
-    padding: 24px 20px 60px;
-  }
-
-  .lr-left {
-    order: 2;
-  }
-  .lr-right {
-    order: 1;
-  }
-
-  body {
-    display: flex;
-    flex-direction: column;
-  }
-}
-</style>
+<!-- External CSS loaded manually since we skip wp_head() -->
+<link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri(); ?>/assets/css/pages/listening-room.css?v=<?php echo time(); ?>">
 </head>
 <body>
+
+<!-- Wrap everything in .lr-app to guarantee 100% CSS isolation -->
+<div class="lr-app">
 
 <!-- ═══════ LEFT PANEL: PLAYLISTS ═══════ -->
 <div class="lr-left">
@@ -409,14 +117,19 @@ body {
         <button class="lr-track"
                 data-youtube-url="<?php echo esc_url($song['yt_url']); ?>"
                 data-title="<?php echo esc_attr($song['title']); ?>"
+                data-artist="<?php echo esc_attr($song['artist']); ?>"
                 data-cover="<?php echo esc_url($song['cover']); ?>"
-                data-group="<?php echo esc_attr($group['name']); ?>">
+                data-group="<?php echo esc_attr($group['name']); ?>"
+                data-link="<?php echo esc_url($song['link']); ?>">
 
           <img class="lr-track-thumb"
                src="<?php echo esc_url($song['cover'] ?: 'https://via.placeholder.com/88?text=%E2%99%AB'); ?>"
                alt="" loading="lazy">
 
-          <span class="lr-track-name"><?php echo esc_html($song['title']); ?></span>
+          <div class="lr-track-info">
+              <span class="lr-track-name"><?php echo esc_html($song['title']); ?></span>
+              <span class="lr-track-artist"><?php echo esc_html($song['artist']); ?></span>
+          </div>
 
           <span class="lr-track-eq">
             <span></span><span></span><span></span>
@@ -456,13 +169,24 @@ body {
       <div class="lr-np-text">
         <p class="lr-np-label">Now Playing</p>
         <h4 class="lr-np-title" id="lr-np-title">—</h4>
+        <p class="lr-np-artist" id="lr-np-artist"></p>
         <p class="lr-np-group" id="lr-np-group"></p>
       </div>
+      
+      <!-- Link to Song CPT -->
+      <a href="#" id="lr-np-link" target="_blank" rel="noopener noreferrer" class="lr-np-link" title="View Song Archive Page">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <line x1="10" y1="14" x2="21" y2="3"></line>
+        </svg>
+      </a>
     </div>
 
   </div>
 </div>
 
+</div> <!-- End .lr-app -->
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -471,8 +195,10 @@ document.addEventListener('DOMContentLoaded', function () {
   var container   = document.getElementById('lr-video-container');
   var placeholder = document.getElementById('lr-placeholder');
   var npTitle     = document.getElementById('lr-np-title');
+  var npArtist    = document.getElementById('lr-np-artist');
   var npGroup     = document.getElementById('lr-np-group');
   var npArt       = document.getElementById('lr-np-art');
+  var npLink      = document.getElementById('lr-np-link');
   var tracks      = document.querySelectorAll('.lr-track');
 
   function getYTID(url) {
@@ -482,11 +208,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
   tracks.forEach(function (track) {
     track.addEventListener('click', function () {
-      var url   = this.getAttribute('data-youtube-url');
-      var title = this.getAttribute('data-title');
-      var cover = this.getAttribute('data-cover');
-      var group = this.getAttribute('data-group');
-      var ytId  = getYTID(url);
+      var url    = this.getAttribute('data-youtube-url');
+      var title  = this.getAttribute('data-title');
+      var artist = this.getAttribute('data-artist');
+      var cover  = this.getAttribute('data-cover');
+      var group  = this.getAttribute('data-group');
+      var link   = this.getAttribute('data-link');
+      var ytId   = getYTID(url);
 
       if (!ytId) return;
 
@@ -500,11 +228,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Update Now Playing
       npTitle.textContent = title;
+      npArtist.textContent = artist;
       npGroup.textContent = group;
+      npLink.href = link;
 
       if (cover) {
         npArt.src = cover;
         npArt.style.display = 'block';
+      } else {
+        npArt.style.display = 'none';
       }
 
       // Highlight active track
