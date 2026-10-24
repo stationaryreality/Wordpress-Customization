@@ -4,6 +4,8 @@ $bio           = get_field('bio', $artist_id);
 $portrait      = get_field('portrait_image', $artist_id);
 $img_url       = $portrait ? $portrait['sizes']['medium'] : '';
 $wiki_slug     = get_field('wikipedia_slug', $artist_id);
+$group_members = get_field('group_members', $artist_id);
+$member_of     = get_field('member_of', $artist_id);
 
 // Query songs where this artist is the primary artist
 $primary_songs = get_posts([
@@ -62,6 +64,46 @@ usort($songs, function($a, $b) {
       <?php the_content(); ?>
     <?php endif; ?>
   </div>
+
+  <?php // ── GROUP MEMBERS (this artist IS a group) ── ?>
+  <?php if (!empty($group_members)): ?>
+    <div class="cpt-artist-members">
+      <h3 class="cpt-artist-members-title">Members</h3>
+      <div class="cpt-artist-members-grid">
+        <?php foreach ($group_members as $member):
+          $member_portrait = get_field('portrait_image', $member->ID);
+          $member_thumb    = $member_portrait ? $member_portrait['sizes']['thumbnail'] : '';
+        ?>
+          <a href="<?php echo esc_url(get_permalink($member->ID)); ?>" class="cpt-artist-member-link">
+            <?php if ($member_thumb): ?>
+              <img src="<?php echo esc_url($member_thumb); ?>" alt="<?php echo esc_attr(get_the_title($member->ID)); ?>" class="cpt-artist-member-thumb">
+            <?php endif; ?>
+            <span class="cpt-artist-member-name"><?php echo esc_html(get_the_title($member->ID)); ?></span>
+          </a>
+        <?php endforeach; ?>
+      </div>
+    </div>
+  <?php endif; ?>
+
+  <?php // ── MEMBER OF (this artist belongs to groups) ── ?>
+  <?php if (!empty($member_of)): ?>
+    <div class="cpt-artist-memberof">
+      <h3 class="cpt-artist-memberof-title">Member of</h3>
+      <div class="cpt-artist-memberof-grid">
+        <?php foreach ($member_of as $group):
+          $group_portrait = get_field('portrait_image', $group->ID);
+          $group_thumb    = $group_portrait ? $group_portrait['sizes']['thumbnail'] : '';
+        ?>
+          <a href="<?php echo esc_url(get_permalink($group->ID)); ?>" class="cpt-artist-memberof-link">
+            <?php if ($group_thumb): ?>
+              <img src="<?php echo esc_url($group_thumb); ?>" alt="<?php echo esc_attr(get_the_title($group->ID)); ?>" class="cpt-artist-memberof-thumb">
+            <?php endif; ?>
+            <span class="cpt-artist-memberof-name"><?php echo esc_html(get_the_title($group->ID)); ?></span>
+          </a>
+        <?php endforeach; ?>
+      </div>
+    </div>
+  <?php endif; ?>
 
   <?php
   // --- LYRICS: explicit lyric_artist, otherwise fall back to song primary ---

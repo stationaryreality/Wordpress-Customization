@@ -134,3 +134,68 @@
 .cpt-artist-member-link:hover .cpt-artist-member-name {
     color: #0066cc;
 }
+
+/* Group Members & Member Of sections */
+.cpt-artist-members,
+.cpt-artist-memberof {
+  text-align: center;
+  margin: 2em 0;
+}
+
+.cpt-artist-members-title,
+.cpt-artist-memberof-title {
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666;
+  margin-bottom: 1em;
+}
+
+.cpt-artist-members-grid,
+.cpt-artist-memberof-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1em;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.cpt-artist-member-link,
+.cpt-artist-memberof-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s;
+}
+
+.cpt-artist-member-link:hover,
+.cpt-artist-memberof-link:hover {
+  transform: translateY(-2px);
+}
+
+.cpt-artist-member-thumb,
+.cpt-artist-memberof-thumb {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.cpt-artist-member-name,
+.cpt-artist-memberof-name {
+  font-size: 0.85rem;
+}
+
+/* Adjust for larger groups (5+ items wrap naturally) */
+@media (max-width: 480px) {
+  .cpt-artist-member-thumb,
+  .cpt-artist-memberof-thumb {
+    width: 50px;
+    height: 50px;
+  }
+}
