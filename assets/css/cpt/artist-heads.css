@@ -183,3 +183,65 @@
     height: 50px;
   }
 }
+
+/* Song Page - Primary Artist */
+.cpt-song-artist-primary {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0 10px;
+}
+
+/* Song Page - Featuring Section */
+.cpt-song-featuring {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.cpt-song-featuring-label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #999;
+    margin-bottom: 8px;
+}
+
+.cpt-song-featuring-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.cpt-song-featuring-thumb {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e0e0e0;
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+.cpt-song-artist-node:hover .cpt-song-featuring-thumb {
+    border-color: #0066cc;
+    transform: scale(1.05);
+}
+
+/* Song Page - Also Featuring (text only) */
+.cpt-song-also-featuring {
+    text-align: center;
+    margin: 8px 0 20px;
+}
+
+.cpt-song-also-featuring-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #999;
+    margin-right: 4px;
+}
+
+.cpt-song-also-featuring-names {
+    font-size: 0.9rem;
+    color: #555;
+}
