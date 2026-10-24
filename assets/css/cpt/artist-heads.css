@@ -94,48 +94,10 @@
 }
 
 
-/* Artist Page - Members Pyramid */
-.cpt-artist-members {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    margin: 20px 0 30px;
-    flex-wrap: wrap;
-}
+/* =========================================
+   Artist Page — Members & Member Of
+   ========================================= */
 
-.cpt-artist-member-link {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-decoration: none;
-    gap: 6px;
-}
-
-.cpt-artist-member-thumb {
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #e0e0e0;
-    transition: border-color 0.2s, transform 0.2s;
-}
-
-.cpt-artist-member-link:hover .cpt-artist-member-thumb {
-    border-color: #0066cc;
-    transform: scale(1.05);
-}
-
-.cpt-artist-member-name {
-    font-size: 0.85em;
-    color: #444;
-    transition: color 0.2s;
-}
-
-.cpt-artist-member-link:hover .cpt-artist-member-name {
-    color: #0066cc;
-}
-
-/* Group Members & Member Of sections */
 .cpt-artist-members,
 .cpt-artist-memberof {
   display: block;
@@ -164,6 +126,7 @@
   margin: 0 auto;
 }
 
+/* --- Shared link wrapper --- */
 .cpt-artist-member-link,
 .cpt-artist-memberof-link {
   display: flex;
@@ -180,17 +143,37 @@
   transform: translateY(-2px);
 }
 
+/* --- Thumbnails --- */
 .cpt-artist-member-thumb,
 .cpt-artist-memberof-thumb {
   width: 60px;
   height: 60px;
   border-radius: 50%;
   object-fit: cover;
+  border: 2px solid #e0e0e0;
+  transition: border-color 0.2s, transform 0.2s;
 }
 
+/* Blue border + scale on hover — Members and Member Of */
+.cpt-artist-member-link:hover .cpt-artist-member-thumb,
+.cpt-artist-memberof-link:hover .cpt-artist-memberof-thumb {
+  border-color: #0066cc;
+  transform: scale(1.05);
+}
+
+/* --- Names --- */
 .cpt-artist-member-name,
 .cpt-artist-memberof-name {
   font-size: 0.85rem;
+  color: #444;
+  text-align: center;
+  transition: color 0.2s;
+}
+
+/* Blue name on hover — Members and Member Of */
+.cpt-artist-member-link:hover .cpt-artist-member-name,
+.cpt-artist-memberof-link:hover .cpt-artist-memberof-name {
+  color: #0066cc;
 }
 
 @media (max-width: 480px) {
