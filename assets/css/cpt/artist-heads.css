@@ -139,11 +139,12 @@
 .cpt-artist-members,
 .cpt-artist-memberof {
   text-align: center;
-  margin: 2em 0;
+  margin: 1.5em 0;
 }
 
 .cpt-artist-members-title,
 .cpt-artist-memberof-title {
+  text-align: center;
   font-size: 1rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -191,7 +192,6 @@
   font-size: 0.85rem;
 }
 
-/* Adjust for larger groups (5+ items wrap naturally) */
 @media (max-width: 480px) {
   .cpt-artist-member-thumb,
   .cpt-artist-memberof-thumb {

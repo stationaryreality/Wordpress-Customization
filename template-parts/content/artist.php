@@ -55,16 +55,6 @@ usort($songs, function($a, $b) {
 
   <h1><?php the_title(); ?></h1>
 
-  <div class="cpt-artist-bio">
-    <?php if ($bio): ?>
-      <?php echo wp_kses_post($bio); ?>
-    <?php elseif ($wiki_slug): ?>
-      <p><?php echo kp_get_wikipedia_intro($wiki_slug); ?></p>
-    <?php else: ?>
-      <?php the_content(); ?>
-    <?php endif; ?>
-  </div>
-
   <?php // ── GROUP MEMBERS (this artist IS a group) ── ?>
   <?php if (!empty($group_members)): ?>
     <div class="cpt-artist-members">
@@ -104,6 +94,16 @@ usort($songs, function($a, $b) {
       </div>
     </div>
   <?php endif; ?>
+
+  <div class="cpt-artist-bio">
+    <?php if ($bio): ?>
+      <?php echo wp_kses_post($bio); ?>
+    <?php elseif ($wiki_slug): ?>
+      <p><?php echo kp_get_wikipedia_intro($wiki_slug); ?></p>
+    <?php else: ?>
+      <?php the_content(); ?>
+    <?php endif; ?>
+  </div>
 
   <?php
   // --- LYRICS: explicit lyric_artist, otherwise fall back to song primary ---
