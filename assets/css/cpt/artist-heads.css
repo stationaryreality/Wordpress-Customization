@@ -138,6 +138,7 @@
 /* Group Members & Member Of sections */
 .cpt-artist-members,
 .cpt-artist-memberof {
+  display: block;
   text-align: center;
   margin: 1.5em 0;
 }
