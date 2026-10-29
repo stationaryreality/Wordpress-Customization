@@ -153,6 +153,9 @@ function get_cpt_metadata($cpt_name = '') {
         'show'              => ['title' => 'TV Shows Referenced',       'emoji' => '📺', 'link' => '/tv-shows-referenced/'],
         'game'              => ['title' => 'Video Games',               'emoji' => '🎮', 'link' => '/video-games/'],
         'video'             => ['title' => 'Video Room',                'emoji' => '📼', 'link' => '/video-room/'],
+        'rapper'            => ['title' => 'Rap Artists',               'emoji' => '🎙️', 'link' => '/rap-artists/'],
+        'rap'               => ['title' => 'Rap Songs',                 'emoji' => '🎧', 'link' => '/rap-songs/'],
+        'raplyric'          => ['title' => 'Rap Excerpts',              'emoji' => '✍️', 'link' => '/rap-lyrics/'],
     ];
 
     return $cpt_name ? ($all[$cpt_name] ?? null) : $all;
@@ -191,7 +194,9 @@ function site_get_navigation_sections() {
             [ 'title' => 'Video Games', 'slug' => 'video-games' ],
             [ 'title' => 'Artists Featured', 'slug' => 'artists-featured' ],
             [ 'title' => 'Songs Featured', 'slug' => 'songs-featured' ],
-            [ 'title' => 'Rap Pages', 'slug' => 'rap-pages' ],
+            [ 'title' => 'Rap Artists', 'slug' => 'rap-artists' ],
+            [ 'title' => 'Rap Songs', 'slug' => 'rap-songs' ],
+            [ 'title' => 'Rap Lyrics', 'slug' => 'rap-lyrics' ],
         ],
         'Research' => [
             [ 'title' => 'Excerpt Library', 'slug' => 'excerpt-library' ],
