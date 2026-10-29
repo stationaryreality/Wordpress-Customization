@@ -18,7 +18,7 @@ function cpt_nav_chart_shortcode() {
         'artist','book','concept','excerpt','fragment','image','lyric',
         'movie','organization','portal','profile','quote','song',
         'theme','topic','chapter','element','show', 'game', 'video',
-        'rapper','rap','raplyric'
+        'rapper','rap','raplyric',
     ];
 
     // Collect counts
