@@ -401,7 +401,8 @@ add_action('wp_footer', 'theme_css_loader_debug', 99);
 function enqueue_keyboard_navigation() {
     // Only load on single Image or Concept pages
         if (is_singular(['image', 'concept', 'artist', 'book', 'chapter', 'fragment', 'element', 'excerpt', 
-        'game', 'movie', 'show', 'lyric', 'organization', 'profile', 'quote', 'song', 'video'])) {
+        'game', 'movie', 'show', 'lyric', 'organization', 'profile', 'quote', 'song', 'video', 'rap', 'rapper',
+        'raplyric'])) {
             wp_enqueue_script(
             'keyboard-nav',
             get_stylesheet_directory_uri() . '/assets/js/keyboard-nav.js',

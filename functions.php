@@ -22,7 +22,11 @@ add_action('load-edit.php', function () {
         'image',
         'excerpt',
         'show',
-        'game'
+        'game',
+        'rap',
+        'rapper',
+        'raplyric'
+
     );
 
     if (in_array($screen->post_type, $alphabetical_cpts)) {
