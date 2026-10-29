@@ -198,6 +198,8 @@ function site_get_navigation_sections() {
             [ 'title' => 'Video Games', 'slug' => 'video-games' ],
             [ 'title' => 'Artists Featured', 'slug' => 'artists-featured' ],
             [ 'title' => 'Songs Featured', 'slug' => 'songs-featured' ],
+        ],
+        'Rap Pages' => [
             [ 'title' => 'Rap Artists', 'slug' => 'rap-artists' ],
             [ 'title' => 'Rap Songs', 'slug' => 'rap-songs' ],
             [ 'title' => 'Rap Lyrics', 'slug' => 'rap-lyrics' ],
