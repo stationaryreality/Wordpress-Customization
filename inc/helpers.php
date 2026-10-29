@@ -18,7 +18,7 @@ function cpt_nav_chart_shortcode() {
         'artist','book','concept','excerpt','fragment','image','lyric',
         'movie','organization','portal','profile','quote','song',
         'theme','topic','chapter','element','show', 'game', 'video',
-        'rapper','rap','raplyric',
+        'rapper','rap','raplyric'
     ];
 
     // Collect counts
@@ -124,7 +124,48 @@ function site_last_updated_shortcode() {
 
 add_shortcode('site_last_updated', 'site_last_updated_shortcode');
 
+function get_content_hub_override($post_id = 0) {
 
+    $post_id = $post_id ?: get_the_ID();
+
+    switch (get_post_type($post_id)) {
+
+        case 'artist':
+
+            if (has_term('rapper', 'artist_type', $post_id)) {
+                return [
+                    'title' => 'Rap Pages',
+                    'url'   => home_url('/rap-pages/')
+                ];
+            }
+
+            break;
+
+        case 'song':
+
+            if (has_term('rap', 'song_category', $post_id)) {
+                return [
+                    'title' => 'Rap Pages',
+                    'url'   => home_url('/rap-pages/')
+                ];
+            }
+
+            break;
+
+        case 'lyric':
+
+            if (has_term('rap', 'song_category', $post_id)) {
+                return [
+                    'title' => 'Rap Pages',
+                    'url'   => home_url('/rap-pages/')
+                ];
+            }
+
+            break;
+    }
+
+    return false;
+}
 
 /**
  * Determine whether a taxonomy term is a system-only term.
