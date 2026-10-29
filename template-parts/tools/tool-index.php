@@ -3,7 +3,8 @@
 $post_types = [
  'artist','profile','book','concept','movie','quote','lyric',
  'organization','image','song','chapter','video',
- 'excerpt','fragment','element','show','game','portal'
+ 'excerpt','fragment','element','show','game','portal',
+ 'rapper', 'rap', 'raplyric'
 ];
 
 $entries = [];
