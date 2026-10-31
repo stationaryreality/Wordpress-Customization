@@ -105,13 +105,13 @@ usort($songs, function($a, $b) {
     <?php endif; ?>
   </div>
 
+  
   <?php
-  // --- RAP LYRICS: explicit lyric_artist, otherwise fall back to rap primary ---
+  // --- RAP LYRICS ---
   $lyrics = [];
 
   if (!empty($songs)) {
       foreach ($songs as $song) {
-
           $song_lyrics = get_posts([
               'post_type'      => 'raplyric', 
               'posts_per_page' => -1,
@@ -122,11 +122,19 @@ usort($songs, function($a, $b) {
               ]
           ]);
 
+          // Get the song's primary artist for group logic
+          $song_primary = get_field('song_artist', $song->ID);
+          $pid = $song_primary ? (is_object($song_primary) ? $song_primary->ID : $song_primary) : 0;
+
           foreach ($song_lyrics as $lyric) {
               $lyric_artists = get_field('lyric_artist', $lyric->ID);
 
-              // A: lyric_artist is explicitly set → only listed artists get it
-              if (!empty($lyric_artists) && is_array($lyric_artists)) {
+              // 1. IF THIS RAPPER IS A GROUP: They get ALL lyrics from their primary songs
+              if (!empty($group_members) && $pid == $rapper_id) {
+                  $lyrics[$lyric->ID] = $lyric;
+              }
+              // 2. IF THIS IS AN INDIVIDUAL: Check if explicitly in lyric_artist
+              else if (!empty($lyric_artists) && is_array($lyric_artists)) {
                   foreach ($lyric_artists as $l_artist) {
                       $lid = is_object($l_artist) ? $l_artist->ID : $l_artist;
                       if ($lid == $rapper_id) {
@@ -135,14 +143,9 @@ usort($songs, function($a, $b) {
                       }
                   }
               }
-              // B: lyric_artist is blank → belongs to the song's primary artist
-              else {
-                  $song_primary = get_field('song_artist', $song->ID);
-                  $pid = $song_primary ? (is_object($song_primary) ? $song_primary->ID : $song_primary) : 0;
-
-                  if ($pid == $rapper_id) {
-                      $lyrics[$lyric->ID] = $lyric;
-                  }
+              // 3. FALLBACK: lyric_artist is blank, belongs to song's primary artist
+              else if ($pid == $rapper_id) {
+                  $lyrics[$lyric->ID] = $lyric;
               }
           }
       }
