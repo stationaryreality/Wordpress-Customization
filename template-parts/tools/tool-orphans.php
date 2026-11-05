@@ -68,7 +68,7 @@ if ($containers->have_posts()) {
 wp_reset_postdata();
 
 /* ===== STEP 2: GET SONG GROUP POSTS (For Toggle) ===== */
-// Songs with song_group taxonomy assigned (not the "ungrouped" default)
+// Songs with song_group taxonomy assigned (excluding "ungrouped")
 $grouped_songs = get_posts([
     'post_type'      => ['song', 'rap'],
     'posts_per_page' => -1,
@@ -81,28 +81,27 @@ $grouped_songs = get_posts([
     ],
 ]);
 
-// Exclude songs that only have the "ungrouped" term
+// Exclude songs that ONLY have the "ungrouped" term
 $ungrouped_term = get_term_by('slug', 'ungrouped', 'song_group');
-if ($ungrouped_term) {
-    $ungrouped_only = get_posts([
-        'post_type'      => ['song', 'rap'],
-        'posts_per_page' => -1,
-        'fields'         => 'ids',
-        'tax_query'      => [
-            [
-                'taxonomy' => 'song_group',
-                'field'    => 'term_id',
-                'terms'    => [$ungrouped_term->term_id],
-                'operator' => 'IN',
-            ],
-            [
-                'taxonomy' => 'song_group',
-                'operator' => 'COUNT',
-                'terms'    => 1,
-            ],
-        ],
-    ]);
-    $grouped_songs = array_diff($grouped_songs, $ungrouped_only);
+if ($ungrouped_term && !empty($grouped_songs)) {
+    $filtered = [];
+    foreach ($grouped_songs as $sid) {
+        $terms = get_the_terms($sid, 'song_group');
+        if ($terms && !is_wp_error($terms)) {
+            // Keep only if it has at least one term that ISN'T "ungrouped"
+            $has_real_group = false;
+            foreach ($terms as $t) {
+                if ($t->term_id !== $ungrouped_term->term_id) {
+                    $has_real_group = true;
+                    break;
+                }
+            }
+            if ($has_real_group) {
+                $filtered[] = $sid;
+            }
+        }
+    }
+    $grouped_songs = $filtered;
 }
 
 $grouped_songs_map = !empty($grouped_songs) ? array_flip($grouped_songs) : [];
