@@ -433,10 +433,15 @@ function kp_get_song_tiers() {
         }
     }
 
-    // FEATURED (Listening Room) — skip songs already in a higher tier
+    // FEATURED (Song Groups) — songs with any song_group term assigned
     $featured = get_posts([
         'post_type'=>'song','posts_per_page'=>-1,'fields'=>'ids',
-        'tax_query'=>[['taxonomy'=>'listening_room','field'=>'slug','terms'=>'listening-room']]
+        'tax_query'=>[
+            [
+                'taxonomy'=>'song_group',
+                'operator'=>'EXISTS'
+            ]
+        ]
     ]);
     foreach ($featured as $sid) {
         if (!isset($assigned[$sid])) {
