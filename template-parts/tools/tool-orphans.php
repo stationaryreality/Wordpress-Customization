@@ -1,7 +1,4 @@
 <?php
-// Force errors to show
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 
 /* ===== CONFIG ===== */
 
@@ -12,6 +9,21 @@ $all_types = [
  'organization','image','song',
  'excerpt','show','game',
  'rap', 'rapper', 'raplyric'
+];
+
+/* Relationship fields */
+$relationship_fields = [
+ 'books_cited',
+ 'concepts_referenced',
+ 'excerpts_referenced',
+ 'lyrics_referenced',
+ 'movies_referenced',
+ 'shows_referenced',
+ 'organizations_referenced',
+ 'people_referenced',
+ 'quotes_referenced',
+ 'images_linked',
+ 'games_referenced',
 ];
 
 /* ===== STEP 1: COLLECT REFERENCED IDS ===== */
@@ -37,6 +49,11 @@ while ($containers->have_posts()) {
         }
     }
 
+    // --------------------------------------
+    // Songs are NOT part of Reference Context
+    // yet, so keep the existing logic.
+    // --------------------------------------
+
     $songs = get_field('chapter_songs', get_the_ID());
 
     if ($songs) {
@@ -50,22 +67,29 @@ while ($containers->have_posts()) {
 
 wp_reset_postdata();
 
-/* ===== STEP 2: GET SONG GROUP SONGS ===== */
-$song_group_songs = get_posts([
-    'post_type'      => ['song', 'rap'],
-    'posts_per_page' => -1,
-    'fields'         => 'ids',
-    'tax_query'      => [
-        [
-            'taxonomy' => 'song_group',
-            'operator' => 'EXISTS',
+    // --------------------------------------
+    // Songs in the Listening Room are NOT orphans
+    // --------------------------------------
+    $lr_songs = get_posts([
+        'post_type'      => ['song', 'rap'],
+        'posts_per_page' => -1,
+        'fields'         => 'ids',
+        'tax_query'      => [
+            [
+                'taxonomy' => 'song_group',
+                'operator' => 'EXISTS',
+            ],
         ],
-    ],
-]);
+    ]);
 
-$song_group_map = array_flip($song_group_songs);
+    foreach ($lr_songs as $lr_id) {
+        $referenced_ids[$lr_id] = true;
+    }
 
-/* ===== STEP 3: GET ALL POSTS ===== */
+    // Convert the array keys (IDs) back to a flat array
+$referenced_ids = array_keys($referenced_ids);
+
+/* ===== STEP 2: GET ALL POSTS ===== */
 
 $q = new WP_Query([
   'post_type'      => $all_types,
@@ -77,8 +101,8 @@ $q = new WP_Query([
 
 $entries = [];
 $type_counts = [];
-$normal_count = 0;
-$song_group_count = 0;
+
+/* ===== STEP 3: FILTER ===== */
 
 while ($q->have_posts()) {
   $q->the_post();
@@ -89,16 +113,13 @@ while ($q->have_posts()) {
   if (!in_array($id, $referenced_ids)) {
 
     $meta  = get_cpt_metadata($type);
-    $emoji = $meta['emoji'] ?? '•';
-    
-    $is_song_group = (($type === 'song' || $type === 'rap') && isset($song_group_map[$id]));
+    $emoji = ($meta && isset($meta['emoji'])) ? $meta['emoji'] : '•';
 
     $entries[] = [
       'title' => get_the_title(),
       'url'   => get_permalink(),
       'emoji' => $emoji,
-      'type'  => $type,
-      'is_song_group' => $is_song_group
+      'type'  => $type
     ];
 
     if (!isset($type_counts[$type])) {
@@ -106,12 +127,6 @@ while ($q->have_posts()) {
     }
 
     $type_counts[$type]++;
-    
-    if ($is_song_group) {
-        $song_group_count++;
-    } else {
-        $normal_count++;
-    }
   }
 }
 
@@ -122,6 +137,7 @@ wp_reset_postdata();
 usort($entries, fn($a,$b)=>strcasecmp($a['title'],$b['title']));
 ksort($type_counts);
 
+$total_count = count($entries);
 ?>
 
 <section class="tool-orphans">
@@ -129,20 +145,8 @@ ksort($type_counts);
     <h2>Orphans</h2>
 
     <p class="tool-orphans-count">
-        <?php echo number_format($normal_count); ?> standard orphans
-        <?php if ($song_group_count > 0): ?>
-            &nbsp;|&nbsp; <span class="song-group-count-text"><?php echo number_format($song_group_count); ?> Song Group orphans (hidden)</span>
-        <?php endif; ?>
+        <?php echo number_format($total_count); ?> orphaned entries - These are CPTs (Custom Post Types) that are not attached to anything, but should be eventually.
     </p>
-
-    <?php if ($song_group_count > 0): ?>
-    <div class="song-group-toggle-wrapper">
-        <label>
-            <input type="checkbox" id="toggle-song-group-orphans">
-            Include Song Group Songs
-        </label>
-    </div>
-    <?php endif; ?>
 
     <?php get_template_part('template-parts/tools/tool', 'filters', [
       'type_counts' => $type_counts
@@ -150,7 +154,7 @@ ksort($type_counts);
 
     <ul class="cpt-clean-list">
         <?php foreach ($entries as $e): ?>
-            <li data-type="<?php echo esc_attr($e['type']); ?>" <?php if($e['is_song_group']) echo 'class="song-group-orphan"'; ?>>
+            <li data-type="<?php echo esc_attr($e['type']); ?>">
                 <span class="entry-emoji">
                     <?php echo esc_html($e['emoji']); ?>
                 </span>
@@ -162,22 +166,3 @@ ksort($type_counts);
     </ul>
 
 </section>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const toggle = document.getElementById('toggle-song-group-orphans');
-    if (toggle) {
-        toggle.addEventListener('change', function() {
-            const wrapper = document.querySelector('.tool-orphans');
-            const countText = document.querySelector('.song-group-count-text');
-            if (this.checked) {
-                wrapper.classList.add('show-song-group');
-                if (countText) countText.textContent = countText.textContent.replace('(hidden)', '(shown)');
-            } else {
-                wrapper.classList.remove('show-song-group');
-                if (countText) countText.textContent = countText.textContent.replace('(shown)', '(hidden)');
-            }
-        });
-    }
-});
-</script>
