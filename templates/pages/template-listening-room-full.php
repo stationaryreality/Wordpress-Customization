@@ -47,9 +47,9 @@ function lr_get_songs($group_slug) {
             $artist_name = 'Unknown Artist';
             
             // Check 'artist' ACF field first, fallback to 'rapper' ACF field just in case
-            $artist_field = get_field('artist');
+            $artist_field = get_field('song_artist');
             if (!$artist_field) {
-                $artist_field = get_field('rapper'); 
+                $artist_field = get_field('song_artist'); 
             }
 
             if ($artist_field) {
