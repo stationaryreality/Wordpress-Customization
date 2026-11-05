@@ -20,8 +20,9 @@ foreach ($groups as $key => $group) {
 }
 
 function lr_get_songs($group_slug) {
+    // 1. UPDATED: Query both 'song' and 'rap' CPTs
     $songs = new WP_Query([
-        'post_type'      => 'song',
+        'post_type'      => ['song', 'rap'], 
         'posts_per_page' => -1,
         'tax_query'      => [
             'relation' => 'AND',
@@ -38,19 +39,30 @@ function lr_get_songs($group_slug) {
             $songs->the_post();
             $cover = get_field('cover_image');
             
-            // 1. Clean Title: Remove trailing parentheses like " (Rusted Root)"
+            // Clean Title: Remove trailing parentheses like " (Rusted Root)"
             $raw_title = get_the_title();
             $clean_title = preg_replace('/\s*\([^)]+\)\s*$/', '', $raw_title);
             
-            // 2. Fetch Artist (Checks ACF Post Object, ACF Text, then Taxonomy fallback)
+            // Fetch Artist 
             $artist_name = 'Unknown Artist';
-            $artist_field = get_field('song_artist'); // Update 'artist' if your ACF field name is different
+            
+            // Check 'artist' ACF field first, fallback to 'rapper' ACF field just in case
+            $artist_field = get_field('artist');
+            if (!$artist_field) {
+                $artist_field = get_field('rapper'); 
+            }
+
             if ($artist_field) {
                 if (is_object($artist_field)) $artist_name = $artist_field->post_title;
                 elseif (is_array($artist_field) && isset($artist_field[0])) $artist_name = is_object($artist_field[0]) ? $artist_field[0]->post_title : $artist_field[0];
                 elseif (is_string($artist_field)) $artist_name = $artist_field;
             } else {
-                $terms = get_the_terms(get_the_ID(), 'artist'); // Update 'artist' if your taxonomy is different
+                // Check 'artist' taxonomy, fallback to 'rapper' taxonomy
+                $terms = get_the_terms(get_the_ID(), 'artist');
+                if (!$terms || is_wp_error($terms)) {
+                    $terms = get_the_terms(get_the_ID(), 'rapper');
+                }
+                
                 if ($terms && !is_wp_error($terms)) $artist_name = $terms[0]->name;
             }
 
@@ -60,7 +72,8 @@ function lr_get_songs($group_slug) {
                 'artist'  => $artist_name,
                 'yt_url'  => get_field('youtube_url'),
                 'cover'   => $cover ? $cover['sizes']['thumbnail'] : '',
-                'link'    => get_permalink(),
+                // get_permalink() automatically knows how to build the URL for both CPTs
+                'link'    => get_permalink(), 
             ];
         }
         wp_reset_postdata();
