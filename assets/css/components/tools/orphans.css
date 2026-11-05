@@ -85,3 +85,38 @@
     color: #007cba;
     text-decoration: underline;
 }
+
+/* Hide LR songs by default */
+.tool-orphans .cpt-clean-list li.lr-orphan {
+    display: none;
+}
+
+/* Show LR songs when toggle is active */
+.tool-orphans.show-lr .cpt-clean-list li.lr-orphan {
+    display: flex;
+}
+
+/* Style the toggle wrapper */
+.tool-orphans .lr-toggle-wrapper {
+    padding: 0.75em 1em;
+    background: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 1.5em;
+}
+
+.tool-orphans .lr-toggle-wrapper label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+    color: #444;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.tool-orphans .lr-count-text {
+    color: #888;
+    font-style: italic;
+}
