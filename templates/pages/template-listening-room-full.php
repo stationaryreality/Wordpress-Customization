@@ -44,7 +44,7 @@ function lr_get_songs($group_slug) {
             
             // 2. Fetch Artist (Checks ACF Post Object, ACF Text, then Taxonomy fallback)
             $artist_name = 'Unknown Artist';
-            $artist_field = get_field('artist'); // Update 'artist' if your ACF field name is different
+            $artist_field = get_field('song_artist'); // Update 'artist' if your ACF field name is different
             if ($artist_field) {
                 if (is_object($artist_field)) $artist_name = $artist_field->post_title;
                 elseif (is_array($artist_field) && isset($artist_field[0])) $artist_name = is_object($artist_field[0]) ? $artist_field[0]->post_title : $artist_field[0];
