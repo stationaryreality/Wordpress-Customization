@@ -20,14 +20,12 @@ foreach ($groups as $key => $group) {
 }
 
 function lr_get_songs($group_slug) {
-    // 1. UPDATED: Query both 'song' and 'rap' CPTs
+    // Query both 'song' and 'rap' CPTs that belong to this group
     $songs = new WP_Query([
         'post_type'      => ['song', 'rap'], 
         'posts_per_page' => -1,
         'tax_query'      => [
-            'relation' => 'AND',
-            ['taxonomy' => 'listening_room', 'field' => 'slug', 'terms' => 'listening-room'],
-            ['taxonomy' => 'song_group',     'field' => 'slug', 'terms' => $group_slug],
+            ['taxonomy' => 'song_group', 'field' => 'slug', 'terms' => $group_slug],
         ],
         'orderby' => 'title',
         'order'   => 'ASC',
@@ -43,27 +41,18 @@ function lr_get_songs($group_slug) {
             $raw_title = get_the_title();
             $clean_title = preg_replace('/\s*\([^)]+\)\s*$/', '', $raw_title);
             
-            // Fetch Artist 
+            // Fetch Artist from song_artist ACF field
             $artist_name = 'Unknown Artist';
-            
-            // Check 'artist' ACF field first, fallback to 'rapper' ACF field just in case
             $artist_field = get_field('song_artist');
-            if (!$artist_field) {
-                $artist_field = get_field('song_artist'); 
-            }
 
             if ($artist_field) {
-                if (is_object($artist_field)) $artist_name = $artist_field->post_title;
-                elseif (is_array($artist_field) && isset($artist_field[0])) $artist_name = is_object($artist_field[0]) ? $artist_field[0]->post_title : $artist_field[0];
-                elseif (is_string($artist_field)) $artist_name = $artist_field;
-            } else {
-                // Check 'artist' taxonomy, fallback to 'rapper' taxonomy
-                $terms = get_the_terms(get_the_ID(), 'artist');
-                if (!$terms || is_wp_error($terms)) {
-                    $terms = get_the_terms(get_the_ID(), 'rapper');
+                if (is_object($artist_field)) {
+                    $artist_name = $artist_field->post_title;
+                } elseif (is_array($artist_field) && isset($artist_field[0])) {
+                    $artist_name = is_object($artist_field[0]) ? $artist_field[0]->post_title : $artist_field[0];
+                } elseif (is_string($artist_field)) {
+                    $artist_name = $artist_field;
                 }
-                
-                if ($terms && !is_wp_error($terms)) $artist_name = $terms[0]->name;
             }
 
             $results[] = [
@@ -72,7 +61,6 @@ function lr_get_songs($group_slug) {
                 'artist'  => $artist_name,
                 'yt_url'  => get_field('youtube_url'),
                 'cover'   => $cover ? $cover['sizes']['thumbnail'] : '',
-                // get_permalink() automatically knows how to build the URL for both CPTs
                 'link'    => get_permalink(), 
             ];
         }

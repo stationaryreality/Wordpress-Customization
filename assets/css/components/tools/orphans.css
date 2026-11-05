@@ -86,18 +86,16 @@
     text-decoration: underline;
 }
 
-/* Hide grouped songs by default */
-.tool-orphans .cpt-clean-list li.grouped-orphan {
+/* --- Song Group Toggle --- */
+.tool-orphans .cpt-clean-list li.song-group-orphan {
     display: none;
 }
 
-/* Show grouped songs when toggle is active */
-.tool-orphans.show-grouped .cpt-clean-list li.grouped-orphan {
+.tool-orphans.show-song-group .cpt-clean-list li.song-group-orphan {
     display: flex;
 }
 
-/* Style the toggle wrapper */
-.tool-orphans .grouped-toggle-wrapper {
+.tool-orphans .song-group-toggle-wrapper {
     padding: 0.75em 1em;
     background: #f9f9f9;
     border: 1px solid #e0e0e0;
@@ -106,7 +104,7 @@
     margin-bottom: 1.5em;
 }
 
-.tool-orphans .grouped-toggle-wrapper label {
+.tool-orphans .song-group-toggle-wrapper label {
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -116,7 +114,7 @@
     font-size: 0.95rem;
 }
 
-.tool-orphans .grouped-count-text {
+.tool-orphans .song-group-count-text {
     color: #888;
     font-style: italic;
 }
