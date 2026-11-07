@@ -3,7 +3,7 @@
 
 get_header(); ?>
 
-<main class="site-main page-narrative-threads">
+<main id="primary" class="site-main page-narrative-threads">
   
 <a id="narrative-threads"></a>
 <section>
