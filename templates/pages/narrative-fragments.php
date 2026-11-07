@@ -1,15 +1,15 @@
 <?php
-/* Template Name: Narrative Threads */
+/* Template Name: Narrative Fragments */
 
 get_header(); ?>
 
-<main id="primary" class="site-main page-narrative-threads">
-  
-<a id="narrative-threads"></a>
+<main class="homepage-posts">
+
+<a id="narrative-fragments"></a>
 <section>
   <?php
-get_template_part('template-parts/grids/chapter', null, [
-      'title' => 'Narrative Threads',
+get_template_part('template-parts/grids/fragment', null, [
+      'title' => 'Narrative Episodes',
     ]);
   ?>
 </section>
