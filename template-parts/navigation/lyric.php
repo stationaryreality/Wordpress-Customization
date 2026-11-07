@@ -1,7 +1,7 @@
 <?php
 $current_id = get_the_ID();
 
-// 1. Determine current lyric's bucket based on its related Song
+// 1. Determine current lyric's attached song
 $song_field = get_field('song', $current_id);
 $current_song_id = 0;
 if ($song_field) {
@@ -9,48 +9,40 @@ if ($song_field) {
     $current_song_id = is_object($song_field) ? $song_field->ID : (int)$song_field;
 }
 
-$is_rap = false;
 $feature_slug = '';
 $heading_prefix = 'Lyric';
 
 if ($current_song_id) {
-    if (has_term('rap', 'song_category', $current_song_id)) {
-        $is_rap = true;
-        $heading_prefix = 'Rap Lyric';
-    } else {
-        $terms = wp_get_post_terms($current_song_id, 'feature_level', ['fields' => 'slugs']);
-        $feature_slug = $terms[0] ?? '';
-        
-        $heading_prefix = match($feature_slug) {
-            'narrative'  => 'Narrative Lyric',
-            'featured'   => 'Featured Lyric',
-            'referenced' => 'Referenced Lyric',
-            default      => 'Lyric'
-        };
-    }
+    // Regular lyrics only attach to regular songs. 
+    // We just check the feature_level taxonomy of the song.
+    $terms = wp_get_post_terms($current_song_id, 'feature_level', ['fields' => 'slugs']);
+    $feature_slug = $terms[0] ?? '';
+    
+    $heading_prefix = match($feature_slug) {
+        'narrative'  => 'Narrative Lyric',
+        'featured'   => 'Featured Lyric',
+        'referenced' => 'Referenced Lyric',
+        default      => 'Lyric'
+    };
 }
 
-// 2. Get all target Song IDs for this bucket (1 DB Query)
+// 2. Get all target Song IDs for this bucket
 $song_args = [
     'post_type'      => 'song',
     'posts_per_page' => -1,
     'fields'         => 'ids',
 ];
 
-if ($is_rap) {
-    $song_args['tax_query'] = [['taxonomy' => 'song_category', 'field' => 'slug', 'terms' => 'rap']];
-} else {
+if ($feature_slug) {
     $song_args['tax_query'] = [
-        'relation' => 'AND',
-        ['taxonomy' => 'feature_level', 'field' => 'slug', 'terms' => $feature_slug],
-        ['taxonomy' => 'song_category', 'field' => 'slug', 'terms' => 'rap', 'operator' => 'NOT IN']
+        ['taxonomy' => 'feature_level', 'field' => 'slug', 'terms' => $feature_slug]
     ];
 }
 
 $target_song_ids = get_posts($song_args);
-$target_song_map = array_flip($target_song_ids); // Creates a lightning-fast hash map for lookups
+$target_song_map = array_flip($target_song_ids); 
 
-// 3. Get all Lyric IDs ordered by title (1 DB Query)
+// 3. Get all regular Lyric IDs ordered by title
 $all_lyric_ids = get_posts([
     'post_type'      => 'lyric',
     'posts_per_page' => -1,
@@ -59,26 +51,22 @@ $all_lyric_ids = get_posts([
     'fields'         => 'ids',
 ]);
 
-// 4. Prime the meta cache for all lyrics at once (1 DB Query)
-// This is the magic step: it fetches the ACF 'song' field for EVERY lyric in one go.
+// 4. Prime the meta cache
 if (!empty($all_lyric_ids)) {
     update_meta_cache('post', $all_lyric_ids);
 }
 
-// 5. Filter lyrics in PHP memory (0 DB Queries)
+// 5. Filter lyrics in PHP memory
 $lyric_ids = [];
 foreach ($all_lyric_ids as $lyric_id) {
-    // Because of update_meta_cache, this reads from RAM, not the database
     $song_meta_values = get_post_meta($lyric_id, 'song', false);
     
     $match_found = false;
     foreach ($song_meta_values as $meta_val) {
-        // Handle standard numeric ID
         if (is_numeric($meta_val) && isset($target_song_map[(int)$meta_val])) {
             $match_found = true;
             break;
         }
-        // Handle ACF serialized arrays (Relationship fields store data serialized)
         if (is_string($meta_val) && is_serialized($meta_val)) {
             $unserialized = maybe_unserialize($meta_val);
             if (is_array($unserialized)) {
@@ -103,7 +91,6 @@ $next_id = $lyric_ids[$current_index + 1] ?? null;
 $prev_id = $lyric_ids[$current_index - 1] ?? null;
 
 // Helper function to get the image for a lyric's nav
-// This only runs a maximum of 2 times now (once for prev, once for next)
 function get_lyric_nav_image($lyric_id) {
     $song = get_field('song', $lyric_id);
     if ($song) {
