@@ -49,11 +49,6 @@ while ($containers->have_posts()) {
         }
     }
 
-    // --------------------------------------
-    // Songs are NOT part of Reference Context
-    // yet, so keep the existing logic.
-    // --------------------------------------
-
     $songs = get_field('chapter_songs', get_the_ID());
 
     if ($songs) {
@@ -67,29 +62,49 @@ while ($containers->have_posts()) {
 
 wp_reset_postdata();
 
-    // --------------------------------------
-    // Songs in the Listening Room are NOT orphans
-    // --------------------------------------
-    $lr_songs = get_posts([
-        'post_type'      => ['song', 'rap'],
-        'posts_per_page' => -1,
-        'fields'         => 'ids',
-        'tax_query'      => [
-            [
-                'taxonomy' => 'song_group',
-                'operator' => 'EXISTS',
-            ],
+/* ===== STEP 2: GET LISTENING ROOM SONGS ===== */
+$lr_songs = get_posts([
+    'post_type'      => ['song', 'rap'],
+    'posts_per_page' => -1,
+    'fields'         => 'ids',
+    'tax_query'      => [
+        [
+            'taxonomy' => 'song_group',
+            'operator' => 'EXISTS',
         ],
-    ]);
+    ],
+]);
 
-    foreach ($lr_songs as $lr_id) {
-        $referenced_ids[$lr_id] = true;
+// Filter out songs that ONLY have "ungrouped"
+$ungrouped_term = get_term_by('slug', 'ungrouped', 'song_group');
+$lr_song_ids = [];
+if (!empty($lr_songs)) {
+    foreach ($lr_songs as $sid) {
+        $terms = get_the_terms($sid, 'song_group');
+        if ($terms && !is_wp_error($terms)) {
+            $has_real_group = false;
+            foreach ($terms as $t) {
+                if (!$ungrouped_term || $t->term_id !== $ungrouped_term->term_id) {
+                    $has_real_group = true;
+                    break;
+                }
+            }
+            if ($has_real_group) {
+                $lr_song_ids[] = $sid;
+            }
+        }
     }
+}
 
-    // Convert the array keys (IDs) back to a flat array
+$lr_song_map = array_flip($lr_song_ids);
+
+// DO NOT add LR songs to $referenced_ids — let them flow through as orphans
+// but flag them so we can hide/show them with the toggle
+
+// Convert the array keys (IDs) back to a flat array
 $referenced_ids = array_keys($referenced_ids);
 
-/* ===== STEP 2: GET ALL POSTS ===== */
+/* ===== STEP 3: GET ALL POSTS ===== */
 
 $q = new WP_Query([
   'post_type'      => $all_types,
@@ -101,8 +116,10 @@ $q = new WP_Query([
 
 $entries = [];
 $type_counts = [];
+$normal_count = 0;
+$lr_count = 0;
 
-/* ===== STEP 3: FILTER ===== */
+/* ===== STEP 4: FILTER ===== */
 
 while ($q->have_posts()) {
   $q->the_post();
@@ -114,12 +131,15 @@ while ($q->have_posts()) {
 
     $meta  = get_cpt_metadata($type);
     $emoji = ($meta && isset($meta['emoji'])) ? $meta['emoji'] : '•';
+    
+    $is_lr = isset($lr_song_map[$id]);
 
     $entries[] = [
       'title' => get_the_title(),
       'url'   => get_permalink(),
       'emoji' => $emoji,
-      'type'  => $type
+      'type'  => $type,
+      'is_lr' => $is_lr
     ];
 
     if (!isset($type_counts[$type])) {
@@ -127,6 +147,12 @@ while ($q->have_posts()) {
     }
 
     $type_counts[$type]++;
+    
+    if ($is_lr) {
+        $lr_count++;
+    } else {
+        $normal_count++;
+    }
   }
 }
 
@@ -137,7 +163,6 @@ wp_reset_postdata();
 usort($entries, fn($a,$b)=>strcasecmp($a['title'],$b['title']));
 ksort($type_counts);
 
-$total_count = count($entries);
 ?>
 
 <section class="tool-orphans">
@@ -145,8 +170,20 @@ $total_count = count($entries);
     <h2>Orphans</h2>
 
     <p class="tool-orphans-count">
-        <?php echo number_format($total_count); ?> orphaned entries - These are CPTs (Custom Post Types) that are not attached to anything, but should be eventually.
+        <?php echo number_format($normal_count); ?> standard orphans
+        <?php if ($lr_count > 0): ?>
+            &nbsp;|&nbsp; <span class="lr-count-text"><?php echo number_format($lr_count); ?> Listening Room orphans (hidden)</span>
+        <?php endif; ?>
     </p>
+
+    <?php if ($lr_count > 0): ?>
+    <div class="lr-toggle-wrapper">
+        <label>
+            <input type="checkbox" id="toggle-lr-orphans">
+            Include Listening Room Songs
+        </label>
+    </div>
+    <?php endif; ?>
 
     <?php get_template_part('template-parts/tools/tool', 'filters', [
       'type_counts' => $type_counts
@@ -154,7 +191,7 @@ $total_count = count($entries);
 
     <ul class="cpt-clean-list">
         <?php foreach ($entries as $e): ?>
-            <li data-type="<?php echo esc_attr($e['type']); ?>">
+            <li data-type="<?php echo esc_attr($e['type']); ?>" <?php if($e['is_lr']) echo 'class="lr-orphan"'; ?>>
                 <span class="entry-emoji">
                     <?php echo esc_html($e['emoji']); ?>
                 </span>
@@ -166,3 +203,22 @@ $total_count = count($entries);
     </ul>
 
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const toggle = document.getElementById('toggle-lr-orphans');
+    if (toggle) {
+        toggle.addEventListener('change', function() {
+            const wrapper = document.querySelector('.tool-orphans');
+            const countText = document.querySelector('.lr-count-text');
+            if (this.checked) {
+                wrapper.classList.add('show-lr');
+                if (countText) countText.textContent = countText.textContent.replace('(hidden)', '(shown)');
+            } else {
+                wrapper.classList.remove('show-lr');
+                if (countText) countText.textContent = countText.textContent.replace('(shown)', '(hidden)');
+            }
+        });
+    }
+});
+</script>
