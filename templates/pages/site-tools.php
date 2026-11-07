@@ -9,6 +9,7 @@ $allowed_tools = [
   'footnotes',
   'index',
   'inspector',
+  'listening-room',
   'live-filter',
   'live-search',
   'media-library',
@@ -82,6 +83,11 @@ if (!in_array($tool, $allowed_tools)) {
             <a href="?tool=inspector"
                class="<?php echo $tool === 'inspector' ? 'active' : ''; ?>">
                 Inspect Relationships
+            </a>
+
+            <a href="?tool=listening-room"
+               class="<?php echo $tool === 'listening-room' ? 'active' : ''; ?>">
+                Listening Room Audit
             </a>
 
             <a href="?tool=live-filter"
@@ -178,6 +184,9 @@ if (!in_array($tool, $allowed_tools)) {
         }
         elseif ($tool === 'inspector') {
           get_template_part('template-parts/tools/tool', 'inspector');
+        }
+        elseif ($tool === 'listening-room') {
+          get_template_part('template-parts/tools/tool', 'listening-room');
         }
         elseif ($tool === 'live-filter') {
           get_template_part('template-parts/tools/tool', 'live-filter');

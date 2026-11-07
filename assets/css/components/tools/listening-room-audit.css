@@ -1,0 +1,116 @@
+/* ==========================================================================
+   Site Tools: Listening Room Audit
+   ========================================================================== */
+
+/* --- Header & Count --- */
+.tool-lr-audit .tool-lr-audit-count {
+    margin: 0.75em 0 1.5em 0;
+    font-size: 0.95rem;
+    color: #666;
+}
+
+.tool-lr-audit .lr-orphan-count {
+    color: #c0392b;
+    font-weight: 600;
+}
+
+/* --- Toggle --- */
+.tool-lr-audit .lr-audit-toggle-wrapper {
+    padding: 0.75em 1em;
+    background: #fff8f0;
+    border: 1px solid #f0d9c0;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 1.5em;
+}
+
+.tool-lr-audit .lr-audit-toggle-wrapper label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+    color: #444;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.tool-lr-audit .lr-audit-toggle-wrapper input[type="checkbox"] {
+    cursor: pointer;
+}
+
+/* --- Groups --- */
+.tool-lr-audit .lr-audit-group {
+    margin-bottom: 2em;
+}
+
+.tool-lr-audit .lr-audit-group-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.75em;
+    padding-bottom: 0.4em;
+    border-bottom: 2px solid #eee;
+    color: #333;
+}
+
+/* --- List --- */
+.tool-lr-audit .lr-audit-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tool-lr-audit .lr-audit-list li {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tool-lr-audit .lr-audit-list li:last-child {
+    border-bottom: none;
+}
+
+.tool-lr-audit .lr-audit-emoji {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    width: 1.5rem;
+    text-align: center;
+}
+
+.tool-lr-audit .lr-audit-list a {
+    color: #1e1e1e;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.tool-lr-audit .lr-audit-list a:hover {
+    color: #007cba;
+    text-decoration: underline;
+}
+
+/* --- Orphan Badge --- */
+.tool-lr-audit .lr-audit-orphan-badge {
+    font-size: 0.7rem;
+    background: #c0392b;
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+/* --- Orphan-only mode: hide non-orphans --- */
+.tool-lr-audit.show-orphans-only .lr-audit-list li:not(.lr-audit-orphan) {
+    display: none;
+}
+
+/* Hide empty groups in orphan-only mode */
+.tool-lr-audit.show-orphans-only .lr-audit-group {
+    display: none;
+}
+
+.tool-lr-audit.show-orphans-only .lr-audit-group:has(.lr-audit-orphan) {
+    display: block;
+}
