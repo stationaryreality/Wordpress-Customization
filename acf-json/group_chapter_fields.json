@@ -56,14 +56,19 @@
                         "class": "",
                         "id": ""
                     },
+                    "relevanssi_exclude": 0,
                     "post_type": [
-                        "song"
+                        "song",
+                        "rap"
                     ],
+                    "post_status": "",
+                    "taxonomy": "",
                     "return_format": "object",
                     "multiple": 0,
                     "allow_null": 0,
+                    "allow_in_bindings": 1,
+                    "bidirectional": 0,
                     "ui": 1,
-                    "taxonomy": [],
                     "bidirectional_target": [],
                     "parent_repeater": "field_chapter_songs"
                 },
@@ -268,7 +273,8 @@
             },
             "relevanssi_exclude": 0,
             "post_type": [
-                "lyric"
+                "lyric",
+                "raplyric"
             ],
             "post_status": "",
             "taxonomy": "",
@@ -806,5 +812,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1782764935
+    "modified": 1793448926
 }

@@ -32,7 +32,10 @@
                 "quote",
                 "lyric",
                 "concept",
-                "chapter"
+                "chapter",
+                "rapper",
+                "rap",
+                "raplyric"
             ],
             "post_status": "",
             "taxonomy": "",
@@ -225,5 +228,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1782145339
+    "modified": 1793448861
 }

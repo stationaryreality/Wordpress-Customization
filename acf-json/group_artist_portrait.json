@@ -65,7 +65,8 @@
             },
             "relevanssi_exclude": 0,
             "post_type": [
-                "artist"
+                "artist",
+                "rapper"
             ],
             "post_status": "",
             "taxonomy": "",
@@ -93,7 +94,8 @@
             },
             "relevanssi_exclude": 0,
             "post_type": [
-                "artist"
+                "artist",
+                "rapper"
             ],
             "post_status": "",
             "taxonomy": "",
@@ -127,5 +129,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1792802779
+    "modified": 1793447244
 }
