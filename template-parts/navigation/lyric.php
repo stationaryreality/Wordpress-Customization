@@ -1,49 +1,8 @@
 <?php
 $current_id = get_the_ID();
 
-// 1. Determine current lyric's attached song
-$song_field = get_field('song', $current_id);
-$current_song_id = 0;
-if ($song_field) {
-    if (is_array($song_field)) $song_field = reset($song_field);
-    $current_song_id = is_object($song_field) ? $song_field->ID : (int)$song_field;
-}
-
-$feature_slug = '';
-$heading_prefix = 'Lyric';
-
-if ($current_song_id) {
-    // Regular lyrics only attach to regular songs. 
-    // We just check the feature_level taxonomy of the song.
-    $terms = wp_get_post_terms($current_song_id, 'feature_level', ['fields' => 'slugs']);
-    $feature_slug = $terms[0] ?? '';
-    
-    $heading_prefix = match($feature_slug) {
-        'narrative'  => 'Narrative Lyric',
-        'featured'   => 'Featured Lyric',
-        'referenced' => 'Referenced Lyric',
-        default      => 'Lyric'
-    };
-}
-
-// 2. Get all target Song IDs for this bucket
-$song_args = [
-    'post_type'      => 'song',
-    'posts_per_page' => -1,
-    'fields'         => 'ids',
-];
-
-if ($feature_slug) {
-    $song_args['tax_query'] = [
-        ['taxonomy' => 'feature_level', 'field' => 'slug', 'terms' => $feature_slug]
-    ];
-}
-
-$target_song_ids = get_posts($song_args);
-$target_song_map = array_flip($target_song_ids); 
-
-// 3. Get all regular Lyric IDs ordered by title
-$all_lyric_ids = get_posts([
+// Just get ALL lyrics alphabetically
+$all_lyrics = get_posts([
     'post_type'      => 'lyric',
     'posts_per_page' => -1,
     'orderby'        => 'title',
@@ -51,46 +10,13 @@ $all_lyric_ids = get_posts([
     'fields'         => 'ids',
 ]);
 
-// 4. Prime the meta cache
-if (!empty($all_lyric_ids)) {
-    update_meta_cache('post', $all_lyric_ids);
-}
+$current_index = array_search($current_id, $all_lyrics);
+$next_id = ($current_index !== false && isset($all_lyrics[$current_index + 1])) ? $all_lyrics[$current_index + 1] : null;
+$prev_id = ($current_index !== false && $current_index > 0) ? $all_lyrics[$current_index - 1] : null;
 
-// 5. Filter lyrics in PHP memory
-$lyric_ids = [];
-foreach ($all_lyric_ids as $lyric_id) {
-    $song_meta_values = get_post_meta($lyric_id, 'song', false);
-    
-    $match_found = false;
-    foreach ($song_meta_values as $meta_val) {
-        if (is_numeric($meta_val) && isset($target_song_map[(int)$meta_val])) {
-            $match_found = true;
-            break;
-        }
-        if (is_string($meta_val) && is_serialized($meta_val)) {
-            $unserialized = maybe_unserialize($meta_val);
-            if (is_array($unserialized)) {
-                foreach ($unserialized as $sub_val) {
-                    $sub_id = is_object($sub_val) ? $sub_val->ID : (int)$sub_val;
-                    if (isset($target_song_map[$sub_id])) {
-                        $match_found = true;
-                        break;
-                    }
-                }
-            }
-        }
-    }
-    
-    if ($match_found) {
-        $lyric_ids[] = $lyric_id;
-    }
-}
+$heading_prefix = 'Lyric';
 
-$current_index = array_search($current_id, $lyric_ids);
-$next_id = $lyric_ids[$current_index + 1] ?? null;
-$prev_id = $lyric_ids[$current_index - 1] ?? null;
-
-// Helper function to get the image for a lyric's nav
+// Helper to get the image for a lyric's nav
 function get_lyric_nav_image($lyric_id) {
     $song = get_field('song', $lyric_id);
     if ($song) {
