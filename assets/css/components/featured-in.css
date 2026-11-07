@@ -1,97 +1,87 @@
 /* ============================================================
-   FEATURED IN SECTIONS (Unified)
-   Shared grid for "Featured In" / "Narrative Threads" / "Elements"
-   Ensures Chapters, Fragments, and Elements look identical 
-   across Song, Artist, Lyric, and Element pages.
+   FEATURED IN SECTIONS
+   Shared grid for "Featured In" / "Narrative Threads" sections
    ============================================================ */
 
 .featured-in-section {
-    margin: 3rem auto 0;
+    margin: 2.5rem auto 0;
     text-align: center;
 }
 
-/* The H2 Section Title */
-.featured-in-section > .featured-in-title {
+.featured-in-section-title {
     font-size: 1.25rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 2rem;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    border-bottom: 1px solid #e5e9f0;
-    padding-bottom: 0.5rem;
-    display: inline-block; /* Keeps the border bottom tight to the text */
+    font-weight: 500;
+    margin-bottom: 1.25rem;
+    color: #111;
 }
 
-/* The Grid: Strict 90px standard to prevent oversized cards */
 .featured-in-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 220px));
+
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 1rem;
+
+    gap: 1.5rem;
     justify-content: center;
 }
 
 .featured-in-item {
     text-align: center;
+    max-width: 220px;
 }
 
 .featured-in-link {
-    display: block;
     text-decoration: none;
     color: inherit;
+    display: block;
     transition: transform 0.2s ease;
 }
 
 .featured-in-link:hover {
-    transform: translateY(-2px); /* Subtle hover lift matching site standards */
+    transform: translateY(-3px);
 }
 
-/* Images: Forced 1:1 square for uniformity across all CPTs */
 .featured-in-image {
     width: 100%;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 16 / 9;
     object-fit: cover;
     border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-bottom: 0.5rem;
     display: block;
-    transition: transform 0.3s ease, box-shadow 0.2s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.2s ease;
 }
 
-.featured-in-item:hover .featured-in-image {
-    transform: scale(1.04); /* Subtle zoom matching image/element grids */
+.featured-in-link:hover .featured-in-image {
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
-/* The H3 Item Title: Matches the Lyric page exactly */
-.featured-in-item h3.featured-in-title {
-    margin-top: 0.75rem;
+.featured-in-item-title {
+    margin: 0.5rem 0 0;
     font-size: 0.95rem;
-    font-weight: normal;
+    font-weight: 500;
     line-height: 1.3;
     color: #111;
 }
 
-.featured-in-item h3.featured-in-title a {
-    color: #111;
-    text-decoration: none;
-    word-wrap: break-word; /* Prevents long titles from breaking the 90px column */
+.featured-in-link:hover .featured-in-item-title {
+    color: #0073aa;
 }
 
-.featured-in-item h3.featured-in-title a:hover {
-    color: #0073aa;
+/* ========== ELEMENT VARIANT (1:1 aspect ratio) ========== */
+.featured-in-grid--elements .featured-in-image {
+    aspect-ratio: 1 / 1;
 }
 
 /* ========== RESPONSIVE ========== */
 @media (max-width: 600px) {
     .featured-in-grid {
-        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(120px, 180px));
         gap: 1rem;
     }
     
-    .featured-in-item h3.featured-in-title {
+    .featured-in-item-title {
         font-size: 0.85rem;
     }
 }
