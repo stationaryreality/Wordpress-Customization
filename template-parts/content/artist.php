@@ -189,17 +189,24 @@ usort($songs, function($a, $b) {
   <?php
   $featured_chapters  = [];
   $featured_fragments = [];
+  $featured_elements  = []; // NEW
   $referenced_in      = [];
 
   if (!empty($songs)) {
       foreach ($songs as $song) {
           $roles = kp_get_song_thread_roles($song->ID);
 
-          foreach (array_merge($roles['chapter']['primary'], $roles['chapter']['secondary']) as $item) {
+          foreach (array_merge($roles['chapter']['primary'], $roles['chapter'][' Secondary']) as $item) {
               $featured_chapters[$item->ID] = $item;
           }
           foreach (array_merge($roles['fragment']['primary'], $roles['fragment']['secondary']) as $item) {
               $featured_fragments[$item->ID] = $item;
+          }
+          // NEW: Add Elements
+          if (!empty($roles['element']['all'])) {
+              foreach ($roles['element']['all'] as $item) {
+                  $featured_elements[$item->ID] = $item;
+              }
           }
           foreach (array_merge($roles['chapter']['supporting'], $roles['fragment']['supporting']) as $item) {
               $referenced_in[$item->ID] = $item;
@@ -207,11 +214,20 @@ usort($songs, function($a, $b) {
       }
   }
 
+  // Remove referenced items that are already featured
   foreach ($featured_chapters as $id => $item) { unset($referenced_in[$id]); }
   foreach ($featured_fragments as $id => $item) { unset($referenced_in[$id]); }
+  foreach ($featured_elements as $id => $item) { unset($referenced_in[$id]); }
 
+  // Output using the now-unified template part
   get_template_part('template-parts/views/featured-in-grid', null, ['title' => 'Narrative Threads', 'items' => $featured_chapters]);
   get_template_part('template-parts/views/featured-in-grid', null, ['title' => 'Narrative Fragments', 'items' => $featured_fragments]);
+  
+  // NEW: Output Elements
+  if (!empty($featured_elements)) {
+      get_template_part('template-parts/views/featured-in-grid', null, ['title' => 'Elements', 'items' => $featured_elements]);
+  }
+  
   get_template_part('template-parts/views/featured-in-grid', null, ['title' => 'Referenced In', 'items' => $referenced_in]);
   ?>
 
