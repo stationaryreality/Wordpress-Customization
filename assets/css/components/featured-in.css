@@ -85,3 +85,41 @@
         font-size: 0.85rem;
     }
 }
+
+/* ========== SURGICAL FIXES ========== */
+
+/* 1. Add image scale on hover (currently only lifts the card) */
+.featured-in-link:hover .featured-in-image {
+    transform: scale(1.03);
+}
+
+/* 2. Add underline to title on hover */
+.featured-in-link:hover .featured-in-item-title {
+    text-decoration: underline;
+}
+
+/* 3. Make titles bold (like excerpt page) */
+.featured-in-item-title {
+    font-weight: 600;
+}
+
+/* 4. Shrink element images to half size */
+.featured-in-grid--elements {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 110px));
+    max-width: 600px;
+}
+
+.featured-in-grid--elements .featured-in-item {
+    max-width: 110px;
+}
+
+/* 5. Add spacing between sections (before "Elements" label) */
+.featured-in-elements {
+    margin-top: 3rem;
+}
+
+/* 6. Fix grid centering for incomplete rows */
+.featured-in-grid {
+    justify-content: center;
+    justify-items: center;
+}
