@@ -15,21 +15,25 @@
     color: #111;
 }
 
-.featured-in-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 220px));
+/* ========== GRID (flexbox — centers incomplete rows) ========== */
 
+.featured-in-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
     max-width: 1200px;
     margin: 0 auto;
-
-    gap: 1.5rem;
-    justify-content: center;
+    padding: 0 1rem;
 }
 
 .featured-in-item {
-    text-align: center;
+    flex: 0 1 220px; /* Grow: 0, Shrink: 1, Basis: 220px */
     max-width: 220px;
+    text-align: center;
 }
+
+/* ========== CARDS ========== */
 
 .featured-in-link {
     text-decoration: none;
@@ -50,102 +54,29 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     margin-bottom: 0.5rem;
     display: block;
-    transition: box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .featured-in-link:hover .featured-in-image {
+    transform: scale(1.03);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
 .featured-in-item-title {
     margin: 0.5rem 0 0;
     font-size: 0.95rem;
-    font-weight: 500;
+    font-weight: normal; /* Was 600 — bold removed */
     line-height: 1.3;
     color: #111;
 }
 
 .featured-in-link:hover .featured-in-item-title {
     color: #0073aa;
-}
-
-/* ========== ELEMENT VARIANT (1:1 aspect ratio) ========== */
-.featured-in-grid--elements .featured-in-image {
-    aspect-ratio: 1 / 1;
-}
-
-/* ========== RESPONSIVE ========== */
-@media (max-width: 600px) {
-    .featured-in-grid {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 180px));
-        gap: 1rem;
-    }
-    
-    .featured-in-item-title {
-        font-size: 0.85rem;
-    }
-}
-
-/* ========== SURGICAL FIXES ========== */
-
-/* 1. Add image scale on hover (currently only lifts the card) */
-.featured-in-link:hover .featured-in-image {
-    transform: scale(1.03);
-}
-
-/* 2. Add underline to title on hover */
-.featured-in-link:hover .featured-in-item-title {
     text-decoration: underline;
 }
 
-/* 3. Make titles bold (like excerpt page) */
-.featured-in-item-title {
-    font-weight: 600;
-}
+/* ========== ELEMENTS VARIANT (1:1, smaller) ========== */
 
-/* 4. Shrink element images to half size */
-.featured-in-grid--elements {
-    grid-template-columns: repeat(auto-fit, minmax(80px, 110px));
-    max-width: 600px;
-}
-
-.featured-in-grid--elements .featured-in-item {
-    max-width: 110px;
-}
-
-/* 5. Add spacing between sections (before "Elements" label) */
-.featured-in-elements {
-    margin-top: 3rem;
-}
-
-/* 6. Fix grid centering for incomplete rows */
-.featured-in-grid {
-    justify-content: center;
-    justify-items: center;
-}
-
-
-/* ========== UNIFIED FEATURED IN FIXES ========== */
-
-/* 1. Image scale and shadow on hover */
-.featured-in-link:hover .featured-in-image {
-    transform: scale(1.03);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-}
-
-/* 2. Blue text and underline on hover */
-.featured-in-link:hover .featured-in-item-title {
-    color: #0073aa;
-    text-decoration: underline;
-}
-
-/* 3. Fix grid centering for incomplete rows (the "4th item stuck left" bug) */
-.featured-in-grid {
-    justify-content: center;
-    justify-items: center;
-}
-
-/* 4. Spacing and styling for the "Elements" sub-heading */
 .featured-in-elements {
     margin-top: 3rem;
 }
@@ -160,16 +91,38 @@
     letter-spacing: 0.02em;
 }
 
-/* 5. Force Element grid to be smaller and strictly 1:1 square */
 .featured-in-grid--elements {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 140px));
-    max-width: 800px;
+    max-width: 600px;
 }
 
 .featured-in-grid--elements .featured-in-item {
-    max-width: 140px;
+    flex: 0 1 110px;
+    max-width: 110px;
 }
 
 .featured-in-grid--elements .featured-in-image {
-    aspect-ratio: 1 / 1 !important;
+    aspect-ratio: 1 / 1;
+}
+
+/* ========== RESPONSIVE ========== */
+
+@media (max-width: 600px) {
+    .featured-in-grid {
+        gap: 1rem;
+        padding: 0 0.75rem;
+    }
+
+    .featured-in-item {
+        flex: 0 1 150px;
+        max-width: 150px;
+    }
+
+    .featured-in-grid--elements .featured-in-item {
+        flex: 0 1 90px;
+        max-width: 90px;
+    }
+
+    .featured-in-item-title {
+        font-size: 0.85rem;
+    }
 }
