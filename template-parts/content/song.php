@@ -87,29 +87,25 @@ $youtube_url        = get_field('youtube_url', $song_id);
 
     <?php
     $roles = kp_get_song_thread_roles($song_id);
+
     $featured_chapters = array_merge($roles['chapter']['primary'], $roles['chapter']['secondary']);
     $featured_fragments = array_merge($roles['fragment']['primary'], $roles['fragment']['secondary']);
+    $featured_elements = $roles['element']['all'];
+
+    if (!empty($featured_chapters) || !empty($featured_fragments) || !empty($featured_elements)) {
+        get_template_part('template-parts/views/featured-in-grid', null, [
+            'title'     => 'Featured In',
+            'chapters'  => $featured_chapters,
+            'fragments' => $featured_fragments,
+            'elements'  => $featured_elements
+        ]);
+    }
+
     $referenced_in = array_merge($roles['chapter']['supporting'], $roles['fragment']['supporting']);
-
-    get_template_part('template-parts/views/featured-in-grid', null, ['title' => 'Narrative Threads', 'items' => $featured_chapters]);
-    get_template_part('template-parts/views/featured-in-grid', null, ['title' => 'Narrative Fragments', 'items' => $featured_fragments]);
-
-    if (!empty($referenced_in)): ?>
-        <div class="cpt-song-referenced">
-            <h2 class="cpt-song-referenced-title">Referenced In</h2>
-            <div class="cpt-song-referenced-grid">
-                <?php foreach ($referenced_in as $item):
-                    $thumb = get_the_post_thumbnail_url($item->ID, 'medium');
-                ?>
-                    <a href="<?php echo esc_url(get_permalink($item->ID)); ?>" class="cpt-song-referenced-item">
-                        <?php if ($thumb): ?>
-                            <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr(get_the_title($item->ID)); ?>" class="cpt-song-referenced-image">
-                        <?php endif; ?>
-                        <h3 class="cpt-song-referenced-name"><?php echo esc_html(get_the_title($item->ID)); ?></h3>
-                    </a>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    <?php endif; ?>
-
-</div>
+    if (!empty($referenced_in)) {
+        get_template_part('template-parts/views/featured-in-grid', null, [
+            'title' => 'Referenced In',
+            'items' => $referenced_in
+        ]);
+    }
+    ?>

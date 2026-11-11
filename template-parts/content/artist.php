@@ -185,10 +185,10 @@ usort($songs, function($a, $b) {
       </div>
     </div>
   <?php endif; ?>
-
   <?php
   $featured_chapters  = [];
   $featured_fragments = [];
+  $featured_elements  = []; // NEW
   $referenced_in      = [];
 
   if (!empty($songs)) {
@@ -201,6 +201,9 @@ usort($songs, function($a, $b) {
           foreach (array_merge($roles['fragment']['primary'], $roles['fragment']['secondary']) as $item) {
               $featured_fragments[$item->ID] = $item;
           }
+          foreach ($roles['element']['all'] as $item) {
+              $featured_elements[$item->ID] = $item;
+          }
           foreach (array_merge($roles['chapter']['supporting'], $roles['fragment']['supporting']) as $item) {
               $referenced_in[$item->ID] = $item;
           }
@@ -209,10 +212,21 @@ usort($songs, function($a, $b) {
 
   foreach ($featured_chapters as $id => $item) { unset($referenced_in[$id]); }
   foreach ($featured_fragments as $id => $item) { unset($referenced_in[$id]); }
+  foreach ($featured_elements as $id => $item) { unset($referenced_in[$id]); }
 
-  get_template_part('template-parts/views/featured-in-grid', null, ['title' => 'Narrative Threads', 'items' => $featured_chapters]);
-  get_template_part('template-parts/views/featured-in-grid', null, ['title' => 'Narrative Fragments', 'items' => $featured_fragments]);
-  get_template_part('template-parts/views/featured-in-grid', null, ['title' => 'Referenced In', 'items' => $referenced_in]);
+  if (!empty($featured_chapters) || !empty($featured_fragments) || !empty($featured_elements)) {
+      get_template_part('template-parts/views/featured-in-grid', null, [
+          'title'     => 'Featured In',
+          'chapters'  => array_values($featured_chapters),
+          'fragments' => array_values($featured_fragments),
+          'elements'  => array_values($featured_elements)
+      ]);
+  }
+
+  if (!empty($referenced_in)) {
+      get_template_part('template-parts/views/featured-in-grid', null, [
+          'title' => 'Referenced In',
+          'items' => array_values($referenced_in)
+      ]);
+  }
   ?>
-
-</div>

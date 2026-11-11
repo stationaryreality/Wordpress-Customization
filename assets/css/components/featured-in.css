@@ -123,3 +123,53 @@
     justify-content: center;
     justify-items: center;
 }
+
+
+/* ========== UNIFIED FEATURED IN FIXES ========== */
+
+/* 1. Image scale and shadow on hover */
+.featured-in-link:hover .featured-in-image {
+    transform: scale(1.03);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* 2. Blue text and underline on hover */
+.featured-in-link:hover .featured-in-item-title {
+    color: #0073aa;
+    text-decoration: underline;
+}
+
+/* 3. Fix grid centering for incomplete rows (the "4th item stuck left" bug) */
+.featured-in-grid {
+    justify-content: center;
+    justify-items: center;
+}
+
+/* 4. Spacing and styling for the "Elements" sub-heading */
+.featured-in-elements {
+    margin-top: 3rem;
+}
+
+.featured-in-elements-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+/* 5. Force Element grid to be smaller and strictly 1:1 square */
+.featured-in-grid--elements {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 140px));
+    max-width: 800px;
+}
+
+.featured-in-grid--elements .featured-in-item {
+    max-width: 140px;
+}
+
+.featured-in-grid--elements .featured-in-image {
+    aspect-ratio: 1 / 1 !important;
+}
