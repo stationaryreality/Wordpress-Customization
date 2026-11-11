@@ -19,8 +19,6 @@ kp_render_artist_header($primary_songs);
             <?php the_content(); ?>
         </div>
 
-        <?php show_featured_in_threads('attached_elements'); ?>
-
         <?php
         $related = get_field('related_content');
 
@@ -86,3 +84,8 @@ kp_render_artist_header($primary_songs);
     <?php do_action('post_after'); ?>
 
 </div>
+
+<?php 
+// MOVED OUTSIDE: now full-width, no 800px wrapper squashing the grid
+show_featured_in_threads('attached_elements'); 
+?>
