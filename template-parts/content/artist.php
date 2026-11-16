@@ -9,7 +9,7 @@ $member_of     = get_field('member_of', $artist_id);
 
 // Query songs where this artist is the primary artist
 $primary_songs = get_posts([
-    'post_type'      => 'song',
+    'post_type'      => ['song', 'rap'],
     'posts_per_page' => -1,
     'meta_query'     => [
         ['key' => 'song_artist', 'value' => $artist_id, 'compare' => '=']
@@ -20,7 +20,7 @@ $primary_songs = get_posts([
 
 // Query songs where this artist appears in additional_artists
 $additional_songs = get_posts([
-    'post_type'      => 'song',
+    'post_type'      => ['song', 'rap'],
     'posts_per_page' => -1,
     'meta_query'     => [
         ['key' => 'additional_artists', 'value' => $artist_id, 'compare' => 'LIKE']
@@ -113,7 +113,7 @@ usort($songs, function($a, $b) {
   if (!empty($songs)) {
       foreach ($songs as $song) {
           $song_lyrics = get_posts([
-              'post_type'      => 'lyric',
+              'post_type'      => ['lyric', 'raplyric'],
               'posts_per_page' => -1,
               'orderby'        => 'title',
               'order'          => 'ASC',
