@@ -258,3 +258,41 @@
     letter-spacing: 0.02em;
     text-transform: uppercase;
 }
+
+/* ============================================================
+   ELEMENT PAGE: THREE-REGION LAYOUT
+   Lead and tail reading columns stay at the original 800px
+   measure via .cpt-element-content. Featured In lives outside
+   them and keeps its full grid width.
+   ============================================================ */
+
+/* Tail column: contain wide tags horizontally, never clip vertically.
+   A hidden axis forces the visible axis to compute to auto, which
+   turns the region into a scroll container and shaves the bottom
+   border off the final bubble row when nothing follows it. */
+.cpt-element-content.cpt-element-content--continued {
+    overflow: visible;          /* fallback: no clipping at all */
+    overflow-x: clip;           /* horizontal containment preserved */
+    overflow-y: visible;        /* legal alongside clip — no scroll box */
+    overflow-clip-margin: 8px;  /* hairline borders bleed cleanly */
+    padding-bottom: 1.5rem;     /* clearance on every page variant */
+}
+
+/* Related accordion and sources stay inside the reading measure. */
+.cpt-element-content--continued .cpt-element-related,
+.cpt-element-content--continued .cpt-element-related-group {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Tail article mirrors the lead article's block behaviour. */
+.cpt-element-tail {
+    display: block;
+    min-width: 0;
+}
+
+/* Bubble rows never sit flush against the clip edge. */
+.cpt-element-content--continued .cpt-element-related + * {
+    margin-top: 2rem;
+}
