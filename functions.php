@@ -354,6 +354,7 @@ require_once get_stylesheet_directory() . '/inc/collectors/knowledge-collector.p
 
 require_once get_stylesheet_directory() . '/inc/presentation/knowledge-registry.php';
 
+require_once get_stylesheet_directory() . '/inc/top-content/helpers.php';
 
 // Load shared taxonomy bubbles function
 add_action('after_setup_theme', function() {

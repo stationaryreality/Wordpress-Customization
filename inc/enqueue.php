@@ -396,6 +396,23 @@ function theme_css_loader_debug() {
 }
 add_action('wp_footer', 'theme_css_loader_debug', 99);
 
+add_action( 'wp_enqueue_scripts', function () {
+    if ( ! is_page_template( 'templates/pages/top-content.php' ) ) {
+        return;
+    }
+
+    $base = get_stylesheet_directory_uri() . '/assets/css';
+    $dir  = get_stylesheet_directory() . '/assets/css';
+    $v    = function ( $path ) use ( $dir ) {
+        return file_exists( $dir . $path ) ? filemtime( $dir . $path ) : '1.0';
+    };
+
+    wp_enqueue_style( 'top-content-page', $base . '/pages/top-content.css', [], $v( '/pages/top-content.css' ) );
+    wp_enqueue_style( 'top-content-grid', $base . '/components/top/top-grid.css', [], $v( '/components/top/top-grid.css' ) );
+    wp_enqueue_style( 'top-content-list', $base . '/components/top/top-list.css', [], $v( '/components/top/top-list.css' ) );
+    wp_enqueue_style( 'top-content-image-grid', $base . '/components/top/top-image-grid.css', [], $v( '/components/top/top-image-grid.css' ) );
+    wp_enqueue_style( 'top-content-sections', $base . '/components/top/top-sections.css', [ 'top-content-page', 'top-content-grid', 'top-content-list', 'top-content-image-grid' ], $v( '/components/top/top-sections.css' ) );
+} );
 
 // === KEYBOARD NAVIGATION SCRIPT ===
 function enqueue_keyboard_navigation() {

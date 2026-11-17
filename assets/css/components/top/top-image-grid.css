@@ -1,0 +1,62 @@
+/* ==========================================================================
+   TOP CONTENT — IMAGE GRID LAYOUT + IMAGE CARD
+   Square tiles, standardized sizing.
+   Per-section tweaks: .top-images-grid--{key}
+   ========================================================================== */
+
+.top-images-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1.5rem;
+}
+
+.top-image-card {
+    text-align: center;
+}
+
+.top-image-card a {
+    text-decoration: none;
+}
+
+.top-image-card img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .04);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+    transition: transform .3s ease;
+}
+
+.top-image-card:hover img {
+    transform: scale(1.02);
+}
+
+.top-image-card h3 {
+    margin: .75rem 0 0;
+    font-size: 1rem;
+    font-weight: normal;
+    line-height: 1.3;
+}
+
+.top-image-card p {
+    margin: .35rem 0 0;
+    opacity: .72;
+    line-height: 1.6;
+    font-size: .85rem;
+}
+
+/* Responsive ------------------------------------------------------------ */
+
+@media (max-width: 768px) {
+    .top-images-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .top-images-grid {
+        grid-template-columns: 1fr;
+    }
+}

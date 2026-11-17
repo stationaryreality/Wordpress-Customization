@@ -1,0 +1,36 @@
+/* ==========================================================================
+   TOP CONTENT — PER-SECTION OVERRIDES
+   Loaded LAST. This is the only file you touch when tweaking one CPT.
+
+   Available modifiers:
+     .top-content-page--{key}      page wrapper
+     .top-content-section--{key}   section wrapper
+     .top-content-grid--{key}      grid wrapper      (grid layout)
+     .top-content-stream--{key}    stream wrapper    (list layout)
+     .top-images-grid--{key}       image grid wrapper (image-grid layout)
+
+   Keys: threads, episodes, lyrics, excerpts, images, portals, quotes,
+         artists, books, concepts, elements, games, movies, organizations,
+         profiles, shows, songs, videos
+
+   Examples (uncomment / adapt as needed):
+
+   .top-content-grid--books .top-grid-card-image { aspect-ratio: 2 / 3; }
+   .top-content-grid--books { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+   .top-content-grid--elements { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+   .top-content-stream--quotes { max-width: 700px; }
+   ========================================================================== */
+
+/* threads ---------------------------------------------------------------- */
+
+/* episodes --------------------------------------------------------------- */
+
+/* lyrics ----------------------------------------------------------------- */
+
+/* excerpts --------------------------------------------------------------- */
+
+/* images ----------------------------------------------------------------- */
+
+/* portals ---------------------------------------------------------------- */
+
+/* quotes ----------------------------------------------------------------- */

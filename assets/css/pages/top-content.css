@@ -1,0 +1,128 @@
+/* ==========================================================================
+   TOP CONTENT — PAGE SHELL
+   Page container, hero, nav, section header, empty state, footer.
+   Card/grid/list styles live in assets/css/components/top/.
+   ========================================================================== */
+
+.top-content-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px 140px;
+}
+
+/* Hero ------------------------------------------------------------------ */
+
+.top-content-hero {
+    margin-bottom: 26px;
+}
+
+.top-content-hero h1 {
+    font-size: clamp(28px, 4vw, 52px);
+    line-height: .92;
+    margin: 0 0 20px;
+}
+
+.top-content-hero p {
+    max-width: 760px;
+    font-size: 15px;
+    line-height: 1.7;
+    opacity: .72;
+}
+
+/* Nav ------------------------------------------------------------------- */
+
+.top-content-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 10px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+.top-content-nav a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, .10);
+    background: rgba(255, 255, 255, .03);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    transition: .2s ease;
+}
+
+.top-content-nav a:hover {
+    background: rgba(255, 255, 255, .07);
+    border-color: rgba(255, 255, 255, .16);
+    transform: translateY(-1px);
+}
+
+.top-content-nav a.active {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .15);
+    opacity: 1;
+}
+
+/* Section --------------------------------------------------------------- */
+
+.top-content-section {
+    margin-bottom: 80px;
+}
+
+.top-content-section-header {
+    margin-bottom: 22px;
+}
+
+.top-content-section-header h2 {
+    font-size: clamp(24px, 3vw, 38px);
+    line-height: 1;
+    margin: 0 0 14px;
+}
+
+.top-content-section-header p {
+    margin: 0;
+    max-width: 720px;
+    font-size: 14px;
+    line-height: 1.8;
+    opacity: .66;
+}
+
+/* Empty ----------------------------------------------------------------- */
+
+.top-content-empty {
+    opacity: .65;
+    font-size: 16px;
+}
+
+/* Footer ---------------------------------------------------------------- */
+
+.top-content-footer {
+    padding-top: 1px;
+    border-top: 1px solid rgba(255, 255, 255, .08);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.top-content-footer a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 20px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, .08);
+    text-decoration: none;
+    transition: .2s ease;
+}
+
+.top-content-footer a:hover {
+    background: rgba(255, 255, 255, .05);
+}

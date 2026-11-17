@@ -1,0 +1,68 @@
+/* ==========================================================================
+   TOP CONTENT — GRID LAYOUT + DEFAULT GRID CARD
+   Standardized sizing: 160px min cards, 1.5rem gap, 16/9 images, 1rem titles.
+   Per-section tweaks: .top-content-grid--{key} / .top-content-section--{key}
+   ========================================================================== */
+
+.top-content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1.5rem;
+}
+
+.top-grid-card {
+    text-align: center;
+}
+
+.top-grid-card-image {
+    display: block;
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .04);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+}
+
+.top-grid-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .3s ease;
+}
+
+.top-grid-card:hover .top-grid-card-image img {
+    transform: scale(1.03);
+}
+
+.top-grid-card-placeholder {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, .04);
+}
+
+.top-grid-card-title {
+    margin: 1rem 0 0;
+    font-size: 1rem;
+    font-weight: normal;
+    line-height: 1.3;
+}
+
+.top-grid-card-title a {
+    text-decoration: none;
+}
+
+/* Responsive ------------------------------------------------------------ */
+
+@media (max-width: 768px) {
+    .top-content-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .top-content-grid {
+        grid-template-columns: 1fr;
+    }
+}
