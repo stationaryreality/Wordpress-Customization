@@ -7,6 +7,21 @@ $wiki_slug     = get_field('wikipedia_slug', $rapper_id);
 $group_members = get_field('group_members', $rapper_id);
 $member_of     = get_field('member_of', $rapper_id);
 
+// Text-only members (no CPT). Comma-separated
+$also_members_raw = get_field('also_members', $rapper_id);
+$also_members = array_filter(array_map('trim', explode(',', (string) $also_members_raw)));
+usort($also_members, 'strcasecmp');
+
+// Derive initials from a name (no image, no CPT needed).
+if (!function_exists('kp_get_initials')) {
+    function kp_get_initials($name) {
+        $parts = preg_split('/\s+/', trim($name));
+        $first = mb_substr($parts[0], 0, 1);
+        $last  = count($parts) > 1 ? mb_substr(end($parts), 0, 1) : '';
+        return mb_strtoupper($first . $last);
+    }
+}
+
 // Query raps where this rapper is the primary artist
 $primary_songs = get_posts([
     'post_type'      => ['song', 'rap'], 
@@ -55,25 +70,35 @@ usort($songs, function($a, $b) {
 
   <h1><?php the_title(); ?></h1>
 
-  <?php // ── GROUP MEMBERS (this rapper IS a group) ── ?>
-  <?php if (!empty($group_members)): ?>
-    <div class="cpt-artist-members">
-      <h3 class="cpt-artist-members-title">Members</h3>
-      <div class="cpt-artist-members-grid">
-        <?php foreach ($group_members as $member):
-          $member_portrait = get_field('portrait_image', $member->ID);
-          $member_thumb    = $member_portrait ? $member_portrait['sizes']['thumbnail'] : '';
-        ?>
-          <a href="<?php echo esc_url(get_permalink($member->ID)); ?>" class="cpt-artist-member-link">
-            <?php if ($member_thumb): ?>
-              <img src="<?php echo esc_url($member_thumb); ?>" alt="<?php echo esc_attr(get_the_title($member->ID)); ?>" class="cpt-artist-member-thumb">
-            <?php endif; ?>
-            <span class="cpt-artist-member-name"><?php echo esc_html(get_the_title($member->ID)); ?></span>
-          </a>
-        <?php endforeach; ?>
-      </div>
+<?php // ── GROUP MEMBERS (this artist IS a group) ── ?>
+<?php if (!empty($group_members) || !empty($also_members)): ?>
+  <div class="cpt-artist-members">
+    <h3 class="cpt-artist-members-title">Members</h3>
+    <div class="cpt-artist-members-grid">
+
+      <?php if (!empty($group_members)): foreach ($group_members as $member):
+        $member_portrait = get_field('portrait_image', $member->ID);
+        $member_thumb    = $member_portrait ? $member_portrait['sizes']['thumbnail'] : '';
+      ?>
+        <a href="<?php echo esc_url(get_permalink($member->ID)); ?>" class="cpt-artist-member-link">
+          <?php if ($member_thumb): ?>
+            <img src="<?php echo esc_url($member_thumb); ?>" alt="<?php echo esc_attr(get_the_title($member->ID)); ?>" class="cpt-artist-member-thumb">
+          <?php endif; ?>
+          <span class="cpt-artist-member-name"><?php echo esc_html(get_the_title($member->ID)); ?></span>
+        </a>
+      <?php endforeach; endif; ?>
+
+      <?php // Ghost cards: members without a CPT (gray initials circle, no link) ?>
+      <?php foreach ($also_members as $gm_name): ?>
+        <div class="cpt-artist-member-link cpt-artist-member-ghost">
+          <div class="cpt-artist-member-thumb cpt-artist-member-initials"><?php echo esc_html(kp_get_initials($gm_name)); ?></div>
+          <span class="cpt-artist-member-name"><?php echo esc_html($gm_name); ?></span>
+        </div>
+      <?php endforeach; ?>
+
     </div>
-  <?php endif; ?>
+  </div>
+<?php endif; ?>
 
   <?php // ── MEMBER OF (this rapper belongs to groups) ── ?>
   <?php if (!empty($member_of)): ?>

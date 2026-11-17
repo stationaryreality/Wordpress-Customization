@@ -251,3 +251,21 @@
     border-bottom: 1px solid #eee;
     padding-bottom: 0.5rem;
 }
+
+/* Ghost member cards (no CPT / no page) */
+.cpt-artist-member-ghost {
+  cursor: default;
+  pointer-events: none;
+}
+.cpt-artist-member-initials {
+  background: #555;           /* gray, distinct from your black "missing photo" square */
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  aspect-ratio: 1 / 1;
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: .05em;
+}
