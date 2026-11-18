@@ -7,7 +7,7 @@ $search_term = $args['search_term'] ?? '';
 $title = $info['title'] ?? $args['title'] ?? 'Rappers';
 $emoji = $info['emoji'] ?? $args['emoji'] ?? '🎙️';
 
-$rapper_query = $args['rapper_query'] ?? $args['artist_query'] ?? get_query_var('artist_query') ?? $query ?? null;
+$rapper_query = $args['rapper_query'] ?? $args['artist_query'] ?? $query ?? (get_query_var('artist_query') ?: null);
 
 if (empty($items) && (!$rapper_query instanceof WP_Query || !$rapper_query->have_posts())) {
     return;
