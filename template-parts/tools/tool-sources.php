@@ -18,7 +18,10 @@ $post_types = [
     'show',
     'game',
     'portal',
-    'video'
+    'video',
+    'rapper',
+    'rap',
+    'raplyric'
 ];
 
 $entries = [];

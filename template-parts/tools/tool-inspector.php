@@ -30,6 +30,10 @@ $cpts = [
     'element'      => '⚛️ Narrative Elements',
     'show'         => '📺 TV Shows Referenced',
     'game'         => '🎮 Video Games',
+    'video'        => '📼 Video Room',
+    'rapper'       => '🎙️ Rap Artists',
+    'rap'          => '🎧 Rap Songs',
+    'raplyric'     => '✍️ Rap Excerpts',
 ];
 
 $selected_cpt = isset($_GET['inspector_cpt'])

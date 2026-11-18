@@ -23,7 +23,11 @@ $post_types = [
     'fragment',
     'element',
     'show',
-    'game'
+    'game',
+    'video',
+    'rapper',
+    'rap',
+    'raplyric'
 ];
 
 $map = get_cpt_metadata();

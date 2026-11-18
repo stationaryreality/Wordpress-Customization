@@ -22,10 +22,12 @@
 */
 
 $cpts = [
-    'quote'   => '💬 Quote Library',
-    'lyric'   => '🎼 Song Excerpts',
-    'concept' => '🔎 Lexicon',
-    'excerpt' => '📖 Excerpts Library',
+    'quote'     => '💬 Quote Library',
+    'lyric'     => '🎼 Song Excerpts',
+    'concept'   => '🔎 Lexicon',
+    'excerpt'   => '📖 Excerpts Library',
+    'raplyric'  => '✍️ Rap Excerpts',
+
 ];
 
 $selected_cpt = isset($_GET['viewer_cpt'])
