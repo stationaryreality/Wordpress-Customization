@@ -1,0 +1,63 @@
+<?php
+$query       = $args['query'] ?? null;
+$items       = $args['items'] ?? [];
+$info        = $args['info'] ?? [];
+$search_term = $args['search_term'] ?? '';
+
+$title = $info['title'] ?? $args['title'] ?? 'Rappers';
+$emoji = $info['emoji'] ?? $args['emoji'] ?? '🎙️';
+
+$rapper_query = $args['rapper_query'] ?? $args['artist_query'] ?? get_query_var('artist_query') ?? $query ?? null;
+
+if (empty($items) && (!$rapper_query instanceof WP_Query || !$rapper_query->have_posts())) {
+    return;
+}
+?>
+
+<section class="cpt-artist-section">
+
+<?php if ($title): ?>
+    <h2 class="cpt-artist-title">
+        <?php echo esc_html(trim($emoji . ' ' . $title)); ?>
+        <?php if ($search_term): ?>
+            containing “<?php echo esc_html($search_term); ?>”
+        <?php endif; ?>
+    </h2>
+<?php endif; ?>
+
+<div class="cpt-artist-grid">
+
+  <?php if (!empty($items)): ?>
+    <?php foreach ($items as $item): ?>
+      <?php $portrait_url = !empty($item['image']) ? $item['image'] : ''; ?>
+      <div class="cpt-artist-grid-item">
+        <a href="<?php echo esc_url($item['url']); ?>">
+          <?php if ($portrait_url): ?>
+            <img src="<?php echo esc_url($portrait_url); ?>" alt="<?php echo esc_attr($item['title']); ?>" class="cpt-artist-grid-image">
+          <?php endif; ?>
+          <h3 class="cpt-artist-grid-title"><?php echo esc_html($item['title']); ?></h3>
+        </a>
+      </div>
+    <?php endforeach; ?>
+
+  <?php else: ?>
+    <?php while ($rapper_query->have_posts()): $rapper_query->the_post(); ?>
+      <?php
+      $portrait = get_field('portrait_image');
+      $img_url  = $portrait ? $portrait['sizes']['thumbnail'] : '';
+      ?>
+      <div class="cpt-artist-grid-item">
+        <a href="<?php the_permalink(); ?>">
+          <?php if ($img_url): ?>
+            <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" class="cpt-artist-grid-image">
+          <?php endif; ?>
+          <h3 class="cpt-artist-grid-title"><?php the_title(); ?></h3>
+        </a>
+      </div>
+    <?php endwhile; ?>
+    <?php wp_reset_postdata(); ?>
+  <?php endif; ?>
+
+</div>
+
+</section>
