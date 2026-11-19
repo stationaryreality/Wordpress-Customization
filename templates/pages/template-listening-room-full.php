@@ -93,7 +93,7 @@ if (!function_exists('lroom_artists')) {
     function lroom_artists($post_id) {
         $names = [];
 
-        foreach (['artist', 'rapper', 'artists', 'rappers'] as $key) {
+        foreach (['song_artist'] as $key) {
             $v = lroom_field($key, $post_id);
             if (empty($v)) continue;
             foreach ((is_array($v) ? $v : [$v]) as $item) {
