@@ -1,69 +1,60 @@
 <?php
 /**
  * Template Name: Listening Room (Full Page)
- * Standalone app shell. No get_header(), no wp_head().
- * Inclusion rule: a track appears here if it has ANY song_group term.
- * Sources: song + rap CPTs. Artists: artist + rapper (ACF or taxonomy).
+ * Standalone shell. No get_header(), no wp_head().
+ * Inclusion: any song/rap with a song_group term.
  */
 
 if (function_exists('show_admin_bar')) { show_admin_bar(false); }
-
-/* ───────────────────────── helpers ───────────────────────── */
 
 if (!function_exists('lroom_field')) {
     function lroom_field($selector, $id = false) {
         return function_exists('get_field') ? get_field($selector, $id) : null;
     }
 }
-
+if (!function_exists('lroom_text')) {
+    function lroom_text($s) {
+        $s = (string) $s;
+        for ($i = 0; $i < 2; $i++) {
+            $d = html_entity_decode($s, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            if ($d === $s) break;
+            $s = $d;
+        }
+        return trim(wp_strip_all_tags($s));
+    }
+}
 if (!function_exists('lroom_sub')) {
-    function lroom_sub($s, $start, $len) {
-        return function_exists('mb_substr') ? mb_substr($s, $start, $len) : substr($s, $start, $len);
-    }
+    function lroom_sub($s, $a, $b) { return function_exists('mb_substr') ? mb_substr($s, $a, $b) : substr($s, $a, $b); }
 }
-
 if (!function_exists('lroom_lower')) {
-    function lroom_lower($s) {
-        return function_exists('mb_strtolower') ? mb_strtolower($s) : strtolower($s);
-    }
+    function lroom_lower($s) { return function_exists('mb_strtolower') ? mb_strtolower($s) : strtolower($s); }
 }
-
 if (!function_exists('lroom_upper')) {
-    function lroom_upper($s) {
-        return function_exists('mb_strtoupper') ? mb_strtoupper($s) : strtoupper($s);
-    }
+    function lroom_upper($s) { return function_exists('mb_strtoupper') ? mb_strtoupper($s) : strtoupper($s); }
 }
-
 if (!function_exists('lroom_sortkey')) {
     function lroom_sortkey($s) {
-        $s = remove_accents(wp_strip_all_tags((string) $s));
-        $s = lroom_lower(trim($s));
-        $s = preg_replace('/^(the|a|an)\s+/u', '', $s);
-        return trim($s);
+        $s = lroom_lower(remove_accents(lroom_text($s)));
+        return trim(preg_replace('/^(the|a|an)\s+/u', '', $s));
     }
 }
-
 if (!function_exists('lroom_yt_id')) {
     function lroom_yt_id($url) {
         if (!is_string($url)) return '';
         $url = trim($url);
         if ($url === '') return '';
         if (preg_match('/^[a-zA-Z0-9_-]{11}$/', $url)) return $url;
-        if (preg_match('~(?:youtu\.be/|/embed/|/v/|/shorts/|/live/|[?&]v=)([a-zA-Z0-9_-]{11})~i', $url, $m)) {
-            return $m[1];
-        }
+        if (preg_match('~(?:youtu\.be/|/embed/|/v/|/shorts/|/live/|[?&]v=)([a-zA-Z0-9_-]{11})~i', $url, $m)) return $m[1];
         return '';
     }
 }
-
 if (!function_exists('lroom_cover')) {
     function lroom_cover($field) {
         $out = ['thumb' => '', 'large' => ''];
         if (empty($field)) return $out;
-
         $id = 0;
         if (is_array($field)) {
-            if (!empty($field['ID']))      $id = (int) $field['ID'];
+            if (!empty($field['ID'])) $id = (int) $field['ID'];
             elseif (!empty($field['url'])) { $out['thumb'] = $field['url']; $out['large'] = $field['url']; return $out; }
         } elseif (is_object($field)) {
             if (!empty($field->ID)) $id = (int) $field->ID;
@@ -72,15 +63,13 @@ if (!function_exists('lroom_cover')) {
         } elseif (is_string($field) && preg_match('~^https?://~i', $field)) {
             $out['thumb'] = $field; $out['large'] = $field; return $out;
         }
-
         if (!$id) return $out;
-
-        foreach (['thumbnail', 'medium', 'large'] as $size) {
-            $src = wp_get_attachment_image_src($id, $size);
+        foreach (['thumbnail', 'medium', 'large'] as $s) {
+            $src = wp_get_attachment_image_src($id, $s);
             if ($src && !$out['thumb']) $out['thumb'] = $src[0];
         }
-        foreach (['medium_large', 'large', 'medium', 'full'] as $size) {
-            $src = wp_get_attachment_image_src($id, $size);
+        foreach (['medium_large', 'large', 'medium', 'full'] as $s) {
+            $src = wp_get_attachment_image_src($id, $s);
             if ($src) { $out['large'] = $src[0]; break; }
         }
         if (!$out['thumb']) $out['thumb'] = $out['large'];
@@ -88,63 +77,42 @@ if (!function_exists('lroom_cover')) {
         return $out;
     }
 }
-
 if (!function_exists('lroom_artists')) {
     function lroom_artists($post_id) {
         $names = [];
-
         foreach (['song_artist'] as $key) {
             $v = lroom_field($key, $post_id);
             if (empty($v)) continue;
             foreach ((is_array($v) ? $v : [$v]) as $item) {
-                if (is_object($item) && isset($item->post_title))      $names[] = $item->post_title;
+                if (is_object($item) && isset($item->post_title))       $names[] = $item->post_title;
                 elseif (is_array($item) && !empty($item['post_title'])) $names[] = $item['post_title'];
                 elseif (is_numeric($item)) { $p = get_post((int) $item); if ($p) $names[] = $p->post_title; }
-                elseif (is_string($item) && trim($item) !== '')         $names[] = $item;
+                elseif (is_string($item) && trim($item) !== '')          $names[] = $item;
             }
             if ($names) break;
         }
-
-        if (!$names) {
-            foreach (['artist', 'rapper', 'artists', 'rappers'] as $tax) {
-                if (!taxonomy_exists($tax)) continue;
-                $terms = get_the_terms($post_id, $tax);
-                if ($terms && !is_wp_error($terms)) {
-                    foreach ($terms as $t) $names[] = $t->name;
-                    break;
-                }
-            }
-        }
-
         $clean = [];
         foreach ($names as $n) {
-            $n = trim(wp_strip_all_tags($n));
+            $n = lroom_text($n);
             if ($n !== '' && !in_array($n, $clean, true)) $clean[] = $n;
         }
         return $clean;
     }
 }
-
 if (!function_exists('lroom_is_qualifier')) {
     function lroom_is_qualifier($inner) {
         $l = lroom_lower($inner);
-        static $keep = [
-            'live','remaster','remix','mix','edit','version','mono','stereo','acoustic',
-            'demo','instrumental','radio','single','album','deluxe','anniversary','bonus',
-            'original','explicit','clean','feat','ft.','ft ','with','session','take',
-            'reprise','extended','vip','dub','bootleg','rework','cover','unplugged',
-            'mono','stereo','remixed','restored','soundtrack','theme from'
-        ];
+        static $keep = ['live','remaster','remix','mix','edit','version','mono','stereo','acoustic','demo',
+            'instrumental','radio','single','album','deluxe','anniversary','bonus','original','explicit','clean',
+            'feat','ft.','ft ','with','session','take','reprise','extended','vip','dub','bootleg','rework',
+            'cover','unplugged','restored','soundtrack','theme from'];
         foreach ($keep as $k) { if (strpos($l, $k) !== false) return true; }
-        if (preg_match('/^\d{4}$/', trim($inner))) return true;
-        return false;
+        return (bool) preg_match('/^\d{4}$/', trim($inner));
     }
 }
-
 if (!function_exists('lroom_title')) {
     function lroom_title($raw) {
-        $base   = trim(wp_strip_all_tags($raw));
-        $suffix = '';
+        $base = lroom_text($raw); $suffix = '';
         for ($i = 0; $i < 4; $i++) {
             if (!preg_match('/^(.*?)\s*\(([^()]*)\)\s*$/u', $base, $m)) break;
             $inner = trim($m[2]);
@@ -153,38 +121,28 @@ if (!function_exists('lroom_title')) {
             $base = trim($m[1]);
         }
         $out = trim($base . $suffix);
-        return $out !== '' ? $out : trim(wp_strip_all_tags($raw));
+        return $out !== '' ? $out : lroom_text($raw);
     }
 }
-
 if (!function_exists('lroom_badge')) {
     function lroom_badge($name, $term_id) {
         $custom = lroom_field('group_badge', 'song_group_' . $term_id);
         if (!$custom) $custom = get_term_meta($term_id, 'group_badge', true);
-        if (is_string($custom) && trim($custom) !== '') {
-            return lroom_sub(trim(wp_strip_all_tags($custom)), 0, 3);
+        if (is_string($custom) && trim($custom) !== '') return lroom_sub(lroom_text($custom), 0, 3);
+
+        $n = lroom_text($name); $l = lroom_lower($n);
+        foreach (['sixties'=>'60s','seventies'=>'70s','eighties'=>'80s','nineties'=>'90s','noughties'=>'00s'] as $k => $v) {
+            if (strpos($l, $k) !== false) return $v;
         }
-
-        $n = trim(wp_strip_all_tags($name));
-        $l = lroom_lower($n);
-
-        $words = ['sixties' => '60s', 'seventies' => '70s', 'eighties' => '80s', 'nineties' => '90s', 'noughties' => '00s'];
-        foreach ($words as $k => $v) { if (strpos($l, $k) !== false) return $v; }
-
         if (preg_match('/(?:\b(?:19|20)(\d0)(?:\'?s)?\b|\b(\d0)\'?s\b)/i', $n, $m)) {
             $d = !empty($m[1]) ? $m[1] : (isset($m[2]) ? $m[2] : '');
             if ($d !== '') return $d . 's';
         }
-
-        $clean = preg_replace('/[^\p{L}\p{N}\s]/u', ' ', $n);
-        $parts = preg_split('/\s+/', trim($clean), -1, PREG_SPLIT_NO_EMPTY);
+        $parts = preg_split('/\s+/', trim(preg_replace('/[^\p{L}\p{N}\s]/u', ' ', $n)), -1, PREG_SPLIT_NO_EMPTY);
         if (!$parts) return lroom_upper(lroom_sub($n, 0, 3));
-
-        $stop = ['the','and','of','a','an','for','in','on','with','&'];
-        $sig  = [];
+        $stop = ['the','and','of','a','an','for','in','on','with','&']; $sig = [];
         foreach ($parts as $w) { if (!in_array(lroom_lower($w), $stop, true)) $sig[] = $w; }
         if (!$sig) $sig = $parts;
-
         if (count($sig) >= 2) {
             $ini = '';
             foreach (array_slice($sig, 0, 3) as $w) $ini .= lroom_sub($w, 0, 1);
@@ -193,24 +151,18 @@ if (!function_exists('lroom_badge')) {
         return lroom_upper(lroom_sub($sig[0], 0, 3));
     }
 }
-
 if (!function_exists('lroom_color')) {
     function lroom_color($name, $term_id) {
         $custom = lroom_field('group_color', 'song_group_' . $term_id);
         if (!$custom) $custom = get_term_meta($term_id, 'group_color', true);
-        if (is_string($custom) && preg_match('/^#([0-9a-f]{3}|[0-9a-f]{6})$/i', trim($custom))) {
-            return trim($custom);
-        }
-        $palette = ['#7C5CFF','#FF4D9D','#FFB020','#2DD4BF','#38BDF8','#A3E635','#FF6B57','#8B93FF'];
-        $key     = lroom_lower(remove_accents($name));
-        return $palette[abs((int) crc32($key)) % count($palette)];
+        if (is_string($custom) && preg_match('/^#([0-9a-f]{3}|[0-9a-f]{6})$/i', trim($custom))) return trim($custom);
+        $palette = ['#3B82F6','#0EA5E9','#22D3EE','#2DD4BF','#60A5FA','#14B8A6'];
+        return $palette[abs((int) crc32(lroom_lower(remove_accents($name)))) % count($palette)];
     }
 }
 
-/* ───────────────────────── data build ───────────────────────── */
-
-$lroom_types = array_values(array_filter(['song', 'rap'], 'post_type_exists'));
-
+/* ── data ── */
+$lroom_types  = array_values(array_filter(['song', 'rap'], 'post_type_exists'));
 $lroom_tracks = [];
 $lroom_terms  = [];
 $lroom_index  = [];
@@ -224,11 +176,8 @@ if ($lroom_types && taxonomy_exists('song_group')) {
         'order'               => 'ASC',
         'no_found_rows'       => true,
         'ignore_sticky_posts' => true,
-        'tax_query'           => [
-            ['taxonomy' => 'song_group', 'operator' => 'EXISTS'],
-        ],
+        'tax_query'           => [['taxonomy' => 'song_group', 'operator' => 'EXISTS']],
     ]);
-
     if ($q->have_posts()) {
         while ($q->have_posts()) {
             $q->the_post();
@@ -237,27 +186,24 @@ if ($lroom_types && taxonomy_exists('song_group')) {
             if (!$terms || is_wp_error($terms)) continue;
 
             $artists = lroom_artists($pid);
-            $raw     = get_the_title();
             $cover   = lroom_cover(lroom_field('cover_image', $pid));
+            $title   = lroom_title(get_the_title());
 
-            $track = [
+            $lroom_tracks[] = [
                 'id'         => $pid,
-                'title'      => lroom_title($raw),
-                'full'       => trim(wp_strip_all_tags($raw)),
+                'title'      => $title,
+                'full'       => lroom_text(get_the_title()),
                 'artist'     => $artists ? implode(', ', $artists) : 'Unknown Artist',
                 'yt'         => lroom_yt_id(lroom_field('youtube_url', $pid)),
                 'thumb'      => $cover['thumb'],
                 'large'      => $cover['large'],
                 'url'        => get_permalink($pid),
-                'sortTitle'  => lroom_sortkey(lroom_title($raw)),
+                'sortTitle'  => lroom_sortkey($title),
                 'sortArtist' => lroom_sortkey($artists ? $artists[0] : 'zzz'),
                 'added'      => (int) get_post_time('U', true, $pid),
-                'group'      => $terms[0]->name,
+                'group'      => lroom_text($terms[0]->name),
             ];
-
-            $i = count($lroom_tracks);
-            $lroom_tracks[] = $track;
-
+            $i = count($lroom_tracks) - 1;
             foreach ($terms as $t) {
                 $lroom_terms[$t->term_id] = $t;
                 if (!isset($lroom_index[$t->term_id])) $lroom_index[$t->term_id] = [];
@@ -270,44 +216,31 @@ if ($lroom_types && taxonomy_exists('song_group')) {
 
 $lroom_groups = [];
 foreach ($lroom_index as $tid => $idxs) {
-    $t = $lroom_terms[$tid];
-
+    $t    = $lroom_terms[$tid];
+    $name = lroom_text($t->name);
     usort($idxs, function ($a, $b) use ($lroom_tracks) {
         return strnatcasecmp($lroom_tracks[$a]['sortTitle'], $lroom_tracks[$b]['sortTitle']);
     });
-
     $lroom_groups[] = [
-        'id'     => (int) $tid,
-        'name'   => $t->name,
-        'slug'   => $t->slug,
-        'badge'  => lroom_badge($t->name, $tid),
-        'color'  => lroom_color($t->name, $tid),
-        'count'  => count($idxs),
-        'tracks' => array_values($idxs),
-        'sort'   => lroom_sortkey($t->name),
+        'id' => (int) $tid, 'name' => $name, 'slug' => $t->slug,
+        'badge' => lroom_badge($name, $tid), 'color' => lroom_color($name, $tid),
+        'count' => count($idxs), 'tracks' => array_values($idxs), 'sort' => lroom_sortkey($name),
     ];
 }
-
 usort($lroom_groups, function ($a, $b) {
-    $tail = ['ungrouped', 'misc', 'other', 'others', 'singles'];
+    $tail = ['ungrouped','misc','other','others','singles'];
     $at = in_array(lroom_lower($a['name']), $tail, true) ? 1 : 0;
     $bt = in_array(lroom_lower($b['name']), $tail, true) ? 1 : 0;
     if ($at !== $bt) return $at - $bt;
     return strnatcasecmp($a['sort'], $b['sort']);
 });
-
 foreach ($lroom_groups as &$g) { unset($g['sort']); }
 unset($g);
 
 $lroom_payload = [
     'tracks' => $lroom_tracks,
     'groups' => $lroom_groups,
-    'room'   => [
-        'name'   => 'The Listening Room',
-        'total'  => count($lroom_tracks),
-        'groups' => count($lroom_groups),
-        'site'   => home_url('/'),
-    ],
+    'room'   => ['total' => count($lroom_tracks), 'groups' => count($lroom_groups)],
 ];
 
 $lroom_css = get_stylesheet_directory() . '/assets/css/pages/listening-room.css';
@@ -327,7 +260,7 @@ $lroom_jv  = file_exists($lroom_js) ? filemtime($lroom_js) : '1';
 </head>
 <body class="lr-body">
 
-<div class="lr-app" id="lr-app" data-state="idle" data-density="comfortable" data-labels="badge" data-art="on" data-motion="on">
+<div class="lr-app" id="lr-app" data-state="idle" data-view="video">
 
   <div class="lr-bg" aria-hidden="true">
     <span class="lr-aurora lr-aurora--a"></span>
@@ -337,7 +270,6 @@ $lroom_jv  = file_exists($lroom_js) ? filemtime($lroom_js) : '1';
     <span class="lr-vignette"></span>
   </div>
 
-  <!-- ══════════ TOP BAR ══════════ -->
   <header class="lr-top">
     <a class="lr-back" href="<?php echo esc_url(home_url('/')); ?>">
       <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
@@ -347,18 +279,13 @@ $lroom_jv  = file_exists($lroom_js) ? filemtime($lroom_js) : '1';
     <div class="lr-brand">
       <span class="lr-mark" aria-hidden="true">
         <svg viewBox="0 0 40 40" width="34" height="34">
-          <defs>
-            <radialGradient id="lrMarkG" cx="50%" cy="42%" r="60%">
-              <stop offset="0%" stop-color="#2A2440"/><stop offset="100%" stop-color="#0B0A12"/>
-            </radialGradient>
-          </defs>
-          <circle cx="20" cy="20" r="19" fill="url(#lrMarkG)" stroke="#3A3160" stroke-width="1"/>
-          <circle cx="20" cy="20" r="14.5" fill="none" stroke="#4B3F7A" stroke-width=".7" opacity=".8"/>
-          <circle cx="20" cy="20" r="11" fill="none" stroke="#4B3F7A" stroke-width=".7" opacity=".6"/>
-          <circle cx="20" cy="20" r="7.5" fill="none" stroke="#4B3F7A" stroke-width=".7" opacity=".45"/>
-          <circle cx="20" cy="20" r="5" fill="#FFB020"/>
-          <circle cx="20" cy="20" r="1.5" fill="#0B0A12"/>
-          <path d="M20 1a19 19 0 0 1 16.5 9.6" fill="none" stroke="#FF4D9D" stroke-width="1.6" stroke-linecap="round" opacity=".85"/>
+          <defs><radialGradient id="lrMarkG" cx="50%" cy="42%" r="60%"><stop offset="0%" stop-color="#16293B"/><stop offset="100%" stop-color="#05090F"/></radialGradient></defs>
+          <circle cx="20" cy="20" r="19" fill="url(#lrMarkG)" stroke="#2A4E6B"/>
+          <circle cx="20" cy="20" r="14.5" fill="none" stroke="#2E7BFF" stroke-width=".7" opacity=".7"/>
+          <circle cx="20" cy="20" r="11" fill="none" stroke="#2E7BFF" stroke-width=".7" opacity=".5"/>
+          <circle cx="20" cy="20" r="7.5" fill="none" stroke="#22D3EE" stroke-width=".7" opacity=".45"/>
+          <circle cx="20" cy="20" r="5" fill="#FFB020"/><circle cx="20" cy="20" r="1.5" fill="#05090F"/>
+          <path d="M20 1a19 19 0 0 1 16.5 9.6" fill="none" stroke="#22D3EE" stroke-width="1.6" stroke-linecap="round" opacity=".9"/>
         </svg>
       </span>
       <span class="lr-brandtxt">
@@ -368,33 +295,23 @@ $lroom_jv  = file_exists($lroom_js) ? filemtime($lroom_js) : '1';
     </div>
 
     <div class="lr-onair" id="lr-onair" data-state="idle">
-      <span class="lr-onair-dot" aria-hidden="true"></span>
-      <span id="lr-onair-text">Standby</span>
+      <span class="lr-onair-dot" aria-hidden="true"></span><span id="lr-onair-text">Standby</span>
     </div>
 
-    <div class="lr-master">
-      <button type="button" class="lr-iconbtn" id="lr-mute" aria-pressed="false" aria-label="Mute all sound" title="Mute all sound (M)">
-        <svg class="i-loud" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
-        <svg class="i-mute" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M22 9l-6 6"/><path d="M16 9l6 6"/></svg>
-      </button>
-      <input class="lr-range lr-range--vol" id="lr-volume" type="range" min="0" max="100" step="1" value="80" aria-label="Master volume">
-      <span class="lr-masterval" id="lr-volval">80</span>
-    </div>
+    <button type="button" class="lr-iconbtn" id="lr-mute" aria-pressed="false" aria-label="Mute all sound" title="Mute all sound (M)">
+      <svg class="i-loud" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+      <svg class="i-mute" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M22 9l-6 6"/><path d="M16 9l6 6"/></svg>
+    </button>
   </header>
 
-  <!-- ══════════ COLUMN 1 · GROUPS ══════════ -->
   <nav class="lr-col lr-groups" aria-label="Track groups">
     <div class="lr-colhead">
       <h2 class="lr-coltitle">Groups</h2>
       <span class="lr-colmeta" id="lr-groupcount"><?php echo (int) $lroom_payload['room']['groups']; ?></span>
     </div>
     <div class="lr-scroll lr-grouplist" id="lr-grouplist" role="tablist" aria-orientation="vertical" aria-label="Groups"></div>
-    <div class="lr-colfoot">
-      <span class="lr-kbd">↑</span><span class="lr-kbd">↓</span> browse
-    </div>
   </nav>
 
-  <!-- ══════════ COLUMN 2 · TRACKS ══════════ -->
   <section class="lr-col lr-tracks" aria-label="Tracks in group">
     <div class="lr-colhead">
       <h2 class="lr-coltitle" id="lr-trackheading">Tracks</h2>
@@ -414,42 +331,83 @@ $lroom_jv  = file_exists($lroom_js) ? filemtime($lroom_js) : '1';
     </div>
 
     <div class="lr-scroll lr-tracklist" id="lr-tracklist" role="tabpanel" tabindex="-1"></div>
+
+    <div class="lr-colfoot lr-trackfoot">
+      <label class="lr-sr" for="lr-sort">Sort tracks</label>
+      <select class="lr-select lr-select--sm" id="lr-sort">
+        <option value="title">Title A–Z</option>
+        <option value="artist">Artist A–Z</option>
+        <option value="newest">Recently added</option>
+      </select>
+      <label class="lr-sr" for="lr-format">Export format</label>
+      <select class="lr-select lr-select--sm" id="lr-format">
+        <option value="m3u">M3U</option>
+        <option value="json">JSON</option>
+        <option value="csv">CSV</option>
+      </select>
+      <button type="button" class="lr-minibtn" id="lr-export" title="Download this list as a playlist of links">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>
+        Export
+      </button>
+    </div>
   </section>
 
-  <!-- ══════════ COLUMN 3 · STAGE ══════════ -->
-  <section class="lr-col lr-stage" aria-label="Player and room controls">
+  <section class="lr-col lr-stage" aria-label="Player">
     <div class="lr-scroll lr-stageinner">
 
-      <div class="lr-frame" id="lr-frame">
-        <div class="lr-facade" id="lr-facade">
-          <span class="lr-vinyl" aria-hidden="true">
-            <svg viewBox="0 0 120 120" width="132" height="132">
-              <defs>
-                <radialGradient id="lrVin" cx="50%" cy="40%" r="65%">
-                  <stop offset="0%" stop-color="#241F3A"/><stop offset="100%" stop-color="#0A0910"/>
-                </radialGradient>
-                <linearGradient id="lrSheen" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#FF4D9D" stop-opacity=".55"/>
-                  <stop offset="55%" stop-color="#7C5CFF" stop-opacity="0"/>
-                  <stop offset="100%" stop-color="#38BDF8" stop-opacity=".45"/>
-                </linearGradient>
-              </defs>
-              <circle cx="60" cy="60" r="58" fill="url(#lrVin)" stroke="#3A3160" stroke-width="1"/>
-              <g fill="none" stroke="#4B3F7A" stroke-width=".8" opacity=".7">
-                <circle cx="60" cy="60" r="50"/><circle cx="60" cy="60" r="44"/><circle cx="60" cy="60" r="38"/>
-                <circle cx="60" cy="60" r="32"/><circle cx="60" cy="60" r="26"/>
-              </g>
-              <circle cx="60" cy="60" r="58" fill="url(#lrSheen)"/>
-              <circle cx="60" cy="60" r="17" fill="#FFB020"/>
-              <circle cx="60" cy="60" r="17" fill="none" stroke="#7A4E00" stroke-width="1"/>
-              <circle cx="60" cy="60" r="3.4" fill="#0A0910"/>
-            </svg>
-          </span>
-          <p class="lr-facade-t">Nothing is playing yet</p>
-          <p class="lr-facade-s">Pick a group, then choose a track. The player loads only when you press play — no trackers until then.</p>
+      <div class="lr-stagebar">
+        <div class="lr-seg" role="group" aria-label="Player view">
+          <button type="button" data-view="video" aria-pressed="true">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M10 9l5 3-5 3z"/></svg>
+            Video
+          </button>
+          <button type="button" data-view="audio" aria-pressed="false" title="Audio focus — the player stays visible, minimized">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            Audio
+          </button>
+        </div>
+        <button type="button" class="lr-iconbtn lr-iconbtn--sm" id="lr-fs" aria-label="Fullscreen" title="Fullscreen">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+        </button>
+      </div>
+
+      <div class="lr-frame" id="lr-frame" data-view="video">
+        <div class="lr-mountwrap" id="lr-mountwrap"><div id="lr-mount"></div></div>
+
+        <div class="lr-audioface" id="lr-audioface" aria-hidden="true">
+          <img class="lr-audio-bg" id="lr-audio-bg" src="" alt="">
+          <div class="lr-audio-core">
+            <span class="lr-audio-art" id="lr-audio-art"><span class="lr-artgen">♪</span></span>
+            <p class="lr-audio-t" id="lr-audio-t">Nothing playing</p>
+            <p class="lr-audio-a" id="lr-audio-a">Pick a track</p>
+            <span class="lr-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+          </div>
         </div>
 
-        <div class="lr-mountwrap" id="lr-mountwrap"><div id="lr-mount"></div></div>
+        <div class="lr-facade" id="lr-facade">
+          <span class="lr-vinyl" aria-hidden="true">
+            <svg viewBox="0 0 120 120" width="126" height="126">
+              <defs>
+                <radialGradient id="lrVin" cx="50%" cy="40%" r="65%"><stop offset="0%" stop-color="#16293B"/><stop offset="100%" stop-color="#05090F"/></radialGradient>
+                <linearGradient id="lrSheen" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#22D3EE" stop-opacity=".5"/><stop offset="55%" stop-color="#2E7BFF" stop-opacity="0"/><stop offset="100%" stop-color="#3B82F6" stop-opacity=".45"/>
+                </linearGradient>
+              </defs>
+              <circle cx="60" cy="60" r="58" fill="url(#lrVin)" stroke="#2A4E6B"/>
+              <g fill="none" stroke="#2E7BFF" stroke-width=".8" opacity=".55">
+                <circle cx="60" cy="60" r="50"/><circle cx="60" cy="60" r="44"/><circle cx="60" cy="60" r="38"/><circle cx="60" cy="60" r="32"/><circle cx="60" cy="60" r="26"/>
+              </g>
+              <circle cx="60" cy="60" r="58" fill="url(#lrSheen)"/>
+              <circle cx="60" cy="60" r="17" fill="#FFB020"/><circle cx="60" cy="60" r="17" fill="none" stroke="#7A4E00"/><circle cx="60" cy="60" r="3.4" fill="#05090F"/>
+            </svg>
+          </span>
+          <p class="lr-facade-t">The room is quiet</p>
+          <p class="lr-facade-s">Choose a group, then a track. Nothing loads from YouTube until you press play.</p>
+          <button type="button" class="lr-btn lr-btn--accent" id="lr-start">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+            Start the room
+          </button>
+        </div>
 
         <div class="lr-framestate" id="lr-framestate" hidden>
           <p class="lr-framestate-t" id="lr-framestate-t">Playback needs a nudge</p>
@@ -463,10 +421,8 @@ $lroom_jv  = file_exists($lroom_js) ? filemtime($lroom_js) : '1';
         <span class="lr-frameglow" aria-hidden="true"></span>
       </div>
 
-      <div class="lr-now" id="lr-now">
-        <span class="lr-nowart" id="lr-nowart" aria-hidden="true">
-          <span class="lr-artgen">♪</span>
-        </span>
+      <div class="lr-now">
+        <span class="lr-nowart" id="lr-nowart" aria-hidden="true"><span class="lr-artgen">♪</span></span>
         <span class="lr-nowtxt">
           <span class="lr-nowlabel">Now playing</span>
           <h3 class="lr-nowtitle" id="lr-nowtitle">Select a track</h3>
@@ -509,91 +465,6 @@ $lroom_jv  = file_exists($lroom_js) ? filemtime($lroom_js) : '1';
         </div>
       </div>
 
-      <div class="lr-controls">
-        <div class="lr-controlshead">
-          <h2>Room controls</h2>
-          <button type="button" class="lr-minibtn" id="ctl-reset">Reset</button>
-        </div>
-
-        <div class="lr-ctlgrid">
-          <label class="lr-ctl" for="ctl-density">
-            <span class="lr-ctl-l">Row density</span>
-            <select class="lr-select" id="ctl-density">
-              <option value="compact">Compact</option>
-              <option value="comfortable">Comfortable</option>
-              <option value="spacious">Spacious</option>
-            </select>
-          </label>
-
-          <label class="lr-ctl" for="ctl-labels">
-            <span class="lr-ctl-l">Group labels</span>
-            <select class="lr-select" id="ctl-labels">
-              <option value="badge">Badge + name</option>
-              <option value="name">Names only</option>
-              <option value="badge-only">Badges only</option>
-            </select>
-          </label>
-
-          <label class="lr-ctl" for="ctl-sort">
-            <span class="lr-ctl-l">Sort tracks</span>
-            <select class="lr-select" id="ctl-sort">
-              <option value="title">Title A–Z</option>
-              <option value="artist">Artist A–Z</option>
-              <option value="newest">Recently added</option>
-            </select>
-          </label>
-
-          <label class="lr-ctl" for="ctl-accent">
-            <span class="lr-ctl-l">Accent hue <b class="lr-ctl-v" id="ctl-accent-v">268°</b></span>
-            <input class="lr-range" id="ctl-accent" type="range" min="0" max="360" step="1" value="268">
-          </label>
-
-          <label class="lr-ctl" for="ctl-glow">
-            <span class="lr-ctl-l">Room glow <b class="lr-ctl-v" id="ctl-glow-v">70%</b></span>
-            <input class="lr-range" id="ctl-glow" type="range" min="0" max="100" step="1" value="70">
-          </label>
-
-          <label class="lr-ctl" for="ctl-scale">
-            <span class="lr-ctl-l">Text size <b class="lr-ctl-v" id="ctl-scale-v">100%</b></span>
-            <input class="lr-range" id="ctl-scale" type="range" min="90" max="125" step="1" value="100">
-          </label>
-
-          <div class="lr-ctl lr-ctl--switch">
-            <span class="lr-ctl-l">List artwork</span>
-            <button type="button" class="lr-switch" id="ctl-art" role="switch" aria-checked="true"><span></span></button>
-          </div>
-
-          <div class="lr-ctl lr-ctl--switch">
-            <span class="lr-ctl-l">Motion</span>
-            <button type="button" class="lr-switch" id="ctl-motion" role="switch" aria-checked="true"><span></span></button>
-          </div>
-
-          <div class="lr-ctl lr-ctl--switch">
-            <span class="lr-ctl-l">Auto-advance</span>
-            <button type="button" class="lr-switch" id="ctl-autoplay" role="switch" aria-checked="true"><span></span></button>
-          </div>
-        </div>
-
-        <div class="lr-ctlactions">
-          <button type="button" class="lr-btn lr-btn--accent" id="ctl-surprise">
-            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4z"/><path d="M18 16l.9 2.1L21 19l-2.1.9L18 22l-.9-2.1L15 19l2.1-.9z"/></svg>
-            Surprise me
-          </button>
-          <label class="lr-sr" for="ctl-format">Export format</label>
-          <select class="lr-select lr-select--sm" id="ctl-format">
-            <option value="m3u">M3U</option>
-            <option value="json">JSON</option>
-            <option value="csv">CSV</option>
-          </select>
-          <button type="button" class="lr-btn" id="ctl-export">
-            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>
-            Export
-          </button>
-        </div>
-
-        <p class="lr-keyhint"><span class="lr-kbd">Space</span> play · <span class="lr-kbd">N</span>/<span class="lr-kbd">P</span> track · <span class="lr-kbd">M</span> mute · <span class="lr-kbd">/</span> search · <span class="lr-kbd">←</span><span class="lr-kbd">→</span> seek</p>
-      </div>
-
     </div>
   </section>
 </div>
@@ -603,27 +474,19 @@ $lroom_jv  = file_exists($lroom_js) ? filemtime($lroom_js) : '1';
 <noscript>
   <div class="lr-noscript">
     <h1>The Listening Room</h1>
-    <p>Playback needs JavaScript. Here is the full archive as plain links.</p>
+    <p>Playback needs JavaScript. Here is the archive as plain links.</p>
     <?php if (empty($lroom_groups)) : ?>
       <p>No tracks have been assigned to a group yet.</p>
-    <?php else : ?>
-      <?php foreach ($lroom_groups as $g) : ?>
-        <section>
-          <h2><?php echo esc_html($g['name']); ?> <small>(<?php echo (int) $g['count']; ?>)</small></h2>
-          <ul>
-            <?php foreach ($g['tracks'] as $i) : $t = $lroom_tracks[$i]; ?>
-              <li>
-                <a href="<?php echo esc_url($t['url']); ?>"><?php echo esc_html($t['title']); ?></a>
-                — <?php echo esc_html($t['artist']); ?>
-                <?php if ($t['yt']) : ?>
-                  · <a href="<?php echo esc_url('https://www.youtube-nocookie.com/watch?v=' . $t['yt']); ?>" rel="noopener noreferrer">video</a>
-                <?php endif; ?>
-              </li>
-            <?php endforeach; ?>
-          </ul>
-        </section>
-      <?php endforeach; ?>
-    <?php endif; ?>
+    <?php else : foreach ($lroom_groups as $g) : ?>
+      <section>
+        <h2><?php echo esc_html($g['name']); ?> <small>(<?php echo (int) $g['count']; ?>)</small></h2>
+        <ul>
+          <?php foreach ($g['tracks'] as $i) : $t = $lroom_tracks[$i]; ?>
+            <li><a href="<?php echo esc_url($t['url']); ?>"><?php echo esc_html($t['title']); ?></a> — <?php echo esc_html($t['artist']); ?><?php if ($t['yt']) : ?> · <a href="<?php echo esc_url('https://www.youtube-nocookie.com/watch?v=' . $t['yt']); ?>" rel="noopener noreferrer">video</a><?php endif; ?></li>
+          <?php endforeach; ?>
+        </ul>
+      </section>
+    <?php endforeach; endif; ?>
   </div>
 </noscript>
 
